@@ -7,7 +7,7 @@ export class Control extends Behaviour<DynamicEntity> {
 
   private input: Input;
 
-  private speed: number = 100; // pixels per second
+  private speed: number = 500; // pixels per second
 
   constructor(owner: DynamicEntity, input: Input) {
     super(owner);
