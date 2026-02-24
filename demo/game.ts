@@ -17,6 +17,10 @@ class BlueBox extends Player {
 
     console.log(
       `Player position: (${this.x.toFixed(2)}, ${this.y.toFixed(2)})`,
+      "Mix X:",
+      Math.min(CANVAS_W - PLAYER_SIZE, this.x),
+      "Mix Y:",
+      Math.min(CANVAS_H - PLAYER_SIZE, this.y),
     );
   }
 
