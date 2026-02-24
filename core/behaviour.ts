@@ -9,6 +9,10 @@ export abstract class Behaviour<T extends Entity = Entity> {
 
   public enabled: boolean = true;
 
+  get key(): string {
+    return this.type.toLowerCase();
+  }
+
   constructor(owner: T) {
     this.owner = owner;
   }

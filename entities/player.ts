@@ -1,4 +1,5 @@
 import { Control } from "../core/behaviours/control";
+import { HealthKit } from "../core/behaviours/healtkit";
 import DynamicEntity from "./dynamic_entity";
 
 export default class Player extends DynamicEntity {
@@ -7,7 +8,11 @@ export default class Player extends DynamicEntity {
   }
 
   get control(): Control | undefined {
-    return this.getBehavioursByType(Control)[0];
+    return this.getBehaviour<Control>("control");
+  }
+
+  get healthkit(): HealthKit | undefined {
+    return this.getBehaviour<HealthKit>("healthkit");
   }
 
   update(deltaTime: number): void {
