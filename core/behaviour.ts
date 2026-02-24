@@ -20,5 +20,8 @@ export abstract class Behaviour<T extends Entity = Entity> {
   abstract update(deltaTime: number): void;
 
   render?(ctx: CanvasRenderingContext2D): void;
+
   onAttach?(): void;
+
+  onDetach?(): void;
 }

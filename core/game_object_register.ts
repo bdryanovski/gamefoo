@@ -1,7 +1,4 @@
-import type DynamicEntity from "../entities/dynamic_entity";
-import type Entity from "../entities/entity";
-
-type GameObject = Entity | DynamicEntity;
+import type { GameObject } from "../types";
 
 export default class GameObjectRegister {
   private objects: Map<string, GameObject> = new Map();

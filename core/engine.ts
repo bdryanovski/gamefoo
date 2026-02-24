@@ -72,6 +72,10 @@ export default class Engine {
     return this._player;
   }
 
+  public attachObjects(objects: GameObject) {
+    this.engine.objects.register(objects);
+  }
+
   handleResize() {
     if (!this.canvas) return;
 
