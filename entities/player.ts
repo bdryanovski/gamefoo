@@ -2,6 +2,10 @@ import { Control } from "../core/behaviours/control";
 import DynamicEntity from "./dynamic_entity";
 
 export default class Player extends DynamicEntity {
+  constructor(x: number, y: number, width: number, height: number) {
+    super(x, y, width, height);
+  }
+
   get control(): Control | undefined {
     return this.getBehavioursByType(Control)[0];
   }

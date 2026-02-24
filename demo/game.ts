@@ -2,9 +2,9 @@ import { Control, Engine, HealthKit, Input, Player } from "../index";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
-const PLAYER_SIZE = 32;
+const PLAYER_SIZE = 50;
 
-class DemoPlayer extends Player {
+class BlueBox extends Player {
   constructor(x: number, y: number) {
     super(x, y, PLAYER_SIZE, PLAYER_SIZE);
   }
@@ -14,6 +14,10 @@ class DemoPlayer extends Player {
 
     this.x = Math.max(0, Math.min(CANVAS_W - PLAYER_SIZE, this.x));
     this.y = Math.max(0, Math.min(CANVAS_H - PLAYER_SIZE, this.y));
+
+    console.log(
+      `Player position: (${this.x.toFixed(2)}, ${this.y.toFixed(2)})`,
+    );
   }
 
   override render(ctx: CanvasRenderingContext2D): void {
@@ -25,7 +29,7 @@ class DemoPlayer extends Player {
   }
 }
 
-const player = new DemoPlayer(
+const player = new BlueBox(
   CANVAS_W / 2 - PLAYER_SIZE / 2,
   CANVAS_H / 2 - PLAYER_SIZE / 2,
 );
