@@ -3,12 +3,19 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --hot demo/server.ts"
+    "dev": "bun --hot demo/server.ts",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch",
+    "lint": "bunx biome check .",
+    "lint:fix": "bunx biome check --write --unsafe .",
+    "format": "bunx biome format --write .",
+    "check": "bun run typecheck && bun run lint"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

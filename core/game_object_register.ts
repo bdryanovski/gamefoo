@@ -19,8 +19,8 @@ export default class GameObjectRegister {
     return Array.from(this.objects.values()).filter(_filter);
   }
 
-  updateAll(deltaTime: number): void {
-    this.getAll(() => true).forEach((obj) => {
+  updateAll(_deltaTime: number): void {
+    this.getAll(() => true).forEach((_obj) => {
       //obj.update(deltaTime);
     });
   }
