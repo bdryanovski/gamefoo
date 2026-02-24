@@ -2,6 +2,7 @@ import type { Vector2 } from "../types";
 import { Behaviour } from "../core/behaviour";
 
 export default abstract class Entity {
+  public id: string = "";
   protected position: Vector2 = { x: 0, y: 0 };
   protected size = { width: 0, height: 0 };
 
@@ -24,7 +25,8 @@ export default abstract class Entity {
     this.position.y = value;
   }
 
-  constructor(x: number, y: number, width: number, height: number) {
+  constructor(id: string, x: number, y: number, width: number, height: number) {
+    this.id = id;
     this.position = { x, y };
     this.size = { width, height };
   }

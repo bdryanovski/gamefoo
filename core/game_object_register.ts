@@ -1,4 +1,7 @@
-import type { GameObject } from "../types";
+import type DynamicEntity from "../entities/dynamic_entity";
+import type Entity from "../entities/entity";
+
+type GameObject = Entity | DynamicEntity;
 
 export default class GameObjectRegister {
   private objects: Map<string, GameObject> = new Map();
@@ -19,9 +22,15 @@ export default class GameObjectRegister {
     return Array.from(this.objects.values()).filter(_filter);
   }
 
-  updateAll(_deltaTime: number): void {
-    this.getAll(() => true).forEach((_obj) => {
-      //obj.update(deltaTime);
+  updateAll(deltaTime: number): void {
+    this.getAll(() => true).forEach((obj) => {
+      obj.update(deltaTime);
+    });
+  }
+
+  renderAll(ctx: CanvasRenderingContext2D): void {
+    this.getAll(() => true).forEach((obj) => {
+      obj.render(ctx);
     });
   }
 }
