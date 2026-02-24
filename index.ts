@@ -8,4 +8,12 @@ export { default as Input } from "./core/input";
 export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";
 export { default as Player } from "./entities/player";
-export type { GameObject, GameObjectType, Vector2 } from "./types";
+export type {
+  GameObject,
+  Vector2,
+  ColliderShape,
+  CollisionInfo,
+} from "./types";
+
+export { default as World } from "./core/world";
+export { Collidable } from "./core/behaviours/collidable";

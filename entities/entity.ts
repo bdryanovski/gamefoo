@@ -70,6 +70,9 @@ export default abstract class Entity {
     const behavior = this.behaviorMap.get(key.toLowerCase());
     if (!behavior) return;
 
+    if (behavior.onDetach) {
+      behavior.onDetach();
+    }
     this.behaviorMap.delete(key.toLowerCase());
     this._sortedBehaviors = null; // Invalidate sorted cache
   }
