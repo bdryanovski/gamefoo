@@ -2,6 +2,9 @@
   "name": "gamefoo",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "dev": "bun --hot demo/server.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

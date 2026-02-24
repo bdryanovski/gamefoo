@@ -1,0 +1,27 @@
+import type { GameObject } from "../types";
+
+export default class GameObjectRegister {
+  private objects: Map<string, GameObject> = new Map();
+
+  register(object: GameObject) {
+    this.objects.set(object.id, object);
+  }
+
+  get(id: string): GameObject | undefined {
+    return this.objects.get(id);
+  }
+
+  has(id: string): boolean {
+    return this.objects.has(id);
+  }
+
+  getAll(_filter: () => true): GameObject[] {
+    return Array.from(this.objects.values()).filter(_filter);
+  }
+
+  updateAll(deltaTime: number): void {
+    this.getAll(() => true).forEach((obj) => {
+      //obj.update(deltaTime);
+    });
+  }
+}
