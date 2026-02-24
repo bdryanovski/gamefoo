@@ -15,12 +15,14 @@ class BlueBox extends Player {
     this.x = Math.max(0, Math.min(CANVAS_W - PLAYER_SIZE, this.x));
     this.y = Math.max(0, Math.min(CANVAS_H - PLAYER_SIZE, this.y));
 
+    // Hit the wall and take damage
+    if (this.x <= 0 || this.x >= CANVAS_W - PLAYER_SIZE) {
+      this.healthkit?.takeDamage(1);
+    }
+
     console.log(
-      `Player position: (${this.x.toFixed(2)}, ${this.y.toFixed(2)})`,
-      "Mix X:",
-      Math.min(CANVAS_W - PLAYER_SIZE, this.x),
-      "Mix Y:",
-      Math.min(CANVAS_H - PLAYER_SIZE, this.y),
+      `HP: ${this.healthkit?.getHealth()}/${this.healthkit?.getMaxHealth()}`,
+      `Pos: (${this.x.toFixed(0)}, ${this.y.toFixed(0)})`,
     );
   }
 
