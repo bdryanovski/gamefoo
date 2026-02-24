@@ -1,4 +1,5 @@
 import {
+  Collidable,
   Control,
   DynamicEntity,
   Engine,
@@ -11,6 +12,10 @@ import {
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 const PLAYER_SIZE = 50;
+
+const engine = new Engine("game", CANVAS_W, CANVAS_H, {
+  backgroundColor: "#1a1a2e",
+});
 
 class BlueBox extends Player {
   constructor(x: number, y: number) {
@@ -27,11 +32,6 @@ class BlueBox extends Player {
     if (this.x <= 0 || this.x >= CANVAS_W - PLAYER_SIZE) {
       this.healthkit?.takeDamage(1);
     }
-
-    console.log(
-      `HP: ${this.healthkit?.getHealth()}/${this.healthkit?.getMaxHealth()}`,
-      `Pos: (${this.x.toFixed(0)}, ${this.y.toFixed(0)})`,
-    );
   }
 
   override render(ctx: CanvasRenderingContext2D): void {
@@ -51,9 +51,22 @@ const player = new BlueBox(
 player.attachBehaviour(new Control(player, new Input()));
 player.attachBehaviour(new HealthKit(player, 200));
 
-const engine = new Engine("game", CANVAS_W, CANVAS_H, {
-  backgroundColor: "#1a1a2e",
-});
+player.attachBehaviour(
+  new Collidable(player, engine.collisions, {
+    shape: { type: "aabb", width: PLAYER_SIZE, height: PLAYER_SIZE },
+    layer: 0,
+    tags: new Set(["player"]),
+    collidesWith: new Set(["blob"]),
+    onCollision: (other) => {
+      player.healthkit?.takeDamage(10);
+
+      console.log(
+        "Player collided with blob! Health:",
+        player.healthkit?.getHealth(),
+      );
+    },
+  }),
+);
 
 engine.player = player;
 
@@ -98,7 +111,21 @@ class Blob extends DynamicEntity {
   }
 }
 
-engine.attachObjects(new Blob(100, 100));
+const blob = new Blob(100, 100);
+
+blob.attachBehaviour(
+  new Collidable(blob, engine.collisions, {
+    shape: { type: "circle", radius: 15 },
+    layer: 0,
+    tags: new Set(["blob"]),
+    collidesWith: new Set(["player"]),
+    onCollision: (other) => {
+      console.log("Blob collided with player!");
+    },
+  }),
+);
+
+engine.attachObjects(blob);
 
 engine.setup(() => {
   console.log("GameFoo engine initialized");

@@ -1,6 +1,8 @@
 import type Player from "../entities/player";
+import type { GameObject } from "../types";
 import Camera from "./camera";
 import GameObjectRegister from "./game_object_register";
+import World from "./world";
 
 interface EngineConfig {
   backgroundColor?: string;
@@ -30,6 +32,7 @@ export default class Engine {
   private engine: {
     camera: Camera | null;
     objects: GameObjectRegister; // Placeholder for game objects, can be expanded later
+    collisions: World;
   };
 
   constructor(
@@ -61,6 +64,8 @@ export default class Engine {
        * This holds all the game objects
        */
       objects: new GameObjectRegister(),
+
+      collisions: new World(),
     };
   }
 
@@ -70,6 +75,10 @@ export default class Engine {
 
   get player(): Player | undefined {
     return this._player;
+  }
+
+  get collisions(): World {
+    return this.engine.collisions;
   }
 
   public attachObjects(objects: GameObject) {
@@ -147,6 +156,8 @@ export default class Engine {
     if (this.engine.objects) {
       this.engine.objects.updateAll(deltaTime);
     }
+
+    this.engine.collisions.detect();
 
     /**
      * There is oportunity to optimize this with much better follow mechanic

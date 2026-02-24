@@ -7,3 +7,21 @@ export interface Vector2 {
 }
 
 export type GameObject = Entity | DynamicEntity;
+
+export type ColliderShape =
+  | { type: "aabb"; width: number; height: number; offset?: Vector2 }
+  | { type: "circle"; radius: number; offset?: Vector2 };
+
+export interface CollisionInfo {
+  self: Entity;
+  other: Entity;
+  selfTags: Set<string>;
+  otherTags: Set<string>;
+}
+
+export interface WorldBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
