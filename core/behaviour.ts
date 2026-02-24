@@ -1,6 +1,6 @@
 import type Entity from "../entities/entity";
 
-export default abstract class Behaviour<T extends Entity = Entity> {
+export abstract class Behaviour<T extends Entity = Entity> {
   protected owner: T;
 
   abstract readonly type: string;
@@ -17,5 +17,4 @@ export default abstract class Behaviour<T extends Entity = Entity> {
 
   render?(ctx: CanvasRenderingContext2D): void;
   onAttach?(): void;
-  onDetach?(): void;
 }

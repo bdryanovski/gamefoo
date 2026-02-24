@@ -1,11 +1,11 @@
-import type Behavior from "../core/behavior";
 import type { Vector2 } from "../types";
+import { Behaviour } from "../core/behaviour";
 
 export default abstract class Entity {
   protected position: Vector2 = { x: 0, y: 0 };
   protected size = { width: 0, height: 0 };
 
-  private behaviors: Behavior[] = [];
+  private behaviors: Behaviour[] = [];
 
   get x(): number {
     return this.position.x;
@@ -39,7 +39,13 @@ export default abstract class Entity {
     return { ...this.size };
   }
 
-  attachBehavior<T extends Behavior>(behavior: T): T {
+  getBehavioursByType<T extends Behaviour>(
+    type: new (...args: any[]) => T,
+  ): T[] {
+    return this.behaviors.filter((b) => b instanceof type) as T[];
+  }
+
+  attachBehaviour<T extends Behaviour>(behavior: T): T {
     this.behaviors.push(behavior);
     this.behaviors.sort((a, b) => a.priority - b.priority);
 
@@ -49,29 +55,7 @@ export default abstract class Entity {
     return behavior;
   }
 
-  detachBehavior(behavior: Behavior): void {
-    const index = this.behaviors.indexOf(behavior);
-    if (index === -1) return;
-
-    if (behavior.onDetach) {
-      behavior.onDetach();
-    }
-    this.behaviors.splice(index, 1);
-  }
-
-  getBehaviors(): Behavior[] {
-    return [...this.behaviors]; // make sure to make a copy to prevent external mutation;
-  }
-
-  getBehavior<T extends Behavior>(behaviorClass: new (...args: any[]) => T): T | undefined {
-    return this.behaviors.find((b) => b instanceof behaviorClass) as T | undefined;
-  }
-
-  hasBehavior<T extends Behavior>(behaviorClass: new (...args: any[]) => T): boolean {
-    return this.behaviors.some((b) => b instanceof behaviorClass);
-  }
-
-  protected updateBehaviors(deltaTime: number): void {
+  protected updateBehaviours(deltaTime: number): void {
     for (const behavior of this.behaviors) {
       if (behavior.enabled) {
         behavior.update(deltaTime);
@@ -79,7 +63,7 @@ export default abstract class Entity {
     }
   }
 
-  protected renderBehaviors(ctx: CanvasRenderingContext2D): void {
+  protected renderBehaviours(ctx: CanvasRenderingContext2D): void {
     for (const behavior of this.behaviors) {
       if (behavior.enabled && behavior.render) {
         behavior.render(ctx);

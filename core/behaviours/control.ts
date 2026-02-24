@@ -1,8 +1,8 @@
 import type DynamicEntity from "../../entities/dynamic_entity";
-import Behaviour from "../behavior";
+import { Behaviour } from "../behaviour";
 import type Input from "../input";
 
-export default class Control extends Behaviour<DynamicEntity> {
+export class Control extends Behaviour<DynamicEntity> {
   readonly type = "control";
 
   private input: Input;
@@ -19,7 +19,8 @@ export default class Control extends Behaviour<DynamicEntity> {
     let dy = 0;
 
     if (this.input.isKeyDown("a") || this.input.isKeyDown("arrowleft")) dx -= 1;
-    if (this.input.isKeyDown("d") || this.input.isKeyDown("arrowright")) dx += 1;
+    if (this.input.isKeyDown("d") || this.input.isKeyDown("arrowright"))
+      dx += 1;
     if (this.input.isKeyDown("w") || this.input.isKeyDown("arrowup")) dy -= 1;
     if (this.input.isKeyDown("s") || this.input.isKeyDown("arrowdown")) dy += 1;
 
