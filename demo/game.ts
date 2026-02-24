@@ -6,7 +6,7 @@ const PLAYER_SIZE = 50;
 
 class BlueBox extends Player {
   constructor(x: number, y: number) {
-    super(x, y, PLAYER_SIZE, PLAYER_SIZE);
+    super("player", x, y, PLAYER_SIZE, PLAYER_SIZE);
   }
 
   override update(deltaTime: number): void {

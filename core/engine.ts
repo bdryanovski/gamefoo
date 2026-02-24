@@ -1,7 +1,6 @@
 import type Player from "../entities/player";
 import Camera from "./camera";
 import GameObjectRegister from "./game_object_register";
-import Input from "./input";
 
 interface EngineConfig {
   backgroundColor?: string;
@@ -29,12 +28,16 @@ export default class Engine {
   private _player?: Player;
 
   private engine: {
-    input: Input;
     camera: Camera | null;
     objects: GameObjectRegister; // Placeholder for game objects, can be expanded later
   };
 
-  constructor(canvasId: string, width: number, height: number, config: EngineConfig) {
+  constructor(
+    canvasId: string,
+    width: number,
+    height: number,
+    config: EngineConfig,
+  ) {
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     this.height = height;
     this.width = width;
@@ -49,7 +52,6 @@ export default class Engine {
     this.cnf = { ...this.cnf, ...config };
 
     this.engine = {
-      input: new Input(),
       /**
        * Maybe later will find a beter way to initialize this
        */
@@ -68,10 +70,6 @@ export default class Engine {
 
   get player(): Player | undefined {
     return this._player;
-  }
-
-  get input(): Input {
-    return this.engine.input;
   }
 
   handleResize() {
@@ -125,7 +123,9 @@ export default class Engine {
     }
 
     if (typeof setupFn !== "function") {
-      throw new Error("Setup function must be provided and must be a function.");
+      throw new Error(
+        "Setup function must be provided and must be a function.",
+      );
     }
 
     this.lastTime = 0;
@@ -163,11 +163,7 @@ export default class Engine {
     }
 
     if (this.engine.objects) {
-      this.engine.objects
-        .getAll(() => true)
-        .forEach((_obj) => {
-          // obj.render(this.ctx);
-        });
+      this.engine.objects.renderAll(this.ctx);
     }
   }
 

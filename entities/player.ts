@@ -3,8 +3,8 @@ import { HealthKit } from "../core/behaviours/healtkit";
 import DynamicEntity from "./dynamic_entity";
 
 export default class Player extends DynamicEntity {
-  constructor(x: number, y: number, width: number, height: number) {
-    super(x, y, width, height);
+  constructor(id: string, x: number, y: number, width: number, height: number) {
+    super(id, x, y, width, height);
   }
 
   get control(): Control | undefined {
