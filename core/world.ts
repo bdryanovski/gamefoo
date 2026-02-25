@@ -76,12 +76,7 @@ export default class World {
     }
 
     if (shapeA.type === "circle" && shapeB.type === "circle") {
-      return this.circleVSCircle(
-        boundsA,
-        shapeA.radius,
-        boundsB,
-        shapeB.radius,
-      );
+      return this.circleVSCircle(a, boundsA, b, boundsB);
     }
 
     const [circle, circleBounds, rect] =
