@@ -70,10 +70,7 @@ export class Collidable extends Behaviour<DynamicEntity> {
 
   getWorldBounds(): WorldBounds {
     const pos = this.owner.getPosition();
-    const offset =
-      "offset" in this.shape && this.shape.offset
-        ? this.shape.offset
-        : { x: 0, y: 0 };
+    const offset = "offset" in this.shape && this.shape.offset ? this.shape.offset : { x: 0, y: 0 };
 
     if (this.shape.type === "aabb") {
       return {

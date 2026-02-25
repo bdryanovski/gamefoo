@@ -90,10 +90,7 @@ export default class World {
   }
   private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
     return (
-      a.x < b.x + b.width &&
-      a.x + a.width > b.x &&
-      a.y < b.y + b.height &&
-      a.y + a.height > b.y
+      a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
     );
   }
 
@@ -118,11 +115,7 @@ export default class World {
     return distSq <= radSum * radSum;
   }
 
-  private circleVSAAabb(
-    circle: Collidable,
-    circleBounds: WorldBounds,
-    rect: WorldBounds,
-  ): boolean {
+  private circleVSAAabb(circle: Collidable, circleBounds: WorldBounds, rect: WorldBounds): boolean {
     if (circle.shape.type !== "circle") return false;
 
     const cx = circleBounds.x + circle.shape.radius;
