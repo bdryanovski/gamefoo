@@ -34,6 +34,10 @@ export default class World {
 
         if (!this.intersects(obj, boundsObj, other, boundsOther)) continue;
 
+        if (obj.solid && other.solid) {
+          this.resolveOverlap(obj, boundsObj, other, boundsOther);
+        }
+
         if (objWantOther && obj.onCollision) {
           obj.onCollision({
             self: obj.getOwner(),
@@ -131,5 +135,50 @@ export default class World {
     const dy = cy - closestY;
 
     return dx * dx + dy * dy <= circle.shape.radius * circle.shape.radius;
+  }
+
+  private resolveOverlap(
+    a: Collidable,
+    boundsA: WorldBounds,
+    b: Collidable,
+    boundsB: WorldBounds,
+  ): void {
+    const overlapX = Math.min(
+      boundsA.x + boundsA.width - boundsB.x,
+      boundsB.x + boundsB.width - boundsA.x,
+    );
+    const overlapY = Math.min(
+      boundsA.y + boundsA.height - boundsB.y,
+      boundsB.y + boundsB.height - boundsA.y,
+    );
+
+    let pushX = 0;
+    let pushY = 0;
+
+    if (overlapX < overlapY) {
+      pushX = boundsA.x < boundsB.x ? -overlapX : overlapX;
+    } else {
+      pushY = boundsA.y < boundsB.y ? -overlapY : overlapY;
+    }
+
+    const ownerA = a.getOwner();
+    const ownerB = b.getOwner();
+
+    if (a.fixed && b.fixed) {
+      return;
+    }
+
+    if (a.fixed) {
+      ownerB.x -= pushX;
+      ownerB.y -= pushY;
+    } else if (b.fixed) {
+      ownerA.x += pushX;
+      ownerA.y += pushY;
+    } else {
+      ownerA.x += pushX / 2;
+      ownerA.y += pushY / 2;
+      ownerB.x -= pushX / 2;
+      ownerB.y -= pushY / 2;
+    }
   }
 }

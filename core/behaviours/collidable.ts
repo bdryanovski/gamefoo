@@ -9,6 +9,8 @@ type CollidableOptions = {
   layer?: number;
   tags?: Set<string>;
   collidesWith?: Set<string>;
+  solid?: boolean;
+  fixed?: boolean;
   onCollision?: (info: CollisionInfo) => void;
 };
 
@@ -22,6 +24,10 @@ export class Collidable extends Behaviour<DynamicEntity> {
   public tags: Set<string> = new Set();
 
   public collidesWith: Set<string> = new Set();
+
+  public solid: boolean = false;
+
+  public fixed: boolean = false;
 
   public onCollision: (info: CollisionInfo) => void;
 
@@ -42,6 +48,8 @@ export class Collidable extends Behaviour<DynamicEntity> {
     };
     this.layer = options.layer ?? 0;
     this.tags = options.tags ?? new Set();
+    this.solid = options.solid ?? false;
+    this.fixed = options.fixed ?? false;
     this.collidesWith = options.collidesWith ?? new Set();
     this.onCollision = options.onCollision || (() => {});
   }
