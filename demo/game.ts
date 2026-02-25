@@ -1,13 +1,12 @@
 import {
   Collidable,
+  type CollisionInfo,
   Control,
   DynamicEntity,
   Engine,
-  Entity,
   HealthKit,
   Input,
   Player,
-  type CollisionInfo,
 } from "../index";
 
 const CANVAS_W = 800;
@@ -46,10 +45,7 @@ class BlueBox extends Player {
   }
 }
 
-const player = new BlueBox(
-  CANVAS_W / 2 - PLAYER_SIZE / 2,
-  CANVAS_H / 2 - PLAYER_SIZE / 2,
-);
+const player = new BlueBox(CANVAS_W / 2 - PLAYER_SIZE / 2, CANVAS_H / 2 - PLAYER_SIZE / 2);
 
 player.attachBehaviour(new Control(player, new Input()));
 player.attachBehaviour(new HealthKit(player, 200));
@@ -66,10 +62,7 @@ player.attachBehaviour(
         player.healthkit?.takeDamage(10);
       }
 
-      console.log(
-        "Player collided with blob! Health:",
-        player.healthkit?.getHealth(),
-      );
+      console.log("Player collided with blob! Health:", player.healthkit?.getHealth());
     },
   }),
 );
@@ -98,9 +91,7 @@ class Blob extends DynamicEntity {
     this.speed = this.dashing ? Blob.FAST_SPEED : Blob.SLOW_SPEED;
     this.velocity = { x: Math.cos(angle), y: Math.sin(angle) };
     this.directionTimer = 0;
-    this.directionInterval = this.dashing
-      ? 0.3 + Math.random() * 0.4
-      : 1.5 + Math.random() * 2.5;
+    this.directionInterval = this.dashing ? 0.3 + Math.random() * 0.4 : 1.5 + Math.random() * 2.5;
   }
 
   override update(deltaTime: number): void {
@@ -145,7 +136,7 @@ blob.attachBehaviour(
     tags: new Set(["blob"]),
     solid: true,
     collidesWith: new Set(["player"]),
-    onCollision: (other) => {
+    onCollision: (_other) => {
       console.log("Blob collided with player!");
     },
   }),
@@ -186,7 +177,7 @@ tree.attachBehaviour(
     solid: true,
     fixed: true,
     collidesWith: new Set(["player"]),
-    onCollision: (other) => {
+    onCollision: (_other) => {
       console.log("Player collided with tree!");
     },
   }),

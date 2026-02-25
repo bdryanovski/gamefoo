@@ -1,5 +1,5 @@
+import type { Behaviour } from "../core/behaviour";
 import type { Vector2 } from "../types";
-import { Behaviour } from "../core/behaviour";
 
 export default abstract class Entity {
   public id: string = "";
@@ -46,9 +46,7 @@ export default abstract class Entity {
     return this.behaviorMap.get(key.toLowerCase()) as T | undefined;
   }
 
-  getBehavioursByType<T extends Behaviour>(
-    type: new (...args: any[]) => T,
-  ): T[] {
+  getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 

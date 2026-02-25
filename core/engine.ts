@@ -35,12 +35,7 @@ export default class Engine {
     collisions: World;
   };
 
-  constructor(
-    canvasId: string,
-    width: number,
-    height: number,
-    config: EngineConfig,
-  ) {
+  constructor(canvasId: string, width: number, height: number, config: EngineConfig) {
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     this.height = height;
     this.width = width;
@@ -136,9 +131,7 @@ export default class Engine {
     }
 
     if (typeof setupFn !== "function") {
-      throw new Error(
-        "Setup function must be provided and must be a function.",
-      );
+      throw new Error("Setup function must be provided and must be a function.");
     }
 
     this.lastTime = 0;

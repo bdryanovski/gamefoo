@@ -19,8 +19,7 @@ export class Control extends Behaviour<DynamicEntity> {
     let dy = 0;
 
     if (this.input.isKeyDown("a") || this.input.isKeyDown("arrowleft")) dx -= 1;
-    if (this.input.isKeyDown("d") || this.input.isKeyDown("arrowright"))
-      dx += 1;
+    if (this.input.isKeyDown("d") || this.input.isKeyDown("arrowright")) dx += 1;
     if (this.input.isKeyDown("w") || this.input.isKeyDown("arrowup")) dy -= 1;
     if (this.input.isKeyDown("s") || this.input.isKeyDown("arrowdown")) dy += 1;
 

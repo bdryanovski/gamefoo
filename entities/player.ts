@@ -1,12 +1,8 @@
-import { Control } from "../core/behaviours/control";
-import { HealthKit } from "../core/behaviours/healtkit";
+import type { Control } from "../core/behaviours/control";
+import type { HealthKit } from "../core/behaviours/healtkit";
 import DynamicEntity from "./dynamic_entity";
 
 export default class Player extends DynamicEntity {
-  constructor(id: string, x: number, y: number, width: number, height: number) {
-    super(id, x, y, width, height);
-  }
-
   get control(): Control | undefined {
     return this.getBehaviour<Control>("control");
   }
