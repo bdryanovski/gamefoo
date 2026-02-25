@@ -1,13 +1,15 @@
 import type DynamicEntity from "../../entities/dynamic_entity";
-import type { ColliderShape, CollisionInfo } from "../../types";
+import type Entity from "../../entities/entity";
+import type { ColliderShape, CollisionInfo, WorldBounds } from "../../types";
 import { Behaviour } from "../behaviour";
+import type World from "../world";
 
 type CollidableOptions = {
   shape: ColliderShape;
   layer?: number;
   tags?: Set<string>;
   collidesWith?: Set<string>;
-  onCollision?: (info: CollisionInfo) => void | null;
+  onCollision?: (info: CollisionInfo) => void;
 };
 
 export class Collidable extends Behaviour<DynamicEntity> {
@@ -21,13 +23,11 @@ export class Collidable extends Behaviour<DynamicEntity> {
 
   public collidesWith: Set<string> = new Set();
 
-  public onCollision: (info: CollisionInfo) => void | null;
+  public onCollision: (info: CollisionInfo) => void;
 
-  constructor(
-    owner: DynamicEntity,
-    world: CollisionWorld,
-    options: CollidableOptions,
-  ) {
+  private world: World;
+
+  constructor(owner: DynamicEntity, world: World, options: CollidableOptions) {
     super(owner);
 
     this.world = world;
@@ -43,7 +43,7 @@ export class Collidable extends Behaviour<DynamicEntity> {
     this.layer = options.layer ?? 0;
     this.tags = options.tags ?? new Set();
     this.collidesWith = options.collidesWith ?? new Set();
-    this.onCollision = options.onCollision ?? null;
+    this.onCollision = options.onCollision || (() => {});
   }
 
   update(_deltaTime: number): void {}

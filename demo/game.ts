@@ -7,6 +7,7 @@ import {
   HealthKit,
   Input,
   Player,
+  type CollisionInfo,
 } from "../index";
 
 const CANVAS_W = 800;
@@ -57,8 +58,10 @@ player.attachBehaviour(
     layer: 0,
     tags: new Set(["player"]),
     collidesWith: new Set(["blob"]),
-    onCollision: (other) => {
-      player.healthkit?.takeDamage(10);
+    onCollision: (collision: CollisionInfo) => {
+      if (collision.otherTags.has("blob")) {
+        player.healthkit?.takeDamage(10);
+      }
 
       console.log(
         "Player collided with blob! Health:",
