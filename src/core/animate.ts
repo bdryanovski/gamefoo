@@ -37,7 +37,7 @@ export default class Animate {
   public draw(_ctx: CanvasRenderingContext2D, _destX: number, _destY: number) {
     const frame = this.frames[this.currentFrame];
     if (!frame) return;
-    const { col, row } = frame;
+    const { col: _col, row: _row } = frame;
     // Asset.drawFrame(ctx, key, col, row, frameW, frameH, destX, destY)
   }
 
