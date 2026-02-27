@@ -11,6 +11,12 @@
         "noUnusedVariables": "warn",
         "noUnusedImports": "warn"
       },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "suspicious": {
         "noExplicitAny": "off"
       }

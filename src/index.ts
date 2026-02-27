@@ -7,6 +7,10 @@ export { default as Engine } from "./core/engine";
 export { default as FontBitmap } from "./core/fonts/font_bitmap";
 export { default as GameObjectRegister } from "./core/game_object_register";
 export { default as Input } from "./core/input";
+/**
+ * Utility function
+ */
+export { PerlinNoise } from "./core/utils/perlin_noise";
 export { default as World } from "./core/world";
 export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";
