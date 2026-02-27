@@ -49,12 +49,7 @@ export default class FontBitmap {
     return text.length * this.width;
   }
 
-  renderChar(
-    char: string,
-    x: number,
-    y: number,
-    ctx: CanvasRenderingContext2D,
-  ) {
+  renderChar(char: string, x: number, y: number, ctx: CanvasRenderingContext2D) {
     const charData = this.getChar(char);
     if (charData === null) {
       return;
@@ -69,12 +64,7 @@ export default class FontBitmap {
     }
   }
 
-  renderText(
-    text: string,
-    x: number,
-    y: number,
-    ctx: CanvasRenderingContext2D,
-  ) {
+  renderText(text: string, x: number, y: number, ctx: CanvasRenderingContext2D) {
     let offsetX = 0;
     for (const char of text) {
       this.renderChar(char, x + offsetX, y, ctx);
