@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GameFoo — Demos</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: #0d0d1a;
+        color: #e0e0e0;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 60px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #8888ff;
+        margin-bottom: 6px;
+      }
+
+      .subtitle {
+        color: #555;
+        font-size: 0.85rem;
+        margin-bottom: 48px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 800px;
+        width: 100%;
+      }
+
+      .card {
+        background: #111122;
+        border: 1px solid #2a2a4a;
+        border-radius: 8px;
+        padding: 24px;
+        text-decoration: none;
+        color: inherit;
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      }
+
+      .card:hover {
+        border-color: #5566cc;
+        box-shadow: 0 0 24px rgba(80, 100, 220, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .card h2 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #aabbff;
+        margin-bottom: 8px;
+      }
+
+      .card p {
+        font-size: 0.8rem;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      .card .tags {
+        margin-top: 12px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+        border-radius: 3px;
+        background: #1a1a2e;
+        color: #7fdbca;
+        border: 1px solid #2a3a3a;
+      }
+
+      footer {
+        margin-top: 60px;
+        font-size: 0.7rem;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GAMEFOO</h1>
+    <p class="subtitle">Demo collection</p>
+
+    <div class="grid">
+      <a class="card" href="/demo">
+        <h2>Basic Demo</h2>
+        <p>Player movement, collision detection, health system, and a wandering blob enemy. The original engine test.</p>
+        <div class="tags">
+          <span class="tag">player</span>
+          <span class="tag">collision</span>
+          <span class="tag">health</span>
+          <span class="tag">behaviours</span>
+        </div>
+      </a>
+
+      <a class="card" href="/endless-world">
+        <h2>Endless World</h2>
+        <p>Camera &amp; viewport stress-test in a 4000&times;4000 world with Perlin terrain, trees, rocks, ponds, and critters.</p>
+        <div class="tags">
+          <span class="tag">camera</span>
+          <span class="tag">perlin noise</span>
+          <span class="tag">large world</span>
+          <span class="tag">minimap</span>
+        </div>
+      </a>
+    </div>
+
+    <footer>bun run dev</footer>
+  </body>
+</html>
