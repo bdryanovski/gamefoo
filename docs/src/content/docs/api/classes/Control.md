@@ -10,7 +10,7 @@ title: 'Class: Control'
 
 # Class: Control
 
-Defined in: [core/behaviours/control.ts:5](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/control.ts#L5)
+Defined in: [core/behaviours/control.ts:5](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L5)
 
 ## Extends
 
@@ -24,7 +24,7 @@ Defined in: [core/behaviours/control.ts:5](https://github.com/bdryanovski/gamefo
 new Control(owner, input): Control;
 ```
 
-Defined in: [core/behaviours/control.ts:12](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/control.ts#L12)
+Defined in: [core/behaviours/control.ts:12](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L12)
 
 #### Parameters
 
@@ -45,10 +45,10 @@ Defined in: [core/behaviours/control.ts:12](https://github.com/bdryanovski/gamef
 
 | Property | Modifier | Type | Default value | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L10) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L4) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L8) |
-| <a id="type"></a> `type` | `readonly` | `"control"` | `"control"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/control.ts:6](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/control.ts#L6) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
+| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
+| <a id="type"></a> `type` | `readonly` | `"control"` | `"control"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/control.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L6) |
 
 ## Accessors
 
@@ -60,7 +60,7 @@ Defined in: [core/behaviours/control.ts:12](https://github.com/bdryanovski/gamef
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L12)
+Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L12)
 
 ##### Returns
 
@@ -78,7 +78,7 @@ Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/c
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L23)
+Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L23)
 
 #### Returns
 
@@ -96,7 +96,7 @@ Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/c
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L24)
+Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L24)
 
 #### Returns
 
@@ -114,7 +114,7 @@ Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/c
 optional render(ctx): void;
 ```
 
-Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L22)
+Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
 
 #### Parameters
 
@@ -138,7 +138,7 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/c
 update(deltaTime): void;
 ```
 
-Defined in: [core/behaviours/control.ts:17](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/control.ts#L17)
+Defined in: [core/behaviours/control.ts:17](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L17)
 
 #### Parameters
 

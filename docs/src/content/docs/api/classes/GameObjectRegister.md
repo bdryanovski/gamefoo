@@ -10,7 +10,7 @@ title: 'Class: GameObjectRegister'
 
 # Class: GameObjectRegister
 
-Defined in: [core/game\_object\_register.ts:3](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L3)
+Defined in: [core/game\_object\_register.ts:3](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L3)
 
 ## Constructors
 
@@ -32,7 +32,7 @@ new GameObjectRegister(): GameObjectRegister;
 get(id): GameObject | undefined;
 ```
 
-Defined in: [core/game\_object\_register.ts:10](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L10)
+Defined in: [core/game\_object\_register.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L10)
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Defined in: [core/game\_object\_register.ts:10](https://github.com/bdryanovski/g
 getAll(_filter): GameObject[];
 ```
 
-Defined in: [core/game\_object\_register.ts:18](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L18)
+Defined in: [core/game\_object\_register.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L18)
 
 #### Parameters
 
@@ -72,7 +72,7 @@ Defined in: [core/game\_object\_register.ts:18](https://github.com/bdryanovski/g
 has(id): boolean;
 ```
 
-Defined in: [core/game\_object\_register.ts:14](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L14)
+Defined in: [core/game\_object\_register.ts:14](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L14)
 
 #### Parameters
 
@@ -92,7 +92,7 @@ Defined in: [core/game\_object\_register.ts:14](https://github.com/bdryanovski/g
 register(object): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:6](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L6)
+Defined in: [core/game\_object\_register.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L6)
 
 #### Parameters
 
@@ -112,7 +112,7 @@ Defined in: [core/game\_object\_register.ts:6](https://github.com/bdryanovski/ga
 renderAll(ctx): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L28)
+Defined in: [core/game\_object\_register.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L28)
 
 #### Parameters
 
@@ -132,7 +132,7 @@ Defined in: [core/game\_object\_register.ts:28](https://github.com/bdryanovski/g
 updateAll(deltaTime): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:22](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/game_object_register.ts#L22)
+Defined in: [core/game\_object\_register.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L22)
 
 #### Parameters
 

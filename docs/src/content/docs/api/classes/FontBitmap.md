@@ -10,7 +10,7 @@ title: 'Class: FontBitmap'
 
 # Class: FontBitmap
 
-Defined in: [core/fonts/font\_bitmap.ts:17](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L17)
+Defined in: [core/fonts/font\_bitmap.ts:17](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L17)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/fonts/font\_bitmap.ts:17](https://github.com/bdryanovski/gamef
 new FontBitmap(name): FontBitmap;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:26](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L26)
+Defined in: [core/fonts/font\_bitmap.ts:26](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L26)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [core/fonts/font\_bitmap.ts:26](https://github.com/bdryanovski/gamef
 
 | Property | Modifier | Type | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="name"></a> `name` | `readonly` | `string` | [core/fonts/font\_bitmap.ts:18](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L18) |
+| <a id="name"></a> `name` | `readonly` | `string` | [core/fonts/font\_bitmap.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L18) |
 
 ## Accessors
 
@@ -57,7 +57,7 @@ get metadata():
   | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:40](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L40)
+Defined in: [core/fonts/font\_bitmap.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L40)
 
 ##### Returns
 
@@ -79,7 +79,7 @@ Defined in: [core/fonts/font\_bitmap.ts:40](https://github.com/bdryanovski/gamef
 getChar(char): number[] | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:44](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L44)
+Defined in: [core/fonts/font\_bitmap.ts:44](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L44)
 
 #### Parameters
 
@@ -99,7 +99,7 @@ Defined in: [core/fonts/font\_bitmap.ts:44](https://github.com/bdryanovski/gamef
 getTextWidth(text): number;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:48](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L48)
+Defined in: [core/fonts/font\_bitmap.ts:48](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L48)
 
 #### Parameters
 
@@ -123,7 +123,7 @@ renderChar(
    ctx): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:52](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L52)
+Defined in: [core/fonts/font\_bitmap.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L52)
 
 #### Parameters
 
@@ -150,7 +150,7 @@ renderText(
    ctx): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:67](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/fonts/font_bitmap.ts#L67)
+Defined in: [core/fonts/font\_bitmap.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L67)
 
 #### Parameters
 

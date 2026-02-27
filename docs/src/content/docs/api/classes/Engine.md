@@ -10,7 +10,7 @@ title: 'Class: Engine'
 
 # Class: Engine
 
-Defined in: [core/engine.ts:14](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L14)
+Defined in: [core/engine.ts:14](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L14)
 
 Game Engine - the main class that manages the game loop, rendering, and overall game state.
 
@@ -26,7 +26,7 @@ new Engine(
    config): Engine;
 ```
 
-Defined in: [core/engine.ts:38](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L38)
+Defined in: [core/engine.ts:38](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L38)
 
 #### Parameters
 
@@ -51,7 +51,7 @@ Defined in: [core/engine.ts:38](https://github.com/bdryanovski/gamefoo/blob/c900
 get collisions(): World;
 ```
 
-Defined in: [core/engine.ts:75](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L75)
+Defined in: [core/engine.ts:75](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L75)
 
 ##### Returns
 
@@ -67,7 +67,7 @@ Defined in: [core/engine.ts:75](https://github.com/bdryanovski/gamefoo/blob/c900
 get player(): Player | undefined;
 ```
 
-Defined in: [core/engine.ts:71](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L71)
+Defined in: [core/engine.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L71)
 
 ##### Returns
 
@@ -79,7 +79,7 @@ Defined in: [core/engine.ts:71](https://github.com/bdryanovski/gamefoo/blob/c900
 set player(player): void;
 ```
 
-Defined in: [core/engine.ts:67](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L67)
+Defined in: [core/engine.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L67)
 
 ##### Parameters
 
@@ -99,7 +99,7 @@ Defined in: [core/engine.ts:67](https://github.com/bdryanovski/gamefoo/blob/c900
 attachObjects(objects): void;
 ```
 
-Defined in: [core/engine.ts:79](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L79)
+Defined in: [core/engine.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L79)
 
 #### Parameters
 
@@ -119,7 +119,7 @@ Defined in: [core/engine.ts:79](https://github.com/bdryanovski/gamefoo/blob/c900
 clear(): void;
 ```
 
-Defined in: [core/engine.ts:182](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L182)
+Defined in: [core/engine.ts:182](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L182)
 
 #### Returns
 
@@ -133,7 +133,7 @@ Defined in: [core/engine.ts:182](https://github.com/bdryanovski/gamefoo/blob/c90
 destroy(): void;
 ```
 
-Defined in: [core/engine.ts:187](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L187)
+Defined in: [core/engine.ts:187](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L187)
 
 #### Returns
 
@@ -147,7 +147,7 @@ Defined in: [core/engine.ts:187](https://github.com/bdryanovski/gamefoo/blob/c90
 handleResize(): void;
 ```
 
-Defined in: [core/engine.ts:83](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L83)
+Defined in: [core/engine.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L83)
 
 #### Returns
 
@@ -161,7 +161,7 @@ Defined in: [core/engine.ts:83](https://github.com/bdryanovski/gamefoo/blob/c900
 pause(): void;
 ```
 
-Defined in: [core/engine.ts:178](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L178)
+Defined in: [core/engine.ts:178](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L178)
 
 #### Returns
 
@@ -175,7 +175,7 @@ Defined in: [core/engine.ts:178](https://github.com/bdryanovski/gamefoo/blob/c90
 render(): void;
 ```
 
-Defined in: [core/engine.ts:164](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L164)
+Defined in: [core/engine.ts:164](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L164)
 
 #### Returns
 
@@ -189,7 +189,7 @@ Defined in: [core/engine.ts:164](https://github.com/bdryanovski/gamefoo/blob/c90
 resize(width, height): void;
 ```
 
-Defined in: [core/engine.ts:101](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L101)
+Defined in: [core/engine.ts:101](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L101)
 
 #### Parameters
 
@@ -210,7 +210,7 @@ Defined in: [core/engine.ts:101](https://github.com/bdryanovski/gamefoo/blob/c90
 setup(setupFn): Promise<void>;
 ```
 
-Defined in: [core/engine.ts:127](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L127)
+Defined in: [core/engine.ts:127](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L127)
 
 Public - cause I'm old school
 
@@ -232,7 +232,7 @@ Public - cause I'm old school
 update(deltaTime): void;
 ```
 
-Defined in: [core/engine.ts:144](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/engine.ts#L144)
+Defined in: [core/engine.ts:144](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L144)
 
 #### Parameters
 

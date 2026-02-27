@@ -10,7 +10,7 @@ title: 'Class: Input'
 
 # Class: Input
 
-Defined in: [core/input.ts:1](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L1)
+Defined in: [core/input.ts:1](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L1)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/input.ts:1](https://github.com/bdryanovski/gamefoo/blob/c900f9
 new Input(): Input;
 ```
 
-Defined in: [core/input.ts:6](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L6)
+Defined in: [core/input.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L6)
 
 #### Returns
 
@@ -37,7 +37,7 @@ getMousePosition(): {
 };
 ```
 
-Defined in: [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L41)
+Defined in: [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L41)
 
 #### Returns
 
@@ -50,8 +50,8 @@ Defined in: [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/c900f
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `x` | `number` | [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L41) |
-| `y` | `number` | [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L41) |
+| `x` | `number` | [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L41) |
+| `y` | `number` | [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L41) |
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [core/input.ts:41](https://github.com/bdryanovski/gamefoo/blob/c900f
 getPressedKeys(): Set<string>;
 ```
 
-Defined in: [core/input.ts:33](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L33)
+Defined in: [core/input.ts:33](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L33)
 
 #### Returns
 
@@ -75,7 +75,7 @@ Defined in: [core/input.ts:33](https://github.com/bdryanovski/gamefoo/blob/c900f
 isKeyDown(key): boolean;
 ```
 
-Defined in: [core/input.ts:29](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L29)
+Defined in: [core/input.ts:29](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L29)
 
 #### Parameters
 
@@ -95,7 +95,7 @@ Defined in: [core/input.ts:29](https://github.com/bdryanovski/gamefoo/blob/c900f
 isMouseButtonDown(button): boolean;
 ```
 
-Defined in: [core/input.ts:37](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L37)
+Defined in: [core/input.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L37)
 
 #### Parameters
 
@@ -115,7 +115,7 @@ Defined in: [core/input.ts:37](https://github.com/bdryanovski/gamefoo/blob/c900f
 reset(): void;
 ```
 
-Defined in: [core/input.ts:45](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/input.ts#L45)
+Defined in: [core/input.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L45)
 
 #### Returns
 
