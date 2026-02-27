@@ -10,7 +10,7 @@ title: 'Class: PerlinNoise'
 
 # Class: PerlinNoise
 
-Defined in: [core/utils/perlin\_noise.ts:1](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/utils/perlin_noise.ts#L1)
+Defined in: [core/utils/perlin\_noise.ts:1](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L1)
 
 Utility function
 
@@ -22,7 +22,7 @@ Utility function
 new PerlinNoise(seed?): PerlinNoise;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:4](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/utils/perlin_noise.ts#L4)
+Defined in: [core/utils/perlin\_noise.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L4)
 
 #### Parameters
 
@@ -47,7 +47,7 @@ fbm(
    persistence?): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:60](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/utils/perlin_noise.ts#L60)
+Defined in: [core/utils/perlin\_noise.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L60)
 
 #### Parameters
 
@@ -71,7 +71,7 @@ Defined in: [core/utils/perlin\_noise.ts:60](https://github.com/bdryanovski/game
 noise2d(x, y): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:40](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/utils/perlin_noise.ts#L40)
+Defined in: [core/utils/perlin\_noise.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L40)
 
 Returns a value in [-1, 1]
 

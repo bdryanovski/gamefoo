@@ -10,7 +10,7 @@ title: 'Class: HealthKit'
 
 # Class: HealthKit
 
-Defined in: [core/behaviours/healtkit.ts:4](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L4)
+Defined in: [core/behaviours/healtkit.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L4)
 
 ## Extends
 
@@ -27,7 +27,7 @@ new HealthKit(
    maxHP?): HealthKit;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:10](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L10)
+Defined in: [core/behaviours/healtkit.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L10)
 
 #### Parameters
 
@@ -49,10 +49,10 @@ Defined in: [core/behaviours/healtkit.ts:10](https://github.com/bdryanovski/game
 
 | Property | Modifier | Type | Default value | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L10) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L4) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L8) |
-| <a id="type"></a> `type` | `readonly` | `"healthkit"` | `"healthkit"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:5](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L5) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
+| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
+| <a id="type"></a> `type` | `readonly` | `"healthkit"` | `"healthkit"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:5](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L5) |
 
 ## Accessors
 
@@ -64,7 +64,7 @@ Defined in: [core/behaviours/healtkit.ts:10](https://github.com/bdryanovski/game
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L12)
+Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L12)
 
 ##### Returns
 
@@ -82,7 +82,7 @@ Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/c
 getHealth(): number;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:26](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L26)
+Defined in: [core/behaviours/healtkit.ts:26](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L26)
 
 #### Returns
 
@@ -96,7 +96,7 @@ Defined in: [core/behaviours/healtkit.ts:26](https://github.com/bdryanovski/game
 getHealthPercent(): number;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:45](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L45)
+Defined in: [core/behaviours/healtkit.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L45)
 
 #### Returns
 
@@ -110,7 +110,7 @@ Defined in: [core/behaviours/healtkit.ts:45](https://github.com/bdryanovski/game
 getMaxHealth(): number;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:30](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L30)
+Defined in: [core/behaviours/healtkit.ts:30](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L30)
 
 #### Returns
 
@@ -124,7 +124,7 @@ Defined in: [core/behaviours/healtkit.ts:30](https://github.com/bdryanovski/game
 heal(amount): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:22](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L22)
+Defined in: [core/behaviours/healtkit.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L22)
 
 #### Parameters
 
@@ -144,7 +144,7 @@ Defined in: [core/behaviours/healtkit.ts:22](https://github.com/bdryanovski/game
 isDead(): boolean;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:41](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L41)
+Defined in: [core/behaviours/healtkit.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L41)
 
 #### Returns
 
@@ -158,7 +158,7 @@ Defined in: [core/behaviours/healtkit.ts:41](https://github.com/bdryanovski/game
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L23)
+Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L23)
 
 #### Returns
 
@@ -176,7 +176,7 @@ Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/c
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L24)
+Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L24)
 
 #### Returns
 
@@ -194,7 +194,7 @@ Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/c
 optional render(ctx): void;
 ```
 
-Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviour.ts#L22)
+Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/c
 setMaxHealth(value): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:34](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L34)
+Defined in: [core/behaviours/healtkit.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L34)
 
 #### Parameters
 
@@ -238,7 +238,7 @@ Defined in: [core/behaviours/healtkit.ts:34](https://github.com/bdryanovski/game
 takeDamage(amount): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:18](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L18)
+Defined in: [core/behaviours/healtkit.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L18)
 
 #### Parameters
 
@@ -258,7 +258,7 @@ Defined in: [core/behaviours/healtkit.ts:18](https://github.com/bdryanovski/game
 update(_deltaTime): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:16](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/behaviours/healtkit.ts#L16)
+Defined in: [core/behaviours/healtkit.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L16)
 
 #### Parameters
 

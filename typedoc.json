@@ -4,6 +4,9 @@
   "out": "./docs/src/content/docs/api",
   "plugin": ["typedoc-plugin-markdown"],
 
+  "sourceLinkTemplate": "https://github.com/bdryanovski/gamefoo/blob/main/{path}#L{line}",
+  "gitRevision": "main",
+
   "readme": "none",
   "excludePrivate": true,
   "excludeInternal": true,

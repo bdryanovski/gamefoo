@@ -10,7 +10,7 @@ title: 'Class: Camera'
 
 # Class: Camera
 
-Defined in: [core/camera.ts:3](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L3)
+Defined in: [core/camera.ts:3](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L3)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/camera.ts:3](https://github.com/bdryanovski/gamefoo/blob/c900f
 new Camera(width, height): Camera;
 ```
 
-Defined in: [core/camera.ts:9](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L9)
+Defined in: [core/camera.ts:9](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L9)
 
 #### Parameters
 
@@ -41,7 +41,7 @@ Defined in: [core/camera.ts:9](https://github.com/bdryanovski/gamefoo/blob/c900f
 follow(target): void;
 ```
 
-Defined in: [core/camera.ts:14](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L14)
+Defined in: [core/camera.ts:14](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L14)
 
 #### Parameters
 
@@ -61,7 +61,7 @@ Defined in: [core/camera.ts:14](https://github.com/bdryanovski/gamefoo/blob/c900
 getPosition(): Vector2;
 ```
 
-Defined in: [core/camera.ts:24](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L24)
+Defined in: [core/camera.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L24)
 
 #### Returns
 
@@ -80,7 +80,7 @@ getViewRect(): {
 };
 ```
 
-Defined in: [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L28)
+Defined in: [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L28)
 
 #### Returns
 
@@ -95,10 +95,10 @@ Defined in: [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `height` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L28) |
-| `width` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L28) |
-| `x` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L28) |
-| `y` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L28) |
+| `height` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L28) |
+| `width` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L28) |
+| `x` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L28) |
+| `y` | `number` | [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L28) |
 
 ***
 
@@ -108,7 +108,7 @@ Defined in: [core/camera.ts:28](https://github.com/bdryanovski/gamefoo/blob/c900
 moveTo(target): void;
 ```
 
-Defined in: [core/camera.ts:19](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L19)
+Defined in: [core/camera.ts:19](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L19)
 
 #### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [core/camera.ts:19](https://github.com/bdryanovski/gamefoo/blob/c900
 resize(width, height): void;
 ```
 
-Defined in: [core/camera.ts:37](https://github.com/bdryanovski/gamefoo/blob/c900f9a4693c62c5ba9335c6c0c3d641dcb7431d/src/core/camera.ts#L37)
+Defined in: [core/camera.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L37)
 
 #### Parameters
 
