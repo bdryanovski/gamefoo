@@ -22,12 +22,12 @@
   "sideEffects": false,
   "scripts": {
     "dev": "bun --hot demo/server.ts",
-    "build": "rm -rf dist && bun build ./index.ts --outdir dist --format esm --target browser --sourcemap=external && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && bun build ./src/index.ts --outdir dist --format esm --target browser --sourcemap=external && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "lint": "bunx biome check .",
-    "lint:fix": "bunx biome check --write --unsafe .",
-    "format": "bunx biome format --write .",
+    "lint": "bunx biome check src/",
+    "lint:fix": "bunx biome check --write --unsafe src/",
+    "format": "bunx biome format --write src/",
     "check": "bun run typecheck && bun run lint",
     "prepublishOnly": "bun run check && bun run build",
     "prepare": "husky"
