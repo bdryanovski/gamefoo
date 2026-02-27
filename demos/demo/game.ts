@@ -7,21 +7,21 @@ import {
   HealthKit,
   Input,
   Player,
-} from "../src/index";
+} from '../../src/index';
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 const PLAYER_SIZE = 50;
 
-const engine = new Engine("game", CANVAS_W, CANVAS_H, {
-  backgroundColor: "#1a1a2e",
+const engine = new Engine('game', CANVAS_W, CANVAS_H, {
+  backgroundColor: '#1a1a2e',
 });
 
 /** ------ PLAYER ------ */
 
 class BlueBox extends Player {
   constructor(x: number, y: number) {
-    super("player", x, y, PLAYER_SIZE, PLAYER_SIZE);
+    super('player', x, y, PLAYER_SIZE, PLAYER_SIZE);
   }
 
   override update(deltaTime: number): void {
@@ -37,38 +37,32 @@ class BlueBox extends Player {
   }
 
   override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#5566ff";
+    ctx.fillStyle = '#5566ff';
     ctx.fillRect(this.x, this.y, PLAYER_SIZE, PLAYER_SIZE);
 
-    ctx.fillStyle = "#88aaff";
+    ctx.fillStyle = '#88aaff';
     ctx.fillRect(this.x + 4, this.y + 4, PLAYER_SIZE - 8, PLAYER_SIZE - 8);
   }
 }
 
-const player = new BlueBox(
-  CANVAS_W / 2 - PLAYER_SIZE / 2,
-  CANVAS_H / 2 - PLAYER_SIZE / 2,
-);
+const player = new BlueBox(CANVAS_W / 2 - PLAYER_SIZE / 2, CANVAS_H / 2 - PLAYER_SIZE / 2);
 
 player.attachBehaviour(new Control(player, new Input()));
 player.attachBehaviour(new HealthKit(player, 200));
 
 player.attachBehaviour(
   new Collidable(player, engine.collisions, {
-    shape: { type: "aabb", width: PLAYER_SIZE, height: PLAYER_SIZE },
+    shape: { type: 'aabb', width: PLAYER_SIZE, height: PLAYER_SIZE },
     layer: 0,
-    tags: new Set(["player"]),
+    tags: new Set(['player']),
     solid: true,
-    collidesWith: new Set(["blob"]),
+    collidesWith: new Set(['blob']),
     onCollision: (collision: CollisionInfo) => {
-      if (collision.otherTags.has("blob")) {
+      if (collision.otherTags.has('blob')) {
         player.healthkit?.takeDamage(10);
       }
 
-      console.log(
-        "Player collided with blob! Health:",
-        player.healthkit?.getHealth(),
-      );
+      console.log('Player collided with blob! Health:', player.healthkit?.getHealth());
     },
   }),
 );
@@ -87,7 +81,7 @@ class Blob extends DynamicEntity {
   private static readonly DASH_CHANCE = 0.15;
 
   constructor(x: number, y: number) {
-    super("blob", x, y, 30, 30);
+    super('blob', x, y, 30, 30);
     this.pickNewDirection();
   }
 
@@ -97,9 +91,7 @@ class Blob extends DynamicEntity {
     this.speed = this.dashing ? Blob.FAST_SPEED : Blob.SLOW_SPEED;
     this.velocity = { x: Math.cos(angle), y: Math.sin(angle) };
     this.directionTimer = 0;
-    this.directionInterval = this.dashing
-      ? 0.3 + Math.random() * 0.4
-      : 1.5 + Math.random() * 2.5;
+    this.directionInterval = this.dashing ? 0.3 + Math.random() * 0.4 : 1.5 + Math.random() * 2.5;
   }
 
   override update(deltaTime: number): void {
@@ -122,13 +114,13 @@ class Blob extends DynamicEntity {
   }
 
   override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = this.dashing ? "#ff2222" : "#ff5555";
+    ctx.fillStyle = this.dashing ? '#ff2222' : '#ff5555';
     ctx.beginPath();
     ctx.arc(this.x + 15, this.y + 15, 15, 0, Math.PI * 2);
     ctx.fill();
 
     if (this.dashing) {
-      ctx.strokeStyle = "#ff8888";
+      ctx.strokeStyle = '#ff8888';
       ctx.lineWidth = 2;
       ctx.stroke();
     }
@@ -139,13 +131,13 @@ const blob = new Blob(100, 100);
 
 blob.attachBehaviour(
   new Collidable(blob, engine.collisions, {
-    shape: { type: "circle", radius: 15 },
+    shape: { type: 'circle', radius: 15 },
     layer: 0,
-    tags: new Set(["blob"]),
+    tags: new Set(['blob']),
     solid: true,
-    collidesWith: new Set(["player"]),
+    collidesWith: new Set(['player']),
     onCollision: (_other) => {
-      console.log("Blob collided with player!");
+      console.log('Blob collided with player!');
     },
   }),
 );
@@ -156,14 +148,14 @@ engine.attachObjects(blob);
 
 class Tree extends DynamicEntity {
   constructor(x: number, y: number) {
-    super("tree", x, y, 40, 60);
+    super('tree', x, y, 40, 60);
   }
 
   override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#654321";
+    ctx.fillStyle = '#654321';
     ctx.fillRect(this.x + 15, this.y + 30, 10, 10);
 
-    ctx.fillStyle = "#228822";
+    ctx.fillStyle = '#228822';
     ctx.beginPath();
     ctx.moveTo(this.x + 20, this.y - 40);
     ctx.lineTo(this.x, this.y + 30);
@@ -179,14 +171,14 @@ const tree = new Tree(300, 200);
 
 tree.attachBehaviour(
   new Collidable(tree, engine.collisions, {
-    shape: { type: "aabb", width: 40, height: 60 },
+    shape: { type: 'aabb', width: 40, height: 60 },
     layer: 0,
-    tags: new Set(["tree"]),
+    tags: new Set(['tree']),
     solid: true,
     fixed: true,
-    collidesWith: new Set(["player"]),
+    collidesWith: new Set(['player']),
     onCollision: (_other) => {
-      console.log("Player collided with tree!");
+      console.log('Player collided with tree!');
     },
   }),
 );
@@ -194,5 +186,5 @@ tree.attachBehaviour(
 engine.attachObjects(tree);
 
 engine.setup(() => {
-  console.log("GameFoo engine initialized");
+  console.log('GameFoo engine initialized');
 });
