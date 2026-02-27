@@ -1,0 +1,30 @@
+{
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
+  "out": "./docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "categorizeByGroup": true,
+  "groupOrder": [
+    "Classes",
+    "Interfaces",
+    "Type Aliases",
+    "Functions",
+    "Variables"
+  ],
+  "hidePageHeader": false,
+  "hideBreadcrumbs": false,
+  "parametersFormat": "table",
+  "propertiesFormat": "table",
+  "typeDeclarationFormat": "table",
+  "enumMembersFormat": "table",
+  "indexFormat": "table",
+  "outputFileStrategy": "modules",
+  "fileExtension": ".md",
+  "flattenOutputFiles": false,
+  "useCodeBlocks": true,
+  "expandObjects": true
+}

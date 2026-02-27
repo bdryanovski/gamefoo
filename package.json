@@ -30,11 +30,19 @@
     "format": "bunx biome format --write src/",
     "check": "bun run typecheck && bun run lint",
     "prepublishOnly": "bun run check && bun run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docs:generate": "typedoc",
+    "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.4",
     "@types/bun": "latest",
     "husky": "^9.1.7"
+  },
+  "dependencies": {
+    "@microsoft/tsdoc": "^0.16.0",
+    "chokidar-cli": "^3.0.0",
+    "typedoc": "^0.28.17",
+    "typedoc-plugin-markdown": "^4.10.0"
   }
 }
