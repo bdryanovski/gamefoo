@@ -1,0 +1,112 @@
+[
+  {
+    "label": "📖 Guides",
+    "items": [
+      {
+        "label": "Example",
+        "link": "/guides/example"
+      }
+    ],
+    "collapsed": false
+  },
+  {
+    "label": "⚙️ API Reference",
+    "items": [
+      {
+        "label": "README",
+        "link": "/api/README"
+      },
+      {
+        "label": "Classes",
+        "items": [
+          {
+            "label": "Behaviour",
+            "link": "/api/classes/Behaviour"
+          },
+          {
+            "label": "Camera",
+            "link": "/api/classes/Camera"
+          },
+          {
+            "label": "Collidable",
+            "link": "/api/classes/Collidable"
+          },
+          {
+            "label": "Control",
+            "link": "/api/classes/Control"
+          },
+          {
+            "label": "DynamicEntity",
+            "link": "/api/classes/DynamicEntity"
+          },
+          {
+            "label": "Engine",
+            "link": "/api/classes/Engine"
+          },
+          {
+            "label": "Entity",
+            "link": "/api/classes/Entity"
+          },
+          {
+            "label": "FontBitmap",
+            "link": "/api/classes/FontBitmap"
+          },
+          {
+            "label": "GameObjectRegister",
+            "link": "/api/classes/GameObjectRegister"
+          },
+          {
+            "label": "HealthKit",
+            "link": "/api/classes/HealthKit"
+          },
+          {
+            "label": "Input",
+            "link": "/api/classes/Input"
+          },
+          {
+            "label": "PerlinNoise",
+            "link": "/api/classes/PerlinNoise"
+          },
+          {
+            "label": "Player",
+            "link": "/api/classes/Player"
+          },
+          {
+            "label": "World",
+            "link": "/api/classes/World"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Interfaces",
+        "items": [
+          {
+            "label": "CollisionInfo",
+            "link": "/api/interfaces/CollisionInfo"
+          },
+          {
+            "label": "Vector2",
+            "link": "/api/interfaces/Vector2"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Type Aliases",
+        "items": [
+          {
+            "label": "ColliderShape",
+            "link": "/api/type-aliases/ColliderShape"
+          },
+          {
+            "label": "GameObject",
+            "link": "/api/type-aliases/GameObject"
+          }
+        ],
+        "collapsed": true
+      }
+    ],
+    "collapsed": false
+  }
+]

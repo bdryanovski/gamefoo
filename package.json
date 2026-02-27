@@ -31,7 +31,11 @@
     "check": "bun run typecheck && bun run lint",
     "prepublishOnly": "bun run check && bun run build",
     "prepare": "husky",
-    "docs:generate": "typedoc",
+    "docs:generate": "typedoc && tsx scripts/fix-api-frontmatter.ts && tsx scripts/collect-docs.ts",
+    "docs:build": "npm run docs:generate && astro build --root ./docs",
+    "docs:collect": "tsx scripts/collect-docs.ts",
+    "docs:dev": "npm run docs:generate && astro dev --root ./docs",
+    "docs:preview": "astro preview --root ./docs",
     "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial"
   },
   "devDependencies": {
@@ -41,7 +45,9 @@
   },
   "dependencies": {
     "@microsoft/tsdoc": "^0.16.0",
+    "astro": "^5.18.0",
     "chokidar-cli": "^3.0.0",
+    "tsx": "^4.21.0",
     "typedoc": "^0.28.17",
     "typedoc-plugin-markdown": "^4.10.0"
   }
