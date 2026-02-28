@@ -2,7 +2,7 @@
 title: 'Class: Collidable'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -22,9 +22,9 @@ Defined in: [core/behaviours/collidable.ts:17](https://github.com/bdryanovski/ga
 
 ```ts
 new Collidable(
-   owner, 
-   world, 
-   options): Collidable;
+   owner: DynamicEntity, 
+   world: World, 
+   options: CollidableOptions): Collidable;
 ```
 
 Defined in: [core/behaviours/collidable.ts:36](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L36)
@@ -53,13 +53,14 @@ Defined in: [core/behaviours/collidable.ts:36](https://github.com/bdryanovski/ga
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
 | <a id="fixed"></a> `fixed` | `public` | `boolean` | `false` | - | - | [core/behaviours/collidable.ts:30](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L30) |
 | <a id="layer"></a> `layer` | `public` | `number` | `0` | - | - | [core/behaviours/collidable.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L22) |
-| <a id="oncollision"></a> `onCollision` | `public` | (`info`) => `void` | `undefined` | - | - | [core/behaviours/collidable.ts:32](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L32) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| <a id="oncollision"></a> `onCollision` | `public` | (`info`: [`CollisionInfo`](../interfaces/CollisionInfo.md)) => `void` | `undefined` | - | - | [core/behaviours/collidable.ts:32](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L32) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
 | <a id="shape"></a> `shape` | `public` | [`ColliderShape`](../type-aliases/ColliderShape.md) | `undefined` | - | - | [core/behaviours/collidable.ts:20](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L20) |
 | <a id="solid"></a> `solid` | `public` | `boolean` | `false` | - | - | [core/behaviours/collidable.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L28) |
 | <a id="tags"></a> `tags` | `public` | `Set`\<`string`\> | `undefined` | - | - | [core/behaviours/collidable.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L24) |
 | <a id="type"></a> `type` | `readonly` | `"collidable"` | `"collidable"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/collidable.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L18) |
+| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| <a id="world"></a> `world` | `private` | [`World`](World.md) | `undefined` | - | - | [core/behaviours/collidable.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L34) |
 
 ## Accessors
 
@@ -150,7 +151,7 @@ Defined in: [core/behaviours/collidable.ts:63](https://github.com/bdryanovski/ga
 ### render()?
 
 ```ts
-optional render(ctx): void;
+optional render(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
@@ -174,7 +175,7 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/m
 ### update()
 
 ```ts
-update(_deltaTime): void;
+update(_deltaTime: number): void;
 ```
 
 Defined in: [core/behaviours/collidable.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L57)

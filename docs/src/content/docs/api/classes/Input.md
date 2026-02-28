@@ -2,7 +2,7 @@
 title: 'Class: Input'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -25,6 +25,16 @@ Defined in: [core/input.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/s
 #### Returns
 
 `Input`
+
+## Properties
+
+| Property | Modifier | Type | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="keys"></a> `keys` | `private` | `Set`\<`string`\> | [core/input.ts:2](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L2) |
+| <a id="mousebuttons"></a> `mouseButtons` | `private` | `Set`\<`number`\> | [core/input.ts:3](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L3) |
+| <a id="mouseposition"></a> `mousePosition` | `private` | \{ `x`: `number`; `y`: `number`; \} | [core/input.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L4) |
+| `mousePosition.x` | `public` | `number` | [core/input.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L4) |
+| `mousePosition.y` | `public` | `number` | [core/input.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L4) |
 
 ## Methods
 
@@ -72,7 +82,7 @@ Defined in: [core/input.ts:33](https://github.com/bdryanovski/gamefoo/blob/main/
 ### isKeyDown()
 
 ```ts
-isKeyDown(key): boolean;
+isKeyDown(key: string): boolean;
 ```
 
 Defined in: [core/input.ts:29](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L29)
@@ -92,7 +102,7 @@ Defined in: [core/input.ts:29](https://github.com/bdryanovski/gamefoo/blob/main/
 ### isMouseButtonDown()
 
 ```ts
-isMouseButtonDown(button): boolean;
+isMouseButtonDown(button: number): boolean;
 ```
 
 Defined in: [core/input.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L37)

@@ -2,7 +2,7 @@
 title: 'Class: PerlinNoise'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -19,7 +19,7 @@ Utility function
 ### Constructor
 
 ```ts
-new PerlinNoise(seed?): PerlinNoise;
+new PerlinNoise(seed?: number): PerlinNoise;
 ```
 
 Defined in: [core/utils/perlin\_noise.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L4)
@@ -34,17 +34,23 @@ Defined in: [core/utils/perlin\_noise.ts:4](https://github.com/bdryanovski/gamef
 
 `PerlinNoise`
 
+## Properties
+
+| Property | Modifier | Type | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="perm"></a> `perm` | `private` | `Uint8Array` | [core/utils/perlin\_noise.ts:2](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L2) |
+
 ## Methods
 
 ### fbm()
 
 ```ts
 fbm(
-   x, 
-   y, 
-   octaves?, 
-   lacunarity?, 
-   persistence?): number;
+   x: number, 
+   y: number, 
+   octaves?: number, 
+   lacunarity?: number, 
+   persistence?: number): number;
 ```
 
 Defined in: [core/utils/perlin\_noise.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L60)
@@ -68,7 +74,7 @@ Defined in: [core/utils/perlin\_noise.ts:60](https://github.com/bdryanovski/game
 ### noise2d()
 
 ```ts
-noise2d(x, y): number;
+noise2d(x: number, y: number): number;
 ```
 
 Defined in: [core/utils/perlin\_noise.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L40)
@@ -81,6 +87,76 @@ Returns a value in [-1, 1]
 | ------ | ------ |
 | `x` | `number` |
 | `y` | `number` |
+
+#### Returns
+
+`number`
+
+***
+
+### fade()
+
+```ts
+private fade(t: number): number;
+```
+
+Defined in: [core/utils/perlin\_noise.ts:23](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L23)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `t` | `number` |
+
+#### Returns
+
+`number`
+
+***
+
+### grad()
+
+```ts
+private grad(
+   hash: number, 
+   x: number, 
+   y: number): number;
+```
+
+Defined in: [core/utils/perlin\_noise.ts:31](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L31)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `hash` | `number` |
+| `x` | `number` |
+| `y` | `number` |
+
+#### Returns
+
+`number`
+
+***
+
+### lerp()
+
+```ts
+private lerp(
+   a: number, 
+   b: number, 
+   t: number): number;
+```
+
+Defined in: [core/utils/perlin\_noise.ts:27](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L27)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `a` | `number` |
+| `b` | `number` |
+| `t` | `number` |
 
 #### Returns
 

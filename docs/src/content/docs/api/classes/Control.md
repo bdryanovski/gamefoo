@@ -2,7 +2,7 @@
 title: 'Class: Control'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [core/behaviours/control.ts:5](https://github.com/bdryanovski/gamefo
 ### Constructor
 
 ```ts
-new Control(owner, input): Control;
+new Control(owner: DynamicEntity, input: Input): Control;
 ```
 
 Defined in: [core/behaviours/control.ts:12](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L12)
@@ -46,9 +46,11 @@ Defined in: [core/behaviours/control.ts:12](https://github.com/bdryanovski/gamef
 | Property | Modifier | Type | Default value | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
 | <a id="type"></a> `type` | `readonly` | `"control"` | `"control"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/control.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L6) |
+| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| <a id="input"></a> `input` | `private` | [`Input`](Input.md) | `undefined` | - | - | [core/behaviours/control.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L8) |
+| <a id="speed"></a> `speed` | `private` | `number` | `500` | - | - | [core/behaviours/control.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L10) |
 
 ## Accessors
 
@@ -111,7 +113,7 @@ Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/m
 ### render()?
 
 ```ts
-optional render(ctx): void;
+optional render(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
@@ -135,7 +137,7 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/m
 ### update()
 
 ```ts
-update(deltaTime): void;
+update(deltaTime: number): void;
 ```
 
 Defined in: [core/behaviours/control.ts:17](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L17)

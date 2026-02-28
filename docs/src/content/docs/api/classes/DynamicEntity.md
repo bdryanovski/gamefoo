@@ -2,7 +2,7 @@
 title: 'Abstract Class: DynamicEntity'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -26,11 +26,11 @@ Defined in: [entities/dynamic\_entity.ts:4](https://github.com/bdryanovski/gamef
 
 ```ts
 new DynamicEntity(
-   id, 
-   x, 
-   y, 
-   width, 
-   height): DynamicEntity;
+   id: string, 
+   x: number, 
+   y: number, 
+   width: number, 
+   height: number): DynamicEntity;
 ```
 
 Defined in: [entities/entity.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L28)
@@ -84,7 +84,7 @@ Defined in: [entities/entity.ts:12](https://github.com/bdryanovski/gamefoo/blob/
 #### Set Signature
 
 ```ts
-set x(value): void;
+set x(value: number): void;
 ```
 
 Defined in: [entities/entity.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L16)
@@ -122,7 +122,7 @@ Defined in: [entities/entity.ts:20](https://github.com/bdryanovski/gamefoo/blob/
 #### Set Signature
 
 ```ts
-set y(value): void;
+set y(value: number): void;
 ```
 
 Defined in: [entities/entity.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L24)
@@ -141,12 +141,32 @@ Defined in: [entities/entity.ts:24](https://github.com/bdryanovski/gamefoo/blob/
 
 [`Player`](Player.md).[`y`](Player.md#y)
 
+***
+
+### behaviors
+
+#### Get Signature
+
+```ts
+get private behaviors(): Behaviour<Entity>[];
+```
+
+Defined in: [entities/entity.ts:78](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L78)
+
+##### Returns
+
+[`Behaviour`](Behaviour.md)\<[`Entity`](Entity.md)\>[]
+
+#### Inherited from
+
+[`Entity`](Entity.md).[`behaviors`](Entity.md#behaviors)
+
 ## Methods
 
 ### attachBehaviour()
 
 ```ts
-attachBehaviour<T>(behavior): T;
+attachBehaviour<T>(behavior: T): T;
 ```
 
 Defined in: [entities/entity.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L57)
@@ -176,7 +196,7 @@ Defined in: [entities/entity.ts:57](https://github.com/bdryanovski/gamefoo/blob/
 ### detachBehaviour()
 
 ```ts
-detachBehaviour(key): void;
+detachBehaviour(key: string): void;
 ```
 
 Defined in: [entities/entity.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L67)
@@ -200,7 +220,7 @@ Defined in: [entities/entity.ts:67](https://github.com/bdryanovski/gamefoo/blob/
 ### getBehaviour()
 
 ```ts
-getBehaviour<T>(key): T | undefined;
+getBehaviour<T>(key: string): T | undefined;
 ```
 
 Defined in: [entities/entity.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L45)
@@ -230,7 +250,7 @@ Defined in: [entities/entity.ts:45](https://github.com/bdryanovski/gamefoo/blob/
 ### getBehavioursByType()
 
 ```ts
-getBehavioursByType<T>(type): T[];
+getBehavioursByType<T>(type: (...args: any[]) => T): T[];
 ```
 
 Defined in: [entities/entity.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L49)
@@ -245,7 +265,7 @@ Defined in: [entities/entity.ts:49](https://github.com/bdryanovski/gamefoo/blob/
 
 | Parameter | Type |
 | ------ | ------ |
-| `type` | (...`args`) => `T` |
+| `type` | (...`args`: `any`[]) => `T` |
 
 #### Returns
 
@@ -337,7 +357,7 @@ Defined in: [entities/dynamic\_entity.ts:12](https://github.com/bdryanovski/game
 ### hasBehaviour()
 
 ```ts
-hasBehaviour(key): boolean;
+hasBehaviour(key: string): boolean;
 ```
 
 Defined in: [entities/entity.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L53)
@@ -361,7 +381,7 @@ Defined in: [entities/entity.ts:53](https://github.com/bdryanovski/gamefoo/blob/
 ### render()
 
 ```ts
-abstract render(ctx): void;
+abstract render(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [entities/entity.ts:35](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L35)
@@ -382,34 +402,10 @@ Defined in: [entities/entity.ts:35](https://github.com/bdryanovski/gamefoo/blob/
 
 ***
 
-### renderBehaviours()
-
-```ts
-protected renderBehaviours(ctx): void;
-```
-
-Defined in: [entities/entity.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L95)
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`Entity`](Entity.md).[`renderBehaviours`](Entity.md#renderbehaviours)
-
-***
-
 ### setSpeed()
 
 ```ts
-setSpeed(speed): void;
+setSpeed(speed: number): void;
 ```
 
 Defined in: [entities/dynamic\_entity.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L16)
@@ -429,7 +425,7 @@ Defined in: [entities/dynamic\_entity.ts:16](https://github.com/bdryanovski/game
 ### setVelocity()
 
 ```ts
-setVelocity(velocity): void;
+setVelocity(velocity: Vector2): void;
 ```
 
 Defined in: [entities/dynamic\_entity.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L8)
@@ -449,7 +445,7 @@ Defined in: [entities/dynamic\_entity.ts:8](https://github.com/bdryanovski/gamef
 ### update()
 
 ```ts
-abstract update(deltaTime): void;
+abstract update(deltaTime: number): void;
 ```
 
 Defined in: [entities/entity.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L34)
@@ -470,10 +466,34 @@ Defined in: [entities/entity.ts:34](https://github.com/bdryanovski/gamefoo/blob/
 
 ***
 
+### renderBehaviours()
+
+```ts
+protected renderBehaviours(ctx: CanvasRenderingContext2D): void;
+```
+
+Defined in: [entities/entity.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L95)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `ctx` | `CanvasRenderingContext2D` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`Entity`](Entity.md).[`renderBehaviours`](Entity.md#renderbehaviours)
+
+***
+
 ### updateBehaviours()
 
 ```ts
-protected updateBehaviours(deltaTime): void;
+protected updateBehaviours(deltaTime: number): void;
 ```
 
 Defined in: [entities/entity.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L87)

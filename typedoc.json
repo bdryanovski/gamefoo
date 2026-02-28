@@ -6,24 +6,76 @@
 
   "sourceLinkTemplate": "https://github.com/bdryanovski/gamefoo/blob/main/{path}#L{line}",
   "gitRevision": "main",
+  "disableSources": false,
 
-  "readme": "none",
-  "excludePrivate": true,
-  "excludeInternal": true,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "excludeInternal": false,
   "excludeExternals": true,
+  "excludeNotDocumented": false,
+  "includeVersion": true,
 
   "outputFileStrategy": "members",
   "fileExtension": ".md",
-  "useCodeBlocks": true,
-  "expandObjects": true,
+  "flattenOutputFiles": false,
+  "readme": "none",
 
   "parametersFormat": "table",
   "propertiesFormat": "table",
   "typeDeclarationFormat": "table",
   "enumMembersFormat": "table",
   "indexFormat": "table",
+  "useCodeBlocks": true,
+  "expandObjects": true,
+  "expandParameters": true,
+
+  "hidePageHeader": false,
+  "hidePageTitle": false,
+  "hideBreadcrumbs": false,
+  "useHTMLAnchors": false,
+
+  "categorizeByGroup": true,
+  "defaultCategory": "General",
+  "categoryOrder": [
+    "Core",
+    "Rendering",
+    "Physics",
+    "Input",
+    "Audio",
+    "Utilities",
+    "*",
+    "Other"
+  ],
+  "groupOrder": [
+    "Classes",
+    "Abstract Classes",
+    "Interfaces",
+    "Type Aliases",
+    "Enumerations",
+    "Functions",
+    "Variables",
+    "Constructors",
+    "Properties",
+    "Accessors",
+    "Methods"
+  ],
+  "sort": ["static-first", "visibility", "alphabetical"],
+  "sortEntryPoints": true,
+
+  "excludeReferences": false,
 
   "validation": {
-    "notExported": false
+    "notExported": false,
+    "invalidLink": true,
+    "notDocumented": true
+  },
+
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "visibilityFilters": {
+    "protected": true,
+    "private": true,
+    "inherited": true,
+    "external": false
   }
 }
