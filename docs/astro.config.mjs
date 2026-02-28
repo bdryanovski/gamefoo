@@ -5,7 +5,7 @@ import starlight from "@astrojs/starlight";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "My Library",
+      title: "Gamefoo",
       sidebar: [
         {
           label: "📖 Guides",
@@ -24,22 +24,22 @@ export default defineConfig({
             {
               label: "Interfaces",
               autogenerate: { directory: "api/interfaces" },
-              collapsed: true,
+              collapsed: false,
             },
             {
               label: "Type Aliases",
               autogenerate: { directory: "api/type-aliases" },
-              collapsed: true,
+              collapsed: false,
             },
             {
               label: "Functions",
               autogenerate: { directory: "api/functions" },
-              collapsed: true,
+              collapsed: false,
             },
             {
               label: "Enumerations",
               autogenerate: { directory: "api/enumerations" },
-              collapsed: true,
+              collapsed: false,
             },
           ],
         },

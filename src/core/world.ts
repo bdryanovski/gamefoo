@@ -1,17 +1,94 @@
 import type { WorldBounds } from "../types";
 import type { Collidable } from "./behaviours/collidable";
 
+/**
+ * Spatial collision-detection world.
+ *
+ * `World` maintains a set of {@link Collidable} behaviours and, each
+ * frame, performs an **O(n^2)** broad-phase + narrow-phase pass via
+ * {@link World.detect}.  It supports:
+ *
+ * - **Layer filtering** — only colliders on the same layer are tested.
+ * - **Tag-based interest** — a collider only receives callbacks for
+ *   tags it has opted into via `collidesWith`.
+ * - **Shape combinations** — AABB vs AABB, circle vs circle, and
+ *   circle vs AABB.
+ * - **Solid overlap resolution** — when both colliders are marked
+ *   `solid`, entities are pushed apart along the axis of least
+ *   penetration.
+ * - **Fixed bodies** — colliders flagged `fixed` are immovable; the
+ *   other body absorbs the full push.
+ *
+ * @category Core
+ * @since 0.1.0
+ *
+ * @example Registering colliders
+ * ```ts
+ * const world = new World();
+ *
+ * const collidable = new Collidable(entity, world, {
+ *   shape: { type: "aabb", width: 32, height: 32 },
+ *   layer: 0,
+ *   tags: new Set(["enemy"]),
+ *   solid: true,
+ *   collidesWith: new Set(["player", "bullet"]),
+ * });
+ *
+ * entity.attachBehaviour(collidable); // calls world.register internally
+ * ```
+ *
+ * @example Running detection manually
+ * ```ts
+ * world.detect(); // typically called by Engine.update each frame
+ * ```
+ *
+ * @see {@link Collidable} — the behaviour that plugs into this world
+ * @see {@link Engine}     — calls {@link World.detect} every frame
+ */
 export default class World {
+  /**
+   * The live set of all registered {@link Collidable} behaviours.
+   */
   private colliders: Set<Collidable> = new Set();
 
+  /**
+   * Adds a collider to the world so it participates in future
+   * {@link World.detect} passes.
+   *
+   * Called automatically by {@link Collidable.onAttach}.
+   *
+   * @param collider - The collidable behaviour to register.
+   */
   register(collider: Collidable): void {
     this.colliders.add(collider);
   }
 
+  /**
+   * Removes a collider from the world.
+   *
+   * Called automatically by {@link Collidable.onDetach}.
+   *
+   * @param collider - The collidable behaviour to remove.
+   */
   unregister(collider: Collidable): void {
     this.colliders.delete(collider);
   }
 
+  /**
+   * Runs one full collision-detection pass over every registered
+   * collider.
+   *
+   * **Algorithm:**
+   *
+   * 1. Iterate all unique pairs `(i, j)` where `i < j`.
+   * 2. Skip disabled colliders or mismatched layers.
+   * 3. Check tag interest in both directions.
+   * 4. Compute world bounds and test intersection.
+   * 5. If both are `solid`, resolve the overlap.
+   * 6. Fire `onCollision` callbacks on interested sides.
+   *
+   * @since 0.1.0
+   */
   detect(): void {
     const list = Array.from(this.colliders);
     const len = list.length;
@@ -59,6 +136,15 @@ export default class World {
     }
   }
 
+  /**
+   * Returns `true` if any tag in `wants` exists in `has`.
+   *
+   * @param wants - Tags the collider is interested in.
+   * @param has   - Tags the other collider owns.
+   * @returns Whether at least one tag overlaps.
+   *
+   * @internal
+   */
   private tagsOverlap(wants: Set<string>, has: Set<string>): boolean {
     for (const tag of wants) {
       if (has.has(tag)) return true;
@@ -66,6 +152,20 @@ export default class World {
     return false;
   }
 
+  /**
+   * Dispatches to the correct narrow-phase test based on collider
+   * shape types.
+   *
+   * Supports AABB-vs-AABB, circle-vs-circle, and circle-vs-AABB.
+   *
+   * @param a       - First collidable.
+   * @param boundsA - World bounds of `a`.
+   * @param b       - Second collidable.
+   * @param boundsB - World bounds of `b`.
+   * @returns `true` if the two shapes overlap.
+   *
+   * @internal
+   */
   private intersects(
     a: Collidable,
     boundsA: WorldBounds,
@@ -88,12 +188,34 @@ export default class World {
 
     return this.circleVSAAabb(circle, circleBounds, rect);
   }
+
+  /**
+   * AABB-vs-AABB overlap test.
+   *
+   * @param a - First bounding rectangle.
+   * @param b - Second bounding rectangle.
+   * @returns `true` if the rectangles overlap.
+   *
+   * @internal
+   */
   private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
     return (
       a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
     );
   }
 
+  /**
+   * Circle-vs-circle overlap test using squared-distance comparison
+   * (avoids `Math.sqrt`).
+   *
+   * @param a       - First collidable (must have `circle` shape).
+   * @param boundsA - World bounds of `a`.
+   * @param b       - Second collidable (must have `circle` shape).
+   * @param boundsB - World bounds of `b`.
+   * @returns `true` if the circles overlap.
+   *
+   * @internal
+   */
   private circleVSCircle(
     a: Collidable,
     boundsA: WorldBounds,
@@ -115,6 +237,17 @@ export default class World {
     return distSq <= radSum * radSum;
   }
 
+  /**
+   * Circle-vs-AABB overlap test. Finds the closest point on the
+   * rectangle to the circle centre and checks the squared distance.
+   *
+   * @param circle       - The collidable with a `circle` shape.
+   * @param circleBounds - World bounds of the circle collider.
+   * @param rect         - World bounds of the AABB collider.
+   * @returns `true` if the circle and rectangle overlap.
+   *
+   * @internal
+   */
   private circleVSAAabb(circle: Collidable, circleBounds: WorldBounds, rect: WorldBounds): boolean {
     if (circle.shape.type !== "circle") return false;
 
@@ -130,6 +263,21 @@ export default class World {
     return dx * dx + dy * dy <= circle.shape.radius * circle.shape.radius;
   }
 
+  /**
+   * Resolves positional overlap between two solid colliders by pushing
+   * their owning entities apart along the axis of minimum penetration.
+   *
+   * Respects the `fixed` flag: if one collider is fixed the other
+   * absorbs the full displacement; if both are fixed, no resolution
+   * occurs.
+   *
+   * @param a       - First collidable.
+   * @param boundsA - World bounds of `a`.
+   * @param b       - Second collidable.
+   * @param boundsB - World bounds of `b`.
+   *
+   * @internal
+   */
   private resolveOverlap(
     a: Collidable,
     boundsA: WorldBounds,

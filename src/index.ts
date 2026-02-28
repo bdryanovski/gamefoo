@@ -1,3 +1,19 @@
+/**
+ * GameFoo — a lightweight 2-D canvas game engine.
+ *
+ * This barrel module re-exports every public class, behaviour, utility,
+ * and type so consumers can import from a single entry point:
+ *
+ * ```ts
+ * import { Engine, Player, Input, Collidable } from "gamefoo";
+ * ```
+ *
+ * @category Core
+ * @module gamefoo
+ * @since 0.1.0
+ */
+
+// ── Core ────────────────────────────────────────────────────────────
 export { Behaviour } from "./core/behaviour";
 export { Collidable } from "./core/behaviours/collidable";
 export { Control } from "./core/behaviours/control";
@@ -7,14 +23,19 @@ export { default as Engine } from "./core/engine";
 export { default as FontBitmap } from "./core/fonts/font_bitmap";
 export { default as GameObjectRegister } from "./core/game_object_register";
 export { default as Input } from "./core/input";
-/**
- * Utility function
- */
+
+// ── Utilities ───────────────────────────────────────────────────────
 export { PerlinNoise } from "./core/utils/perlin_noise";
+
+// ── World / Physics ─────────────────────────────────────────────────
 export { default as World } from "./core/world";
+
+// ── Entities ────────────────────────────────────────────────────────
 export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";
 export { default as Player } from "./entities/player";
+
+// ── Type-only exports ───────────────────────────────────────────────
 export type {
   ColliderShape,
   CollisionInfo,
