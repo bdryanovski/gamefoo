@@ -2,7 +2,7 @@
 title: 'Class: HealthKit'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -22,9 +22,9 @@ Defined in: [core/behaviours/healtkit.ts:4](https://github.com/bdryanovski/gamef
 
 ```ts
 new HealthKit(
-   owner, 
-   health, 
-   maxHP?): HealthKit;
+   owner: DynamicEntity, 
+   health: number, 
+   maxHP?: number): HealthKit;
 ```
 
 Defined in: [core/behaviours/healtkit.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L10)
@@ -50,9 +50,11 @@ Defined in: [core/behaviours/healtkit.ts:10](https://github.com/bdryanovski/game
 | Property | Modifier | Type | Default value | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
 | <a id="type"></a> `type` | `readonly` | `"healthkit"` | `"healthkit"` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:5](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L5) |
+| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| <a id="health"></a> `health` | `private` | `number` | `undefined` | - | - | [core/behaviours/healtkit.ts:7](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L7) |
+| <a id="maxhp"></a> `maxHP` | `private` | `number` | `undefined` | - | - | [core/behaviours/healtkit.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L8) |
 
 ## Accessors
 
@@ -121,7 +123,7 @@ Defined in: [core/behaviours/healtkit.ts:30](https://github.com/bdryanovski/game
 ### heal()
 
 ```ts
-heal(amount): void;
+heal(amount: number): void;
 ```
 
 Defined in: [core/behaviours/healtkit.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L22)
@@ -191,7 +193,7 @@ Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/m
 ### render()?
 
 ```ts
-optional render(ctx): void;
+optional render(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
@@ -215,7 +217,7 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/m
 ### setMaxHealth()
 
 ```ts
-setMaxHealth(value): void;
+setMaxHealth(value: number): void;
 ```
 
 Defined in: [core/behaviours/healtkit.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L34)
@@ -235,7 +237,7 @@ Defined in: [core/behaviours/healtkit.ts:34](https://github.com/bdryanovski/game
 ### takeDamage()
 
 ```ts
-takeDamage(amount): void;
+takeDamage(amount: number): void;
 ```
 
 Defined in: [core/behaviours/healtkit.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L18)
@@ -255,7 +257,7 @@ Defined in: [core/behaviours/healtkit.ts:18](https://github.com/bdryanovski/game
 ### update()
 
 ```ts
-update(_deltaTime): void;
+update(_deltaTime: number): void;
 ```
 
 Defined in: [core/behaviours/healtkit.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L16)

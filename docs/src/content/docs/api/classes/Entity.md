@@ -2,7 +2,7 @@
 title: 'Abstract Class: Entity'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -22,11 +22,11 @@ Defined in: [entities/entity.ts:4](https://github.com/bdryanovski/gamefoo/blob/m
 
 ```ts
 new Entity(
-   id, 
-   x, 
-   y, 
-   width, 
-   height): Entity;
+   id: string, 
+   x: number, 
+   y: number, 
+   width: number, 
+   height: number): Entity;
 ```
 
 Defined in: [entities/entity.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L28)
@@ -54,6 +54,8 @@ Defined in: [entities/entity.ts:28](https://github.com/bdryanovski/gamefoo/blob/
 | <a id="size"></a> `size` | `protected` | \{ `height`: `number`; `width`: `number`; \} | `undefined` | [entities/entity.ts:7](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L7) |
 | `size.height` | `public` | `number` | `0` | [entities/entity.ts:7](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L7) |
 | `size.width` | `public` | `number` | `0` | [entities/entity.ts:7](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L7) |
+| <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | [entities/entity.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L10) |
+| <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | [entities/entity.ts:9](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L9) |
 
 ## Accessors
 
@@ -74,7 +76,7 @@ Defined in: [entities/entity.ts:12](https://github.com/bdryanovski/gamefoo/blob/
 #### Set Signature
 
 ```ts
-set x(value): void;
+set x(value: number): void;
 ```
 
 Defined in: [entities/entity.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L16)
@@ -108,7 +110,7 @@ Defined in: [entities/entity.ts:20](https://github.com/bdryanovski/gamefoo/blob/
 #### Set Signature
 
 ```ts
-set y(value): void;
+set y(value: number): void;
 ```
 
 Defined in: [entities/entity.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L24)
@@ -123,12 +125,28 @@ Defined in: [entities/entity.ts:24](https://github.com/bdryanovski/gamefoo/blob/
 
 `void`
 
+***
+
+### behaviors
+
+#### Get Signature
+
+```ts
+get private behaviors(): Behaviour<Entity>[];
+```
+
+Defined in: [entities/entity.ts:78](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L78)
+
+##### Returns
+
+[`Behaviour`](Behaviour.md)\<`Entity`\>[]
+
 ## Methods
 
 ### attachBehaviour()
 
 ```ts
-attachBehaviour<T>(behavior): T;
+attachBehaviour<T>(behavior: T): T;
 ```
 
 Defined in: [entities/entity.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L57)
@@ -154,7 +172,7 @@ Defined in: [entities/entity.ts:57](https://github.com/bdryanovski/gamefoo/blob/
 ### detachBehaviour()
 
 ```ts
-detachBehaviour(key): void;
+detachBehaviour(key: string): void;
 ```
 
 Defined in: [entities/entity.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L67)
@@ -174,7 +192,7 @@ Defined in: [entities/entity.ts:67](https://github.com/bdryanovski/gamefoo/blob/
 ### getBehaviour()
 
 ```ts
-getBehaviour<T>(key): T | undefined;
+getBehaviour<T>(key: string): T | undefined;
 ```
 
 Defined in: [entities/entity.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L45)
@@ -200,7 +218,7 @@ Defined in: [entities/entity.ts:45](https://github.com/bdryanovski/gamefoo/blob/
 ### getBehavioursByType()
 
 ```ts
-getBehavioursByType<T>(type): T[];
+getBehavioursByType<T>(type: (...args: any[]) => T): T[];
 ```
 
 Defined in: [entities/entity.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L49)
@@ -215,7 +233,7 @@ Defined in: [entities/entity.ts:49](https://github.com/bdryanovski/gamefoo/blob/
 
 | Parameter | Type |
 | ------ | ------ |
-| `type` | (...`args`) => `T` |
+| `type` | (...`args`: `any`[]) => `T` |
 
 #### Returns
 
@@ -267,7 +285,7 @@ Defined in: [entities/entity.ts:41](https://github.com/bdryanovski/gamefoo/blob/
 ### hasBehaviour()
 
 ```ts
-hasBehaviour(key): boolean;
+hasBehaviour(key: string): boolean;
 ```
 
 Defined in: [entities/entity.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L53)
@@ -287,7 +305,7 @@ Defined in: [entities/entity.ts:53](https://github.com/bdryanovski/gamefoo/blob/
 ### render()
 
 ```ts
-abstract render(ctx): void;
+abstract render(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [entities/entity.ts:35](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L35)
@@ -304,30 +322,10 @@ Defined in: [entities/entity.ts:35](https://github.com/bdryanovski/gamefoo/blob/
 
 ***
 
-### renderBehaviours()
-
-```ts
-protected renderBehaviours(ctx): void;
-```
-
-Defined in: [entities/entity.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L95)
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` |
-
-#### Returns
-
-`void`
-
-***
-
 ### update()
 
 ```ts
-abstract update(deltaTime): void;
+abstract update(deltaTime: number): void;
 ```
 
 Defined in: [entities/entity.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L34)
@@ -344,10 +342,30 @@ Defined in: [entities/entity.ts:34](https://github.com/bdryanovski/gamefoo/blob/
 
 ***
 
+### renderBehaviours()
+
+```ts
+protected renderBehaviours(ctx: CanvasRenderingContext2D): void;
+```
+
+Defined in: [entities/entity.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L95)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `ctx` | `CanvasRenderingContext2D` |
+
+#### Returns
+
+`void`
+
+***
+
 ### updateBehaviours()
 
 ```ts
-protected updateBehaviours(deltaTime): void;
+protected updateBehaviours(deltaTime: number): void;
 ```
 
 Defined in: [entities/entity.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L87)

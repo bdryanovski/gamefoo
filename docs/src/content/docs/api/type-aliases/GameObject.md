@@ -2,7 +2,7 @@
 title: 'Type Alias: GameObject'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 

@@ -2,7 +2,7 @@
 title: 'Class: GameObjectRegister'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -24,12 +24,18 @@ new GameObjectRegister(): GameObjectRegister;
 
 `GameObjectRegister`
 
+## Properties
+
+| Property | Modifier | Type | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="objects"></a> `objects` | `private` | `Map`\<`string`, [`GameObject`](../type-aliases/GameObject.md)\> | [core/game\_object\_register.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L4) |
+
 ## Methods
 
 ### get()
 
 ```ts
-get(id): GameObject | undefined;
+get(id: string): GameObject | undefined;
 ```
 
 Defined in: [core/game\_object\_register.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L10)
@@ -49,7 +55,7 @@ Defined in: [core/game\_object\_register.ts:10](https://github.com/bdryanovski/g
 ### getAll()
 
 ```ts
-getAll(_filter): GameObject[];
+getAll(_filter: () => true): GameObject[];
 ```
 
 Defined in: [core/game\_object\_register.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L18)
@@ -69,7 +75,7 @@ Defined in: [core/game\_object\_register.ts:18](https://github.com/bdryanovski/g
 ### has()
 
 ```ts
-has(id): boolean;
+has(id: string): boolean;
 ```
 
 Defined in: [core/game\_object\_register.ts:14](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L14)
@@ -89,7 +95,7 @@ Defined in: [core/game\_object\_register.ts:14](https://github.com/bdryanovski/g
 ### register()
 
 ```ts
-register(object): void;
+register(object: GameObject): void;
 ```
 
 Defined in: [core/game\_object\_register.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L6)
@@ -109,7 +115,7 @@ Defined in: [core/game\_object\_register.ts:6](https://github.com/bdryanovski/ga
 ### renderAll()
 
 ```ts
-renderAll(ctx): void;
+renderAll(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [core/game\_object\_register.ts:28](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L28)
@@ -129,7 +135,7 @@ Defined in: [core/game\_object\_register.ts:28](https://github.com/bdryanovski/g
 ### updateAll()
 
 ```ts
-updateAll(deltaTime): void;
+updateAll(deltaTime: number): void;
 ```
 
 Defined in: [core/game\_object\_register.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L22)

@@ -2,7 +2,7 @@
 title: 'Abstract Class: Behaviour<T>'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [core/behaviour.ts:3](https://github.com/bdryanovski/gamefoo/blob/ma
 ### Constructor
 
 ```ts
-new Behaviour<T>(owner): Behaviour<T>;
+new Behaviour<T>(owner: T): Behaviour<T>;
 ```
 
 Defined in: [core/behaviour.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L16)
@@ -49,9 +49,9 @@ Defined in: [core/behaviour.ts:16](https://github.com/bdryanovski/gamefoo/blob/m
 | Property | Modifier | Type | Default value | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
-| <a id="owner"></a> `owner` | `protected` | `T` | `undefined` | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
 | <a id="type"></a> `type` | `abstract` | `string` | `undefined` | [core/behaviour.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L6) |
+| <a id="owner"></a> `owner` | `protected` | `T` | `undefined` | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
 
 ## Accessors
 
@@ -102,7 +102,7 @@ Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/m
 ### render()?
 
 ```ts
-optional render(ctx): void;
+optional render(ctx: CanvasRenderingContext2D): void;
 ```
 
 Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
@@ -122,7 +122,7 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/m
 ### update()
 
 ```ts
-abstract update(deltaTime): void;
+abstract update(deltaTime: number): void;
 ```
 
 Defined in: [core/behaviour.ts:20](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L20)

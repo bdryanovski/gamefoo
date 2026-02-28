@@ -2,7 +2,7 @@
 title: 'Interface: Vector2'
 ---
 
-[**@dryanovski/gamefoo**](../README.md)
+[**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 

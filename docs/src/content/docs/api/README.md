@@ -1,12 +1,12 @@
 ---
-title: '@dryanovski/gamefoo'
+title: '@dryanovski/gamefoo v0.0.1'
 ---
 
-**@dryanovski/gamefoo**
+**@dryanovski/gamefoo v0.0.1**
 
 ***
 
-# @dryanovski/gamefoo
+# @dryanovski/gamefoo v0.0.1
 
 ## Classes
 
@@ -17,7 +17,7 @@ title: '@dryanovski/gamefoo'
 | [Collidable](classes/Collidable.md) | - |
 | [Control](classes/Control.md) | - |
 | [DynamicEntity](classes/DynamicEntity.md) | - |
-| [Engine](classes/Engine.md) | Game Engine - the main class that manages the game loop, rendering, and overall game state. |
+| [Engine](classes/Engine.md) | Core game engine responsible for the game loop, rendering pipeline, entity management, collision detection, and camera tracking. |
 | [Entity](classes/Entity.md) | - |
 | [FontBitmap](classes/FontBitmap.md) | - |
 | [GameObjectRegister](classes/GameObjectRegister.md) | - |
