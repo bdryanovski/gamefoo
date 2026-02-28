@@ -10,13 +10,33 @@ title: 'Interface: CollisionInfo'
 
 # Interface: CollisionInfo
 
-Defined in: [types.ts:15](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L15)
+Defined in: [types.ts:132](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L132)
+
+Payload delivered to a [Collidable.onCollision](../classes/Collidable.md#oncollision) callback when two
+colliders overlap.
+
+Provides references to both participating entities and their tag sets
+so the callback can determine the nature of the collision.
+
+## Since
+
+0.1.0
+
+## Example
+
+```ts
+function handleHit(info: CollisionInfo) {
+  if (info.otherTags.has("enemy")) {
+    console.log(`${info.self.id} was hit by ${info.other.id}`);
+  }
+}
+```
 
 ## Properties
 
-| Property | Type | Defined in |
-| ------ | ------ | ------ |
-| <a id="other"></a> `other` | [`Entity`](../classes/Entity.md) | [types.ts:17](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L17) |
-| <a id="othertags"></a> `otherTags` | `Set`\<`string`\> | [types.ts:19](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L19) |
-| <a id="self"></a> `self` | [`Entity`](../classes/Entity.md) | [types.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L16) |
-| <a id="selftags"></a> `selfTags` | `Set`\<`string`\> | [types.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L18) |
+| Property | Type | Description | Defined in |
+| ------ | ------ | ------ | ------ |
+| <a id="other"></a> `other` | [`Entity`](../classes/Entity.md) | The other entity involved in the collision. | [types.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L136) |
+| <a id="othertags"></a> `otherTags` | `Set`\<`string`\> | Tags belonging to [other](#other). | [types.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L140) |
+| <a id="self"></a> `self` | [`Entity`](../classes/Entity.md) | The entity that *owns* this collision callback. | [types.ts:134](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L134) |
+| <a id="selftags"></a> `selfTags` | `Set`\<`string`\> | Tags belonging to [self](#self). | [types.ts:138](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L138) |

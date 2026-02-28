@@ -10,7 +10,51 @@ title: 'Abstract Class: Behaviour<T>'
 
 # Abstract Class: Behaviour\<T\>
 
-Defined in: [core/behaviour.ts:3](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L3)
+Defined in: [core/behaviour.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L49)
+
+Abstract base class for all entity behaviours in the GameFoo engine.
+
+A **behaviour** is a self-contained unit of logic (input handling,
+collision response, health tracking, rendering, etc.) that can be
+attached to any [Entity](Entity.md) at runtime via
+[Entity.attachBehaviour](Entity.md#attachbehaviour).
+
+Subclasses **must** implement:
+- [type](#type) — a unique string identifier (e.g. `"control"`, `"healthkit"`).
+- [update](#update) — called once per frame with `deltaTime`.
+
+Subclasses **may** override:
+- [render](#render) — draw debug visuals or overlays.
+- [onAttach](#onattach) — setup hook when added to an entity.
+- [onDetach](#ondetach) — teardown hook when removed.
+
+## Since
+
+0.1.0
+
+## Examples
+
+```ts
+import { Behaviour, type Entity } from "gamefoo";
+
+class Gravity extends Behaviour<Entity> {
+  readonly type = "gravity";
+
+  update(deltaTime: number): void {
+    this.owner.y += 9.8 * 60 * deltaTime;
+  }
+}
+```
+
+```ts
+const entity = new Player("hero", 100, 100, 32, 32);
+entity.attachBehaviour(new Gravity(entity));
+```
+
+## See
+
+ - [Entity.attachBehaviour](Entity.md#attachbehaviour)
+ - [Entity.detachBehaviour](Entity.md#detachbehaviour)
 
 ## Extended by
 
@@ -20,9 +64,9 @@ Defined in: [core/behaviour.ts:3](https://github.com/bdryanovski/gamefoo/blob/ma
 
 ## Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `T` *extends* [`Entity`](Entity.md) | [`Entity`](Entity.md) |
+| Type Parameter | Default type | Description |
+| ------ | ------ | ------ |
+| `T` *extends* [`Entity`](Entity.md) | [`Entity`](Entity.md) | The entity type this behaviour operates on. Defaults to [Entity](Entity.md); narrow it to [DynamicEntity](DynamicEntity.md) or [Player](Player.md) when the behaviour needs velocity, speed, etc. |
 
 ## Constructors
 
@@ -32,13 +76,15 @@ Defined in: [core/behaviour.ts:3](https://github.com/bdryanovski/gamefoo/blob/ma
 new Behaviour<T>(owner: T): Behaviour<T>;
 ```
 
-Defined in: [core/behaviour.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L16)
+Defined in: [core/behaviour.ts:108](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L108)
+
+Creates a new behaviour bound to the given entity.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `owner` | `T` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `owner` | `T` | The entity this behaviour will operate on. |
 
 #### Returns
 
@@ -46,12 +92,12 @@ Defined in: [core/behaviour.ts:16](https://github.com/bdryanovski/gamefoo/blob/m
 
 ## Properties
 
-| Property | Modifier | Type | Default value | Defined in |
-| ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | [core/behaviour.ts:10](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L10) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | [core/behaviour.ts:8](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L8) |
-| <a id="type"></a> `type` | `abstract` | `string` | `undefined` | [core/behaviour.ts:6](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L6) |
-| <a id="owner"></a> `owner` | `protected` | `T` | `undefined` | [core/behaviour.ts:4](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L4) |
+| Property | Modifier | Type | Default value | Description | Defined in |
+| ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | [core/behaviour.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L91) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | [core/behaviour.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L81) |
+| <a id="type"></a> `type` | `abstract` | `string` | `undefined` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [core/behaviour.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L71) |
+| <a id="owner"></a> `owner` | `protected` | `T` | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
 
 ## Accessors
 
@@ -63,7 +109,12 @@ Defined in: [core/behaviour.ts:16](https://github.com/bdryanovski/gamefoo/blob/m
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L12)
+Defined in: [core/behaviour.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L99)
+
+Derived look-up key, equal to [Behaviour.type](#type) in lowercase.
+
+Used internally by the entity's behaviour map so that look-ups are
+case-insensitive.
 
 ##### Returns
 
@@ -77,7 +128,13 @@ Defined in: [core/behaviour.ts:12](https://github.com/bdryanovski/gamefoo/blob/m
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L23)
+Defined in: [core/behaviour.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L136)
+
+Lifecycle hook called immediately after the behaviour is attached
+to an entity via [Entity.attachBehaviour](Entity.md#attachbehaviour).
+
+Use this for one-time setup such as registering with the
+collision [World](World.md).
 
 #### Returns
 
@@ -91,7 +148,12 @@ Defined in: [core/behaviour.ts:23](https://github.com/bdryanovski/gamefoo/blob/m
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L24)
+Defined in: [core/behaviour.ts:144](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L144)
+
+Lifecycle hook called when the behaviour is removed from an entity
+via [Entity.detachBehaviour](Entity.md#detachbehaviour).
+
+Use this to unregister from external systems or release resources.
 
 #### Returns
 
@@ -105,13 +167,18 @@ Defined in: [core/behaviour.ts:24](https://github.com/bdryanovski/gamefoo/blob/m
 optional render(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L22)
+Defined in: [core/behaviour.ts:127](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L127)
+
+Optional rendering hook invoked after the entity's own
+[Entity.render](Entity.md#render) call.
+
+Override this to draw debug shapes, health bars, status effects, etc.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
 
 #### Returns
 
@@ -125,13 +192,15 @@ Defined in: [core/behaviour.ts:22](https://github.com/bdryanovski/gamefoo/blob/m
 abstract update(deltaTime: number): void;
 ```
 
-Defined in: [core/behaviour.ts:20](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L20)
+Defined in: [core/behaviour.ts:117](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L117)
+
+Called once per frame to advance this behaviour's logic.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `deltaTime` | `number` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `deltaTime` | `number` | Seconds elapsed since the previous frame. |
 
 #### Returns
 
