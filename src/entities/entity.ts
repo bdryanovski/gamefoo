@@ -268,9 +268,7 @@ export default abstract class Entity {
    */
   private get behaviors(): Behaviour[] {
     if (!this._sortedBehaviors) {
-      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort(
-        (a, b) => a.priority - b.priority,
-      );
+      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort((a, b) => a.priority - b.priority);
     }
     return this._sortedBehaviors;
   }

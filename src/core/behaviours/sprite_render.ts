@@ -207,17 +207,7 @@ export default class SpriteRender extends Behaviour<Entity> {
     if (this.flipX) {
       ctx.save();
       ctx.scale(-1, 1);
-      ctx.drawImage(
-        this.sheet.image,
-        x,
-        y,
-        width,
-        height,
-        -(drawX + size.width),
-        drawY,
-        size.width,
-        size.height,
-      );
+      ctx.drawImage(this.sheet.image, x, y, width, height, -(drawX + size.width), drawY, size.width, size.height);
       ctx.restore();
     } else {
       ctx.drawImage(this.sheet.image, x, y, width, height, drawX, drawY, size.width, size.height);

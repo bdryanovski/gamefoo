@@ -166,12 +166,7 @@ export default class World {
    *
    * @internal
    */
-  private intersects(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): boolean {
+  private intersects(a: Collidable, boundsA: WorldBounds, b: Collidable, boundsB: WorldBounds): boolean {
     const shapeA = a.shape;
     const shapeB = b.shape;
 
@@ -183,8 +178,7 @@ export default class World {
       return this.circleVSCircle(a, boundsA, b, boundsB);
     }
 
-    const [circle, circleBounds, rect] =
-      shapeA.type === "circle" ? [a, boundsA, boundsB] : [b, boundsB, boundsA];
+    const [circle, circleBounds, rect] = shapeA.type === "circle" ? [a, boundsA, boundsB] : [b, boundsB, boundsA];
 
     return this.circleVSAAabb(circle, circleBounds, rect);
   }
@@ -199,9 +193,7 @@ export default class World {
    * @internal
    */
   private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
-    return (
-      a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
-    );
+    return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
   }
 
   /**
@@ -216,12 +208,7 @@ export default class World {
    *
    * @internal
    */
-  private circleVSCircle(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): boolean {
+  private circleVSCircle(a: Collidable, boundsA: WorldBounds, b: Collidable, boundsB: WorldBounds): boolean {
     if (a.shape.type !== "circle" || b.shape.type !== "circle") return false;
 
     const cx1 = boundsA.x + a.shape.radius;
@@ -278,20 +265,9 @@ export default class World {
    *
    * @internal
    */
-  private resolveOverlap(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): void {
-    const overlapX = Math.min(
-      boundsA.x + boundsA.width - boundsB.x,
-      boundsB.x + boundsB.width - boundsA.x,
-    );
-    const overlapY = Math.min(
-      boundsA.y + boundsA.height - boundsB.y,
-      boundsB.y + boundsB.height - boundsA.y,
-    );
+  private resolveOverlap(a: Collidable, boundsA: WorldBounds, b: Collidable, boundsB: WorldBounds): void {
+    const overlapX = Math.min(boundsA.x + boundsA.width - boundsB.x, boundsB.x + boundsB.width - boundsA.x);
+    const overlapY = Math.min(boundsA.y + boundsA.height - boundsB.y, boundsB.y + boundsB.height - boundsA.y);
 
     let pushX = 0;
     let pushY = 0;

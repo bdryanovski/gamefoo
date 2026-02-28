@@ -272,6 +272,40 @@ export default class Engine {
   }
 
   /**
+   * Provides direct access to the engine's {@link Camera}.
+   *
+   * Use this to control viewport tracking, e.g. by calling `camera.follow`
+   * with a custom target or adjusting the camera position manually.
+   * The camera automatically follows the player position each frame when a
+   * player is set, but you can override this behaviour by manipulating the
+   * camera directly.
+   *
+   * @since 0.2.0
+   *
+   * @returns The active {@link Camera} instance managed by this engine.
+   * Note that the camera is always present and never `null` in the current
+   * implementation, but the return type allows for future flexibility (e.g. optional camera).
+   *
+   * @example
+   * ```ts
+   * // Manually set the camera to a specific position:
+   * engine.camera?.moveTo({ x: 500, y: 300 });
+   * ```
+   * @example
+   * ```ts
+   * // Disable automatic camera follow by overriding the follow method:
+   * if (engine.camera) {
+   *  engine.camera.follow = () => {};
+   *  }
+   *
+   *  // The camera will now ignore the player position and stay fixed.
+   *  ```
+   */
+  get camera(): Camera | null {
+    return this.engine.camera;
+  }
+
+  /**
    * Provides direct access to the engine's collision {@link World}.
    *
    * Use this to register {@link Collidable} behaviours so they participate
@@ -520,6 +554,10 @@ export default class Engine {
 
     if (this.engine.objects) {
       this.engine.objects.renderAll(this.ctx);
+    }
+
+    if (this.engine.camera && this.player) {
+      this.engine.camera.follow(this.player.getPosition() || { x: 0, y: 0 });
     }
   }
 
