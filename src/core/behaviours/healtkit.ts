@@ -1,8 +1,8 @@
-import type DynamicEntity from "../../entities/dynamic_entity";
+import type Entity from "../../entities/entity";
 import { Behaviour } from "../behaviour";
 
 /**
- * Health-tracking behaviour for a {@link DynamicEntity}.
+ * Health-tracking behaviour for a {@link Entity}.
  *
  * `HealthKit` manages a current and maximum HP value, provides damage
  * and healing methods, and exposes queries for health percentage and
@@ -34,7 +34,7 @@ import { Behaviour } from "../behaviour";
  * @see {@link Behaviour} — abstract base class
  * @see {@link Player}    — has a convenience getter for this behaviour
  */
-export class HealthKit extends Behaviour<DynamicEntity> {
+export class HealthKit extends Behaviour<Entity> {
   /** @inheritDoc */
   readonly type = "healthkit";
 
@@ -52,7 +52,7 @@ export class HealthKit extends Behaviour<DynamicEntity> {
    * @param maxHP  - Maximum health cap. If omitted, defaults to the
    *   initial `health` value.
    */
-  constructor(owner: DynamicEntity, health: number, maxHP?: number) {
+  constructor(owner: Entity, health: number, maxHP?: number) {
     super(owner);
     this.health = health;
     this.maxHP = maxHP || health;

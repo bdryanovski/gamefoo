@@ -1,6 +1,5 @@
-import type DynamicEntity from "../../entities/dynamic_entity";
 import type Entity from "../../entities/entity";
-import type { ColliderShape, CollisionInfo, WorldBounds } from "../../types";
+import type { ColliderShape, CollisionInfo, GameObject, WorldBounds } from "../../types";
 import { Behaviour } from "../behaviour";
 import type World from "../world";
 
@@ -92,7 +91,7 @@ type CollidableOptions = {
 };
 
 /**
- * Collision behaviour that can be attached to any {@link DynamicEntity}.
+ * Collision behaviour that can be attached to any {@link Entity}.
  *
  * When attached, the `Collidable` automatically registers itself with
  * the engine's {@link World} (via {@link Collidable.onAttach}) and
@@ -104,7 +103,7 @@ type CollidableOptions = {
  *
  * @example Creating and attaching a box collider
  * ```ts
- * import { Collidable, DynamicEntity, type CollisionInfo } from "gamefoo";
+ * import { Collidable, Entity, type CollisionInfo } from "gamefoo";
  *
  * const entity = new Enemy("goblin", 100, 200, 30, 30);
  *
@@ -138,7 +137,7 @@ type CollidableOptions = {
  * @see {@link CollisionInfo}  — payload delivered to callbacks
  * @see {@link Behaviour}      — abstract base class
  */
-export class Collidable extends Behaviour<DynamicEntity> {
+export class Collidable extends Behaviour<GameObject> {
   /** @inheritDoc */
   readonly type = "collidable";
 
@@ -197,12 +196,12 @@ export class Collidable extends Behaviour<DynamicEntity> {
   /**
    * Creates a new collidable behaviour.
    *
-   * @param owner   - The dynamic entity that owns this collider.
+   * @param owner   - The game object entity that owns this collider.
    * @param world   - The collision {@link World} to register with.
    * @param options - Configuration for shape, tags, solidity, and
    *   callbacks. See {@link CollidableOptions}.
    */
-  constructor(owner: DynamicEntity, world: World, options: CollidableOptions) {
+  constructor(owner: GameObject, world: World, options: CollidableOptions) {
     super(owner);
 
     this.world = world;
