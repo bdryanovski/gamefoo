@@ -1,5 +1,5 @@
 import type { Behaviour } from "../core/behaviour";
-import type { Vector2 } from "../types";
+import type { Demension, Vector2 } from "../types";
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -67,7 +67,7 @@ export default abstract class Entity {
   /**
    * Bounding dimensions of the entity in pixels.
    */
-  protected size = { width: 0, height: 0 };
+  protected size: Demension = { width: 0, height: 0 };
 
   /**
    * Internal map from behaviour key (lowercased type) to
@@ -126,10 +126,13 @@ export default abstract class Entity {
    * }
    * ```
    */
-  constructor(id: string, x: number, y: number, width: number, height: number) {
+  constructor(id: string, x: number, y: number, width?: number, height?: number) {
     this.id = id;
     this.position = { x, y };
-    this.size = { width, height };
+
+    if (width && height) {
+      this.size = { width, height };
+    }
   }
 
   /**
@@ -160,8 +163,20 @@ export default abstract class Entity {
    *
    * @returns An object with `width` and `height`.
    */
-  getSize(): { width: number; height: number } {
+  getSize(): Demension {
     return { ...this.size };
+  }
+
+  /**
+   * Set size of the entity
+   *
+   * @since 0.2.0
+   *
+   * @return void
+   */
+  setSize(width: number, height: number): void {
+    this.size.width = width;
+    this.size.height = height;
   }
 
   /**
