@@ -86,6 +86,8 @@ export default class Player extends DynamicEntity {
    *
    * Override this in a subclass for custom visuals.
    *
+   * TODO: write a better default player object
+   *
    * @inheritDoc
    * @param ctx - The canvas 2-D rendering context.
    */
