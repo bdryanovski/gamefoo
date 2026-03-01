@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GameFoo — Demos</title>
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
       body {
         background: #0d0d1a;
         color: #e0e0e0;
-        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-family: "Segoe UI", system-ui, sans-serif;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -47,7 +51,10 @@
         padding: 24px;
         text-decoration: none;
         color: inherit;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          transform 0.15s;
       }
 
       .card:hover {
@@ -99,7 +106,10 @@
     <div class="grid">
       <a class="card" href="/demo">
         <h2>Basic Demo</h2>
-        <p>Player movement, collision detection, health system, and a wandering blob enemy. The original engine test.</p>
+        <p>
+          Player movement, collision detection, health system, and a wandering
+          blob enemy. The original engine test.
+        </p>
         <div class="tags">
           <span class="tag">player</span>
           <span class="tag">collision</span>
@@ -110,7 +120,20 @@
 
       <a class="card" href="/endless-world">
         <h2>Endless World</h2>
-        <p>Camera &amp; viewport stress-test in a 4000&times;4000 world with Perlin terrain, trees, rocks, ponds, and critters.</p>
+        <p>
+          Camera &amp; viewport stress-test in a 4000&times;4000 world with
+          Perlin terrain, trees, rocks, ponds, and critters.
+        </p>
+        <div class="tags">
+          <span class="tag">camera</span>
+          <span class="tag">perlin noise</span>
+          <span class="tag">large world</span>
+          <span class="tag">minimap</span>
+        </div>
+      </a>
+      <a class="card" href="/sprite">
+        <h2>Sprites</h2>
+        <p>Sprite and animation playground</p>
         <div class="tags">
           <span class="tag">camera</span>
           <span class="tag">perlin noise</span>
