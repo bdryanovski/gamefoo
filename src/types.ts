@@ -39,6 +39,22 @@ export interface Vector2 {
 }
 
 /**
+ * An object representin 2D demensions of anything
+ *
+ * @category Types
+ * @since 0.2.0
+ *
+ * @example Basic set
+ * ```ts
+ * const Size: Demension = { width: 32, height: 32 };
+ * ```
+ */
+export interface Demension {
+  width: number;
+  height: number;
+}
+
+/**
  * Union of all entity types that can be managed by the engine's
  * {@link GameObjectRegister}.
  *
