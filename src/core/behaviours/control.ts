@@ -1,9 +1,9 @@
-import type DynamicEntity from "../../entities/dynamic_entity";
+import type Entity from "../../entities/entity";
 import { Behaviour } from "../behaviour";
 import type Input from "../input";
 
 /**
- * Keyboard-driven movement behaviour for a {@link DynamicEntity}.
+ * Keyboard-driven movement behaviour for a {@link Entity}.
  *
  * `Control` reads the current keyboard state from an {@link Input}
  * instance every frame and translates WASD / arrow-key presses into
@@ -26,7 +26,7 @@ import type Input from "../input";
  * @see {@link Input}     — the polling input manager consumed by this behaviour
  * @see {@link Behaviour} — abstract base class
  */
-export class Control extends Behaviour<DynamicEntity> {
+export class Control extends Behaviour<Entity> {
   /** @inheritDoc */
   readonly type = "control";
 
@@ -43,10 +43,10 @@ export class Control extends Behaviour<DynamicEntity> {
   /**
    * Creates a new keyboard control behaviour.
    *
-   * @param owner - The dynamic entity whose position will be updated.
+   * @param owner - The game object entity whose position will be updated.
    * @param input - The {@link Input} instance to read key state from.
    */
-  constructor(owner: DynamicEntity, input: Input) {
+  constructor(owner: Entity, input: Input) {
     super(owner);
     this.input = input;
   }
