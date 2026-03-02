@@ -197,8 +197,8 @@ export default class SpriteRender extends Behaviour<Entity> {
     if (!animation) {
       return;
     }
-    const frameIndex = animation.frames[this.currentFrameIndex]!;
-    const { x, y, width, height } = this.sheet.getFrameRect(frameIndex);
+    const frameKey = animation.frames[this.currentFrameIndex]!;
+    const { x, y, width, height } = this.sheet.getFrameRect(frameKey);
     const pos = this.owner.getPosition();
     const drawX = pos.x + this.offset.x;
     const drawY = pos.y + this.offset.y;
