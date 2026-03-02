@@ -21,7 +21,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "dev": "bun --hot demos/server.ts",
+    "dev": "bun --watch demos/server.ts",
     "build": "rm -rf dist && bun build ./src/index.ts --outdir dist --format esm --target browser --sourcemap=external && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",

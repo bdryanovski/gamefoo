@@ -4,67 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GameFoo Demo</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        background: #0f0f1a;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: "Segoe UI", system-ui, sans-serif;
-        color: #e0e0e0;
-      }
-
-      h1 {
-        margin-bottom: 12px;
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #8888ff;
-        letter-spacing: 0.05em;
-      }
-
-      #game-container {
-        border: 2px solid #2a2a4a;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 0 40px rgba(80, 80, 200, 0.15);
-      }
-
-      canvas {
-        display: block;
-      }
-
-      p {
-        margin-top: 16px;
-        font-size: 0.85rem;
-        color: #666;
-        text-align: center;
-      }
-
-      kbd {
-        background: #1a1a2e;
-        border: 1px solid #333;
-        border-radius: 4px;
-        padding: 2px 6px;
-        font-family: monospace;
-        font-size: 0.8rem;
-        color: #aaa;
-      }
-    </style>
+    <link rel="stylesheet" href="../shared.css" />
   </head>
   <body>
     <h1>GameFoo Demo</h1>
     <div id="game-container">
       <canvas id="game"></canvas>
     </div>
-    <p>
+    <p class="controls">
       Move: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or
       <kbd>Arrow Keys</kbd>
     </p>

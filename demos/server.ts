@@ -26,5 +26,3 @@ const server = Bun.serve({
 });
 
 console.log(`🎮 GameFoo demos running at ${server.url}`);
-
-Bun.spawn(["open", server.url.toString()]);

@@ -4,22 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Endless World — GameFoo Demo</title>
+    <link rel="stylesheet" href="../shared.css" />
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
         background: #0d0d1a;
         color: #ccc;
         font-family: 'Courier New', monospace;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
+        justify-content: flex-start;
         padding: 20px;
       }
       h1 {
         color: #7fdbca;
-        margin-bottom: 8px;
-        font-size: 1.4rem;
         letter-spacing: 2px;
       }
       #info {
@@ -28,23 +23,10 @@
         margin-bottom: 12px;
       }
       #game-container {
-        border: 2px solid #2a2a4a;
         border-radius: 4px;
-        overflow: hidden;
         box-shadow: 0 0 30px rgba(100, 180, 255, 0.08);
       }
-      #controls {
-        margin-top: 14px;
-        font-size: 0.8rem;
-        color: #555;
-        text-align: center;
-        line-height: 1.6;
-      }
       kbd {
-        background: #1a1a2e;
-        border: 1px solid #333;
-        border-radius: 3px;
-        padding: 1px 6px;
         font-size: 0.75rem;
         color: #8fa;
       }
@@ -71,7 +53,7 @@
     <div id="game-container">
       <canvas id="game"></canvas>
     </div>
-    <div id="controls">
+    <div class="controls">
       Move: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or
       <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd>
     </div>
