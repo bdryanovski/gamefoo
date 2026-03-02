@@ -71,14 +71,14 @@ export default class FontBitmap {
    *
    * @defaultValue `0` (populated from catalogue on construction)
    */
-  private width: number = 0;
+  public width: number = 0;
 
   /**
    * Character cell height in pixels.
    *
    * @defaultValue `0` (populated from catalogue on construction)
    */
-  private height: number = 0;
+  public height: number = 0;
 
   /**
    * Horizontal spacing between the drawable area and the full cell

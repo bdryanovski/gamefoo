@@ -1,3 +1,4 @@
+import Monitor from "../debug/monitor";
 import type Player from "../entities/player";
 import type { GameObject } from "../types";
 import Camera from "./camera";
@@ -29,6 +30,12 @@ interface EngineConfig {
    * @defaultValue `"#000000"`
    */
   backgroundColor?: string;
+
+  /**
+   * A multiplier applied to the `deltaTime` value passed to `update` each
+   * frame. Useful for globally adjusting game speed (e.g. slow motion).
+   */
+  frameModifier?: number;
 }
 
 /**
@@ -167,7 +174,14 @@ export default class Engine {
    */
   private cnf: EngineConfig = {
     backgroundColor: "#000000",
+    frameModifier: 1,
   };
+
+  /**
+   * Cached reference to the `frameModifier` from the configuration for quick
+   * access during the game loop.
+   */
+  frameModifier: number | undefined;
 
   /**
    * Optional reference to the designated player entity.
@@ -193,6 +207,9 @@ export default class Engine {
     objects: GameObjectRegister;
     /** Collision-detection world. Entities register their {@link Collidable} behaviour here. */
     collisions: World;
+
+    /** Debug monitor for visualising performance **/
+    monitor: Monitor;
   };
 
   /**
@@ -232,10 +249,13 @@ export default class Engine {
 
     this.cnf = { ...this.cnf, ...config };
 
+    this.frameModifier = this.cnf.frameModifier;
+
     this.engine = {
       camera: new Camera(this.width, this.height),
       objects: new GameObjectRegister(),
       collisions: new World(),
+      monitor: new Monitor(),
     };
   }
 
@@ -436,7 +456,7 @@ export default class Engine {
       this.lastTime = timestamp;
     }
 
-    const deltaTime = (timestamp - this.lastTime) / 1000;
+    const deltaTime = ((timestamp - this.lastTime) / 1000) * this.frameModifier!;
     this.lastTime = timestamp;
 
     this.update(deltaTime);
@@ -523,6 +543,10 @@ export default class Engine {
     if (this.engine.camera && this.player) {
       this.engine.camera.follow(this.player.getPosition());
     }
+
+    if (this.engine.monitor) {
+      this.engine.monitor.update(deltaTime);
+    }
   }
 
   /**
@@ -558,6 +582,10 @@ export default class Engine {
 
     if (this.engine.camera && this.player) {
       this.engine.camera.follow(this.player.getPosition() || { x: 0, y: 0 });
+    }
+
+    if (this.engine.monitor) {
+      this.engine.monitor.render(this.ctx);
     }
   }
 

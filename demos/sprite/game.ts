@@ -144,7 +144,12 @@ engine.setup(async () => {
   // ═══════════════════════════════════════════════════════════
 
   engine.attachObjects(
-    new Label("lbl-a", "2 · Animated Sprites (looping at different speeds)", 30, 150),
+    new Label(
+      "lbl-a",
+      "2 · Animated Sprites (looping at different speeds)",
+      30,
+      150,
+    ),
   );
 
   const animDefs = [
