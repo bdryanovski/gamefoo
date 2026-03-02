@@ -39,7 +39,12 @@ function worldToScreen(wx: number, wy: number): Vector2 {
 function isOnScreen(wx: number, wy: number, margin = 100): boolean {
   const sx = wx - cam.x;
   const sy = wy - cam.y;
-  return sx > -margin && sx < CANVAS_W + margin && sy > -margin && sy < CANVAS_H + margin;
+  return (
+    sx > -margin &&
+    sx < CANVAS_W + margin &&
+    sy > -margin &&
+    sy < CANVAS_H + margin
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -48,6 +53,7 @@ function isOnScreen(wx: number, wy: number, margin = 100): boolean {
 
 const engine = new Engine("game", CANVAS_W, CANVAS_H, {
   backgroundColor: "#1a2a1a",
+  gameScale: 1,
 });
 
 // ---------------------------------------------------------------------------
@@ -91,7 +97,10 @@ class Explorer extends Player {
     this.trailTimer += dt;
     if (this.trailTimer > 0.05) {
       this.trailTimer = 0;
-      this.trail.push({ x: this.x + PLAYER_SIZE / 2, y: this.y + PLAYER_SIZE / 2 });
+      this.trail.push({
+        x: this.x + PLAYER_SIZE / 2,
+        y: this.y + PLAYER_SIZE / 2,
+      });
       if (this.trail.length > 120) this.trail.shift();
     }
   }
@@ -196,7 +205,13 @@ class Tree extends Entity {
     // Crown
     ctx.fillStyle = this.shade;
     ctx.beginPath();
-    ctx.arc(cx, s.y + this.size.height - this.trunkH, this.crownR, 0, Math.PI * 2);
+    ctx.arc(
+      cx,
+      s.y + this.size.height - this.trunkH,
+      this.crownR,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
   }
 }
@@ -225,7 +240,9 @@ class Rock extends Entity {
       s.y + this.radius,
       this.radius,
       this.radius * 0.7,
-      0, 0, Math.PI * 2,
+      0,
+      0,
+      Math.PI * 2,
     );
     ctx.fill();
 
@@ -237,7 +254,9 @@ class Rock extends Entity {
       s.y + this.radius - 3,
       this.radius * 0.5,
       this.radius * 0.3,
-      -0.3, 0, Math.PI * 2,
+      -0.3,
+      0,
+      Math.PI * 2,
     );
     ctx.fill();
   }
@@ -282,7 +301,14 @@ class Flower extends Entity {
 
   constructor(x: number, y: number) {
     super(`flower_${objectIdCounter++}`, x, y, 6, 6);
-    const colors = ["#ff6b8a", "#ffaa44", "#aa88ff", "#44ccff", "#ffff66", "#ff66cc"];
+    const colors = [
+      "#ff6b8a",
+      "#ffaa44",
+      "#aa88ff",
+      "#44ccff",
+      "#ffff66",
+      "#ff66cc",
+    ];
     this.petalColor = colors[Math.floor(Math.random() * colors.length)]!;
   }
 
@@ -296,7 +322,13 @@ class Flower extends Entity {
     ctx.fillStyle = this.petalColor;
     for (let a = 0; a < Math.PI * 2; a += Math.PI / 2.5) {
       ctx.beginPath();
-      ctx.arc(s.x + 3 + Math.cos(a) * 3, s.y + 3 + Math.sin(a) * 3, 2, 0, Math.PI * 2);
+      ctx.arc(
+        s.x + 3 + Math.cos(a) * 3,
+        s.y + 3 + Math.sin(a) * 3,
+        2,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
     }
     // Center
@@ -327,13 +359,29 @@ class Pond extends Entity {
 
     ctx.fillStyle = "rgba(40, 80, 140, 0.6)";
     ctx.beginPath();
-    ctx.ellipse(s.x + this.rx, s.y + this.ry, this.rx, this.ry, 0, 0, Math.PI * 2);
+    ctx.ellipse(
+      s.x + this.rx,
+      s.y + this.ry,
+      this.rx,
+      this.ry,
+      0,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
 
     // Shimmer
     ctx.fillStyle = "rgba(100, 170, 255, 0.15)";
     ctx.beginPath();
-    ctx.ellipse(s.x + this.rx - 5, s.y + this.ry - 5, this.rx * 0.6, this.ry * 0.5, -0.2, 0, Math.PI * 2);
+    ctx.ellipse(
+      s.x + this.rx - 5,
+      s.y + this.ry - 5,
+      this.rx * 0.6,
+      this.ry * 0.5,
+      -0.2,
+      0,
+      Math.PI * 2,
+    );
     ctx.fill();
   }
 }
@@ -367,8 +415,14 @@ class Critter extends DynamicEntity {
     this.y += this.velocity.y * this.speed * dt;
 
     // Bounce off world edges
-    if (this.x < 0 || this.x > WORLD_W - 10) { this.velocity.x *= -1; this.x = Math.max(0, Math.min(WORLD_W - 10, this.x)); }
-    if (this.y < 0 || this.y > WORLD_H - 10) { this.velocity.y *= -1; this.y = Math.max(0, Math.min(WORLD_H - 10, this.y)); }
+    if (this.x < 0 || this.x > WORLD_W - 10) {
+      this.velocity.x *= -1;
+      this.x = Math.max(0, Math.min(WORLD_W - 10, this.x));
+    }
+    if (this.y < 0 || this.y > WORLD_H - 10) {
+      this.velocity.y *= -1;
+      this.y = Math.max(0, Math.min(WORLD_H - 10, this.y));
+    }
   }
 
   render(ctx: CanvasRenderingContext2D): void {

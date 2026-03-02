@@ -42,7 +42,7 @@ class Label extends DynamicEntity {
   override update(_dt: number): void {}
   override render(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = "#6666aa";
-    ctx.font = "bold 13px monospace";
+    ctx.font = "bold 8px monospace";
     ctx.fillText(this.text, this.x, this.y);
   }
 }
