@@ -5,6 +5,8 @@ import Camera from "./camera";
 import GameObjectRegister from "./game_object_register";
 import World from "./world";
 
+const DEFAULT_GAME_SCALE = 1;
+
 /**
  * Configuration options for the {@link Engine}.
  *
@@ -32,10 +34,11 @@ interface EngineConfig {
   backgroundColor?: string;
 
   /**
-   * A multiplier applied to the `deltaTime` value passed to `update` each
-   * frame. Useful for globally adjusting game speed (e.g. slow motion).
+   * Global scale factor applied to the canvas via CSS transforms.
+   *
+   * @defaultValue `1` (no scaling)
    */
-  frameModifier?: number;
+  gameScale?: number;
 }
 
 /**
@@ -174,14 +177,21 @@ export default class Engine {
    */
   private cnf: EngineConfig = {
     backgroundColor: "#000000",
-    frameModifier: 1,
+
+    /**
+     * Global scale factor applied to the canvas via CSS transforms.
+     */
+    gameScale: 1,
   };
 
   /**
-   * Cached reference to the `frameModifier` from the configuration for quick
-   * access during the game loop.
+   * Global scale factor applied to the canvas via CSS transforms.
+   *
+   * This does not affect the internal resolution (`width` / `height`) or the
+   * camera viewport, but simply scales the rendered output for display.
+   *
    */
-  frameModifier: number | undefined;
+  public gameScale: number = DEFAULT_GAME_SCALE;
 
   /**
    * Optional reference to the designated player entity.
@@ -249,14 +259,24 @@ export default class Engine {
 
     this.cnf = { ...this.cnf, ...config };
 
-    this.frameModifier = this.cnf.frameModifier;
-
     this.engine = {
       camera: new Camera(this.width, this.height),
       objects: new GameObjectRegister(),
       collisions: new World(),
       monitor: new Monitor(),
     };
+
+    this.gameScale = this.cnf.gameScale || DEFAULT_GAME_SCALE;
+
+    /**
+     * Make sure to always pixelate the canvas to preserve crisp edges for pixel art.
+     */
+    this.canvas.style.imageRendering = "pixelated";
+    this.canvas.style.imageRendering = "-moz-crisp-edges";
+    this.canvas.style.imageRendering = "crisp-edges";
+
+    this.canvas.style.width = `${this.width * this.gameScale}px`;
+    this.canvas.style.height = `${this.height * this.gameScale}px`;
   }
 
   /**
@@ -456,7 +476,7 @@ export default class Engine {
       this.lastTime = timestamp;
     }
 
-    const deltaTime = ((timestamp - this.lastTime) / 1000) * this.frameModifier!;
+    const deltaTime = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
     this.update(deltaTime);
