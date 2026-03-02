@@ -1,169 +1,84 @@
 ---
-title: 'Class: Player'
+title: 'Abstract Class: Text'
 ---
 
 [**@dryanovski/gamefoo v0.0.1**](../README.md)
 
 ***
 
-[@dryanovski/gamefoo](../README.md) / Player
+[@dryanovski/gamefoo](../README.md) / Text
 
-# Class: Player
+# Abstract Class: Text
 
-Defined in: [entities/player.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L54)
+Defined in: [entities/text.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L16)
 
-Default player entity with convenience accessors for common
-behaviours.
+Abstract base class for Text and Label alike objects
 
-`Player` extends [DynamicEntity](DynamicEntity.md) and automatically delegates
-its [update](#update) and [render](#render)
-calls to all attached [behaviours](Behaviour.md). It also
-provides typed getters for the [Control](Control.md) and
-[HealthKit](HealthKit.md) behaviours so game code can access them without
-manual casting.
-
-Subclass `Player` to customise rendering, add game-specific logic,
-or bind additional behaviours.
+`Text` extends [Entity](Entity.md) and could also get all behaviors attach to it but
+most likely there will be no need for that. Its primary design use case is to
+keep track of text objects and interact with them
 
 ## Since
 
-0.1.0
-
-## Examples
-
-```ts
-import { Player, Control, HealthKit, Input } from "gamefoo";
-
-const player = new Player("hero", 400, 300, 50, 50);
-
-player.attachBehaviour(new Control(player, new Input()));
-player.attachBehaviour(new HealthKit(player, 100));
-
-player.control?.enabled;           // true
-player.healthkit?.getHealth();      // 100
-```
-
-```ts
-class Knight extends Player {
-  constructor(x: number, y: number) {
-    super("knight", x, y, 48, 48);
-  }
-
-  override render(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = "#c0c0c0";
-    ctx.fillRect(this.x, this.y, 48, 48);
-    this.renderBehaviours(ctx);
-  }
-}
-```
+0.2.0
 
 ## See
 
- - [DynamicEntity](DynamicEntity.md) — parent class (velocity, speed)
- - [Control](Control.md)       — keyboard movement behaviour
- - [HealthKit](HealthKit.md)     — health-tracking behaviour
+[Entity](Entity.md) - parent class
 
 ## Extends
 
-- [`DynamicEntity`](DynamicEntity.md)
+- [`Entity`](Entity.md)
 
 ## Constructors
 
 ### Constructor
 
 ```ts
-new Player(
-   id: string, 
+new Text(
+   fontName: any, 
    x: number, 
-   y: number, 
-   width?: number, 
-   height?: number): Player;
+   y: number): Text;
 ```
 
-Defined in: [entities/entity.ts:129](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L129)
+Defined in: [entities/text.ts:38](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L38)
 
-Creates a new entity.
+Create new Text object that could be placed and render on the screen
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `id` | `string` | Unique string identifier. |
-| `x` | `number` | Initial X position in pixels. |
-| `y` | `number` | Initial Y position in pixels. |
-| `width?` | `number` | Width of the entity's bounding box in pixels. |
-| `height?` | `number` | Height of the entity's bounding box in pixels. |
+| `fontName` | `any` | the FontBitmap valid name to load |
+| `x` | `number` | initial vertical position |
+| `y` | `number` | initial horizontal position |
 
 #### Returns
 
-`Player`
+`Text`
 
 #### Example
 
 ```ts
-class Crate extends Entity {
-  constructor(x: number, y: number) {
-    super("crate", x, y, 32, 32);
-  }
-  // ...
-}
+const Label = new Text('5x5', 20, 20);
 ```
 
-#### Inherited from
+#### Overrides
 
-[`DynamicEntity`](DynamicEntity.md).[`constructor`](DynamicEntity.md#constructor)
+[`Entity`](Entity.md).[`constructor`](Entity.md#constructor)
 
 ## Properties
 
 | Property | Modifier | Type | Default value | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [`DynamicEntity`](DynamicEntity.md).[`id`](DynamicEntity.md#id) | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
-| <a id="position"></a> `position` | `protected` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [`DynamicEntity`](DynamicEntity.md).[`position`](DynamicEntity.md#position) | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
-| <a id="size"></a> `size` | `protected` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [`DynamicEntity`](DynamicEntity.md).[`size`](DynamicEntity.md#size) | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
-| <a id="speed"></a> `speed` | `protected` | `number` | `0` | Scalar movement speed in pixels per second. | [`DynamicEntity`](DynamicEntity.md).[`speed`](DynamicEntity.md#speed) | [entities/dynamic\_entity.ts:59](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L59) |
-| <a id="velocity"></a> `velocity` | `protected` | [`Vector2`](../interfaces/Vector2.md) | `{ x: 0, y: 0 }` | Directional velocity vector. Represents the normalised (or raw) direction of movement. Multiply by [speed](DynamicEntity.md#speed) and `deltaTime` to get the per-frame displacement. | [`DynamicEntity`](DynamicEntity.md).[`velocity`](DynamicEntity.md#velocity) | [entities/dynamic\_entity.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L52) |
+| <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [`Entity`](Entity.md).[`id`](Entity.md#id) | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
+| <a id="f"></a> `f` | `protected` | [`FontBitmap`](FontBitmap.md) | `undefined` | BitmapFont instance used to manipulate the font | - | [entities/text.ts:21](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L21) |
+| <a id="fontname"></a> `fontName` | `protected` | `string` | `undefined` | Bitmap font name to load internally | - | [entities/text.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L18) |
+| <a id="position"></a> `position` | `protected` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [`Entity`](Entity.md).[`position`](Entity.md#position) | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
+| <a id="size"></a> `size` | `protected` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [`Entity`](Entity.md).[`size`](Entity.md#size) | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
+| <a id="text"></a> `text` | `protected` | `string` | `""` | Internal state of the text needed to be update | - | [entities/text.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L24) |
 
 ## Accessors
-
-### control
-
-#### Get Signature
-
-```ts
-get control(): Control | undefined;
-```
-
-Defined in: [entities/player.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L60)
-
-Convenience getter for the attached [Control](Control.md) behaviour.
-
-##### Returns
-
-[`Control`](Control.md) \| `undefined`
-
-The `Control` instance, or `undefined` if not attached.
-
-***
-
-### healthkit
-
-#### Get Signature
-
-```ts
-get healthkit(): HealthKit | undefined;
-```
-
-Defined in: [entities/player.ts:69](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L69)
-
-Convenience getter for the attached [HealthKit](HealthKit.md) behaviour.
-
-##### Returns
-
-[`HealthKit`](HealthKit.md) \| `undefined`
-
-The `HealthKit` instance, or `undefined` if not attached.
-
-***
 
 ### x
 
@@ -204,7 +119,7 @@ Sets the horizontal position.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`x`](DynamicEntity.md#x)
+[`Entity`](Entity.md).[`x`](Entity.md#x)
 
 ***
 
@@ -247,7 +162,7 @@ Sets the vertical position.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`y`](DynamicEntity.md#y)
+[`Entity`](Entity.md).[`y`](Entity.md#y)
 
 ***
 
@@ -273,7 +188,7 @@ only re-computed when behaviours are added or removed.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`behaviors`](DynamicEntity.md#behaviors)
+[`Entity`](Entity.md).[`behaviors`](Entity.md#behaviors)
 
 ## Methods
 
@@ -318,7 +233,7 @@ hk.takeDamage(10);
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`attachBehaviour`](DynamicEntity.md#attachbehaviour)
+[`Entity`](Entity.md).[`attachBehaviour`](Entity.md#attachbehaviour)
 
 ***
 
@@ -351,7 +266,7 @@ entity.detachBehaviour("collidable");
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`detachBehaviour`](DynamicEntity.md#detachbehaviour)
+[`Entity`](Entity.md).[`detachBehaviour`](Entity.md#detachbehaviour)
 
 ***
 
@@ -392,7 +307,7 @@ if (ctrl) ctrl.enabled = false;
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`getBehaviour`](DynamicEntity.md#getbehaviour)
+[`Entity`](Entity.md).[`getBehaviour`](Entity.md#getbehaviour)
 
 ***
 
@@ -433,7 +348,7 @@ const renderers = entity.getBehavioursByType(SpriteRender);
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`getBehavioursByType`](DynamicEntity.md#getbehavioursbytype)
+[`Entity`](Entity.md).[`getBehavioursByType`](Entity.md#getbehavioursbytype)
 
 ***
 
@@ -455,7 +370,7 @@ A new [Vector2](../interfaces/Vector2.md) with the entity's `x` and `y`.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`getPosition`](DynamicEntity.md#getposition)
+[`Entity`](Entity.md).[`getPosition`](Entity.md#getposition)
 
 ***
 
@@ -477,51 +392,25 @@ An object with `width` and `height`.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`getSize`](DynamicEntity.md#getsize)
+[`Entity`](Entity.md).[`getSize`](Entity.md#getsize)
 
 ***
 
-### getSpeed()
+### getText()
 
 ```ts
-getSpeed(): number;
+getText(): string;
 ```
 
-Defined in: [entities/dynamic\_entity.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L103)
+Defined in: [entities/text.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L62)
 
-Returns the current movement speed.
+Get the internal state of the object
 
 #### Returns
 
-`number`
+`string`
 
-Speed in pixels per second.
-
-#### Inherited from
-
-[`DynamicEntity`](DynamicEntity.md).[`getSpeed`](DynamicEntity.md#getspeed)
-
-***
-
-### getVelocity()
-
-```ts
-getVelocity(): Vector2;
-```
-
-Defined in: [entities/dynamic\_entity.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L80)
-
-Returns a **copy** of the current velocity vector.
-
-#### Returns
-
-[`Vector2`](../interfaces/Vector2.md)
-
-A new [Vector2](../interfaces/Vector2.md).
-
-#### Inherited from
-
-[`DynamicEntity`](DynamicEntity.md).[`getVelocity`](DynamicEntity.md#getvelocity)
+string
 
 ***
 
@@ -549,7 +438,7 @@ Checks whether a behaviour with the given key is attached.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`hasBehaviour`](DynamicEntity.md#hasbehaviour)
+[`Entity`](Entity.md).[`hasBehaviour`](Entity.md#hasbehaviour)
 
 ***
 
@@ -559,7 +448,7 @@ Checks whether a behaviour with the given key is attached.
 render(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [entities/player.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L94)
+Defined in: [entities/text.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L66)
 
 Draws the entity to the canvas.
 
@@ -567,7 +456,7 @@ Draws the entity to the canvas.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
+| `ctx` | `CanvasRenderingContext2D` | The 2-D rendering context. |
 
 #### Returns
 
@@ -575,7 +464,7 @@ Draws the entity to the canvas.
 
 #### Overrides
 
-[`DynamicEntity`](DynamicEntity.md).[`render`](DynamicEntity.md#render)
+[`Entity`](Entity.md).[`render`](Entity.md#render)
 
 ***
 
@@ -608,81 +497,41 @@ void
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`setSize`](DynamicEntity.md#setsize)
+[`Entity`](Entity.md).[`setSize`](Entity.md#setsize)
 
 ***
 
-### setSpeed()
+### setText()
 
 ```ts
-setSpeed(speed: number): void;
+setText(text: string): void;
 ```
 
-Defined in: [entities/dynamic\_entity.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L94)
+Defined in: [entities/text.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L53)
 
-Sets the scalar movement speed.
+Set internal state value
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `speed` | `number` | Speed in pixels per second. |
+| `text` | `string` | any content that should be render |
 
 #### Returns
 
 `void`
 
-#### Example
-
-```ts
-entity.setSpeed(200);
-```
-
-#### Inherited from
-
-[`DynamicEntity`](DynamicEntity.md).[`setSpeed`](DynamicEntity.md#setspeed)
-
-***
-
-### setVelocity()
-
-```ts
-setVelocity(velocity: Vector2): void;
-```
-
-Defined in: [entities/dynamic\_entity.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L71)
-
-Replaces the current velocity vector.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `velocity` | [`Vector2`](../interfaces/Vector2.md) | The new velocity. |
-
-#### Returns
-
-`void`
-
-#### Example
-
-```ts
-entity.setVelocity({ x: -1, y: 0 }); // moving left
-```
-
-#### Inherited from
-
-[`DynamicEntity`](DynamicEntity.md).[`setVelocity`](DynamicEntity.md#setvelocity)
+void
 
 ***
 
 ### update()
 
 ```ts
-update(deltaTime: number): void;
+abstract update(deltaTime: number): void;
 ```
 
-Defined in: [entities/player.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L79)
+Defined in: [entities/entity.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L143)
 
 Advances the entity's state by one frame.
 
@@ -696,9 +545,9 @@ Advances the entity's state by one frame.
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`update`](DynamicEntity.md#update)
+[`Entity`](Entity.md).[`update`](Entity.md#update)
 
 ***
 
@@ -727,7 +576,7 @@ Typically called from a subclass's `render` implementation.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`renderBehaviours`](DynamicEntity.md#renderbehaviours)
+[`Entity`](Entity.md).[`renderBehaviours`](Entity.md#renderbehaviours)
 
 ***
 
@@ -756,4 +605,4 @@ Typically called from a subclass's `update` implementation.
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`updateBehaviours`](DynamicEntity.md#updatebehaviours)
+[`Entity`](Entity.md).[`updateBehaviours`](Entity.md#updatebehaviours)

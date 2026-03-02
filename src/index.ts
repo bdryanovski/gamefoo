@@ -35,11 +35,13 @@ export { default as World } from "./core/world";
 export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";
 export { default as Player } from "./entities/player";
+export { default as Text } from "./entities/text";
 
 // ── Type-only exports ───────────────────────────────────────────────
 export type {
   ColliderShape,
   CollisionInfo,
+  Demension,
   GameObject,
   Vector2,
 } from "./types";

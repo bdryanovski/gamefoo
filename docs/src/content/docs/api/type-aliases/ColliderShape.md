@@ -25,7 +25,7 @@ type ColliderShape =
 };
 ```
 
-Defined in: [types.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L87)
+Defined in: [types.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L103)
 
 Discriminated union describing the shape of a collision volume.
 
@@ -49,10 +49,10 @@ The `type` field acts as the discriminant:
 
 | Name | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| `height` | `number` | Height of the bounding box in pixels. | [types.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L94) |
-| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [types.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L99) |
-| `type` | `"aabb"` | Discriminant for an axis-aligned bounding box. | [types.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L90) |
-| `width` | `number` | Width of the bounding box in pixels. | [types.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L92) |
+| `height` | `number` | Height of the bounding box in pixels. | [types.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L110) |
+| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [types.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L115) |
+| `type` | `"aabb"` | Discriminant for an axis-aligned bounding box. | [types.ts:106](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L106) |
+| `width` | `number` | Width of the bounding box in pixels. | [types.ts:108](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L108) |
 
 ```ts
 {
@@ -64,9 +64,9 @@ The `type` field acts as the discriminant:
 
 | Name | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [types.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L110) |
-| `radius` | `number` | Radius of the circle in pixels. | [types.ts:105](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L105) |
-| `type` | `"circle"` | Discriminant for a circular collider. | [types.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L103) |
+| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [types.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L126) |
+| `radius` | `number` | Radius of the circle in pixels. | [types.ts:121](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L121) |
+| `type` | `"circle"` | Discriminant for a circular collider. | [types.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L119) |
 
 ## Since
 
