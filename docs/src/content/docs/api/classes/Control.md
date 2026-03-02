@@ -12,7 +12,7 @@ title: 'Class: Control'
 
 Defined in: [core/behaviours/control.ts:29](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L29)
 
-Keyboard-driven movement behaviour for a [DynamicEntity](DynamicEntity.md).
+Keyboard-driven movement behaviour for a [Entity](Entity.md).
 
 `Control` reads the current keyboard state from an [Input](Input.md)
 instance every frame and translates WASD / arrow-key presses into
@@ -41,14 +41,14 @@ player.attachBehaviour(new Control(player, input));
 
 ## Extends
 
-- [`Behaviour`](Behaviour.md)\<[`DynamicEntity`](DynamicEntity.md)\>
+- [`Behaviour`](Behaviour.md)\<[`Entity`](Entity.md)\>
 
 ## Constructors
 
 ### Constructor
 
 ```ts
-new Control(owner: DynamicEntity, input: Input): Control;
+new Control(owner: Entity, input: Input): Control;
 ```
 
 Defined in: [core/behaviours/control.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L49)
@@ -59,7 +59,7 @@ Creates a new keyboard control behaviour.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `owner` | [`DynamicEntity`](DynamicEntity.md) | The dynamic entity whose position will be updated. |
+| `owner` | [`Entity`](Entity.md) | The game object entity whose position will be updated. |
 | `input` | [`Input`](Input.md) | The [Input](Input.md) instance to read key state from. |
 
 #### Returns
@@ -77,7 +77,7 @@ Creates a new keyboard control behaviour.
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L91) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L81) |
 | <a id="type"></a> `type` | `readonly` | `"control"` | `"control"` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/control.ts:31](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L31) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
+| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
 | <a id="input"></a> `input` | `private` | [`Input`](Input.md) | `undefined` | The input manager to poll each frame. | - | - | [core/behaviours/control.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L34) |
 | <a id="speed"></a> `speed` | `private` | `number` | `500` | Movement speed in pixels per second. | - | - | [core/behaviours/control.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L41) |
 

@@ -12,7 +12,7 @@ title: 'Class: HealthKit'
 
 Defined in: [core/behaviours/healtkit.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L37)
 
-Health-tracking behaviour for a [DynamicEntity](DynamicEntity.md).
+Health-tracking behaviour for a [Entity](Entity.md).
 
 `HealthKit` manages a current and maximum HP value, provides damage
 and healing methods, and exposes queries for health percentage and
@@ -49,7 +49,7 @@ console.log(hk.getHealth()); // 200 (clamped to max)
 
 ## Extends
 
-- [`Behaviour`](Behaviour.md)\<[`DynamicEntity`](DynamicEntity.md)\>
+- [`Behaviour`](Behaviour.md)\<[`Entity`](Entity.md)\>
 
 ## Constructors
 
@@ -57,7 +57,7 @@ console.log(hk.getHealth()); // 200 (clamped to max)
 
 ```ts
 new HealthKit(
-   owner: DynamicEntity, 
+   owner: Entity, 
    health: number, 
    maxHP?: number): HealthKit;
 ```
@@ -70,7 +70,7 @@ Creates a new health behaviour.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `owner` | [`DynamicEntity`](DynamicEntity.md) | The entity this behaviour is attached to. |
+| `owner` | [`Entity`](Entity.md) | The entity this behaviour is attached to. |
 | `health` | `number` | Starting health value. |
 | `maxHP?` | `number` | Maximum health cap. If omitted, defaults to the initial `health` value. |
 
@@ -89,7 +89,7 @@ Creates a new health behaviour.
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L91) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L81) |
 | <a id="type"></a> `type` | `readonly` | `"healthkit"` | `"healthkit"` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:39](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L39) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
+| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
 | <a id="health"></a> `health` | `private` | `number` | `undefined` | Current health points. | - | - | [core/behaviours/healtkit.ts:42](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L42) |
 | <a id="maxhp"></a> `maxHP` | `private` | `number` | `undefined` | Maximum health points (healing cap). | - | - | [core/behaviours/healtkit.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L45) |
 

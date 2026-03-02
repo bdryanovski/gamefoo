@@ -163,7 +163,7 @@ Called automatically by [Collidable.onDetach](Collidable.md#ondetach).
 private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean;
 ```
 
-Defined in: [core/world.ts:201](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L201)
+Defined in: [core/world.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L195)
 
 **`Internal`**
 
@@ -193,7 +193,7 @@ private circleVSAAabb(
    rect: WorldBounds): boolean;
 ```
 
-Defined in: [core/world.ts:251](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L251)
+Defined in: [core/world.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L238)
 
 **`Internal`**
 
@@ -226,7 +226,7 @@ private circleVSCircle(
    boundsB: WorldBounds): boolean;
 ```
 
-Defined in: [core/world.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L219)
+Defined in: [core/world.ts:211](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L211)
 
 **`Internal`**
 
@@ -296,7 +296,7 @@ private resolveOverlap(
    boundsB: WorldBounds): void;
 ```
 
-Defined in: [core/world.ts:281](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L281)
+Defined in: [core/world.ts:268](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L268)
 
 **`Internal`**
 

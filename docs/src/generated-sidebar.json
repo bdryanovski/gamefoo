@@ -20,6 +20,10 @@
         "label": "Classes",
         "items": [
           {
+            "label": "Asset",
+            "link": "/api/classes/Asset"
+          },
+          {
             "label": "Behaviour",
             "link": "/api/classes/Behaviour"
           },
@@ -72,6 +76,18 @@
             "link": "/api/classes/Player"
           },
           {
+            "label": "Sprite",
+            "link": "/api/classes/Sprite"
+          },
+          {
+            "label": "SpriteRender",
+            "link": "/api/classes/SpriteRender"
+          },
+          {
+            "label": "Text",
+            "link": "/api/classes/Text"
+          },
+          {
             "label": "World",
             "link": "/api/classes/World"
           }
@@ -84,6 +100,10 @@
           {
             "label": "CollisionInfo",
             "link": "/api/interfaces/CollisionInfo"
+          },
+          {
+            "label": "Demension",
+            "link": "/api/interfaces/Demension"
           },
           {
             "label": "Vector2",

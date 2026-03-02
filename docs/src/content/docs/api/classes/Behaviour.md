@@ -61,6 +61,7 @@ entity.attachBehaviour(new Gravity(entity));
 - [`Collidable`](Collidable.md)
 - [`Control`](Control.md)
 - [`HealthKit`](HealthKit.md)
+- [`SpriteRender`](SpriteRender.md)
 
 ## Type Parameters
 

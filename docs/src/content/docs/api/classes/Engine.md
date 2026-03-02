@@ -157,6 +157,54 @@ const engine = new Engine("game", 800, 600, {
 
 ## Accessors
 
+### camera
+
+#### Get Signature
+
+```ts
+get camera(): Camera | null;
+```
+
+Defined in: [core/engine.ts:304](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L304)
+
+Provides direct access to the engine's [Camera](Camera.md).
+
+Use this to control viewport tracking, e.g. by calling `camera.follow`
+with a custom target or adjusting the camera position manually.
+The camera automatically follows the player position each frame when a
+player is set, but you can override this behaviour by manipulating the
+camera directly.
+
+##### Since
+
+0.2.0
+
+##### Examples
+
+```ts
+// Manually set the camera to a specific position:
+engine.camera?.moveTo({ x: 500, y: 300 });
+```
+
+```ts
+// Disable automatic camera follow by overriding the follow method:
+if (engine.camera) {
+ engine.camera.follow = () => {};
+ }
+
+ // The camera will now ignore the player position and stay fixed.
+ ```
+
+##### Returns
+
+[`Camera`](Camera.md) \| `null`
+
+The active [Camera](Camera.md) instance managed by this engine.
+Note that the camera is always present and never `null` in the current
+implementation, but the return type allows for future flexibility (e.g. optional camera).
+
+***
+
 ### collisions
 
 #### Get Signature
@@ -165,7 +213,7 @@ const engine = new Engine("game", 800, 600, {
 get collisions(): World;
 ```
 
-Defined in: [core/engine.ts:294](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L294)
+Defined in: [core/engine.ts:328](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L328)
 
 Provides direct access to the engine's collision [World](World.md).
 
@@ -255,7 +303,7 @@ engine.player = hero;
 attachObjects(objects: GameObject): void;
 ```
 
-Defined in: [core/engine.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L324)
+Defined in: [core/engine.ts:358](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L358)
 
 Registers a game object (entity) with the engine so it is automatically
 updated and rendered each frame.
@@ -298,7 +346,7 @@ engine.attachObjects(new Tree(300, 200));
 clear(): void;
 ```
 
-Defined in: [core/engine.ts:559](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L559)
+Defined in: [core/engine.ts:597](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L597)
 
 Stops the game loop **and** clears the canvas to transparent.
 
@@ -324,7 +372,7 @@ engine.clear();
 destroy(): void;
 ```
 
-Defined in: [core/engine.ts:581](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L581)
+Defined in: [core/engine.ts:619](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L619)
 
 Tears down the engine and releases resources.
 
@@ -356,7 +404,7 @@ engine.destroy();
 handleResize(): void;
 ```
 
-Defined in: [core/engine.ts:346](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L346)
+Defined in: [core/engine.ts:380](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L380)
 
 Resizes the canvas via CSS transforms so it fits within its parent
 container while preserving the original aspect ratio.
@@ -389,7 +437,7 @@ window.addEventListener("resize", () => engine.handleResize());
 pause(): void;
 ```
 
-Defined in: [core/engine.ts:543](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L543)
+Defined in: [core/engine.ts:581](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L581)
 
 Pauses the game loop.
 
@@ -420,7 +468,7 @@ document.addEventListener("visibilitychange", () => {
 render(): void;
 ```
 
-Defined in: [core/engine.ts:512](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L512)
+Defined in: [core/engine.ts:546](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L546)
 
 Draws one complete frame to the canvas.
 
@@ -452,7 +500,7 @@ engine.render();
 resize(width: number, height: number): void;
 ```
 
-Defined in: [core/engine.ts:378](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L378)
+Defined in: [core/engine.ts:412](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L412)
 
 Directly sets the canvas pixel dimensions.
 
@@ -484,7 +532,7 @@ engine.resize(1024, 768);
 setup(setupFn: () => void): Promise<void>;
 ```
 
-Defined in: [core/engine.ts:441](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L441)
+Defined in: [core/engine.ts:475](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L475)
 
 Initialises the engine and starts the game loop.
 
@@ -530,7 +578,7 @@ engine.setup(() => {}); // warns: "Engine is already initialized."
 update(deltaTime: number): void;
 ```
 
-Defined in: [core/engine.ts:478](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L478)
+Defined in: [core/engine.ts:512](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L512)
 
 Advances the game state by one tick.
 
@@ -568,7 +616,7 @@ engine.update(1 / 60); // simulate a single 60 FPS tick
 private loop(timestamp: number): void;
 ```
 
-Defined in: [core/engine.ts:396](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L396)
+Defined in: [core/engine.ts:430](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L430)
 
 **`Internal`**
 

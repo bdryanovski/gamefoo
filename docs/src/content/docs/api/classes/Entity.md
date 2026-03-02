@@ -66,6 +66,7 @@ if (entity.hasBehaviour("collidable")) {
 ## Extended by
 
 - [`DynamicEntity`](DynamicEntity.md)
+- [`Text`](Text.md)
 
 ## Constructors
 
@@ -76,8 +77,8 @@ new Entity(
    id: string, 
    x: number, 
    y: number, 
-   width: number, 
-   height: number): Entity;
+   width?: number, 
+   height?: number): Entity;
 ```
 
 Defined in: [entities/entity.ts:129](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L129)
@@ -91,8 +92,8 @@ Creates a new entity.
 | `id` | `string` | Unique string identifier. |
 | `x` | `number` | Initial X position in pixels. |
 | `y` | `number` | Initial Y position in pixels. |
-| `width` | `number` | Width of the entity's bounding box in pixels. |
-| `height` | `number` | Height of the entity's bounding box in pixels. |
+| `width?` | `number` | Width of the entity's bounding box in pixels. |
+| `height?` | `number` | Height of the entity's bounding box in pixels. |
 
 #### Returns
 
@@ -115,9 +116,7 @@ class Crate extends Entity {
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
 | <a id="position"></a> `position` | `protected` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
-| <a id="size"></a> `size` | `protected` | \{ `height`: `number`; `width`: `number`; \} | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
-| `size.height` | `public` | `number` | `0` | - | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
-| `size.width` | `public` | `number` | `0` | - | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
+| <a id="size"></a> `size` | `protected` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
 | <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | Priority-sorted cache of behaviours. Invalidated (`null`) whenever a behaviour is attached or detached. | [entities/entity.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L82) |
 | <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | Internal map from behaviour key (lowercased type) to [Behaviour](Behaviour.md) instance. | [entities/entity.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L76) |
 
@@ -209,7 +208,7 @@ Sets the vertical position.
 get private behaviors(): Behaviour<Entity>[];
 ```
 
-Defined in: [entities/entity.ts:269](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L269)
+Defined in: [entities/entity.ts:284](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L284)
 
 **`Internal`**
 
@@ -229,7 +228,7 @@ only re-computed when behaviours are added or removed.
 attachBehaviour<T>(behavior: T): T;
 ```
 
-Defined in: [entities/entity.ts:229](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L229)
+Defined in: [entities/entity.ts:244](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L244)
 
 Attaches a behaviour to this entity.
 
@@ -270,7 +269,7 @@ hk.takeDamage(10);
 detachBehaviour(key: string): void;
 ```
 
-Defined in: [entities/entity.ts:251](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L251)
+Defined in: [entities/entity.ts:266](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L266)
 
 Detaches a behaviour by its key and calls
 [onDetach](Behaviour.md#ondetach) if defined.
@@ -299,7 +298,7 @@ entity.detachBehaviour("collidable");
 getBehaviour<T>(key: string): T | undefined;
 ```
 
-Defined in: [entities/entity.ts:180](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L180)
+Defined in: [entities/entity.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L195)
 
 Retrieves a behaviour by its key (case-insensitive).
 
@@ -336,7 +335,7 @@ if (ctrl) ctrl.enabled = false;
 getBehavioursByType<T>(type: (...args: any[]) => T): T[];
 ```
 
-Defined in: [entities/entity.ts:197](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L197)
+Defined in: [entities/entity.ts:212](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L212)
 
 Returns all attached behaviours that are instances of the given
 class.
@@ -373,7 +372,7 @@ const renderers = entity.getBehavioursByType(SpriteRender);
 getPosition(): Vector2;
 ```
 
-Defined in: [entities/entity.ts:154](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L154)
+Defined in: [entities/entity.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L157)
 
 Returns a **copy** of the entity's current position.
 
@@ -388,31 +387,18 @@ A new [Vector2](../interfaces/Vector2.md) with the entity's `x` and `y`.
 ### getSize()
 
 ```ts
-getSize(): {
-  height: number;
-  width: number;
-};
+getSize(): Demension;
 ```
 
-Defined in: [entities/entity.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L163)
+Defined in: [entities/entity.ts:166](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L166)
 
 Returns a **copy** of the entity's bounding dimensions.
 
 #### Returns
 
-```ts
-{
-  height: number;
-  width: number;
-}
-```
+[`Demension`](../interfaces/Demension.md)
 
 An object with `width` and `height`.
-
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| `height` | `number` | [entities/entity.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L163) |
-| `width` | `number` | [entities/entity.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L163) |
 
 ***
 
@@ -422,7 +408,7 @@ An object with `width` and `height`.
 hasBehaviour(key: string): boolean;
 ```
 
-Defined in: [entities/entity.ts:208](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L208)
+Defined in: [entities/entity.ts:223](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L223)
 
 Checks whether a behaviour with the given key is attached.
 
@@ -446,7 +432,7 @@ Checks whether a behaviour with the given key is attached.
 abstract render(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [entities/entity.ts:147](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L147)
+Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
 
 Draws the entity to the canvas.
 
@@ -462,13 +448,42 @@ Draws the entity to the canvas.
 
 ***
 
+### setSize()
+
+```ts
+setSize(width: number, height: number): void;
+```
+
+Defined in: [entities/entity.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L177)
+
+Set size of the entity
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `width` | `number` |
+| `height` | `number` |
+
+#### Returns
+
+`void`
+
+void
+
+#### Since
+
+0.2.0
+
+***
+
 ### update()
 
 ```ts
 abstract update(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L140)
+Defined in: [entities/entity.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L143)
 
 Advances the entity's state by one frame.
 
@@ -490,7 +505,7 @@ Advances the entity's state by one frame.
 protected renderBehaviours(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [entities/entity.ts:302](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L302)
+Defined in: [entities/entity.ts:315](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L315)
 
 Calls [render(ctx)](Behaviour.md#render) on every enabled
 behaviour that defines a render method, in priority order.
@@ -515,7 +530,7 @@ Typically called from a subclass's `render` implementation.
 protected updateBehaviours(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:286](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L286)
+Defined in: [entities/entity.ts:299](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L299)
 
 Calls [update(deltaTime)](Behaviour.md#update) on every
 enabled behaviour, in priority order.
