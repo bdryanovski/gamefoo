@@ -31,6 +31,8 @@ export { default as Sprite } from "./core/sprite";
 export { PerlinNoise } from "./core/utils/perlin_noise";
 // ── World / Physics ─────────────────────────────────────────────────
 export { default as World } from "./core/world";
+// -- Debug -----
+export { default as Monitor } from "./debug/monitor";
 // ── Entities ────────────────────────────────────────────────────────
 export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";
