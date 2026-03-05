@@ -435,7 +435,32 @@ export default class Engine {
     const deltaTime = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
+    if (this.engine.objects) {
+      this.engine.objects.updateAll(deltaTime);
+    }
+
+    this.engine.collisions.detect();
+
+    /**
+     * TODO: this need to be moved outside of this class
+     */
+    if (this.engine.monitor) {
+      this.engine.monitor.update(deltaTime);
+    }
+
     this.update(deltaTime);
+
+    if (this.engine.objects) {
+      this.engine.objects.renderAll(this.ctx);
+    }
+
+    /**
+     * TODO: this should not be part of this implementation
+     */
+    if (this.engine.monitor) {
+      this.engine.monitor.render(this.ctx);
+    }
+
     this.render();
     requestAnimationFrame((timestamp) => this.loop(timestamp));
   }
@@ -495,9 +520,6 @@ export default class Engine {
    * Called automatically by the game loop, but is `public` so it can be
    * invoked manually for deterministic / test-driven updates.
    *
-   * **Update order:**
-   * 2. All registered game objects.
-   * 3. Collision detection pass ({@link World.detect}).
    *
    * @param deltaTime - Time elapsed since the last frame, **in seconds**.
    *
@@ -507,17 +529,7 @@ export default class Engine {
    * engine.update(1 / 60); // simulate a single 60 FPS tick
    * ```
    */
-  public update(deltaTime: number) {
-    if (this.engine.objects) {
-      this.engine.objects.updateAll(deltaTime);
-    }
-
-    this.engine.collisions.detect();
-
-    if (this.engine.monitor) {
-      this.engine.monitor.update(deltaTime);
-    }
-  }
+  public update(deltaTime: number) {}
 
   /**
    * Draws one complete frame to the canvas.
@@ -537,19 +549,7 @@ export default class Engine {
    * engine.render();
    * ```
    */
-  public render() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = this.cnf.backgroundColor || "#000000";
-    this.ctx.fillRect(0, 0, this.width, this.height);
-
-    if (this.engine.objects) {
-      this.engine.objects.renderAll(this.ctx);
-    }
-
-    if (this.engine.monitor) {
-      this.engine.monitor.render(this.ctx);
-    }
-  }
+  public render() {}
 
   /**
    * Pauses the game loop.
