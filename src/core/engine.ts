@@ -1,5 +1,4 @@
 import Monitor from "../debug/monitor";
-import type Player from "../entities/player";
 import type { GameObject } from "../types";
 import Camera from "./camera";
 import GameObjectRegister from "./game_object_register";
@@ -194,14 +193,6 @@ export default class Engine {
   public gameScale: number = DEFAULT_GAME_SCALE;
 
   /**
-   * Optional reference to the designated player entity.
-   *
-   * When set, the player is updated and rendered separately from the
-   * general object register and is used as the camera-follow target.
-   */
-  private _player?: Player;
-
-  /**
    * Internal subsystem container holding the three pillars of the engine:
    *
    * | Subsystem    | Purpose                                      |
@@ -213,7 +204,7 @@ export default class Engine {
   private engine: {
     /** Viewport camera; follows the player position each frame. */
     camera: Camera | null;
-    /** Central registry for all {@link GameObject} instances (excluding the player). */
+    /** Central registry for all {@link GameObject}. */
     objects: GameObjectRegister;
     /** Collision-detection world. Entities register their {@link Collidable} behaviour here. */
     collisions: World;
@@ -280,38 +271,6 @@ export default class Engine {
   }
 
   /**
-   * Assigns the primary player entity that the engine will update, render,
-   * and have the camera follow each frame.
-   *
-   * @param player - A {@link Player} (or subclass) instance.
-   *
-   * @example
-   * ```ts
-   * const hero = new Player("hero", 400, 300, 50, 50);
-   * engine.player = hero;
-   * ```
-   */
-  set player(player: Player) {
-    this._player = player;
-  }
-
-  /**
-   * Returns the current player entity, or `undefined` if none has been set.
-   *
-   * @returns The active {@link Player} instance, or `undefined`.
-   *
-   * @example
-   * ```ts
-   * if (engine.player) {
-   *   console.log("Player position:", engine.player.getPosition());
-   * }
-   * ```
-   */
-  get player(): Player | undefined {
-    return this._player;
-  }
-
-  /**
    * Provides direct access to the engine's {@link Camera}.
    *
    * Use this to control viewport tracking, e.g. by calling `camera.follow`
@@ -372,9 +331,6 @@ export default class Engine {
   /**
    * Registers a game object (entity) with the engine so it is automatically
    * updated and rendered each frame.
-   *
-   * Objects registered here are **separate** from the player — the player is
-   * managed via the {@link Engine.player | player} setter.
    *
    * @param objects - Any {@link GameObject} (`Entity` or `DynamicEntity`)
    *   to include in the game loop.
@@ -494,10 +450,8 @@ export default class Engine {
    * Calling `setup` more than once is a no-op — a warning is logged to the
    * console and the method returns immediately.
    *
-   * @param setupFn - A synchronous callback executed once before the loop
+   * @param setupFn - (optional) A synchronous callback executed once before the loop
    *   begins. Typically used for scene initialisation.
-   *
-   * @throws {Error} If `setupFn` is not a function.
    *
    * @example
    * ```ts
@@ -512,18 +466,24 @@ export default class Engine {
    * engine.setup(() => {}); // warns: "Engine is already initialized."
    * ```
    */
-  public async setup(setupFn: () => void) {
+  public async setup(setupFn?: () => void) {
     if (this._initialized) {
       console.warn("Engine is already initialized.");
       return;
     }
 
-    if (typeof setupFn !== "function") {
-      throw new Error("Setup function must be provided and must be a function.");
+    this.lastTime = 0;
+    this.clearScrean();
+
+    /**
+     * Setup function is optional and can be used
+     * to perform any last-minute initialisation that depends on the
+     * engine being ready (e.g. spawning initial entities, binding UI).
+     */
+    if (typeof setupFn === "function") {
+      setupFn();
     }
 
-    this.lastTime = 0;
-    setupFn();
     this._initialized = true;
     this.running = true;
     requestAnimationFrame((timestamp) => this.loop(timestamp));
@@ -536,10 +496,8 @@ export default class Engine {
    * invoked manually for deterministic / test-driven updates.
    *
    * **Update order:**
-   * 1. Player (if set).
    * 2. All registered game objects.
    * 3. Collision detection pass ({@link World.detect}).
-   * 4. Camera follow (tracks the player position).
    *
    * @param deltaTime - Time elapsed since the last frame, **in seconds**.
    *
@@ -550,19 +508,11 @@ export default class Engine {
    * ```
    */
   public update(deltaTime: number) {
-    if (this.player) {
-      this.player.update(deltaTime);
-    }
-
     if (this.engine.objects) {
       this.engine.objects.updateAll(deltaTime);
     }
 
     this.engine.collisions.detect();
-
-    if (this.engine.camera && this.player) {
-      this.engine.camera.follow(this.player.getPosition());
-    }
 
     if (this.engine.monitor) {
       this.engine.monitor.update(deltaTime);
@@ -592,16 +542,8 @@ export default class Engine {
     this.ctx.fillStyle = this.cnf.backgroundColor || "#000000";
     this.ctx.fillRect(0, 0, this.width, this.height);
 
-    if (this.player) {
-      this.player.render(this.ctx);
-    }
-
     if (this.engine.objects) {
       this.engine.objects.renderAll(this.ctx);
-    }
-
-    if (this.engine.camera && this.player) {
-      this.engine.camera.follow(this.player.getPosition() || { x: 0, y: 0 });
     }
 
     if (this.engine.monitor) {
@@ -631,20 +573,18 @@ export default class Engine {
   }
 
   /**
-   * Stops the game loop **and** clears the canvas to transparent.
-   *
-   * Equivalent to calling {@link Engine.pause} followed by erasing all
-   * drawn content.
+   * Clear the screen and set default background colour.
    *
    * @example
    * ```ts
-   * engine.clear();
+   * engine.clearScrean();
    * // Canvas is now blank; loop is stopped.
    * ```
    */
-  public clear() {
-    this.running = false;
+  public clearScrean() {
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = this.cnf.backgroundColor || "#000000";
+    this.ctx.fillRect(0, 0, this.width, this.height);
   }
 
   /**
