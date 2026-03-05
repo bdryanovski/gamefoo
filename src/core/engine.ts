@@ -435,6 +435,8 @@ export default class Engine {
     const deltaTime = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
+    this.clearScrean();
+
     if (this.engine.objects) {
       this.engine.objects.updateAll(deltaTime);
     }
@@ -461,7 +463,7 @@ export default class Engine {
       this.engine.monitor.render(this.ctx);
     }
 
-    this.render();
+    this.render(this.ctx);
     requestAnimationFrame((timestamp) => this.loop(timestamp));
   }
 
@@ -552,7 +554,7 @@ export default class Engine {
    * });
    * ```
    */
-  public render() {}
+  public render(_ctx: CanvasRenderingContext2D) {}
 
   /**
    * Pauses the game loop.
