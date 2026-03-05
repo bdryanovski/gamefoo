@@ -536,7 +536,7 @@ export default class Engine {
    * engine.update(1 / 60); // simulate a single 60 FPS tick
    * ```
    */
-  public update(deltaTime: number) {}
+  public update(_deltaTime: number) {}
 
   /**
    * Draws one complete frame to the canvas.
