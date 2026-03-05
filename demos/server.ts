@@ -3,12 +3,15 @@ import demo from "./demo/index.html";
 import sprite from "./sprite/index.html";
 import endlessWorld from "./endless-world/index.html";
 
+import fonts from "./fonts/index.html";
+
 const server = Bun.serve({
   port: 3000,
   routes: {
     "/": index,
     "/demo": demo,
     "/sprite": sprite,
+    "/fonts": fonts,
     "/endless-world": endlessWorld,
   },
   async fetch(req) {
