@@ -497,6 +497,13 @@ export default class Engine {
       return;
     }
 
+    /**
+     * Handle automatically the resize of the viewport
+     */
+    if (window && typeof window.addEventListener === "function") {
+      window.addEventListener("resize", () => this.handleResize());
+    }
+
     this.lastTime = 0;
     this.clearScrean();
 
@@ -537,16 +544,12 @@ export default class Engine {
    * Called automatically after {@link Engine.update} in the game loop, but
    * is `public` for manual / debug rendering.
    *
-   * **Render order:**
-   * 1. Clear the entire canvas.
-   * 2. Fill with the configured {@link EngineConfig.backgroundColor}.
-   * 3. Draw the player (if set).
-   * 4. Draw all registered game objects.
-   *
    * @example
    * ```ts
    * // Force a single frame repaint:
-   * engine.render();
+   * engine.render((ctx) => {
+   *   ctx.fillStyle = "red";
+   * });
    * ```
    */
   public render() {}
