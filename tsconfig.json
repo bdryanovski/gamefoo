@@ -8,6 +8,11 @@
     "jsx": "react-jsx",
     "allowJs": true,
 
+    // Legacy decorators — required for Bun's browser bundler (TC39 helpers missing in client bundles)
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+
+
     // Bundler mode
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -24,7 +29,13 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+
+    "paths": {
+      "@/*": ["./src/*"],
+      "@decorators": ["./src/decorators/index.ts"],
+      "@decorators/*": ["./src/decorators/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
