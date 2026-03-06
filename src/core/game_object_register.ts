@@ -37,6 +37,8 @@ export default class GameObjectRegister {
    */
   private objects: Map<string, GameObject> = new Map();
 
+  private _cache: GameObject[] | null = null;
+
   /**
    * Adds a game object to the registry.
    *
@@ -52,6 +54,7 @@ export default class GameObjectRegister {
    */
   register(object: GameObject) {
     this.objects.set(object.id, object);
+    this._cache = null;
   }
 
   /**
@@ -81,9 +84,26 @@ export default class GameObjectRegister {
   }
 
   /**
+   * Returns all registered objects as an array.
+   *
+   * Make sure to also cache the objects
+   *
+   * @since 0.2.0
+   *
+   * @returns An array of all {@link GameObject} instances in the registry.
+   */
+  toArray(): GameObject[] {
+    if (!this._cache) {
+      this._cache = Array.from(this.objects.values());
+    }
+
+    return this._cache;
+  }
+
+  /**
    * Returns all registered objects that pass the supplied filter.
    *
-   * @param _filter - A predicate function. Return `true` to include the
+   * @param filter - (optional) A predicate function. Return `true` to include the
    *   object in the result.
    * @returns An array of matching {@link GameObject} instances.
    *
@@ -92,8 +112,12 @@ export default class GameObjectRegister {
    * const enemies = register.getAll(() => true);
    * ```
    */
-  getAll(_filter: () => true): GameObject[] {
-    return Array.from(this.objects.values()).filter(_filter);
+  getAll(filter?: () => true): GameObject[] {
+    if (typeof filter === "function") {
+      return this.toArray().filter(filter);
+    }
+
+    return this.toArray();
   }
 
   /**
@@ -103,9 +127,9 @@ export default class GameObjectRegister {
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
   updateAll(deltaTime: number): void {
-    this.getAll(() => true).forEach((obj) => {
+    for (const obj of this.getAll()) {
       obj.update(deltaTime);
-    });
+    }
   }
 
   /**
@@ -115,8 +139,8 @@ export default class GameObjectRegister {
    * @param ctx - The canvas 2-D rendering context.
    */
   renderAll(ctx: CanvasRenderingContext2D): void {
-    this.getAll(() => true).forEach((obj) => {
+    for (const obj of this.getAll()) {
       obj.render(ctx);
-    });
+    }
   }
 }

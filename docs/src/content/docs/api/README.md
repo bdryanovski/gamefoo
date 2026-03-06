@@ -70,6 +70,7 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | Class | Description |
 | ------ | ------ |
 | [Engine](classes/Engine.md) | Core game engine responsible for the game loop, rendering pipeline, entity management, collision detection, and camera tracking. |
+| [Monitor](classes/Monitor.md) | - |
 
 ## Interfaces
 
@@ -89,3 +90,11 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | ------ | ------ |
 | [ColliderShape](type-aliases/ColliderShape.md) | Discriminated union describing the shape of a collision volume. |
 | [GameObject](type-aliases/GameObject.md) | Union of all entity types that can be managed by the engine's [GameObjectRegister](classes/GameObjectRegister.md). |
+
+## Functions
+
+### Decorators
+
+| Function | Description |
+| ------ | ------ |
+| [log](functions/log.md) | A method decorator that logs the method name, arguments, and return value. |

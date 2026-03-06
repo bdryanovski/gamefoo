@@ -411,6 +411,14 @@ export default class Engine {
   }
 
   /**
+   * Binds the `loop` method to the current `this` context so it can be passed directly to
+   * `requestAnimationFrame` without losing the correct reference to the engine instance.
+   *
+   * Also prevent the need of GC to create a new function on each frame, which could lead to performance issues over time.
+   */
+  private boundLoop = this.loop.bind(this);
+
+  /**
    * The core animation loop driven by `requestAnimationFrame`.
    *
    * Each iteration:
@@ -424,24 +432,64 @@ export default class Engine {
    * @internal
    */
   private loop(timestamp: number) {
+    /**
+     * Prevent the loop from running if the engine is paused or cleared. The loop
+     * is only restarted by calling {@link Engine.setup} on a new engine instance.
+     */
     if (!this.running) {
       return;
     }
 
+    /**
+     * Clear the canvas at the start of each frame to prepare for fresh rendering.
+     */
+    this.clearScrean();
+
+    /**
+     * Calculate deltaTime (in seconds) since the last frame. On the first frame,
+     * `lastTime` is `0`, so we set it to the current timestamp to avoid a large
+     * delta on the first update.
+     */
     if (this.lastTime === 0) {
       this.lastTime = timestamp;
     }
 
+    /**
+     * @remarks
+     *   - `timestamp` is provided by `requestAnimationFrame` and is in milliseconds. Dividing by `1000`
+     *   converts it to seconds, which is a more common unit for game logic.
+     *   - The first frame is handled specially to avoid a large deltaTime value that would occur if we calculated it as `(timestamp - 0) / 1000`.
+     *   - This allows the game loop to adapt to varying frame rates, ensuring that game logic runs at a consistent pace regardless of how fast or slow the frames are rendered.
+     *   - In summary, this block of code is crucial for maintaining smooth and consistent game updates by accurately tracking the time elapsed between frames and providing that information to the update logic.
+     */
     const deltaTime = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
-    this.clearScrean();
+    /**
+     * Retrieve all registered game objects and call their `update` method with the computed `deltaTime`.
+     * This allows each object to advance its state based on the time elapsed since the last frame.
+     */
+    const objects = this.engine.objects.getAll();
 
-    if (this.engine.objects) {
-      this.engine.objects.updateAll(deltaTime);
+    if (objects) {
+      for (const obj of objects) {
+        obj.update(deltaTime);
+      }
     }
 
+    /**
+     * Perform collision detection for all registered collidable entities in the world.
+     * This should be called after all entities have updated their positions and states, but before rendering.
+     */
     this.engine.collisions.detect();
+
+    /**
+     * Call the main `update` method of the engine, which can be overridden by subclasses to
+     * implement custom update logic that runs every frame.
+     * This is where you would put any global game logic that needs to run independently of
+     * individual game objects.
+     */
+    this.update(deltaTime);
 
     /**
      * TODO: this need to be moved outside of this class
@@ -450,10 +498,15 @@ export default class Engine {
       this.engine.monitor.update(deltaTime);
     }
 
-    this.update(deltaTime);
-
-    if (this.engine.objects) {
-      this.engine.objects.renderAll(this.ctx);
+    /**
+     * Call render on all registered game objects to draw them onto the canvas. This should be done
+     * after all updates and collision detection, so that the rendered state reflects the latest
+     * game logic.
+     */
+    if (objects) {
+      for (const obj of objects) {
+        obj.render(this.ctx);
+      }
     }
 
     /**
@@ -463,8 +516,17 @@ export default class Engine {
       this.engine.monitor.render(this.ctx);
     }
 
+    /**
+     * Call the main `render` method of the engine, which can be overridden by subclasses to
+     * implement custom rendering logic that runs every frame.
+     */
     this.render(this.ctx);
-    requestAnimationFrame((timestamp) => this.loop(timestamp));
+
+    /**
+     * Schedule the next frame by calling `requestAnimationFrame` with the `loop` method as the callback.
+     * This creates a continuous animation loop that keeps the game running until `running` is set to `false`.
+     */
+    requestAnimationFrame(this.boundLoop);
   }
 
   /**
@@ -520,7 +582,7 @@ export default class Engine {
 
     this._initialized = true;
     this.running = true;
-    requestAnimationFrame((timestamp) => this.loop(timestamp));
+    requestAnimationFrame(this.boundLoop);
   }
 
   /**
@@ -611,5 +673,6 @@ export default class Engine {
    */
   public destroy() {
     // Clean up resources, event listeners, etc. if needed.
+    this.pause();
   }
 }

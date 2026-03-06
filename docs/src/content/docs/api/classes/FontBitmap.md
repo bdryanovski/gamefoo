@@ -10,7 +10,7 @@ title: 'Class: FontBitmap'
 
 # Class: FontBitmap
 
-Defined in: [core/fonts/font\_bitmap.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L57)
+Defined in: [core/fonts/font\_bitmap.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L67)
 
 Pixel-perfect bitmap font renderer.
 
@@ -54,7 +54,7 @@ FONT\_5x5 — the built-in 5x5 pixel font data
 new FontBitmap(name: string): FontBitmap;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:105](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L105)
+Defined in: [core/fonts/font\_bitmap.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L115)
 
 Creates a font renderer for the named catalogue entry.
 
@@ -82,11 +82,11 @@ const font = new FontBitmap("5x5");
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="name"></a> `name` | `readonly` | `string` | `undefined` | The catalogue name of the loaded font (e.g. `"5x5"`). | [core/fonts/font\_bitmap.ts:59](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L59) |
-| <a id="data"></a> `data` | `private` | `Record`\<`string`, `number`[]\> | `undefined` | Character bitmask data keyed by character string. Each value is an array of integers where each integer represents one row of pixels (MSB = leftmost pixel). | [core/fonts/font\_bitmap.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L67) |
-| <a id="height"></a> `height` | `private` | `number` | `0` (populated from catalogue on construction) | Character cell height in pixels. | [core/fonts/font\_bitmap.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L81) |
-| <a id="spacing"></a> `spacing` | `private` | `number` | `0` | Horizontal spacing between the drawable area and the full cell width, in pixels. | [core/fonts/font\_bitmap.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L89) |
-| <a id="width"></a> `width` | `private` | `number` | `0` (populated from catalogue on construction) | Character cell width in pixels (including spacing). | [core/fonts/font\_bitmap.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L74) |
+| <a id="height"></a> `height` | `public` | `number` | `0` (populated from catalogue on construction) | Character cell height in pixels. | [core/fonts/font\_bitmap.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L91) |
+| <a id="name"></a> `name` | `readonly` | `string` | `undefined` | The catalogue name of the loaded font (e.g. `"5x5"`). | [core/fonts/font\_bitmap.ts:69](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L69) |
+| <a id="width"></a> `width` | `public` | `number` | `0` (populated from catalogue on construction) | Character cell width in pixels (including spacing). | [core/fonts/font\_bitmap.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L84) |
+| <a id="data"></a> `data` | `private` | `Record`\<`string`, `number`[]\> | `undefined` | Character bitmask data keyed by character string. Each value is an array of integers where each integer represents one row of pixels (MSB = leftmost pixel). | [core/fonts/font\_bitmap.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L77) |
+| <a id="spacing"></a> `spacing` | `private` | `number` | `0` | Horizontal spacing between the drawable area and the full cell width, in pixels. | [core/fonts/font\_bitmap.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L99) |
 
 ## Accessors
 
@@ -107,7 +107,7 @@ get metadata():
   | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L125)
+Defined in: [core/fonts/font\_bitmap.ts:135](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L135)
 
 Returns the raw catalogue entry for this font, or `null` if the
 font name was not found.
@@ -134,7 +134,7 @@ Font metadata object or `null`.
 getChar(char: string): number[] | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:142](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L142)
+Defined in: [core/fonts/font\_bitmap.ts:152](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L152)
 
 Retrieves the bitmask rows for a single character.
 
@@ -166,7 +166,7 @@ const rows = font.getChar("A");
 getTextWidth(text: string): number;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L157)
+Defined in: [core/fonts/font\_bitmap.ts:167](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L167)
 
 Computes the pixel width required to render the given text string.
 
@@ -200,7 +200,7 @@ renderChar(
    ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:178](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L178)
+Defined in: [core/fonts/font\_bitmap.ts:188](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L188)
 
 Renders a single character at the given pixel position.
 
@@ -239,7 +239,7 @@ renderText(
    ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:209](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L209)
+Defined in: [core/fonts/font\_bitmap.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L219)
 
 Renders a full text string by drawing each character sequentially.
 

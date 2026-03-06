@@ -32,6 +32,8 @@ Catalog.set(FONT_6x8_METADATA.name, FONT_6x8_METADATA);
 Catalog.set(FONT_8x13_METADATA.name, FONT_8x13_METADATA);
 Catalog.set(FONT_8x8_METADATA.name, FONT_8x8_METADATA);
 
+export type InternalBitmapFontName = "3x5" | "4x6" | "5x5" | "6x8" | "8x13" | "8x8";
+
 /**
  * Pixel-perfect bitmap font renderer.
  *
@@ -107,18 +109,22 @@ export default class FontBitmap {
    *
    * @param name - The catalogue key (e.g. `"5x5"`).
    *
+   * @throws Error if the name is not found in the catalogue.
+   *
    * @example
    * ```ts
    * const font = new FontBitmap("5x5");
    * ```
    */
-  constructor(name: string) {
+  constructor(name: InternalBitmapFontName) {
     this.name = name;
 
     this.data = {};
 
     if (Catalog.has(name)) {
       this.data = Catalog.get(name)!.data;
+    } else {
+      throw new Error(`FontBitmap: No font found for name "${name}".`);
     }
 
     this.width = this.metadata?.width || 0;
