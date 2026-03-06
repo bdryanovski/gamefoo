@@ -47,11 +47,11 @@ export default class Monitor {
 
     if (this.frames.length >= 1) {
       ctx.beginPath();
-      this.frames.forEach((value, i) => {
+      for (let i = 0; i < this.frames.length; i++) {
         const x = this.x + i;
-        const y = this.x + font.height * 2 + 80 - value;
+        const y = this.x + font.height * 2 + 80 - (this.frames[i] ?? 0);
         ctx.lineTo(x, y);
-      });
+      }
       ctx.stroke();
     }
 

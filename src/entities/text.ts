@@ -1,4 +1,4 @@
-import FontBitmap from "../core/fonts/font_bitmap";
+import FontBitmap, { type InternalBitmapFontName } from "../core/fonts/font_bitmap";
 import Entity from "./entity";
 
 /**
@@ -18,7 +18,7 @@ export default abstract class Text extends Entity {
   protected fontName: string;
 
   /** BitmapFont instance used to manipulate the font */
-  protected f: FontBitmap;
+  protected font: FontBitmap;
 
   /** Internal state of the text needed to be update */
   protected text: string = "";
@@ -27,20 +27,18 @@ export default abstract class Text extends Entity {
    * Create new Text object that could be placed and render on the screen
    *
    * @param fontName - the FontBitmap valid name to load
-   * @param x - initial vertical position
-   * @param y - initial horizontal position
    *
    * @example
    * ```ts
-   * const Label = new Text('5x5', 20, 20);
+   * const Label = new Text('CustomLabel', '5x5');
    * ```
    */
-  constructor(fontName: any, x: number, y: number) {
-    super("TEXT", x, y);
+  constructor(id: string, fontName: InternalBitmapFontName) {
+    super(id, 0, 0);
 
     this.fontName = fontName;
 
-    this.f = new FontBitmap(fontName);
+    this.font = new FontBitmap(fontName);
   }
 
   /**
@@ -52,6 +50,8 @@ export default abstract class Text extends Entity {
    */
   setText(text: string) {
     this.text = text;
+
+    this.setSize(this.font.width * this.text.length, this.font.height);
   }
 
   /**
@@ -63,8 +63,10 @@ export default abstract class Text extends Entity {
     return this.text;
   }
 
+  /**
+   * Render the text to the canvas using the BitmapFont instance
+   */
   override render(ctx: CanvasRenderingContext2D): void {
-    const { x, y } = this.getPosition();
-    this.f.renderText(this.getText(), x, y, ctx);
+    this.font.renderText(this.getText(), this.x, this.y, ctx);
   }
 }

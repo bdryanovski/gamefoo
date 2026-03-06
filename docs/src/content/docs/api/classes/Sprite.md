@@ -10,7 +10,7 @@ title: 'Class: Sprite'
 
 # Class: Sprite
 
-Defined in: [core/sprite.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L60)
+Defined in: [core/sprite.ts:123](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L123)
 
 Metadata wrapper around an HTMLImageElement that describes how
 it is sliced into a uniform grid of frames and what named animations
@@ -61,7 +61,7 @@ new Sprite(
    animations?: Record<string, AnimationDefinition>): Sprite;
 ```
 
-Defined in: [core/sprite.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L107)
+Defined in: [core/sprite.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L175)
 
 Creates a new spritesheet descriptor.
 
@@ -90,27 +90,152 @@ const sprite = new Sprite(img, 64, 64, {
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="animations"></a> `animations` | `readonly` | `Map`\<`string`, `AnimationDefinition`\> | Named animation definitions keyed by animation name. Populated from the optional `animations` parameter passed to the constructor. | [core/sprite.ts:88](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L88) |
-| <a id="columns"></a> `columns` | `readonly` | `number` | Number of frame columns in the spritesheet, computed as `Math.floor(image.width / width)`. | [core/sprite.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L74) |
-| <a id="height"></a> `height` | `readonly` | `number` | Height of a single frame cell in pixels. | [core/sprite.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L68) |
-| <a id="image"></a> `image` | `readonly` | `HTMLImageElement` | The underlying image element containing the full spritesheet. | [core/sprite.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L62) |
-| <a id="rows"></a> `rows` | `readonly` | `number` | Number of frame rows in the spritesheet, computed as `Math.floor(image.height / height)`. | [core/sprite.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L80) |
-| <a id="width"></a> `width` | `readonly` | `number` | Width of a single frame cell in pixels. | [core/sprite.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L65) |
+| <a id="animations"></a> `animations` | `public` | `Map`\<`string`, `AnimationDefinition`\> | Named animation definitions keyed by animation name. Populated from the optional `animations` parameter passed to the constructor. | [core/sprite.ts:151](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L151) |
+| <a id="columns"></a> `columns` | `readonly` | `number` | Number of frame columns in the spritesheet, computed as `Math.floor(image.width / width)`. | [core/sprite.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L137) |
+| <a id="frames"></a> `frames` | `public` | `Map`\<`string` \| `number`, `SpriteFrame`\> | **Since** 0.2.0 | [core/sprite.ts:156](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L156) |
+| <a id="height"></a> `height` | `readonly` | `number` | Height of a single frame cell in pixels. | [core/sprite.ts:131](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L131) |
+| <a id="image"></a> `image` | `public` | `HTMLImageElement` | The underlying image element containing the full spritesheet. | [core/sprite.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L125) |
+| <a id="rows"></a> `rows` | `readonly` | `number` | Number of frame rows in the spritesheet, computed as `Math.floor(image.height / height)`. | [core/sprite.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L143) |
+| <a id="width"></a> `width` | `readonly` | `number` | Width of a single frame cell in pixels. | [core/sprite.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L128) |
 
 ## Methods
+
+### fromAseprite()
+
+```ts
+static fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite>;
+```
+
+Defined in: [core/sprite.ts:286](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L286)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `imagePath` | `string` |
+| `jsonPath` | `string` |
+
+#### Returns
+
+`Promise`\<`Sprite`\>
+
+***
+
+### fromAtlas()
+
+```ts
+static fromAtlas(
+   image: HTMLImageElement, 
+   regions: Record<string, SpriteFrame>, 
+   animations?: Record<string, AnimationDefinition>): Sprite;
+```
+
+Defined in: [core/sprite.ts:274](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L274)
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `image` | `HTMLImageElement` |
+| `regions` | `Record`\<`string`, `SpriteFrame`\> |
+| `animations?` | `Record`\<`string`, `AnimationDefinition`\> |
+
+#### Returns
+
+`Sprite`
+
+***
+
+### fromGrid()
+
+```ts
+static fromGrid(
+   image: HTMLImageElement, 
+   config: GridConfig, 
+   animations?: Record<string, AnimationDefinition>): Sprite;
+```
+
+Defined in: [core/sprite.ts:225](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L225)
+
+Alternative constructor for spritesheets that are already sliced into a
+uniform grid of frames.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `image` | `HTMLImageElement` | A fully-loaded `HTMLImageElement` containing the spritesheet texture. |
+| `config` | `GridConfig` | Configuration options for slicing the image into a grid of frames. |
+| `animations?` | `Record`\<`string`, `AnimationDefinition`\> | Optional map of named animation definitions. Keys are animation names (e.g. `"idle"`, `"run"`). |
+
+#### Returns
+
+`Sprite`
+
+#### Since
+
+0.2.0
+
+#### Example
+
+```ts
+ const sprite = Sprite.fromGrid(img, {
+ frameWidth: 64,
+
+ frameHeight: 64,
+ offsetX: 0,
+ offsetY: 0,
+ spacingX: 0,
+ spacingY: 0,
+ count: 16,
+ }, {
+ idle: { frames: [0, 1], duration: 0.25, loop: true },
+ run:  { frames: [2, 3, 4, 5], duration: 0.1, loop: true },
+ });
+ ```
+
+***
+
+### generateGridFrames()
+
+```ts
+private static generateGridFrames(image: HTMLImageElement, config: GridConfig): Map<number, SpriteFrame>;
+```
+
+Defined in: [core/sprite.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L253)
+
+Helper method to compute frame rectangles for a spritesheet sliced into a
+uniform grid.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `image` | `HTMLImageElement` | A fully-loaded `HTMLImageElement` containing the spritesheet texture. |
+| `config` | `GridConfig` | Configuration options for slicing the image into a grid of frames. |
+
+#### Returns
+
+`Map`\<`number`, `SpriteFrame`\>
+
+A map of frame indices to their corresponding source rectangles.
+ Frame indices are zero-based and laid out left-to-right, top-to-bottom.
+ The source rectangles are in pixel coordinates relative to the top-left corner
+ of the source image.
+
+#### Since
+
+0.2.0
+
+***
 
 ### getFrameRect()
 
 ```ts
-getFrameRect(frame: number): {
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-};
+getFrameRect(frame: string | number): SpriteFrame;
 ```
 
-Defined in: [core/sprite.ts:138](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L138)
+Defined in: [core/sprite.ts:332](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L332)
 
 Computes the source rectangle for a given frame index within the
 spritesheet.
@@ -122,28 +247,14 @@ top-to-bottom.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `frame` | `number` | Zero-based frame index. |
+| `frame` | `string` \| `number` | Zero-based frame index. |
 
 #### Returns
 
-```ts
-{
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-}
-```
+`SpriteFrame`
 
 An `{ x, y, width, height }` rectangle in pixel coordinates
   relative to the top-left corner of the source image.
-
-| Name | Type | Defined in |
-| ------ | ------ | ------ |
-| `height` | `number` | [core/sprite.ts:142](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L142) |
-| `width` | `number` | [core/sprite.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L141) |
-| `x` | `number` | [core/sprite.ts:139](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L139) |
-| `y` | `number` | [core/sprite.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L140) |
 
 #### Example
 

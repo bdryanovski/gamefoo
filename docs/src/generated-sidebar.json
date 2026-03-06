@@ -68,6 +68,10 @@
             "link": "/api/classes/Input"
           },
           {
+            "label": "Monitor",
+            "link": "/api/classes/Monitor"
+          },
+          {
             "label": "PerlinNoise",
             "link": "/api/classes/PerlinNoise"
           },
@@ -90,6 +94,16 @@
           {
             "label": "World",
             "link": "/api/classes/World"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Functions",
+        "items": [
+          {
+            "label": "Log",
+            "link": "/api/functions/log"
           }
         ],
         "collapsed": true

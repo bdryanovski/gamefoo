@@ -95,7 +95,7 @@ getMousePosition(): {
 };
 ```
 
-Defined in: [core/input.ts:161](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L161)
+Defined in: [core/input.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L162)
 
 Returns the last known mouse position in client (viewport)
 coordinates.
@@ -116,8 +116,8 @@ An `{ x, y }` object with the mouse coordinates.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `x` | `number` | [core/input.ts:161](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L161) |
-| `y` | `number` | [core/input.ts:161](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L161) |
+| `x` | `number` | [core/input.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L162) |
+| `y` | `number` | [core/input.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L162) |
 
 #### Example
 
@@ -134,7 +134,7 @@ ctx.fillRect(pos.x, pos.y, 4, 4); // draw cursor dot
 getPressedKeys(): Set<string>;
 ```
 
-Defined in: [core/input.ts:124](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L124)
+Defined in: [core/input.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L125)
 
 Returns a snapshot of all keys that are currently held down.
 
@@ -162,7 +162,7 @@ console.log([...pressed]); // e.g. ["w", "shift"]
 isKeyDown(key: string): boolean;
 ```
 
-Defined in: [core/input.ts:106](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L106)
+Defined in: [core/input.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L107)
 
 Checks whether a specific key is currently held down.
 
@@ -194,7 +194,7 @@ if (input.isKeyDown("space")) {
 isMouseButtonDown(button: number): boolean;
 ```
 
-Defined in: [core/input.ts:142](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L142)
+Defined in: [core/input.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L143)
 
 Checks whether a specific mouse button is currently held down.
 
@@ -226,7 +226,7 @@ if (input.isMouseButtonDown(2)) {
 reset(): void;
 ```
 
-Defined in: [core/input.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L177)
+Defined in: [core/input.ts:178](https://github.com/bdryanovski/gamefoo/blob/main/src/core/input.ts#L178)
 
 Clears all tracked key and mouse-button state.
 

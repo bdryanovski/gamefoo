@@ -208,7 +208,6 @@ export class Collidable extends Behaviour<GameObject> {
 
     const size = owner.getSize();
 
-    this.shape = options.shape;
     this.shape = options.shape ?? {
       type: "aabb",
       width: size.width,

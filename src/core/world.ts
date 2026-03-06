@@ -90,6 +90,36 @@ export default class World {
    * @since 0.1.0
    */
   detect(): void {
+    /**
+     * Note: this naive O(n^2) approach is fine for small numbers of colliders
+     * (e.g. <100) but will degrade rapidly as that grows. For larger games,
+     * consider implementing spatial partitioning (e.g. quad-trees) to reduce
+     * the number of pairwise checks.
+     * In the meantime, users can mitigate performance issues by carefully
+     * managing which colliders are active and using layers/tags to minimize
+     * unnecessary checks.
+     * This method is intentionally straightforward for clarity and ease of
+     * extension (e.g. adding new shapes or filters) in the early stages of
+     * development.
+     *
+     * Future optimizations could include:
+     * - Spatial partitioning (quad-trees, grids)
+     *   - Sweep and prune (sorting by axis)
+     *   - Early-out checks (e.g. bounding circles)
+     *   - Parallel processing (Web Workers)
+     *   - Configurable broad-phase strategies
+     *   - Caching world bounds and only updating when necessary
+     *   - Object pooling for collision data structures
+     *   - Profiling and optimizing hot paths (e.g. intersection tests)
+     *   - Allowing users to provide custom collision filters or callbacks
+     *   - Supporting more complex shapes (polygons, capsules) with appropriate tests
+     *   - Providing debug visualization tools to help users understand collisions
+     *   - Documenting best practices for performance (e.g. using layers/tags effectively)
+     *   - Providing warnings or profiling tools when performance degrades due to too many colliders
+     *   - etc.
+     */
+    if (this.colliders.size === 0) return;
+
     const list = Array.from(this.colliders);
     const len = list.length;
 

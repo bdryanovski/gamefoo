@@ -10,7 +10,7 @@ title: 'Class: Engine'
 
 # Class: Engine
 
-Defined in: [core/engine.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L115)
+Defined in: [core/engine.ts:124](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L124)
 
 Core game engine responsible for the game loop, rendering pipeline,
 entity management, collision detection, and camera tracking.
@@ -106,7 +106,7 @@ new Engine(
    config: EngineConfig): Engine;
 ```
 
-Defined in: [core/engine.ts:221](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L221)
+Defined in: [core/engine.ts:239](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L239)
 
 Creates a new `Engine` instance, binds it to a `<canvas>` element,
 and initialises the camera, object register, and collision world.
@@ -141,19 +141,21 @@ const engine = new Engine("game", 800, 600, {
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="_initialized"></a> `_initialized` | `private` | `boolean` | `false` | Guards against calling [Engine.setup](#setup) more than once. Flipped to `true` after the first successful setup invocation. | [core/engine.ts:154](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L154) |
-| <a id="_player"></a> `_player?` | `private` | [`Player`](Player.md) | `undefined` | Optional reference to the designated player entity. When set, the player is updated and rendered separately from the general object register and is used as the camera-follow target. | [core/engine.ts:178](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L178) |
-| <a id="canvas"></a> `canvas` | `private` | `HTMLCanvasElement` | `undefined` | The underlying `<canvas>` DOM element retrieved by its `id` during construction. | [core/engine.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L120) |
-| <a id="cnf"></a> `cnf` | `private` | `EngineConfig` | `undefined` | Merged engine configuration. Combines user-supplied values with internal defaults (`backgroundColor: "#000000"`). | [core/engine.ts:168](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L168) |
-| <a id="ctx"></a> `ctx` | `private` | `CanvasRenderingContext2D` | `undefined` | The 2-D rendering context obtained from [Engine.canvas](#canvas). Used by [Engine.render](#render) and exposed indirectly to game objects. | [core/engine.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L126) |
-| <a id="engine"></a> `engine` | `private` | \{ `camera`: [`Camera`](Camera.md) \| `null`; `collisions`: [`World`](World.md); `objects`: [`GameObjectRegister`](GameObjectRegister.md); \} | `undefined` | Internal subsystem container holding the three pillars of the engine: | Subsystem | Purpose | | ------------ | -------------------------------------------- | | `camera` | Viewport that tracks a target position | | `objects` | Registry of all non-player game objects | | `collisions` | Spatial world that performs collision detection | | [core/engine.ts:189](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L189) |
-| `engine.camera` | `public` | [`Camera`](Camera.md) \| `null` | `undefined` | Viewport camera; follows the player position each frame. | [core/engine.ts:191](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L191) |
-| `engine.collisions` | `public` | [`World`](World.md) | `undefined` | Collision-detection world. Entities register their [Collidable](Collidable.md) behaviour here. | [core/engine.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L195) |
-| `engine.objects` | `public` | [`GameObjectRegister`](GameObjectRegister.md) | `undefined` | Central registry for all [GameObject](../type-aliases/GameObject.md) instances (excluding the player). | [core/engine.ts:193](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L193) |
-| <a id="height"></a> `height` | `private` | `number` | `undefined` | The logical height of the game world (and the canvas), in pixels. Set once during construction and also used by the [Camera](Camera.md). | [core/engine.ts:148](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L148) |
-| <a id="lasttime"></a> `lastTime` | `private` | `number` | `0` | Timestamp (in milliseconds) of the previous animation frame. Used internally to calculate `deltaTime` between frames. Reset to `0` when the engine is set up via [Engine.setup](#setup). | [core/engine.ts:134](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L134) |
-| <a id="running"></a> `running` | `private` | `boolean` | `false` | Whether the game loop is actively requesting new frames. - Set to `true` inside [Engine.setup](#setup). - Set to `false` by [Engine.pause](#pause) or [Engine.clear](#clear). | [core/engine.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L162) |
-| <a id="width"></a> `width` | `private` | `number` | `undefined` | The logical width of the game world (and the canvas), in pixels. Set once during construction and also used by the [Camera](Camera.md). | [core/engine.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L141) |
+| <a id="gamescale"></a> `gameScale` | `public` | `number` | `DEFAULT_GAME_SCALE` | Global scale factor applied to the canvas via CSS transforms. This does not affect the internal resolution (`width` / `height`) or the camera viewport, but simply scales the rendered output for display. | [core/engine.ts:193](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L193) |
+| <a id="_initialized"></a> `_initialized` | `private` | `boolean` | `false` | Guards against calling [Engine.setup](#setup) more than once. Flipped to `true` after the first successful setup invocation. | [core/engine.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L163) |
+| <a id="boundloop"></a> `boundLoop` | `private` | (`timestamp`: `number`) => `void` | `undefined` | Binds the `loop` method to the current `this` context so it can be passed directly to `requestAnimationFrame` without losing the correct reference to the engine instance. Also prevent the need of GC to create a new function on each frame, which could lead to performance issues over time. | [core/engine.ts:419](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L419) |
+| <a id="canvas"></a> `canvas` | `private` | `HTMLCanvasElement` | `undefined` | The underlying `<canvas>` DOM element retrieved by its `id` during construction. | [core/engine.ts:129](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L129) |
+| <a id="cnf"></a> `cnf` | `private` | `EngineConfig` | `undefined` | Merged engine configuration. Combines user-supplied values with internal defaults (`backgroundColor: "#000000"`). | [core/engine.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L177) |
+| <a id="ctx"></a> `ctx` | `private` | `CanvasRenderingContext2D` | `undefined` | The 2-D rendering context obtained from [Engine.canvas](#canvas). Used by [Engine.render](#render) and exposed indirectly to game objects. | [core/engine.ts:135](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L135) |
+| <a id="engine"></a> `engine` | `private` | \{ `camera`: [`Camera`](Camera.md) \| `null`; `collisions`: [`World`](World.md); `monitor`: [`Monitor`](Monitor.md); `objects`: [`GameObjectRegister`](GameObjectRegister.md); \} | `undefined` | Internal subsystem container holding the three pillars of the engine: | Subsystem | Purpose | | ------------ | -------------------------------------------- | | `camera` | Viewport that tracks a target position | | `objects` | Registry of all non-player game objects | | `collisions` | Spatial world that performs collision detection | | [core/engine.ts:204](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L204) |
+| `engine.camera` | `public` | [`Camera`](Camera.md) \| `null` | `undefined` | Viewport camera; follows the player position each frame. | [core/engine.ts:206](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L206) |
+| `engine.collisions` | `public` | [`World`](World.md) | `undefined` | Collision-detection world. Entities register their [Collidable](Collidable.md) behaviour here. | [core/engine.ts:210](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L210) |
+| `engine.monitor` | `public` | [`Monitor`](Monitor.md) | `undefined` | Debug monitor for visualising performance * | [core/engine.ts:213](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L213) |
+| `engine.objects` | `public` | [`GameObjectRegister`](GameObjectRegister.md) | `undefined` | Central registry for all [GameObject](../type-aliases/GameObject.md). | [core/engine.ts:208](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L208) |
+| <a id="height"></a> `height` | `private` | `number` | `undefined` | The logical height of the game world (and the canvas), in pixels. Set once during construction and also used by the [Camera](Camera.md). | [core/engine.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L157) |
+| <a id="lasttime"></a> `lastTime` | `private` | `number` | `0` | Timestamp (in milliseconds) of the previous animation frame. Used internally to calculate `deltaTime` between frames. Reset to `0` when the engine is set up via [Engine.setup](#setup). | [core/engine.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L143) |
+| <a id="running"></a> `running` | `private` | `boolean` | `false` | Whether the game loop is actively requesting new frames. - Set to `true` inside [Engine.setup](#setup). - Set to `false` by [Engine.pause](#pause) or Engine.clear. | [core/engine.ts:171](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L171) |
+| <a id="width"></a> `width` | `private` | `number` | `undefined` | The logical width of the game world (and the canvas), in pixels. Set once during construction and also used by the [Camera](Camera.md). | [core/engine.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L150) |
 
 ## Accessors
 
@@ -165,7 +167,7 @@ const engine = new Engine("game", 800, 600, {
 get camera(): Camera | null;
 ```
 
-Defined in: [core/engine.ts:304](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L304)
+Defined in: [core/engine.ts:303](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L303)
 
 Provides direct access to the engine's [Camera](Camera.md).
 
@@ -213,7 +215,7 @@ implementation, but the return type allows for future flexibility (e.g. optional
 get collisions(): World;
 ```
 
-Defined in: [core/engine.ts:328](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L328)
+Defined in: [core/engine.ts:327](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L327)
 
 Provides direct access to the engine's collision [World](World.md).
 
@@ -239,62 +241,6 @@ entity.attachBehaviour(collidable);
 
 The active [World](World.md) instance managed by this engine.
 
-***
-
-### player
-
-#### Get Signature
-
-```ts
-get player(): Player | undefined;
-```
-
-Defined in: [core/engine.ts:270](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L270)
-
-Returns the current player entity, or `undefined` if none has been set.
-
-##### Example
-
-```ts
-if (engine.player) {
-  console.log("Player position:", engine.player.getPosition());
-}
-```
-
-##### Returns
-
-[`Player`](Player.md) \| `undefined`
-
-The active [Player](Player.md) instance, or `undefined`.
-
-#### Set Signature
-
-```ts
-set player(player: Player): void;
-```
-
-Defined in: [core/engine.ts:254](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L254)
-
-Assigns the primary player entity that the engine will update, render,
-and have the camera follow each frame.
-
-##### Example
-
-```ts
-const hero = new Player("hero", 400, 300, 50, 50);
-engine.player = hero;
-```
-
-##### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `player` | [`Player`](Player.md) | A [Player](Player.md) (or subclass) instance. |
-
-##### Returns
-
-`void`
-
 ## Methods
 
 ### attachObjects()
@@ -303,13 +249,10 @@ engine.player = hero;
 attachObjects(objects: GameObject): void;
 ```
 
-Defined in: [core/engine.ts:358](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L358)
+Defined in: [core/engine.ts:354](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L354)
 
 Registers a game object (entity) with the engine so it is automatically
 updated and rendered each frame.
-
-Objects registered here are **separate** from the player — the player is
-managed via the [player](#player) setter.
 
 #### Parameters
 
@@ -340,18 +283,15 @@ engine.attachObjects(new Tree(300, 200));
 
 ***
 
-### clear()
+### clearScrean()
 
 ```ts
-clear(): void;
+clearScrean(): void;
 ```
 
-Defined in: [core/engine.ts:597](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L597)
+Defined in: [core/engine.ts:651](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L651)
 
-Stops the game loop **and** clears the canvas to transparent.
-
-Equivalent to calling [Engine.pause](#pause) followed by erasing all
-drawn content.
+Clear the screen and set default background colour.
 
 #### Returns
 
@@ -360,7 +300,7 @@ drawn content.
 #### Example
 
 ```ts
-engine.clear();
+engine.clearScrean();
 // Canvas is now blank; loop is stopped.
 ```
 
@@ -372,7 +312,7 @@ engine.clear();
 destroy(): void;
 ```
 
-Defined in: [core/engine.ts:619](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L619)
+Defined in: [core/engine.ts:674](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L674)
 
 Tears down the engine and releases resources.
 
@@ -404,7 +344,7 @@ engine.destroy();
 handleResize(): void;
 ```
 
-Defined in: [core/engine.ts:380](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L380)
+Defined in: [core/engine.ts:376](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L376)
 
 Resizes the canvas via CSS transforms so it fits within its parent
 container while preserving the original aspect ratio.
@@ -437,7 +377,7 @@ window.addEventListener("resize", () => engine.handleResize());
 pause(): void;
 ```
 
-Defined in: [core/engine.ts:581](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L581)
+Defined in: [core/engine.ts:638](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L638)
 
 Pauses the game loop.
 
@@ -465,21 +405,21 @@ document.addEventListener("visibilitychange", () => {
 ### render()
 
 ```ts
-render(): void;
+render(_ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [core/engine.ts:546](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L546)
+Defined in: [core/engine.ts:619](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L619)
 
 Draws one complete frame to the canvas.
 
 Called automatically after [Engine.update](#update) in the game loop, but
 is `public` for manual / debug rendering.
 
-**Render order:**
-1. Clear the entire canvas.
-2. Fill with the configured EngineConfig.backgroundColor.
-3. Draw the player (if set).
-4. Draw all registered game objects.
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `_ctx` | `CanvasRenderingContext2D` |
 
 #### Returns
 
@@ -489,7 +429,9 @@ is `public` for manual / debug rendering.
 
 ```ts
 // Force a single frame repaint:
-engine.render();
+engine.render((ctx) => {
+  ctx.fillStyle = "red";
+});
 ```
 
 ***
@@ -500,7 +442,7 @@ engine.render();
 resize(width: number, height: number): void;
 ```
 
-Defined in: [core/engine.ts:412](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L412)
+Defined in: [core/engine.ts:408](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L408)
 
 Directly sets the canvas pixel dimensions.
 
@@ -529,10 +471,10 @@ engine.resize(1024, 768);
 ### setup()
 
 ```ts
-setup(setupFn: () => void): Promise<void>;
+setup(setupFn?: () => void): Promise<void>;
 ```
 
-Defined in: [core/engine.ts:475](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L475)
+Defined in: [core/engine.ts:558](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L558)
 
 Initialises the engine and starts the game loop.
 
@@ -547,15 +489,11 @@ console and the method returns immediately.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `setupFn` | () => `void` | A synchronous callback executed once before the loop begins. Typically used for scene initialisation. |
+| `setupFn?` | () => `void` | (optional) A synchronous callback executed once before the loop begins. Typically used for scene initialisation. |
 
 #### Returns
 
 `Promise`\<`void`\>
-
-#### Throws
-
-If `setupFn` is not a function.
 
 #### Examples
 
@@ -575,27 +513,21 @@ engine.setup(() => {}); // warns: "Engine is already initialized."
 ### update()
 
 ```ts
-update(deltaTime: number): void;
+update(_deltaTime: number): void;
 ```
 
-Defined in: [core/engine.ts:512](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L512)
+Defined in: [core/engine.ts:603](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L603)
 
 Advances the game state by one tick.
 
 Called automatically by the game loop, but is `public` so it can be
 invoked manually for deterministic / test-driven updates.
 
-**Update order:**
-1. Player (if set).
-2. All registered game objects.
-3. Collision detection pass ([World.detect](World.md#detect)).
-4. Camera follow (tracks the player position).
-
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `deltaTime` | `number` | Time elapsed since the last frame, **in seconds**. |
+| Parameter | Type |
+| ------ | ------ |
+| `_deltaTime` | `number` |
 
 #### Returns
 
@@ -616,7 +548,7 @@ engine.update(1 / 60); // simulate a single 60 FPS tick
 private loop(timestamp: number): void;
 ```
 
-Defined in: [core/engine.ts:430](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L430)
+Defined in: [core/engine.ts:434](https://github.com/bdryanovski/gamefoo/blob/main/src/core/engine.ts#L434)
 
 **`Internal`**
 

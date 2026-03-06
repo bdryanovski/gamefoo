@@ -115,8 +115,8 @@ class Crate extends Entity {
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
-| <a id="position"></a> `position` | `protected` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
-| <a id="size"></a> `size` | `protected` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
+| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
+| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
 | <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | Priority-sorted cache of behaviours. Invalidated (`null`) whenever a behaviour is attached or detached. | [entities/entity.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L82) |
 | <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | Internal map from behaviour key (lowercased type) to [Behaviour](Behaviour.md) instance. | [entities/entity.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L76) |
 

@@ -84,7 +84,8 @@ export default class Input {
     });
 
     window.addEventListener("mousemove", (e) => {
-      this.mousePosition = { x: e.clientX, y: e.clientY };
+      this.mousePosition.x = e.clientX;
+      this.mousePosition.y = e.clientY;
     });
   }
 

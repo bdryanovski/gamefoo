@@ -146,7 +146,7 @@ case-insensitive.
 getOwner(): Entity;
 ```
 
-Defined in: [core/behaviours/collidable.ts:260](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L260)
+Defined in: [core/behaviours/collidable.ts:259](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L259)
 
 Returns the [Entity](Entity.md) that owns this behaviour.
 
@@ -167,7 +167,7 @@ The owning entity.
 getWorldBounds(): WorldBounds;
 ```
 
-Defined in: [core/behaviours/collidable.ts:276](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L276)
+Defined in: [core/behaviours/collidable.ts:275](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L275)
 
 Computes this collider's axis-aligned bounding rectangle in
 world-space, accounting for the shape's optional offset.
@@ -193,7 +193,7 @@ const bounds = collidable.getWorldBounds();
 onAttach(): void;
 ```
 
-Defined in: [core/behaviours/collidable.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L238)
+Defined in: [core/behaviours/collidable.ts:237](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L237)
 
 Lifecycle hook: registers this collider with the [World](World.md)
 when the behaviour is attached to an entity.
@@ -218,7 +218,7 @@ when the behaviour is attached to an entity.
 onDetach(): void;
 ```
 
-Defined in: [core/behaviours/collidable.ts:248](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L248)
+Defined in: [core/behaviours/collidable.ts:247](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L247)
 
 Lifecycle hook: removes this collider from the [World](World.md)
 when the behaviour is detached.
@@ -272,7 +272,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 update(_deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/collidable.ts:230](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L230)
+Defined in: [core/behaviours/collidable.ts:229](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L229)
 
 No-op — collision logic lives in [World.detect](World.md#detect).
 

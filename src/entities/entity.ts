@@ -62,12 +62,12 @@ export default abstract class Entity {
   /**
    * World-space position of the entity's origin (top-left corner).
    */
-  protected position: Vector2 = { x: 0, y: 0 };
+  protected readonly position: Vector2 = { x: 0, y: 0 };
 
   /**
    * Bounding dimensions of the entity in pixels.
    */
-  protected size: Demension = { width: 0, height: 0 };
+  protected readonly size: Demension = { width: 0, height: 0 };
 
   /**
    * Internal map from behaviour key (lowercased type) to
@@ -155,7 +155,7 @@ export default abstract class Entity {
    * @returns A new {@link Vector2} with the entity's `x` and `y`.
    */
   getPosition(): Vector2 {
-    return { ...this.position };
+    return this.position;
   }
 
   /**
@@ -164,7 +164,7 @@ export default abstract class Entity {
    * @returns An object with `width` and `height`.
    */
   getSize(): Demension {
-    return { ...this.size };
+    return this.size;
   }
 
   /**

@@ -59,9 +59,10 @@ new GameObjectRegister(): GameObjectRegister;
 
 ## Properties
 
-| Property | Modifier | Type | Description | Defined in |
-| ------ | ------ | ------ | ------ | ------ |
-| <a id="objects"></a> `objects` | `private` | `Map`\<`string`, [`GameObject`](../type-aliases/GameObject.md)\> | Internal map from entity ID to its [GameObject](../type-aliases/GameObject.md) instance. | [core/game\_object\_register.ts:38](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L38) |
+| Property | Modifier | Type | Default value | Description | Defined in |
+| ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="_cache"></a> `_cache` | `private` | [`GameObject`](../type-aliases/GameObject.md)[] \| `null` | `null` | - | [core/game\_object\_register.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L40) |
+| <a id="objects"></a> `objects` | `private` | `Map`\<`string`, [`GameObject`](../type-aliases/GameObject.md)\> | `undefined` | Internal map from entity ID to its [GameObject](../type-aliases/GameObject.md) instance. | [core/game\_object\_register.ts:38](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L38) |
 
 ## Methods
 
@@ -71,7 +72,7 @@ new GameObjectRegister(): GameObjectRegister;
 get(id: string): GameObject | undefined;
 ```
 
-Defined in: [core/game\_object\_register.ts:69](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L69)
+Defined in: [core/game\_object\_register.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L72)
 
 Retrieves a registered object by its unique ID.
 
@@ -99,10 +100,10 @@ if (crate) crate.x += 10;
 ### getAll()
 
 ```ts
-getAll(_filter: () => true): GameObject[];
+getAll(filter?: () => true): GameObject[];
 ```
 
-Defined in: [core/game\_object\_register.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L95)
+Defined in: [core/game\_object\_register.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L115)
 
 Returns all registered objects that pass the supplied filter.
 
@@ -110,7 +111,7 @@ Returns all registered objects that pass the supplied filter.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `_filter` | () => `true` | A predicate function. Return `true` to include the object in the result. |
+| `filter?` | () => `true` | (optional) A predicate function. Return `true` to include the object in the result. |
 
 #### Returns
 
@@ -132,7 +133,7 @@ const enemies = register.getAll(() => true);
 has(id: string): boolean;
 ```
 
-Defined in: [core/game\_object\_register.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L79)
+Defined in: [core/game\_object\_register.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L82)
 
 Checks whether an object with the given ID is registered.
 
@@ -156,7 +157,7 @@ Checks whether an object with the given ID is registered.
 register(object: GameObject): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L53)
+Defined in: [core/game\_object\_register.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L55)
 
 Adds a game object to the registry.
 
@@ -187,7 +188,7 @@ register.register(new Crate("crate_1", 200, 150, 32, 32));
 renderAll(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:117](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L117)
+Defined in: [core/game\_object\_register.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L141)
 
 Calls [render(ctx)](Entity.md#render) on every registered
 object.
@@ -204,13 +205,37 @@ object.
 
 ***
 
+### toArray()
+
+```ts
+toArray(): GameObject[];
+```
+
+Defined in: [core/game\_object\_register.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L95)
+
+Returns all registered objects as an array.
+
+Make sure to also cache the objects
+
+#### Returns
+
+[`GameObject`](../type-aliases/GameObject.md)[]
+
+An array of all [GameObject](../type-aliases/GameObject.md) instances in the registry.
+
+#### Since
+
+0.2.0
+
+***
+
 ### updateAll()
 
 ```ts
 updateAll(deltaTime: number): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:105](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L105)
+Defined in: [core/game\_object\_register.ts:129](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L129)
 
 Calls [update(deltaTime)](Entity.md#update) on every
 registered object.

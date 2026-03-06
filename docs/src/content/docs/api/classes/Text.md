@@ -35,13 +35,10 @@ keep track of text objects and interact with them
 ### Constructor
 
 ```ts
-new Text(
-   fontName: any, 
-   x: number, 
-   y: number): Text;
+new Text(id: string, fontName: string): Text;
 ```
 
-Defined in: [entities/text.ts:38](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L38)
+Defined in: [entities/text.ts:36](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L36)
 
 Create new Text object that could be placed and render on the screen
 
@@ -49,9 +46,8 @@ Create new Text object that could be placed and render on the screen
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `fontName` | `any` | the FontBitmap valid name to load |
-| `x` | `number` | initial vertical position |
-| `y` | `number` | initial horizontal position |
+| `id` | `string` | - |
+| `fontName` | `string` | the FontBitmap valid name to load |
 
 #### Returns
 
@@ -72,10 +68,10 @@ const Label = new Text('5x5', 20, 20);
 | Property | Modifier | Type | Default value | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [`Entity`](Entity.md).[`id`](Entity.md#id) | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
-| <a id="f"></a> `f` | `protected` | [`FontBitmap`](FontBitmap.md) | `undefined` | BitmapFont instance used to manipulate the font | - | [entities/text.ts:21](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L21) |
+| <a id="font"></a> `font` | `protected` | [`FontBitmap`](FontBitmap.md) | `undefined` | BitmapFont instance used to manipulate the font | - | [entities/text.ts:21](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L21) |
 | <a id="fontname"></a> `fontName` | `protected` | `string` | `undefined` | Bitmap font name to load internally | - | [entities/text.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L18) |
-| <a id="position"></a> `position` | `protected` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [`Entity`](Entity.md).[`position`](Entity.md#position) | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
-| <a id="size"></a> `size` | `protected` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [`Entity`](Entity.md).[`size`](Entity.md#size) | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
+| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [`Entity`](Entity.md).[`position`](Entity.md#position) | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
+| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [`Entity`](Entity.md).[`size`](Entity.md#size) | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
 | <a id="text"></a> `text` | `protected` | `string` | `""` | Internal state of the text needed to be update | - | [entities/text.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L24) |
 
 ## Accessors
@@ -507,7 +503,7 @@ void
 setText(text: string): void;
 ```
 
-Defined in: [entities/text.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L53)
+Defined in: [entities/text.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L51)
 
 Set internal state value
 
