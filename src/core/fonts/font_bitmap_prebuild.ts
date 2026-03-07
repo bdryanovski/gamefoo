@@ -1,4 +1,4 @@
-import FontBitmap, { type InternalBitmapFontName } from "./font_bitmap";
+import FontBitmap from "./font_bitmap";
 
 /**
  * Bitmap font renderer that pre-builds character paths for faster rendering and
@@ -65,13 +65,6 @@ import FontBitmap, { type InternalBitmapFontName } from "./font_bitmap";
  *
  */
 export default class FontBitmapPrebuild extends FontBitmap {
-  /**
-   * Creates a new `FontBitmapPrebuild` instance with the specified font name.
-   */
-  constructor(name: InternalBitmapFontName) {
-    super(name);
-  }
-
   /**
    * Map of pre-built `Path2D` objects for each character. Keys are characters,
    * values are their corresponding paths.
