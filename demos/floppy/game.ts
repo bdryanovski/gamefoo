@@ -1,138 +1,156 @@
-import { InternalBitmapFontName } from "../../src/core/fonts/font_bitmap";
-import {
-  Engine,
-  Entity,
-  FontBitmap,
-  FontBitmapPrebuild,
-  ObjectSystem,
-  Text,
-  type Vector2,
-} from "../../src/index";
+import { DynamicEntity, Engine, Entity, Input, ObjectSystem, Text } from "../../src/index";
 
-const input = new Input();
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
 const WIDTH = 200;
 const HEIGHT = 75;
-const BACKGROUND = "#e0e0e0";
-
-const GROUND_H = HEIGHT - 10;
-
+const GROUND_Y = HEIGHT - 10;
 const START_X = 20;
 const START_Y = HEIGHT / 2 - 10;
 
-const GSTATE = {
-  IDLE: "idle",
-  READY: "ready",
-  PLAYING: "playing",
-  GAMEOVER: "gameover",
-};
+const SCROLL_SPEED = 48;
+const PIPE_GAP = 22;
+const PIPE_WIDTH = 11;
+const PIPE_SPAWN_INTERVAL = 1.4;
+const PIPE_MIN_HEIGHT = 8;
+const SCORE_PER_PIPE = 10;
+
+const FLAP_STRENGTH = -75;
+const GRAVITY = 255;
+const MAX_FALL_SPEED = 150;
+const GAME_OVER_COOLDOWN = 0.5;
 
 const Colors = {
   background: "#e0e0e0",
   foreground: "#1a1a1a",
   middle: "#888888",
+} as const;
+
+// ---------------------------------------------------------------------------
+// Game State
+// ---------------------------------------------------------------------------
+
+enum GameState {
+  IDLE = "idle",
+  READY = "ready",
+  PLAYING = "playing",
+  GAME_OVER = "gameover",
+}
+
+const game = {
+  state: GameState.IDLE as GameState,
+  score: 0,
+  highScore: 0,
+  gameOverTimer: 0,
 };
 
-let gameState = GSTATE.IDLE;
-let gameOverTime = 0;
-let score = 0;
-let highScore = 0;
+function triggerGameOver(): void {
+  if (game.state === GameState.GAME_OVER) return;
+  game.state = GameState.GAME_OVER;
+  game.gameOverTimer = 0;
+  if (game.score > game.highScore) {
+    game.highScore = game.score;
+  }
+}
 
-class Player extends DynamicEntity {
-  protected readonly flapStrenght = -75;
-  protected readonly gravity = 255;
-  protected readonly maxFallSpeed = 150;
+function restartGame(): void {
+  game.state = GameState.PLAYING;
+  game.score = 0;
+  bird.reset();
+  bird.flap();
+  pipeManager.resetPipes();
+}
 
-  public height: number;
-  public width: number;
+// ---------------------------------------------------------------------------
+// Input
+// ---------------------------------------------------------------------------
 
+const input = new Input();
+
+// ---------------------------------------------------------------------------
+// Entities
+// ---------------------------------------------------------------------------
+
+const BIRD_SPRITE = [
+  [1, 0, 1, 1, 0, 0],
+  [1, 1, 1, 0, 1, 0],
+  [0, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 0, 0],
+  [0, 1, 0, 1, 0, 0],
+];
+
+class Bird extends DynamicEntity {
   private bobTimer = 0;
-
   private flapKeyWasDown = false;
 
-  private bgColor = Colors.background;
-  private fgColor = Colors.foreground;
-
-  private sprite = [
-    [1, 0, 1, 1, 0, 0],
-    [1, 1, 1, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 0, 0],
-    [0, 1, 0, 1, 0, 0],
-  ];
-
-  constructor(width = 5, height = 5) {
-    super("player", START_X, START_Y, width, height);
+  constructor() {
+    super("bird", START_X, START_Y, 6, 5);
     this.velocity = { x: 0, y: 0 };
-
-    this.width = width;
-    this.height = height;
   }
 
-  flap() {
-    this.velocity.y = this.flapStrenght;
+  flap(): void {
+    this.velocity.y = FLAP_STRENGTH;
   }
 
-  reset() {
+  reset(): void {
     this.x = START_X;
     this.y = START_Y;
     this.velocity = { x: 0, y: 0 };
   }
 
-  consumeFlap(): boolean {
+  private consumeFlap(): boolean {
     const isDown = input.isKeyDown("w");
     if (isDown && !this.flapKeyWasDown) {
       this.flapKeyWasDown = true;
       return true;
     }
-
     if (!isDown) {
       this.flapKeyWasDown = false;
     }
     return false;
   }
 
-  override update(delta: number): void {
-    if (gameState === GSTATE.PLAYING) {
-      this.velocity.y += this.gravity * delta;
-      /**
-       * Don't fall faster than maxFallSpeed, otherwise the game becomes unplayable.
-       */
-      if (this.velocity.y > this.maxFallSpeed) {
-        this.velocity.y = this.maxFallSpeed;
-      }
+  override update(dt: number): void {
+    switch (game.state) {
+      case GameState.PLAYING:
+        this.velocity.y = Math.min(this.velocity.y + GRAVITY * dt, MAX_FALL_SPEED);
+        this.y += this.velocity.y * dt;
 
-      this.y += this.velocity.y * delta;
+        if (this.y < 0) {
+          this.y = 0;
+          this.velocity.y = 0;
+        }
+        if (this.y + this.getSize().height >= GROUND_Y) {
+          this.y = GROUND_Y - this.getSize().height;
+          triggerGameOver();
+        }
+        break;
 
-      if (this.y < 0) {
-        this.y = 0;
-        this.velocity.y = 0;
-      }
+      case GameState.GAME_OVER:
+        game.gameOverTimer += dt;
+        this.velocity.y += GRAVITY * dt;
+        this.y += this.velocity.y * dt;
+        if (this.y + this.getSize().height >= GROUND_Y) {
+          this.y = GROUND_Y - this.getSize().height;
+          this.velocity.y = 0;
+        }
+        break;
 
-      if (this.y + this.height >= GROUND_H) {
-        this.y = GROUND_H - this.height;
-        gameOver();
-      }
-    } else if (gameState === GSTATE.GAMEOVER) {
-      gameOverTime += delta;
-      this.velocity.y += this.gravity * delta;
-      this.y += this.velocity.y * delta;
-      if (this.y + this.height >= GROUND_H) {
-        this.y = GROUND_H - this.height;
-        this.velocity.y = 0;
-      }
-    } else if (gameState === GSTATE.READY) {
-      this.bobTimer += delta;
-      this.y = START_Y + Math.sin(this.bobTimer * 3) * 2;
+      case GameState.READY:
+        this.bobTimer += dt;
+        this.y = START_Y + Math.sin(this.bobTimer * 3) * 2;
+        break;
     }
 
     if (this.consumeFlap()) {
-      if (gameState === GSTATE.READY) {
-        gameState = GSTATE.PLAYING;
+      if (game.state === GameState.READY) {
+        game.state = GameState.PLAYING;
         this.flap();
-      } else if (gameState === GSTATE.PLAYING) {
+      } else if (game.state === GameState.PLAYING) {
         this.flap();
-      } else if (gameState === GSTATE.GAMEOVER && gameOverTime > 0.5) {
+      } else if (game.state === GameState.GAME_OVER && game.gameOverTimer > GAME_OVER_COOLDOWN) {
         restartGame();
       }
     }
@@ -142,136 +160,122 @@ class Player extends DynamicEntity {
     const px = Math.round(this.x);
     const py = Math.round(this.y);
 
-    ctx.fillStyle = this.fgColor;
-    for (let row = 0; row < this.sprite.length; row++) {
-      const cols = this.sprite[row]!;
+    ctx.fillStyle = Colors.foreground;
+    for (let row = 0; row < BIRD_SPRITE.length; row++) {
+      const cols = BIRD_SPRITE[row]!;
       for (let col = 0; col < cols.length; col++) {
         if (cols[col]) {
           ctx.fillRect(px + col, py + row, 1, 1);
         }
       }
     }
-    //
-    //ctx.fillStyle = this.bgColor;
-    //ctx.fillRect(px + 2, py + 2, 1, 1);
   }
 }
 
-const player = new Player();
+// ---------------------------------------------------------------------------
+// Ground
+// ---------------------------------------------------------------------------
 
 class Ground extends DynamicEntity {
   private scrollX = 0;
-  private height = 10;
 
-  public speed = 48;
-
-  constructor(height = 10) {
-    super("ground", 0, GROUND_H, WIDTH, height);
-
-    this.height = height;
+  constructor() {
+    super("ground", 0, GROUND_Y, WIDTH, 10);
   }
 
-  override update(delta: number): void {
-    if (gameState === GSTATE.PLAYING) {
-      this.scrollX = (this.scrollX + this.speed * delta) % 6;
+  override update(dt: number): void {
+    if (game.state === GameState.PLAYING) {
+      this.scrollX = (this.scrollX + SCROLL_SPEED * dt) % 6;
     }
   }
 
   override render(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = Colors.foreground;
-    ctx.fillRect(0, GROUND_H, WIDTH, 1);
+    ctx.fillRect(0, GROUND_Y, WIDTH, 1);
 
     ctx.fillStyle = Colors.background;
-    ctx.fillRect(0, GROUND_H + 1, WIDTH, this.height - 1);
+    ctx.fillRect(0, GROUND_Y + 1, WIDTH, this.getSize().height - 1);
 
     ctx.fillStyle = Colors.middle;
-
     for (let gx = -Math.round(this.scrollX); gx < WIDTH; gx += 6) {
-      ctx.fillRect(gx, GROUND_H + 1, 1, 2);
+      ctx.fillRect(gx, GROUND_Y + 1, 1, 2);
     }
   }
 }
-const ground = new Ground();
 
-const engine = new Engine("flappy-canvas", WIDTH, HEIGHT, {
-  backgroundColor: Colors.background,
-});
+// ---------------------------------------------------------------------------
+// Pipes
+// ---------------------------------------------------------------------------
 
-type Pipe = {
+interface PipeData {
   x: number;
-  height: number;
+  gapY: number;
   scored: boolean;
-};
+}
 
-let pipeSpawnTimer = 0;
+class PipeManager extends Entity {
+  private pipes: PipeData[] = [];
+  private spawnTimer = 0;
+  private bird: Bird;
 
-class Pipes extends DynamicEntity {
-  private width = 11;
-  private gap = 22;
-  public speed = 48;
-  private spawnInterval = 1.4;
-  private minHeight = 8;
-
-  private scorePoint = 10;
-
-  private pipes: Pipe[] = [];
-
-  constructor() {
-    super("pipes", 0, 0, 0, 0);
+  constructor(bird: Bird) {
+    super("pipes", 0, 0);
+    this.bird = bird;
   }
 
-  spawnPipe() {
-    const min = this.minHeight;
-    const max = GROUND_H - this.gap - this.minHeight;
-    const height = min + Math.random() * (max - min);
+  resetPipes(): void {
+    this.pipes.length = 0;
+    this.spawnTimer = 0;
+  }
+
+  private spawnPipe(): void {
+    const min = PIPE_MIN_HEIGHT;
+    const max = GROUND_Y - PIPE_GAP - PIPE_MIN_HEIGHT;
     this.pipes.push({
       x: WIDTH,
-      height: Math.round(height),
+      gapY: Math.round(min + Math.random() * (max - min)),
       scored: false,
     });
   }
 
-  resetPipes() {
-    this.pipes.length = 0;
-    pipeSpawnTimer = 0;
-  }
+  override update(dt: number): void {
+    if (game.state !== GameState.PLAYING) return;
 
-  override update(delta: number): void {
-    if (gameState !== GSTATE.PLAYING) return;
-
-    pipeSpawnTimer += delta;
-    if (pipeSpawnTimer >= this.spawnInterval) {
+    this.spawnTimer += dt;
+    if (this.spawnTimer >= PIPE_SPAWN_INTERVAL) {
       this.spawnPipe();
-      pipeSpawnTimer = 0;
+      this.spawnTimer = 0;
     }
 
-    const bLeft = Math.round(player.x) + 1;
-    const bRight = bLeft + player.width - 1;
-    const bTop = Math.round(player.y);
-    const bBottom = bTop + player.height;
+    const birdPos = this.bird.getPosition();
+    const birdSize = this.bird.getSize();
+    const bLeft = Math.round(birdPos.x) + 1;
+    const bRight = bLeft + birdSize.width - 1;
+    const bTop = Math.round(birdPos.y);
+    const bBottom = bTop + birdSize.height;
 
     for (let i = this.pipes.length - 1; i >= 0; i--) {
       const pipe = this.pipes[i]!;
-      pipe.x -= this.speed * delta;
+      pipe.x -= SCROLL_SPEED * dt;
 
-      if (pipe.x + this.width < 0) {
+      if (pipe.x + PIPE_WIDTH < 0) {
         this.pipes.splice(i, 1);
         continue;
       }
 
-      if (!pipe.scored && pipe.x + this.width < bLeft) {
+      if (!pipe.scored && pipe.x + PIPE_WIDTH < bLeft) {
         pipe.scored = true;
-        score += this.scorePoint;
+        game.score += SCORE_PER_PIPE;
       }
 
       const pLeft = Math.round(pipe.x);
-      const pRight = pLeft + this.width;
-      const gapTop = pipe.height;
-      const gapBottom = pipe.height + this.gap;
+      const pRight = pLeft + PIPE_WIDTH;
+      const gapTop = pipe.gapY;
+      const gapBottom = pipe.gapY + PIPE_GAP;
 
       if (bRight > pLeft && bLeft < pRight) {
         if (bTop < gapTop || bBottom > gapBottom) {
-          gameOver();
+          triggerGameOver();
         }
       }
     }
@@ -281,43 +285,85 @@ class Pipes extends DynamicEntity {
     ctx.fillStyle = Colors.foreground;
     for (const pipe of this.pipes) {
       const px = Math.round(pipe.x);
-      const gapTop = pipe.height;
-      const gapBottom = pipe.height + this.gap;
+      const gapTop = pipe.gapY;
+      const gapBottom = pipe.gapY + PIPE_GAP;
 
-      // Top pipe
-      ctx.fillRect(px, 0, this.width, gapTop);
-
-      // Bottom pipe
-      ctx.fillRect(px, gapBottom, this.width, GROUND_H - gapBottom);
+      ctx.fillRect(px, 0, PIPE_WIDTH, gapTop);
+      ctx.fillRect(px, gapBottom, PIPE_WIDTH, GROUND_Y - gapBottom);
     }
   }
 }
 
-const pipes = new Pipes();
+// ---------------------------------------------------------------------------
+// HUD
+// ---------------------------------------------------------------------------
 
-engine.attachObjects(pipes);
-engine.attachObjects(player);
-engine.attachObjects(ground);
+class ScoreLabel extends Text {
+  constructor() {
+    super("score-label", "3x5");
+    this.y = 2;
+  }
 
-engine.setup(() => {
-  gameState = GSTATE.READY;
-  console.log("Flappy setup");
+  override update(_dt: number): void {
+    if (game.state === GameState.PLAYING || game.state === GameState.GAME_OVER) {
+      const text = `${game.score}`;
+      this.setText(text);
+      this.x = Math.round((WIDTH - this.font.getTextWidth(text)) / 2);
+    } else {
+      this.setText("");
+    }
+  }
+
+  override render(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = Colors.foreground;
+    super.render(ctx);
+  }
+}
+
+class MessageLabel extends Text {
+  constructor() {
+    super("message-label", "3x5");
+  }
+
+  override update(_dt: number): void {
+    let text = "";
+
+    switch (game.state) {
+      case GameState.READY:
+        text = "PRESS W TO FLAP";
+        break;
+      case GameState.GAME_OVER:
+        text = `GAME OVER  HI:${game.highScore}`;
+        break;
+    }
+
+    this.setText(text);
+    this.x = Math.round((WIDTH - this.font.getTextWidth(text)) / 2);
+    this.y = Math.round(GROUND_Y / 2 + 10);
+  }
+
+  override render(ctx: CanvasRenderingContext2D): void {
+    ctx.fillStyle = Colors.foreground;
+    super.render(ctx);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Bootstrap
+// ---------------------------------------------------------------------------
+
+const bird = new Bird();
+const pipeManager = new PipeManager(bird);
+
+const engine = new Engine("game", WIDTH, HEIGHT, {
+  backgroundColor: Colors.background,
+  gameScale: 4,
 });
 
-const restartGame = (): void => {
-  gameState = GSTATE.PLAYING;
-  score = 0;
-  player.reset();
-  player.flap();
-  pipes.resetPipes();
-  // reset pipes
-};
+engine.use(
+  new ObjectSystem([pipeManager, bird, new Ground(), new ScoreLabel(), new MessageLabel()]),
+);
 
-const gameOver = (): void => {
-  if (gameState === GSTATE.GAMEOVER) return;
-  gameState = GSTATE.GAMEOVER;
-  gameOverTime = 0;
-  if (score > highScore) {
-    highScore = score;
-  }
-};
+engine.setup(() => {
+  game.state = GameState.READY;
+});
