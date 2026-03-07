@@ -41,5 +41,11 @@ export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";
 export { default as Player } from "./entities/player";
 export { default as Text } from "./entities/text";
+export { CameraSystem } from "./subsystems/camera_system";
+// ── Subsystems ───────────────────────────────────────────────────
+export { CollisionSystem } from "./subsystems/collision_system";
+export { MonitorSystem } from "./subsystems/monitor_system";
+export { ObjectSystem } from "./subsystems/object_system";
+export type { SubSystem } from "./subsystems/types";
 // ── Type-only exports ───────────────────────────────────────────────
 export type { ColliderShape, CollisionInfo, Demension, GameObject, Vector2 } from "./types";
