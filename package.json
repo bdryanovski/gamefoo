@@ -1,6 +1,6 @@
 {
   "name": "@dryanovski/gamefoo",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A lightweight 2D game engine with behavior-based component system",
   "license": "MIT",
   "files": [
