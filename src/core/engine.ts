@@ -186,7 +186,7 @@ export default class Engine {
    * camera viewport, but simply scales the rendered output for display.
    *
    */
-  public gameScale: number = DEFAULT_GAME_SCALE;
+  public scale: number = DEFAULT_GAME_SCALE;
 
   /**
    * The main subsystems of the engine, responsible for core functionalities
@@ -233,7 +233,7 @@ export default class Engine {
 
     this.cnf = { ...this.cnf, ...config };
 
-    this.gameScale = this.cnf.gameScale || DEFAULT_GAME_SCALE;
+    this.scale = this.cnf.gameScale || DEFAULT_GAME_SCALE;
 
     /**
      * Make sure to always pixelate the canvas to preserve crisp edges for pixel art.
@@ -242,8 +242,8 @@ export default class Engine {
     this.canvas.style.imageRendering = "-moz-crisp-edges";
     this.canvas.style.imageRendering = "crisp-edges";
 
-    this.canvas.style.width = `${this.width * this.gameScale}px`;
-    this.canvas.style.height = `${this.height * this.gameScale}px`;
+    this.canvas.style.width = `${this.width * this.scale}px`;
+    this.canvas.style.height = `${this.height * this.scale}px`;
   }
 
   /**
