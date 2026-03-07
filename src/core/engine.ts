@@ -1,8 +1,4 @@
-import Monitor from "../debug/monitor";
-import type { GameObject } from "../types";
-import Camera from "./camera";
-import GameObjectRegister from "./game_object_register";
-import World from "./world";
+import type { SubSystem } from "@/subsystems/types";
 
 const DEFAULT_GAME_SCALE = 1;
 
@@ -193,25 +189,12 @@ export default class Engine {
   public gameScale: number = DEFAULT_GAME_SCALE;
 
   /**
-   * Internal subsystem container holding the three pillars of the engine:
+   * The main subsystems of the engine, responsible for core functionalities
+   * like rendering, object management, collision detection, and monitoring.
    *
-   * | Subsystem    | Purpose                                      |
-   * | ------------ | -------------------------------------------- |
-   * | `camera`     | Viewport that tracks a target position        |
-   * | `objects`    | Registry of all non-player game objects        |
-   * | `collisions` | Spatial world that performs collision detection |
+   * Subsystems are executed in a specific order determined by their `order` property
    */
-  private engine: {
-    /** Viewport camera; follows the player position each frame. */
-    camera: Camera | null;
-    /** Central registry for all {@link GameObject}. */
-    objects: GameObjectRegister;
-    /** Collision-detection world. Entities register their {@link Collidable} behaviour here. */
-    collisions: World;
-
-    /** Debug monitor for visualising performance **/
-    monitor: Monitor;
-  };
+  private subsystems: SubSystem[] = [];
 
   /**
    * Creates a new `Engine` instance, binds it to a `<canvas>` element,
@@ -250,13 +233,6 @@ export default class Engine {
 
     this.cnf = { ...this.cnf, ...config };
 
-    this.engine = {
-      camera: new Camera(this.width, this.height),
-      objects: new GameObjectRegister(),
-      collisions: new World(),
-      monitor: new Monitor(),
-    };
-
     this.gameScale = this.cnf.gameScale || DEFAULT_GAME_SCALE;
 
     /**
@@ -271,88 +247,72 @@ export default class Engine {
   }
 
   /**
-   * Provides direct access to the engine's {@link Camera}.
+   * Attaches a subsystem to the engine, making it part of the update and render cycles.
    *
-   * Use this to control viewport tracking, e.g. by calling `camera.follow`
-   * with a custom target or adjusting the camera position manually.
-   * The camera automatically follows the player position each frame when a
-   * player is set, but you can override this behaviour by manipulating the
-   * camera directly.
+   * Subsystems are executed in a specific order determined by their `order` property (lower values run first).
    *
    * @since 0.2.0
    *
-   * @returns The active {@link Camera} instance managed by this engine.
-   * Note that the camera is always present and never `null` in the current
-   * implementation, but the return type allows for future flexibility (e.g. optional camera).
+   * @param subsystem - The subsystem instance to attach. Must implement the {@link SubSystem} interface.
+   *
+   * @returns The engine instance, allowing for method chaining.
    *
    * @example
    * ```ts
-   * // Manually set the camera to a specific position:
-   * engine.camera?.moveTo({ x: 500, y: 300 });
+   * engine.use(new ObjectSystem());
+   * engine.use(new CollisionSystem());
    * ```
-   * @example
-   * ```ts
-   * // Disable automatic camera follow by overriding the follow method:
-   * if (engine.camera) {
-   *  engine.camera.follow = () => {};
-   *  }
-   *
-   *  // The camera will now ignore the player position and stay fixed.
-   *  ```
    */
-  get camera(): Camera | null {
-    return this.engine.camera;
+  use(subsystem: SubSystem): this {
+    this.subsystems.push(subsystem);
+    /**
+     * Sort subsystems by their `order` property (defaulting to `100` if not specified) to ensure they run in the correct sequence.
+     */
+    this.subsystems.sort((a, b) => (a.order || 100) - (b.order || 100));
+
+    /**
+     * Call the `init` method of the subsystem if it exists, passing the engine instance.
+     * This allows subsystems to perform any necessary setup that depends on the engine
+     * being available.
+     */
+    subsystem.init?.(this);
+    return this;
   }
 
   /**
-   * Provides direct access to the engine's collision {@link World}.
+   * Runs a specific lifecycle hook on all enabled subsystems that implement it.
    *
-   * Use this to register {@link Collidable} behaviours so they participate
-   * in the per-frame collision detection pass.
+   * This method is used internally by the game loop to delegate update and render calls to subsystems.
    *
-   * @returns The active {@link World} instance managed by this engine.
+   * @param hook - The name of the lifecycle method to invoke (e.g. "update", "render").
+   * @param args - Arguments to pass to the subsystem methods (e.g. `deltaTime` for updates, `ctx` for rendering).
+   *
+   * @remarks
+   * The method iterates over all subsystems, checks if they are enabled, and if they implement the specified hook. If so, it calls the hook method with the provided arguments.
+   * This allows for a flexible and modular architecture where subsystems can independently implement the lifecycle methods they need without being tightly coupled to the engine's core logic.
    *
    * @example
    * ```ts
-   * const collidable = new Collidable(entity, engine.collisions, {
-   *   shape: { type: "aabb", width: 40, height: 40 },
-   *   layer: 0,
-   *   tags: new Set(["enemy"]),
-   *   solid: true,
-   *   collidesWith: new Set(["player"]),
-   * });
-   * entity.attachBehaviour(collidable);
+   * // During the update phase of the game loop:
+   * this.run("update", deltaTime);
+   *
+   * // During the render phase of the game loop:
+   * this.run("render", ctx);
    * ```
    */
-  get collisions(): World {
-    return this.engine.collisions;
-  }
+  private run<K extends keyof SubSystem>(hook: K, ...args: any[]): void {
+    for (const subsystem of this.subsystems) {
+      /**
+       * Check if the subsystem is enabled before attempting to call the hook method. If `enabled` is explicitly set to `false`, skip this subsystem.
+       */
+      if (subsystem.enabled === false) continue;
+      const fun = subsystem[hook];
 
-  /**
-   * Registers a game object (entity) with the engine so it is automatically
-   * updated and rendered each frame.
-   *
-   * @param objects - Any {@link GameObject} (`Entity` or `DynamicEntity`)
-   *   to include in the game loop.
-   *
-   * @example
-   * ```ts
-   * class Tree extends DynamicEntity {
-   *   constructor(x: number, y: number) {
-   *     super("tree", x, y, 40, 60);
-   *   }
-   *   override update(_dt: number) {}
-   *   override render(ctx: CanvasRenderingContext2D) {
-   *     ctx.fillStyle = "#228822";
-   *     ctx.fillRect(this.x, this.y, 40, 60);
-   *   }
-   * }
-   *
-   * engine.attachObjects(new Tree(300, 200));
-   * ```
-   */
-  public attachObjects(objects: GameObject) {
-    this.engine.objects.register(objects);
+      if (typeof fun === "function") {
+        // @ts-expect-error
+        fun.apply(subsystem, args);
+      }
+    }
   }
 
   /**
@@ -441,11 +401,6 @@ export default class Engine {
     }
 
     /**
-     * Clear the canvas at the start of each frame to prepare for fresh rendering.
-     */
-    this.clearScrean();
-
-    /**
      * Calculate deltaTime (in seconds) since the last frame. On the first frame,
      * `lastTime` is `0`, so we set it to the current timestamp to avoid a large
      * delta on the first update.
@@ -465,23 +420,9 @@ export default class Engine {
     const deltaTime = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
-    /**
-     * Retrieve all registered game objects and call their `update` method with the computed `deltaTime`.
-     * This allows each object to advance its state based on the time elapsed since the last frame.
-     */
-    const objects = this.engine.objects.getAll();
-
-    if (objects) {
-      for (const obj of objects) {
-        obj.update(deltaTime);
-      }
-    }
-
-    /**
-     * Perform collision detection for all registered collidable entities in the world.
-     * This should be called after all entities have updated their positions and states, but before rendering.
-     */
-    this.engine.collisions.detect();
+    this.run("preUpdate", deltaTime);
+    this.run("update", deltaTime);
+    this.run("postUpdate", deltaTime);
 
     /**
      * Call the main `update` method of the engine, which can be overridden by subclasses to
@@ -492,35 +433,19 @@ export default class Engine {
     this.update(deltaTime);
 
     /**
-     * TODO: this need to be moved outside of this class
+     * Clear the canvas at the start of each frame to prepare for fresh rendering.
      */
-    if (this.engine.monitor) {
-      this.engine.monitor.update(deltaTime);
-    }
-
-    /**
-     * Call render on all registered game objects to draw them onto the canvas. This should be done
-     * after all updates and collision detection, so that the rendered state reflects the latest
-     * game logic.
-     */
-    if (objects) {
-      for (const obj of objects) {
-        obj.render(this.ctx);
-      }
-    }
-
-    /**
-     * TODO: this should not be part of this implementation
-     */
-    if (this.engine.monitor) {
-      this.engine.monitor.render(this.ctx);
-    }
+    this.clearScrean();
 
     /**
      * Call the main `render` method of the engine, which can be overridden by subclasses to
      * implement custom rendering logic that runs every frame.
      */
     this.render(this.ctx);
+
+    this.run("preRender", this.ctx);
+    this.run("render", this.ctx);
+    this.run("postRender", this.ctx);
 
     /**
      * Schedule the next frame by calling `requestAnimationFrame` with the `loop` method as the callback.
@@ -674,5 +599,9 @@ export default class Engine {
   public destroy() {
     // Clean up resources, event listeners, etc. if needed.
     this.pause();
+
+    for (let i = this.subsystems.length - 1; i >= 0; i--) {
+      this.subsystems[i]?.destroy?.();
+    }
   }
 }

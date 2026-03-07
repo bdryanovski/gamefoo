@@ -4,6 +4,7 @@ import {
   Entity,
   FontBitmap,
   FontBitmapPrebuild,
+  ObjectSystem,
   Text,
   type Vector2,
 } from "../../src/index";
@@ -147,16 +148,19 @@ class HUD extends Entity {
   }
 }
 
-engine.attachObjects(new HUD());
-
-engine.attachObjects(new ShakyText());
-engine.attachObjects(new TypeWriter());
-engine.attachObjects(new KeyboardLayoutText("3x5", { x: 10, y: 30 }));
-engine.attachObjects(new KeyboardLayoutText("5x5", { x: 60, y: 30 }));
-engine.attachObjects(new KeyboardLayoutText("4x6", { x: 130, y: 30 }));
-engine.attachObjects(new KeyboardLayoutText("6x8", { x: 190, y: 30 }));
-engine.attachObjects(new KeyboardLayoutText("8x13", { x: 270, y: 30 }));
-engine.attachObjects(new KeyboardLayoutText("8x8", { x: 370, y: 30 }));
-engine.attachObjects(new PrebuildText());
+engine.use(
+  new ObjectSystem([
+    new HUD(),
+    new ShakyText(),
+    new TypeWriter(),
+    new KeyboardLayoutText("3x5", { x: 10, y: 30 }),
+    new KeyboardLayoutText("5x5", { x: 60, y: 30 }),
+    new KeyboardLayoutText("4x6", { x: 130, y: 30 }),
+    new KeyboardLayoutText("6x8", { x: 190, y: 30 }),
+    new KeyboardLayoutText("8x13", { x: 270, y: 30 }),
+    new KeyboardLayoutText("8x8", { x: 370, y: 30 }),
+    new PrebuildText(),
+  ]),
+);
 
 engine.setup(() => {});
