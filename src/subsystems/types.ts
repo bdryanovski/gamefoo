@@ -1,4 +1,4 @@
-import type Engine from "@/core/engine";
+import type Engine from "../core/engine";
 
 /**
  * SubSystem is a modular component of the game engine that can be added or removed as needed.

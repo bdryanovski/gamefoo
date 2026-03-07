@@ -1,4 +1,4 @@
-import type { SubSystem } from "@/subsystems/types";
+import type { SubSystem } from "../subsystems/types";
 
 const DEFAULT_GAME_SCALE = 1;
 
