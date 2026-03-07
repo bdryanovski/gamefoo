@@ -22,7 +22,7 @@
   },
   "scripts": {
     "dev": "bun --watch demos/server.ts",
-    "build": "rm -rf dist && bun build ./src/index.ts --outdir dist --format esm --target browser --sourcemap=external && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && bun build ./src/index.ts --outdir dist --format esm --target browser --sourcemap=external --splitting && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "lint": "bunx biome check src/",
