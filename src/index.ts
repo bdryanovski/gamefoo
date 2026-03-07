@@ -26,6 +26,7 @@ export { default as SpriteRender } from "./core/behaviours/sprite_render";
 export { default as Camera } from "./core/camera";
 export { default as Engine } from "./core/engine";
 export { default as FontBitmap } from "./core/fonts/font_bitmap";
+export { default as FontBitmapPrebuild } from "./core/fonts/font_bitmap_prebuild";
 export { default as GameObjectRegister } from "./core/game_object_register";
 export { default as Input } from "./core/input";
 export { default as Sprite } from "./core/sprite";
