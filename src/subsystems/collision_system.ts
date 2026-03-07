@@ -1,4 +1,4 @@
-import World from "@/core/world";
+import World from "../core/world";
 import type { SubSystem } from "./types";
 
 /**

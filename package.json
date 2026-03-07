@@ -4,25 +4,35 @@
   "description": "A lightweight 2D game engine with behavior-based component system",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "README.md"
   ],
   "type": "module",
   "sideEffects": false,
+  "source": "./src/index.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./source": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "dev": "bun --watch demos/server.ts",
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && bunx tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "lint": "bunx biome check src/",
@@ -36,7 +46,8 @@
     "docs:collect": "tsx scripts/collect-docs.ts",
     "docs:dev": "npm run docs:generate && astro dev --root ./docs",
     "docs:preview": "astro preview --root ./docs",
-    "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial"
+    "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial",
+    "test:publish": "bun run --cwd publish-test sanity"
   },
   "dependencies": {
     "@microsoft/tsdoc": "^0.16.0",

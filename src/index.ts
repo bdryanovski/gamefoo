@@ -13,8 +13,6 @@
  * @since 0.1.0
  */
 
-// ── Decorators ───────────────────────────────────────────────────────
-export { log } from "@decorators";
 // --- Assets / Rendering ───────────────────────────────────────────────
 export { default as Asset } from "./core/asset";
 // ── Core ────────────────────────────────────────────────────────────
@@ -36,6 +34,8 @@ export { PerlinNoise } from "./core/utils/perlin_noise";
 export { default as World } from "./core/world";
 // -- Debug -----
 export { default as Monitor } from "./debug/monitor";
+// ── Decorators ───────────────────────────────────────────────────────
+export { log } from "./decorators/index";
 // ── Entities ────────────────────────────────────────────────────────
 export { default as DynamicEntity } from "./entities/dynamic_entity";
 export { default as Entity } from "./entities/entity";

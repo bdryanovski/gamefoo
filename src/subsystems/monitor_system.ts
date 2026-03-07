@@ -1,4 +1,4 @@
-import Monitor from "@/debug/monitor";
+import Monitor from "../debug/monitor";
 import type { SubSystem } from "./types";
 
 /**

@@ -1,0 +1,8 @@
+{
+  "name": "publish-test",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sanity": "bun run ./sanity.ts"
+  }
+}

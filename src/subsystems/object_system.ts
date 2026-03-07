@@ -1,5 +1,5 @@
-import GameObjectRegister from "@/core/game_object_register";
-import type { GameObject } from "@/types";
+import GameObjectRegister from "../core/game_object_register";
+import type { GameObject } from "../types";
 import type { SubSystem } from "./types";
 
 /**
