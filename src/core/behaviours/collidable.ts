@@ -1,5 +1,5 @@
 import type Entity from "../../entities/entity";
-import type { ColliderShape, CollisionInfo, GameObject, WorldBounds } from "../../types";
+import type { ColliderShape, CollisionInfo, GameObject, WorldBounds } from "../../generic_types";
 import { Behaviour } from "../behaviour";
 import type World from "../world";
 

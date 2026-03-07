@@ -1,4 +1,4 @@
-import type { Vector2 } from "../types";
+import type { Vector2 } from "../generic_types";
 import Entity from "./entity";
 
 /**

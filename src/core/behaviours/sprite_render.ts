@@ -1,5 +1,5 @@
 import type Entity from "../../entities/entity";
-import type { Vector2 } from "../../types";
+import type { Vector2 } from "../../generic_types";
 import { Behaviour } from "../behaviour";
 import type Sprite from "../sprite";
 
