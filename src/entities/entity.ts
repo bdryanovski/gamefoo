@@ -1,5 +1,5 @@
 import type { Behaviour } from "../core/behaviour";
-import type { Demension, Vector2 } from "../types";
+import type { Demension, Vector2 } from "../generic_types";
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.

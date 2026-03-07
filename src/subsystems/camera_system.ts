@@ -1,5 +1,5 @@
 import Camera from "../core/camera";
-import type { Vector2 } from "../types";
+import type { Vector2 } from "../generic_types";
 import type { SubSystem } from "./types";
 
 /**

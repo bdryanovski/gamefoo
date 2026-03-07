@@ -1,4 +1,4 @@
-import type { GameObject } from "../types";
+import type { GameObject } from "../generic_types";
 
 /**
  * Central registry that stores and manages all non-player

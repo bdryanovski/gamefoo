@@ -3,6 +3,8 @@ import demo from "./demo/index.html";
 import sprite from "./sprite/index.html";
 import endlessWorld from "./endless-world/index.html";
 
+import floppy from "./floppy/index.html";
+
 import fonts from "./fonts/index.html";
 
 const server = Bun.serve({
@@ -13,6 +15,7 @@ const server = Bun.serve({
     "/sprite": sprite,
     "/fonts": fonts,
     "/endless-world": endlessWorld,
+    "/floppy": floppy,
   },
   async fetch(req) {
     const path = new URL(req.url).pathname;

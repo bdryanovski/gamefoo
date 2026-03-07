@@ -1,4 +1,4 @@
-import type { WorldBounds } from "../types";
+import type { WorldBounds } from "../generic_types";
 import type { Collidable } from "./behaviours/collidable";
 
 /**
