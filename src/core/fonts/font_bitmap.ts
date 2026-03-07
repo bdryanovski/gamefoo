@@ -76,7 +76,7 @@ export default class FontBitmap {
    * Each value is an array of integers where each integer represents
    * one row of pixels (MSB = leftmost pixel).
    */
-  private readonly data: Record<string, number[]>;
+  protected readonly data: Record<string, number[]>;
 
   /**
    * Character cell width in pixels (including spacing).
@@ -98,7 +98,7 @@ export default class FontBitmap {
    *
    * @defaultValue `0`
    */
-  private spacing: number = 0;
+  protected spacing: number = 0;
 
   /**
    * Creates a font renderer for the named catalogue entry.

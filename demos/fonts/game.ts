@@ -1,4 +1,12 @@
-import { Engine, Entity, FontBitmap, Text, type Vector2 } from "../../src/index";
+import { InternalBitmapFontName } from "../../src/core/fonts/font_bitmap";
+import {
+  Engine,
+  Entity,
+  FontBitmap,
+  FontBitmapPrebuild,
+  Text,
+  type Vector2,
+} from "../../src/index";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
@@ -74,7 +82,7 @@ class TypeWriter extends Text {
 }
 
 class KeyboardLayoutText extends Text {
-  constructor(font: string, position: Vector2) {
+  constructor(font: InternalBitmapFontName, position: Vector2) {
     super("KeyboardLayoutText" + font, font);
     this.x = position.x;
     this.y = position.y;
@@ -98,6 +106,26 @@ class KeyboardLayoutText extends Text {
       const y = this.y + row * charHeight;
       this.font.renderText(char, x, y, ctx);
     }
+  }
+}
+
+class PrebuildText extends Text {
+  constructor(name: InternalBitmapFontName = "6x8") {
+    super("PrebuildText", name);
+    this.setText("Pre-built Glyphs");
+    this.x = CANVAS_W / 2;
+    this.y = CANVAS_H / 2 + 50;
+
+    /**
+     * This is experimental so the API may change in the future
+     */
+    this.font = new FontBitmapPrebuild(name);
+  }
+
+  override update(_dt: number): void {}
+
+  override render(ctx: CanvasRenderingContext2D): void {
+    super.render(ctx);
   }
 }
 
@@ -129,5 +157,6 @@ engine.attachObjects(new KeyboardLayoutText("4x6", { x: 130, y: 30 }));
 engine.attachObjects(new KeyboardLayoutText("6x8", { x: 190, y: 30 }));
 engine.attachObjects(new KeyboardLayoutText("8x13", { x: 270, y: 30 }));
 engine.attachObjects(new KeyboardLayoutText("8x8", { x: 370, y: 30 }));
+engine.attachObjects(new PrebuildText());
 
 engine.setup(() => {});
