@@ -1,9 +1,13 @@
 {
   "name": "@dryanovski/gamefoo",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A lightweight 2D game engine with behavior-based component system",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,13 +17,9 @@
       "import": "./dist/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
   "scripts": {
     "dev": "bun --watch demos/server.ts",
     "build": "rm -rf dist && bun build ./src/index.ts --outdir dist --format esm --target browser --sourcemap=external && tsc -p tsconfig.build.json",
@@ -38,11 +38,6 @@
     "docs:preview": "astro preview --root ./docs",
     "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial"
   },
-  "devDependencies": {
-    "@biomejs/biome": "^2.4.4",
-    "@types/bun": "latest",
-    "husky": "^9.1.7"
-  },
   "dependencies": {
     "@microsoft/tsdoc": "^0.16.0",
     "astro": "^5.18.0",
@@ -50,5 +45,10 @@
     "tsx": "^4.21.0",
     "typedoc": "^0.28.17",
     "typedoc-plugin-markdown": "^4.10.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
+    "@types/bun": "latest",
+    "husky": "^9.1.7"
   }
 }
