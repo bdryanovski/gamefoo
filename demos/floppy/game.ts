@@ -1,4 +1,4 @@
-import { Behaviour, DynamicEntity, Engine, Entity, Input, ObjectSystem, Text } from "../../src/index";
+import { Behaviour, DynamicEntity, Engine, Entity, Input, ObjectSystem, StateMachine, Text } from "../../src/index";
 
 // ---------------------------------------------------------------------------
 // Layout — shared by many classes, derived from game dimensions
@@ -26,30 +26,30 @@ enum GameState {
 }
 
 class FloppyState {
-  state = GameState.IDLE as GameState;
+  readonly fsm = new StateMachine(GameState.IDLE);
   score = 0;
   highScore = 0;
   gameOverTimer = 0;
 
+  constructor() {
+    this.fsm.onEnter(GameState.GAME_OVER, () => {
+      this.gameOverTimer = 0;
+      if (this.score > this.highScore) {
+        this.highScore = this.score;
+      }
+    });
+  }
+
   get isPlaying(): boolean {
-    return this.state === GameState.PLAYING;
+    return this.fsm.is(GameState.PLAYING);
   }
 
   get isGameOver(): boolean {
-    return this.state === GameState.GAME_OVER;
+    return this.fsm.is(GameState.GAME_OVER);
   }
 
   get isReady(): boolean {
-    return this.state === GameState.READY;
-  }
-
-  triggerGameOver(): void {
-    if (this.state === GameState.GAME_OVER) return;
-    this.state = GameState.GAME_OVER;
-    this.gameOverTimer = 0;
-    if (this.score > this.highScore) {
-      this.highScore = this.score;
-    }
+    return this.fsm.is(GameState.READY);
   }
 }
 
@@ -94,7 +94,7 @@ class Bird extends DynamicEntity {
   }
 
   override update(dt: number): void {
-    switch (this.gs.state) {
+    switch (this.gs.fsm.current) {
       case GameState.PLAYING:
         this.velocity.y = Math.min(this.velocity.y + this.gravity * dt, this.maxFallSpeed);
         this.y += this.velocity.y * dt;
@@ -105,7 +105,7 @@ class Bird extends DynamicEntity {
         }
         if (this.y + this.birdH >= GROUND_Y) {
           this.y = GROUND_Y - this.birdH;
-          this.gs.triggerGameOver();
+          this.gs.fsm.transition(GameState.GAME_OVER);
         }
         break;
 
@@ -181,7 +181,7 @@ class FlapControl extends Behaviour<Bird> {
     if (!this.consumeFlap()) return;
 
     if (this.gs.isReady) {
-      this.gs.state = GameState.PLAYING;
+      this.gs.fsm.transition(GameState.PLAYING);
       this.owner.flap();
     } else if (this.gs.isPlaying) {
       this.owner.flap();
@@ -315,7 +315,7 @@ class PipeManager extends Entity {
 
       if (bRight > pLeft && bLeft < pRight) {
         if (bTop < pipe.gapY || bBottom > gapBottom) {
-          this.gs.triggerGameOver();
+          this.gs.fsm.transition(GameState.GAME_OVER);
         }
       }
 
@@ -391,12 +391,12 @@ class MessageLabel extends Text {
   }
 
   override update(_dt: number): void {
-    if (this.gs.state === this.lastState && this.gs.highScore === this.lastHighScore) return;
-    this.lastState = this.gs.state;
+    if (this.gs.fsm.current === this.lastState && this.gs.highScore === this.lastHighScore) return;
+    this.lastState = this.gs.fsm.current;
     this.lastHighScore = this.gs.highScore;
 
     let text = "";
-    switch (this.gs.state) {
+    switch (this.gs.fsm.current) {
       case GameState.READY:
         text = "PRESS W TO FLAP";
         break;
@@ -451,7 +451,7 @@ class Floppy extends Engine {
   }
 
   restart(): void {
-    this.gs.state = GameState.PLAYING;
+    this.gs.fsm.transition(GameState.PLAYING);
     this.gs.score = 0;
     this.bird.reset();
     this.bird.flap();
@@ -466,5 +466,5 @@ class Floppy extends Engine {
 const floppy = new Floppy();
 
 floppy.setup(() => {
-  floppy.gs.state = GameState.READY;
+  floppy.gs.fsm.transition(GameState.READY);
 });
