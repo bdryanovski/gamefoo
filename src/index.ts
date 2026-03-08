@@ -29,6 +29,7 @@ export { default as FontBitmapPrebuild } from "./core/fonts/font_bitmap_prebuild
 export { default as GameObjectRegister } from "./core/game_object_register";
 export { default as Input } from "./core/input";
 export { default as Sprite } from "./core/sprite";
+export { default as StateMachine } from "./core/state_machine";
 // ── Utilities ───────────────────────────────────────────────────────
 export { PerlinNoise } from "./core/utils/perlin_noise";
 // ── World / Physics ─────────────────────────────────────────────────
