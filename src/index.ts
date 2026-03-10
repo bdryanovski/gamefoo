@@ -25,8 +25,10 @@ export { default as Camera } from "./core/camera";
 export { default as Engine } from "./core/engine";
 export type { InternalBitmapFontName } from "./core/fonts/font_bitmap";
 export { default as FontBitmap } from "./core/fonts/font_bitmap";
-export { default as FontBitmapPrebuild } from "./core/fonts/font_bitmap_prebuild";
 export { default as GameObjectRegister } from "./core/game_object_register";
+// ── Icons ───────────────────────────────────────────────────────
+export type { InternalBitmapIconName } from "./core/icons/icon_bitmap";
+export { default as IconBitmap } from "./core/icons/icon_bitmap";
 export { default as Input } from "./core/input";
 export { default as Sprite } from "./core/sprite";
 export { default as StateMachine } from "./core/state_machine";
