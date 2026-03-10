@@ -24,21 +24,33 @@ export default abstract class Text extends Entity {
   protected text: string = "";
 
   /**
+   * Text color (optional)
+   *
+   * @since 0.4.0
+   */
+  protected color?: string = "#FFFFFF";
+
+  /**
    * Create new Text object that could be placed and render on the screen
    *
    * @param fontName - the FontBitmap valid name to load
+   * @param color - text color (optional)
    *
    * @example
    * ```ts
    * const Label = new Text('CustomLabel', '5x5');
    * ```
    */
-  constructor(id: string, fontName: InternalBitmapFontName) {
+  constructor(id: string, fontName: InternalBitmapFontName, color?: string) {
     super(id, 0, 0);
 
     this.fontName = fontName;
 
     this.font = new FontBitmap(fontName);
+
+    if (color) {
+      this.color = color;
+    }
   }
 
   /**
@@ -67,6 +79,9 @@ export default abstract class Text extends Entity {
    * Render the text to the canvas using the BitmapFont instance
    */
   override render(ctx: CanvasRenderingContext2D): void {
+    if (this.color) {
+      ctx.fillStyle = this.color;
+    }
     this.font.renderText(this.getText(), this.x, this.y, ctx);
   }
 }

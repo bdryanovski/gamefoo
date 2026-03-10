@@ -223,8 +223,12 @@ export default class Engine {
     this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     this.height = height;
     this.width = width;
-    this.canvas.width = width;
-    this.canvas.height = height;
+
+    this.scale = this.cnf.gameScale || DEFAULT_GAME_SCALE;
+
+    this.canvas.width = width * this.scale;
+    this.canvas.height = height * this.scale;
+
     const context = this.canvas.getContext("2d");
     if (!context) {
       throw new Error("Failed to get 2D context");
@@ -233,17 +237,40 @@ export default class Engine {
 
     this.cnf = { ...this.cnf, ...config };
 
-    this.scale = this.cnf.gameScale || DEFAULT_GAME_SCALE;
-
     /**
      * Make sure to always pixelate the canvas to preserve crisp edges for pixel art.
      */
     this.canvas.style.imageRendering = "pixelated";
     this.canvas.style.imageRendering = "-moz-crisp-edges";
     this.canvas.style.imageRendering = "crisp-edges";
+    //
+    this.canvas.style.width = `${this.width}px`;
+    this.canvas.style.height = `${this.height}px`;
 
-    this.canvas.style.width = `${this.width * this.scale}px`;
-    this.canvas.style.height = `${this.height * this.scale}px`;
+    this.ctx.scale(this.scale, this.scale);
+  }
+
+  /**
+   * Returns the current logical dimensions of the game area.
+   *
+   * These dimensions are set during construction and do not change with CSS scaling.
+   * They represent the internal resolution of the canvas and the camera viewport.
+   *
+   * @since 0.4.0
+   *
+   * @returns An object containing the `width` and `height` in pixels.
+   *
+   * @example
+   * ```ts
+   * const { width, height } = engine.dementions;
+   * console.log(`Game area is ${width}x${height} pixels.`);
+   * ```
+   */
+  get dementions(): { width: number; height: number } {
+    return {
+      width: this.width,
+      height: this.height,
+    };
   }
 
   /**

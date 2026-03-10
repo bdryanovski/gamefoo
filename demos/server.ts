@@ -5,6 +5,7 @@ import endlessWorld from "./endless-world/index.html";
 import floppy from "./floppy/index.html";
 import fonts from "./fonts/index.html";
 import icons from "./icons/index.html";
+import clock from "./clock/index.html";
 
 const server = Bun.serve({
   port: 3000,
@@ -16,6 +17,7 @@ const server = Bun.serve({
     "/endless-world": endlessWorld,
     "/floppy": floppy,
     "/icons": icons,
+    "/clock": clock,
   },
   async fetch(req) {
     const path = new URL(req.url).pathname;
