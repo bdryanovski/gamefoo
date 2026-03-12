@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Untitled",
+    "image": "TX Tileset Grass.png",
+    "imageWidth": 256,
+    "imageHeight": 256,
+    "exportedAt": "2026-03-12T14:28:16.082Z"
+  },
+  "frames": {
+    "grass": {
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32
+    },
+    "region_1": {
+      "x": 64,
+      "y": 32,
+      "width": 64,
+      "height": 32
+    }
+  },
+  "animations": {},
+  "objects": {
+    "grass": {
+      "sprites": [
+        "grass"
+      ],
+      "animations": [],
+      "properties": {}
+    }
+  },
+  "spriteMetadata": {
+    "grass": {
+      "tags": [],
+      "group": "",
+      "order": 0,
+      "level": 0,
+      "properties": {}
+    },
+    "region_1": {
+      "tags": [],
+      "group": "",
+      "order": 1,
+      "level": 0,
+      "properties": {}
+    }
+  },
+  "grid": {
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  }
+}

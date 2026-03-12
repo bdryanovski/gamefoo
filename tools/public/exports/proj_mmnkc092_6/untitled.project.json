@@ -1,0 +1,78 @@
+{
+  "projectName": "Untitled",
+  "imageData": {
+    "url": "/uploads/1773325541778_TX_Tileset_Grass.png",
+    "name": "TX Tileset Grass.png",
+    "width": 256,
+    "height": 256
+  },
+  "grid": {
+    "enabled": true,
+    "cellWidth": 32,
+    "cellHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "sprites": [
+    {
+      "id": "spr_mmnk96bp_3",
+      "name": "grass",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 0,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mmnkbdii_5",
+      "name": "region_1",
+      "x": 64,
+      "y": 32,
+      "width": 64,
+      "height": 32,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 1,
+      "level": 0,
+      "properties": {}
+    }
+  ],
+  "animations": [],
+  "objects": [
+    {
+      "id": "obj_mmnk9nw4_4",
+      "name": "grass",
+      "sprites": [
+        "spr_mmnk96bp_3"
+      ],
+      "animations": [],
+      "properties": {}
+    }
+  ],
+  "selectedSpriteIds": [
+    "spr_mmnkbdii_5"
+  ],
+  "selectedAnimationId": null,
+  "selectedObjectId": "obj_mmnk9nw4_4",
+  "activeTool": "select",
+  "zoom": 3.125,
+  "pan": {
+    "x": 0,
+    "y": 0
+  },
+  "activeTab": "sprites"
+}

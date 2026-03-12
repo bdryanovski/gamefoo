@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Untitled",
+    "image": "TX Tileset Grass.png",
+    "imageWidth": 256,
+    "imageHeight": 256,
+    "exportedAt": "2026-03-12T14:28:16.082Z"
+  },
+  "grid": {
+    "frameWidth": 32,
+    "frameHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "grass": 0,
+    "region_1": 10
+  },
+  "animations": {}
+}
