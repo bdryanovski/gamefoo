@@ -75,6 +75,28 @@ export default class World {
   }
 
   /**
+   * Returns a read-only view of all registered colliders.
+   *
+   * Primarily used by debug tools to visualise collision bounds
+   * without modifying the internal set.
+   *
+   * @returns A `ReadonlySet` of all active {@link Collidable} instances.
+   *
+   * @since 0.4.0
+   *
+   * @example
+   * ```ts
+   * for (const collider of world.getColliders()) {
+   *   const bounds = collider.getWorldBounds();
+   *   ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+   * }
+   * ```
+   */
+  getColliders(): ReadonlySet<Collidable> {
+    return this.colliders;
+  }
+
+  /**
    * Runs one full collision-detection pass over every registered
    * collider.
    *

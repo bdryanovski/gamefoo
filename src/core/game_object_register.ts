@@ -133,6 +133,26 @@ export default class GameObjectRegister {
   }
 
   /**
+   * Sorts the internal object cache using the given comparator.
+   *
+   * Call before {@link renderAll} to control draw order (e.g. Y-sort
+   * for isometric depth).
+   *
+   * @param compareFn - Standard `Array.sort` comparator.
+   *
+   * @since 0.4.0
+   *
+   * @example Y-sort for isometric depth
+   * ```ts
+   * register.sort((a, b) => a.y - b.y);
+   * register.renderAll(ctx);
+   * ```
+   */
+  sort(compareFn: (a: GameObject, b: GameObject) => number): void {
+    this.toArray().sort(compareFn);
+  }
+
+  /**
    * Calls {@link GameObject.render | render(ctx)} on every registered
    * object.
    *

@@ -13,7 +13,53 @@ export class CollisionSystem implements SubSystem {
   id = "collision";
   order = 30;
 
-  private world = new World();
+  private world: World;
+
+  /**
+   * Creates a collision subsystem.
+   *
+   * @param world - Optional external {@link World} instance. When
+   *   provided, this world is used for all collision detection.
+   *   When omitted, an internal empty world is created (legacy
+   *   behaviour for demos that register colliders via the world
+   *   returned by this system).
+   *
+   * @since 0.4.0
+   *
+   * @example Using a shared world
+   * ```ts
+   * const world = new World();
+   * // Register colliders on `world`, then:
+   * engine.use(new CollisionSystem(world));
+   * ```
+   *
+   * @example Legacy (internal world)
+   * ```ts
+   * engine.use(new CollisionSystem());
+   * ```
+   */
+  constructor(world?: World) {
+    this.world = world ?? new World();
+  }
+
+  /**
+   * Returns the {@link World} instance used by this subsystem.
+   *
+   * Useful when no external world was provided and callers need to
+   * register colliders on the internal world.
+   *
+   * @since 0.4.0
+   *
+   * @example
+   * ```ts
+   * const sys = new CollisionSystem();
+   * const world = sys.getWorld();
+   * entity.attachBehaviour(new Collidable(entity, world, { ... }));
+   * ```
+   */
+  getWorld(): World {
+    return this.world;
+  }
 
   update() {
     this.world.detect();

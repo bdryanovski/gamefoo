@@ -6,6 +6,7 @@ import floppy from "./floppy/index.html";
 import fonts from "./fonts/index.html";
 import icons from "./icons/index.html";
 import clock from "./clock/index.html";
+import isometric from "./isometric/index.html";
 
 const server = Bun.serve({
   port: 3000,
@@ -18,6 +19,7 @@ const server = Bun.serve({
     "/floppy": floppy,
     "/icons": icons,
     "/clock": clock,
+    "/isometric": isometric,
   },
   async fetch(req) {
     const path = new URL(req.url).pathname;
