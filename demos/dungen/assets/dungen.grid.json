@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "dungen",
+    "image": "Dungeon_Tileset.png",
+    "imageWidth": 160,
+    "imageHeight": 160,
+    "exportedAt": "2026-03-12T19:17:56.778Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "wall_left_0": 0,
+    "wall_right_0": 5,
+    "wall_top_0": 1,
+    "wall_bottom_0": 41,
+    "wall_left_bottom_0": 40,
+    "wall_right_bottom_0": 45,
+    "wall_top_angle_left_0": 50,
+    "wall_top_angle_right_0": 53,
+    "ground_0": 6,
+    "ground_1": 7,
+    "ground_2": 8,
+    "ground_3": 17,
+    "chest_0": 84,
+    "chest_1": 83,
+    "fire_0": 90,
+    "fire_1": 91,
+    "fire_3": 92
+  },
+  "animations": {}
+}

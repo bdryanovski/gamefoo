@@ -8,6 +8,8 @@ import icons from "./icons/index.html";
 import clock from "./clock/index.html";
 import isometric from "./isometric/index.html";
 
+import dungen from "./dungen/index.html";
+
 const server = Bun.serve({
   port: 3000,
   routes: {
@@ -20,6 +22,7 @@ const server = Bun.serve({
     "/icons": icons,
     "/clock": clock,
     "/isometric": isometric,
+    "/dungen": dungen,
   },
   async fetch(req) {
     const path = new URL(req.url).pathname;
