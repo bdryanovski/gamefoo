@@ -44,13 +44,22 @@ import type { GridCell, GridConfig } from "./grid_types";
 
 /** 4-directional offsets (cardinal). @internal */
 const CARDINALS: ReadonlyArray<[number, number]> = [
-  [0, -1], [0, 1], [-1, 0], [1, 0],
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
 ];
 
 /** 8-directional offsets (cardinal + diagonal). @internal */
 const ALL_DIRS: ReadonlyArray<[number, number]> = [
-  [0, -1], [0, 1], [-1, 0], [1, 0],
-  [-1, -1], [1, -1], [-1, 1], [1, 1],
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
+  [-1, -1],
+  [1, -1],
+  [-1, 1],
+  [1, 1],
 ];
 
 export class Grid<T = number> {

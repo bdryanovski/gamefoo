@@ -10,11 +10,11 @@
  * @since 0.4.0
  */
 
-import type Sprite from "../sprite";
 import type { Grid } from "../grid/grid";
 import type { IsometricProjection } from "../grid/isometric";
-import type { TileSet } from "./tileset";
+import type Sprite from "../sprite";
 import type { TileLayer } from "./tile_layer";
+import type { TileSet } from "./tileset";
 
 /**
  * Configuration for constructing a {@link TileSet}.
@@ -161,4 +161,3 @@ export interface TileMapConfig {
    */
   collisionLayerName?: string;
 }
-

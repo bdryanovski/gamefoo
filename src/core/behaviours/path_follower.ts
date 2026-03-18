@@ -46,8 +46,9 @@
  * @see {@link IsometricProjection} — coordinate conversion for iso
  * @see {@link Behaviour}           — base behaviour class
  */
-import { Behaviour } from "../behaviour";
+
 import type DynamicEntity from "../../entities/dynamic_entity";
+import { Behaviour } from "../behaviour";
 import type { Grid } from "../grid/grid";
 import type { IsometricProjection } from "../grid/isometric";
 import type { Pathfinder } from "../utils/pathfinding";
@@ -142,12 +143,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * npc.attachBehaviour(pf);
    * ```
    */
-  constructor(
-    owner: DynamicEntity,
-    pathfinder: Pathfinder,
-    grid: Grid,
-    config?: PathFollowerConfig,
-  ) {
+  constructor(owner: DynamicEntity, pathfinder: Pathfinder, grid: Grid, config?: PathFollowerConfig) {
     super(owner);
     this.pathfinder = pathfinder;
     this.grid = grid;
@@ -216,12 +212,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   moveTo(goalCol: number, goalRow: number): boolean {
     const ownerWorld = this.getOwnerGridPosition();
 
-    const result = this.pathfinder.findPath(
-      ownerWorld.col,
-      ownerWorld.row,
-      goalCol,
-      goalRow,
-    );
+    const result = this.pathfinder.findPath(ownerWorld.col, ownerWorld.row, goalCol, goalRow);
 
     if (!result) {
       this._isMoving = false;

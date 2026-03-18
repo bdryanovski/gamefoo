@@ -3,7 +3,7 @@ import { MAP_COLS, MAP_ROWS, TILE_SIZE, VIEW_RADIUS } from "./constants";
 
 export class DungenEnemy extends Entity {
   private wallMap: boolean[][];
-  private speed = 40;
+  protected speed = 40;
   private dx = 0;
   private dy = 0;
   private dirTimer = 0;
@@ -12,11 +12,11 @@ export class DungenEnemy extends Entity {
   private target: Entity | null = null;
   private losCheck: (x0: number, y0: number, x1: number, y1: number) => boolean;
   private chasing = false;
-  private chaseSpeed = 60;
+  protected chaseSpeed = 60;
 
-  private hp: number;
-  private maxHp: number;
-  private enemyType: "slime" | "phantom" | "archer";
+  protected hp: number;
+  protected maxHp: number;
+  protected enemyType: "slime" | "phantom" | "archer";
 
   private knockbackVx = 0;
   private knockbackVy = 0;
@@ -33,32 +33,13 @@ export class DungenEnemy extends Entity {
     wallMap: boolean[][],
     target: Entity,
     losCheck: (x0: number, y0: number, x1: number, y1: number) => boolean,
-    type: "slime" | "archer" | "phantom" = "slime",
   ) {
     super(id, x, y, TILE_SIZE, TILE_SIZE);
     this.wallMap = wallMap;
     this.target = target;
     this.losCheck = losCheck;
-    this.enemyType = type;
     this.dirInterval = 1 + Math.random() * 2;
     this.pickDirection();
-
-    if (type === "phantom") {
-      this.hp = 2;
-      this.maxHp = 2;
-      this.speed = 50;
-      this.chaseSpeed = 80;
-    } else if (type === "archer") {
-      this.hp = 1;
-      this.maxHp = 1;
-      this.speed = 30;
-      this.chaseSpeed = 30;
-    } else {
-      this.hp = 1;
-      this.maxHp = 1;
-      this.speed = 40;
-      this.chaseSpeed = 60;
-    }
   }
 
   private pickDirection() {
@@ -83,9 +64,12 @@ export class DungenEnemy extends Entity {
 
     const dist = Math.abs(myCol - tCol) + Math.abs(myRow - tRow);
 
-    const detectRange = this.enemyType === "archer" ? VIEW_RADIUS + 3
-      : this.enemyType === "phantom" ? VIEW_RADIUS + 5
-      : VIEW_RADIUS + 2;
+    const detectRange =
+      this.enemyType === "archer"
+        ? VIEW_RADIUS + 3
+        : this.enemyType === "phantom"
+          ? VIEW_RADIUS + 5
+          : VIEW_RADIUS + 2;
     this.chasing = dist < detectRange && this.losCheck(myCol, myRow, tCol, tRow);
 
     if (this.knockbackTimer > 0) {
@@ -121,7 +105,12 @@ export class DungenEnemy extends Entity {
       }
 
       this.shootTimer += deltaTime;
-      if (this.shootTimer >= this.shootInterval && len > 0 && len < preferredDist + TILE_SIZE * 2 && this.onShoot) {
+      if (
+        this.shootTimer >= this.shootInterval &&
+        len > 0 &&
+        len < preferredDist + TILE_SIZE * 2 &&
+        this.onShoot
+      ) {
         this.shootTimer = 0;
         const speed = 120;
         this.onShoot(

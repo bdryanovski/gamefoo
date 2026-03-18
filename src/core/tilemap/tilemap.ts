@@ -40,10 +40,10 @@
  * @see {@link Grid}                — underlying grid data
  */
 import Entity from "../../entities/entity";
-import type World from "../world";
 import { Collidable } from "../behaviours/collidable";
 import type { Grid } from "../grid/grid";
 import type { IsometricProjection } from "../grid/isometric";
+import type World from "../world";
 import type { TileLayer } from "./tile_layer";
 import type { TileMapConfig } from "./tilemap_types";
 
@@ -132,28 +132,14 @@ export class TileMap {
    * tilemap.render(ctx, camera.getViewRect());
    * ```
    */
-  render(
-    ctx: CanvasRenderingContext2D,
-    viewport: { x: number; y: number; width: number; height: number },
-  ): void {
+  render(ctx: CanvasRenderingContext2D, viewport: { x: number; y: number; width: number; height: number }): void {
     for (const layer of this.layers) {
       if (!layer.visible) continue;
 
       if (this.projection) {
-        layer.renderIsometric(
-          ctx,
-          this.projection,
-          viewport,
-          this.grid.cols,
-          this.grid.rows,
-        );
+        layer.renderIsometric(ctx, this.projection, viewport, this.grid.cols, this.grid.rows);
       } else {
-        layer.renderOrthogonal(
-          ctx,
-          this.grid.cellWidth,
-          this.grid.cellHeight,
-          viewport,
-        );
+        layer.renderOrthogonal(ctx, this.grid.cellWidth, this.grid.cellHeight, viewport);
       }
     }
   }
@@ -260,11 +246,7 @@ export class TileMap {
           colliderH = this.grid.cellHeight;
         }
 
-        const wall = new WallEntity(
-          col, row,
-          wx, wy,
-          colliderW, colliderH,
-        );
+        const wall = new WallEntity(col, row, wx, wy, colliderW, colliderH);
 
         wall.attachBehaviour(
           new Collidable(wall, world, {

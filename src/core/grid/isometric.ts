@@ -274,10 +274,10 @@ export class IsometricProjection {
     const cy = center.y + this.hh;
 
     return [
-      { x: cx, y: cy - this.hh },         // top
-      { x: cx + this.hw, y: cy },          // right
-      { x: cx, y: cy + this.hh },          // bottom
-      { x: cx - this.hw, y: cy },          // left
+      { x: cx, y: cy - this.hh }, // top
+      { x: cx + this.hw, y: cy }, // right
+      { x: cx, y: cy + this.hh }, // bottom
+      { x: cx - this.hw, y: cy }, // left
     ];
   }
 

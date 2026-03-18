@@ -31,9 +31,8 @@
  * @see {@link TileMap} — owns and renders multiple layers
  */
 import type { IsometricProjection } from "../grid/isometric";
-import type { TileSet } from "./tileset";
 import type { TileLayerConfig } from "./tilemap_types";
-import type { VisibleRange } from "../grid/isometric_types";
+import type { TileSet } from "./tileset";
 
 export class TileLayer {
   /** Human-readable name of this layer. */
@@ -188,9 +187,14 @@ export class TileLayer {
 
         ctx.drawImage(
           img,
-          frame.x, frame.y, frame.width, frame.height,
-          Math.round(col * cellWidth + ox), Math.round(row * cellHeight + oy),
-          cellWidth, cellHeight,
+          frame.x,
+          frame.y,
+          frame.width,
+          frame.height,
+          Math.round(col * cellWidth + ox),
+          Math.round(row * cellHeight + oy),
+          cellWidth,
+          cellHeight,
         );
       }
     }
@@ -228,8 +232,12 @@ export class TileLayer {
     if (!this.visible) return;
 
     const range = projection.getVisibleRange(
-      viewport.x, viewport.y, viewport.width, viewport.height,
-      gridCols, gridRows,
+      viewport.x,
+      viewport.y,
+      viewport.width,
+      viewport.height,
+      gridCols,
+      gridRows,
     );
 
     const prevAlpha = ctx.globalAlpha;
@@ -253,9 +261,14 @@ export class TileLayer {
 
         ctx.drawImage(
           img,
-          frame.x, frame.y, frame.width, frame.height,
-          Math.round(pos.x + ox), Math.round(pos.y + oy),
-          tw, th,
+          frame.x,
+          frame.y,
+          frame.width,
+          frame.height,
+          Math.round(pos.x + ox),
+          Math.round(pos.y + oy),
+          tw,
+          th,
         );
       }
     }

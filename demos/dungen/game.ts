@@ -14,6 +14,9 @@ import {
   VIS_UNSEEN,
   VIS_VISIBLE,
 } from "./constants";
+import { Archer } from "./enemies/archer";
+import { Phantom } from "./enemies/phantom";
+import { Slime } from "./enemies/slime";
 import { DungenEnemy } from "./enemy";
 import { DungenPlayer } from "./player";
 import { drawTile } from "./utils";
@@ -85,7 +88,7 @@ class DungenEngine extends Engine {
 
   constructor(canvasId: string, width: number, height: number) {
     super(canvasId, width, height, {
-      backgroundColor: "#000000",
+      backgroundColor: "#000",
       gameScale: 1,
     });
 
@@ -185,7 +188,10 @@ class DungenEngine extends Engine {
           let nearestDist = Infinity;
           for (const e of this.enemies) {
             const d = Math.abs(e.x - p.x) + Math.abs(e.y - p.y);
-            if (d < nearestDist) { nearestDist = d; nearest = e; }
+            if (d < nearestDist) {
+              nearestDist = d;
+              nearest = e;
+            }
           }
           if (nearest) {
             const dx = nearest.x - p.x;
@@ -198,25 +204,32 @@ class DungenEngine extends Engine {
             p.vy *= -1;
           }
           p.life = 3;
-          this.spawnParticles(p.x, p.y, '#ffffff', 4);
-          this.messages.push({ text: 'DEFLECT!', x: p.x - 16, y: p.y - 12, timer: 0.8 });
+          this.spawnParticles(p.x, p.y, "#ffffff", 4);
+          this.messages.push({
+            text: "DEFLECT!",
+            x: p.x - 16,
+            y: p.y - 12,
+            timer: 0.8,
+          });
           return true;
         }
       }
 
       for (const enemy of this.enemies) {
         if (
-          p.x > enemy.x && p.x < enemy.x + TILE_SIZE &&
-          p.y > enemy.y && p.y < enemy.y + TILE_SIZE
+          p.x > enemy.x &&
+          p.x < enemy.x + TILE_SIZE &&
+          p.y > enemy.y &&
+          p.y < enemy.y + TILE_SIZE
         ) {
           enemy.takeDamage();
           enemy.applyKnockback(p.x, p.y);
           if (enemy.isDead()) {
-            this.spawnParticles(enemy.x, enemy.y, '#ff6060', 8);
+            this.spawnParticles(enemy.x, enemy.y, "#ff6060", 8);
             this.spawnDrop(enemy.x, enemy.y);
             this.kills += 1;
           } else {
-            this.spawnParticles(enemy.x, enemy.y, '#ffffff', 4);
+            this.spawnParticles(enemy.x, enemy.y, "#ffffff", 4);
           }
           return false;
         }
@@ -815,23 +828,27 @@ class DungenEngine extends Engine {
       } else {
         type = "slime";
       }
-      const enemy = new DungenEnemy(
-        `enemy_${i}`,
-        pos.x,
-        pos.y,
-        this.wallMap,
-        this.player,
-        losCheck,
-        type,
-      );
+
+      let enemy;
+
+      if (type === "phantom") {
+        enemy = new Phantom(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
+      }
+
       if (type === "archer") {
+        enemy = new Archer(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
+
         enemy.setShootCallback((x, y, vx, vy) => {
           this.projectiles.push({ x, y, vx, vy, life: 3 });
         });
       }
+
+      if (type === "slime") {
+        enemy = new Slime(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
+      }
+
       this.enemies.push(enemy);
     }
-
   }
 
   private checkEnemyCollision() {

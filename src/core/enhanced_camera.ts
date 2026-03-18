@@ -49,8 +49,9 @@
  * @see {@link Camera}               — base camera class
  * @see {@link IsometricCameraSystem} — subsystem using this camera
  */
-import Camera from "./camera";
+
 import type { Vector2 } from "../generic_types";
+import Camera from "./camera";
 
 /**
  * Configuration options for {@link EnhancedCamera}.
@@ -204,7 +205,7 @@ export class EnhancedCamera extends Camera {
    */
   smoothFollow(target: Vector2, deltaTime: number): void {
     const pos = this.getPosition();
-    const t = 1 - Math.pow(1 - this._lerpSpeed, deltaTime * 60);
+    const t = 1 - (1 - this._lerpSpeed) ** (deltaTime * 60);
     const newX = pos.x + (target.x - pos.x) * t;
     const newY = pos.y + (target.y - pos.y) * t;
     this.moveTo({ x: newX, y: newY });

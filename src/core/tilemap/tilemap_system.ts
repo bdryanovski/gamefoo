@@ -24,9 +24,10 @@
  * @see {@link TileMap}    — the tilemap being rendered
  * @see {@link SubSystem}  — the subsystem interface
  */
-import type Engine from "../engine";
+
 import type { CameraSystem } from "../../subsystems/camera_system";
 import type { SubSystem } from "../../subsystems/types";
+import type Engine from "../engine";
 import type { TileMap } from "./tilemap";
 
 export class TilemapSystem implements SubSystem {

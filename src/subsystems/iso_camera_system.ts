@@ -44,8 +44,9 @@
  * @see {@link EnhancedCamera} — the camera implementation
  * @see {@link CameraSystem}   — the simpler base camera subsystem
  */
-import { EnhancedCamera } from "../core/enhanced_camera";
+
 import type { EnhancedCameraConfig } from "../core/enhanced_camera";
+import { EnhancedCamera } from "../core/enhanced_camera";
 import type { IsometricProjection } from "../core/grid/isometric";
 import type { Vector2 } from "../generic_types";
 import type { SubSystem } from "./types";

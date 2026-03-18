@@ -80,8 +80,6 @@ export class GridDebugSystem implements SubSystem {
   private mouseX = 0;
   private mouseY = 0;
   private mouseActive = false;
-
-  private canvasWidth = 0;
   private canvasHeight = 0;
   private canvas: HTMLCanvasElement | null = null;
 
@@ -279,8 +277,12 @@ export class GridDebugSystem implements SubSystem {
     if (!this.projection) return;
 
     const range = this.projection.getVisibleRange(
-      this.viewX, this.viewY, this.viewW, this.viewH,
-      this.grid.cols, this.grid.rows,
+      this.viewX,
+      this.viewY,
+      this.viewW,
+      this.viewH,
+      this.grid.cols,
+      this.grid.rows,
     );
 
     ctx.strokeStyle = this.gridColor;
@@ -320,8 +322,12 @@ export class GridDebugSystem implements SubSystem {
 
     if (this.projection) {
       const range = this.projection.getVisibleRange(
-        this.viewX, this.viewY, this.viewW, this.viewH,
-        this.grid.cols, this.grid.rows,
+        this.viewX,
+        this.viewY,
+        this.viewW,
+        this.viewH,
+        this.grid.cols,
+        this.grid.rows,
       );
       minCol = range.minCol;
       maxCol = range.maxCol;
@@ -381,13 +387,7 @@ export class GridDebugSystem implements SubSystem {
         ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
       } else if (shape.type === "circle") {
         ctx.beginPath();
-        ctx.arc(
-          bounds.x + shape.radius,
-          bounds.y + shape.radius,
-          shape.radius,
-          0,
-          Math.PI * 2,
-        );
+        ctx.arc(bounds.x + shape.radius, bounds.y + shape.radius, shape.radius, 0, Math.PI * 2);
         ctx.stroke();
       }
     }

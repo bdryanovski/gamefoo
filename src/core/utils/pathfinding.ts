@@ -45,17 +45,26 @@
  * @see {@link PathfinderConfig} — configuration options
  */
 import type { Grid } from "../grid/grid";
-import type { HeuristicName, PathNode, PathfinderConfig } from "./pathfinding_types";
+import type { HeuristicName, PathfinderConfig, PathNode } from "./pathfinding_types";
 
 /** 4-directional offsets (cardinal). @internal */
 const OFFSETS_4: ReadonlyArray<[number, number]> = [
-  [0, -1], [0, 1], [-1, 0], [1, 0],
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
 ];
 
 /** 8-directional offsets (cardinal + diagonal). @internal */
 const OFFSETS_8: ReadonlyArray<[number, number]> = [
-  [0, -1], [0, 1], [-1, 0], [1, 0],
-  [-1, -1], [1, -1], [-1, 1], [1, 1],
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
+  [-1, -1],
+  [1, -1],
+  [-1, 1],
+  [1, 1],
 ];
 
 /**
@@ -273,12 +282,7 @@ export class Pathfinder {
    * }
    * ```
    */
-  isReachable(
-    startCol: number,
-    startRow: number,
-    goalCol: number,
-    goalRow: number,
-  ): boolean {
+  isReachable(startCol: number, startRow: number, goalCol: number, goalRow: number): boolean {
     return this.findPath(startCol, startRow, goalCol, goalRow) !== null;
   }
 
@@ -319,7 +323,6 @@ export class Pathfinder {
         };
       case "chebyshev":
         return (a, b) => Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row));
-      case "manhattan":
       default:
         return (a, b) => Math.abs(a.col - b.col) + Math.abs(a.row - b.row);
     }

@@ -10,7 +10,7 @@ import {
 
 export class DungenPlayer extends Entity {
   private input: Input;
-  private speed = 100;
+  private speed = 140;
 
   private wallMap: boolean[][];
 
