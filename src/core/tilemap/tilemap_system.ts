@@ -28,6 +28,7 @@
 import type { CameraSystem } from "../../subsystems/camera_system";
 import type { SubSystem } from "../../subsystems/types";
 import type Engine from "../engine";
+import type { RenderContext } from "../renderer/type";
 import type { TileMap } from "./tilemap";
 
 export class TilemapSystem implements SubSystem {
@@ -115,7 +116,7 @@ export class TilemapSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  render(ctx: CanvasRenderingContext2D): void {
+  render(ctx: RenderContext): void {
     const viewport = this.cameraSystem
       ? this.cameraSystem.camera.getViewRect()
       : { x: 0, y: 0, width: this.canvasWidth, height: this.canvasHeight };

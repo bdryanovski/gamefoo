@@ -1,4 +1,5 @@
 import { Entity } from "../../src";
+import type { RenderContext } from "../../src/core/renderer/type";
 import { MAP_COLS, MAP_ROWS, TILE_SIZE, VIEW_RADIUS } from "./constants";
 
 export class DungenEnemy extends Entity {
@@ -14,9 +15,9 @@ export class DungenEnemy extends Entity {
   private chasing = false;
   protected chaseSpeed = 60;
 
-  protected hp: number;
-  protected maxHp: number;
-  protected enemyType: "slime" | "phantom" | "archer";
+  protected hp!: number;
+  protected maxHp!: number;
+  protected enemyType!: "slime" | "phantom" | "archer";
 
   private knockbackVx = 0;
   private knockbackVy = 0;
@@ -50,9 +51,9 @@ export class DungenEnemy extends Entity {
       [0, -1],
       [0, 0],
     ];
-    const pick = dirs[Math.floor(Math.random() * dirs.length)];
-    this.dx = pick[0];
-    this.dy = pick[1];
+    const pick = dirs[Math.floor(Math.random() * dirs.length)]!;
+    this.dx = pick[0]!;
+    this.dy = pick[1]!;
     this.dirTimer = 0;
   }
 
@@ -65,11 +66,7 @@ export class DungenEnemy extends Entity {
     const dist = Math.abs(myCol - tCol) + Math.abs(myRow - tRow);
 
     const detectRange =
-      this.enemyType === "archer"
-        ? VIEW_RADIUS + 3
-        : this.enemyType === "phantom"
-          ? VIEW_RADIUS + 5
-          : VIEW_RADIUS + 2;
+      this.enemyType === "archer" ? VIEW_RADIUS + 3 : this.enemyType === "phantom" ? VIEW_RADIUS + 5 : VIEW_RADIUS + 2;
     this.chasing = dist < detectRange && this.losCheck(myCol, myRow, tCol, tRow);
 
     if (this.knockbackTimer > 0) {
@@ -105,12 +102,7 @@ export class DungenEnemy extends Entity {
       }
 
       this.shootTimer += deltaTime;
-      if (
-        this.shootTimer >= this.shootInterval &&
-        len > 0 &&
-        len < preferredDist + TILE_SIZE * 2 &&
-        this.onShoot
-      ) {
+      if (this.shootTimer >= this.shootInterval && len > 0 && len < preferredDist + TILE_SIZE * 2 && this.onShoot) {
         this.shootTimer = 0;
         const speed = 120;
         this.onShoot(
@@ -160,22 +152,23 @@ export class DungenEnemy extends Entity {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: RenderContext) {
+    const c = ctx.getCanvas!()!
     if (this.enemyType === "archer") {
-      ctx.fillStyle = this.chasing ? "#ffff40" : "#cccc30";
-      ctx.fillRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
-      ctx.fillStyle = "#ff4040";
-      ctx.fillRect(this.x + 5, this.y + 7, 6, 2);
+      c.fillStyle = this.chasing ? "#ffff40" : "#cccc30";
+      c.fillRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+      c.fillStyle = "#ff4040";
+      c.fillRect(this.x + 5, this.y + 7, 6, 2);
     } else if (this.enemyType === "phantom") {
-      ctx.fillStyle = this.chasing ? "#b050ff" : "#7040a0";
-      ctx.fillRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+      c.fillStyle = this.chasing ? "#b050ff" : "#7040a0";
+      c.fillRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
       if (this.hp < this.maxHp) {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+        c.fillStyle = "rgba(255, 255, 255, 0.4)";
+        c.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
       }
     } else {
-      ctx.fillStyle = this.chasing ? "#ff3030" : "#e05050";
-      ctx.fillRect(this.x + 2, this.y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+      c.fillStyle = this.chasing ? "#ff3030" : "#e05050";
+      c.fillRect(this.x + 2, this.y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
     }
   }
 
@@ -188,7 +181,7 @@ export class DungenEnemy extends Entity {
     for (let row = top; row <= bottom; row++) {
       for (let col = left; col <= right; col++) {
         if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return true;
-        if (this.wallMap[row][col]) return true;
+        if (this.wallMap[row]?.[col]) return true;
       }
     }
     return false;

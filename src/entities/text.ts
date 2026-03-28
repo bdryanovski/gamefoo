@@ -1,4 +1,5 @@
 import FontBitmap, { type InternalBitmapFontName } from "../core/fonts/font_bitmap";
+import type { RenderContext } from "../core/renderer/type";
 import Entity from "./entity";
 
 /**
@@ -76,11 +77,15 @@ export default abstract class Text extends Entity {
   }
 
   /**
-   * Render the text to the canvas using the BitmapFont instance
+   * Render the text using the BitmapFont instance.
+   * On canvas: uses Path2D glyph rendering.
+   * On terminal: delegates to drawText.
    */
-  override render(ctx: CanvasRenderingContext2D): void {
-    if (this.color) {
-      ctx.fillStyle = this.color;
+  override render(ctx: RenderContext): void {
+    // Set fill colour for canvas path rendering
+    const raw = ctx.getCanvas?.();
+    if (this.color && raw) {
+      raw.fillStyle = this.color;
     }
     this.font.renderText(this.getText(), this.x, this.y, ctx);
   }

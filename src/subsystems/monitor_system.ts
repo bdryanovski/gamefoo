@@ -1,3 +1,4 @@
+import type { RenderContext } from "../core/renderer/type";
 import Monitor from "../debug/monitor";
 import type { SubSystem } from "./types";
 
@@ -20,7 +21,7 @@ export class MonitorSystem implements SubSystem {
     this.monitor.update(deltaTime);
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: RenderContext) {
     this.monitor.render(ctx);
   }
 }

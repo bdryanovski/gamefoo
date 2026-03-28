@@ -1,4 +1,5 @@
 import type { Behaviour } from "../core/behaviour";
+import type { RenderContext } from "../core/renderer/type";
 import type { Demension, Vector2 } from "../generic_types";
 
 /**
@@ -29,7 +30,7 @@ import type { Demension, Vector2 } from "../generic_types";
  *
  *   update(_dt: number) {}
  *
- *   render(ctx: CanvasRenderingContext2D) {
+ *   render(ctx: RenderContext) {
  *     ctx.fillStyle = "#888";
  *     ctx.fillRect(this.x, this.y, this.size.width, this.size.height);
  *   }
@@ -143,11 +144,11 @@ export default abstract class Entity {
   abstract update(deltaTime: number): void;
 
   /**
-   * Draws the entity to the canvas.
+   * Draws the entity .
    *
    * @param ctx - The 2-D rendering context.
    */
-  abstract render(ctx: CanvasRenderingContext2D): void;
+  abstract render(ctx: RenderContext): void;
 
   /**
    * Returns a **copy** of the entity's current position.
@@ -310,9 +311,9 @@ export default abstract class Entity {
    *
    * Typically called from a subclass's `render` implementation.
    *
-   * @param ctx - The canvas 2-D rendering context.
+   * @param ctx - The rendering context.
    */
-  protected renderBehaviours(ctx: CanvasRenderingContext2D): void {
+  protected renderBehaviours(ctx: RenderContext): void {
     for (const behavior of this.behaviors) {
       if (behavior.enabled && behavior.render) {
         behavior.render(ctx);

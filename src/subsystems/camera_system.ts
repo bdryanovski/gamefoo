@@ -1,4 +1,5 @@
 import Camera from "../core/camera";
+import type { RenderContext } from "../core/renderer/type";
 import type { Vector2 } from "../generic_types";
 import type { SubSystem } from "./types";
 
@@ -40,13 +41,13 @@ export class CameraSystem implements SubSystem {
     }
   }
 
-  preRender(ctx: CanvasRenderingContext2D) {
+  preRender(ctx: RenderContext) {
     const v = this.camera.getViewRect();
     ctx.save();
     ctx.translate(-v.x, -v.y);
   }
 
-  postRender(ctx: CanvasRenderingContext2D) {
+  postRender(ctx: RenderContext) {
     ctx.restore();
   }
 }

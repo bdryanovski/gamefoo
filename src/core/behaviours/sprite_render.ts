@@ -1,6 +1,7 @@
 import type Entity from "../../entities/entity";
 import type { Vector2 } from "../../generic_types";
 import { Behaviour } from "../behaviour";
+import type { RenderContext } from "../renderer/type";
 import type Sprite from "../sprite";
 
 /**
@@ -187,7 +188,7 @@ export default class SpriteRender extends Behaviour<Entity> {
    *
    * @param ctx - The canvas 2-D rendering context.
    */
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     if (!this.currentFrame) {
       return;
     }
@@ -207,10 +208,10 @@ export default class SpriteRender extends Behaviour<Entity> {
     if (this.flipX) {
       ctx.save();
       ctx.scale(-1, 1);
-      ctx.drawImage(this.sheet.image, x, y, width, height, -(drawX + size.width), drawY, size.width, size.height);
+      ctx.drawSprite?.(this.sheet.image, x, y, width, height, -(drawX + size.width), drawY, size.width, size.height);
       ctx.restore();
     } else {
-      ctx.drawImage(this.sheet.image, x, y, width, height, drawX, drawY, size.width, size.height);
+      ctx.drawSprite?.(this.sheet.image, x, y, width, height, drawX, drawY, size.width, size.height);
     }
   }
 }

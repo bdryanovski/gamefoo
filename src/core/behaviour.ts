@@ -1,4 +1,5 @@
 import type Entity from "../entities/entity";
+import type { RenderContext } from "./renderer/type";
 
 /**
  * Abstract base class for all entity behaviours in the GameFoo engine.
@@ -122,9 +123,9 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * Override this to draw debug shapes, health bars, status effects, etc.
    *
-   * @param ctx - The canvas 2-D rendering context.
+   * @param ctx - The rendering context.
    */
-  render?(ctx: CanvasRenderingContext2D): void;
+  render?(ctx: RenderContext): void;
 
   /**
    * Lifecycle hook called immediately after the behaviour is attached

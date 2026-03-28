@@ -1,18 +1,12 @@
-import { InternalBitmapFontName } from "../../src/core/fonts/font_bitmap";
-import {
-  Engine,
-  Entity,
-  FontBitmap,
-  FontBitmapPrebuild,
-  ObjectSystem,
-  Text,
-  type Vector2,
-} from "../../src/index";
+import type { InternalBitmapFontName } from "../../src/core/fonts/font_bitmap";
+import type { RenderContext } from "../../src/core/renderer/type";
+import { Engine, Entity, FontBitmap, ObjectSystem, Text, type Vector2, WebRenderer } from "../../src/index";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 
-const engine = new Engine("game", CANVAS_W, CANVAS_H, {
+const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+const engine = new Engine(renderer, {
   backgroundColor: "#000000",
   gameScale: 1,
 });
@@ -43,7 +37,7 @@ class ShakyText extends Text {
     this.y = this.y + amplitude * Math.sin(2 * Math.PI * frequency * time);
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     super.render(ctx);
   }
 }
@@ -68,16 +62,14 @@ class TypeWriter extends Text {
     this.ticks += _dt / typingSpeed;
 
     const charsToShow = Math.min(Math.floor(this.ticks), this.copyOfText.length);
-    this.setText(
-      this.copyOfText.substring(0, charsToShow) + (charsToShow < this.copyOfText.length ? "|" : ""),
-    ); // add cursor if not finished
+    this.setText(this.copyOfText.substring(0, charsToShow) + (charsToShow < this.copyOfText.length ? "|" : "")); // add cursor if not finished
 
     if (charsToShow === this.copyOfText.length) {
       this.ticks = 0; // reset ticks to loop the effect
     }
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     super.render(ctx);
   }
 }
@@ -93,14 +85,14 @@ class KeyboardLayoutText extends Text {
     // No dynamic behavior needed for this text, so we can leave it empty.
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     const chars = this.font.metadata?.chars || "";
     const charsPerRow = 10;
     const charWidth = this.font.width;
     const charHeight = this.font.height;
 
     for (let i = 0; i < chars.length; i++) {
-      const char = chars[i];
+      const char = chars[i] ?? "";
       const row = Math.floor(i / charsPerRow);
       const col = i % charsPerRow;
       const x = this.x + col * charWidth;
@@ -118,14 +110,15 @@ class PrebuildText extends Text {
     this.y = CANVAS_H / 2 + 50;
 
     /**
-     * This is experimental so the API may change in the future
+     * Pre-build glyphs for faster rendering using the FontBitmap prebuildGlyphs API.
      */
-    this.font = new FontBitmapPrebuild(name);
+    const chars = this.font.metadata?.chars || "";
+    this.font.prebuildGlyphs(chars.split(""));
   }
 
   override update(_dt: number): void {}
 
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     super.render(ctx);
   }
 }
@@ -137,8 +130,10 @@ class HUD extends Entity {
 
   override update(_dt: number): void {}
 
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#FFFFFF";
+  override render(ctx: RenderContext): void {
+    const _rawCtx = ctx.getCanvas?.(); if (_rawCtx) {
+      _rawCtx.fillStyle = "#FFFFFF";
+    }
     font3x5.renderText(font3x5.metadata?.chars + "", 10, 200, ctx);
     font5x5.renderText(font5x5.metadata?.chars + "", 10, 210, ctx);
     font4x6.renderText(font4x6.metadata?.chars + "", 10, 220, ctx);

@@ -1,12 +1,6 @@
-import { Entity, Input } from "../../src";
-import {
-  DASH_COOLDOWN,
-  DASH_DURATION,
-  DASH_SPEED,
-  MAP_COLS,
-  MAP_ROWS,
-  TILE_SIZE,
-} from "./constants";
+import { Entity, type Input } from "../../src";
+import type { RenderContext } from "../../src/core/renderer/type";
+import { DASH_COOLDOWN, DASH_DURATION, DASH_SPEED, MAP_COLS, MAP_ROWS, TILE_SIZE } from "./constants";
 
 export class DungenPlayer extends Entity {
   private input: Input;
@@ -70,12 +64,7 @@ export class DungenPlayer extends Entity {
       this.dashCooldown -= deltaTime;
     }
 
-    if (
-      this.input.isKeyDown("x") &&
-      this.dashCooldown <= 0 &&
-      (dx !== 0 || dy !== 0) &&
-      !this.dashing
-    ) {
+    if (this.input.isKeyDown("x") && this.dashCooldown <= 0 && (dx !== 0 || dy !== 0) && !this.dashing) {
       this.dashing = true;
       this.dashTimer = DASH_DURATION;
       this.dashCooldown = DASH_COOLDOWN;
@@ -99,14 +88,15 @@ export class DungenPlayer extends Entity {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: RenderContext) {
     if (this.invincibleTimer > 0 && Math.floor(this.invincibleTimer * 10) % 2 === 0) {
       return;
     }
+    const c = ctx.getCanvas!()!
 
     if (this.dashing) {
-      ctx.fillStyle = "rgba(127, 219, 202, 0.3)";
-      ctx.fillRect(
+      c.fillStyle = "rgba(127, 219, 202, 0.3)";
+      c.fillRect(
         this.x - this.facing.x * TILE_SIZE * 0.5,
         this.y - this.facing.y * TILE_SIZE * 0.5,
         TILE_SIZE,
@@ -114,13 +104,13 @@ export class DungenPlayer extends Entity {
       );
     }
 
-    ctx.fillStyle = this.dashing ? "#ffffff" : "#7fdbca";
-    ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+    c.fillStyle = this.dashing ? "#ffffff" : "#7fdbca";
+    c.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
 
     if (this.attacking) {
       const box = this.getAttackBox();
-      ctx.fillStyle = "rgba(255, 255, 100, 0.6)";
-      ctx.fillRect(box.x, box.y, box.w, box.h);
+      c.fillStyle = "rgba(255, 255, 100, 0.6)";
+      c.fillRect(box.x, box.y, box.w, box.h);
     }
   }
 
@@ -133,7 +123,7 @@ export class DungenPlayer extends Entity {
     for (let row = top; row <= bottom; row++) {
       for (let col = left; col <= right; col++) {
         if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return true;
-        if (this.wallMap[row][col]) return true;
+        if (this.wallMap[row]?.[col]) return true;
       }
     }
     return false;

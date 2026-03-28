@@ -1,5 +1,7 @@
 import type Engine from "../core/engine";
 
+import type { RenderContext } from "../core/renderer/type";
+
 /**
  * SubSystem is a modular component of the game engine that can be added or removed as needed.
  * It provides hooks for initialization, updating, rendering, and destruction.
@@ -38,9 +40,9 @@ export interface SubSystem {
   update?(deltaTime: number): void;
   postUpdate?(deltaTime: number): void;
 
-  preRender?(ctx: CanvasRenderingContext2D): void;
-  render?(ctx: CanvasRenderingContext2D): void;
-  postRender?(ctx: CanvasRenderingContext2D): void;
+  preRender?(ctx: RenderContext): void;
+  render?(ctx: RenderContext): void;
+  postRender?(ctx: RenderContext): void;
 
   destroy?(): void;
 }

@@ -1,4 +1,5 @@
 import GameObjectRegister from "../core/game_object_register";
+import type { RenderContext } from "../core/renderer/type";
 import type { GameObject } from "../generic_types";
 import type { SubSystem } from "./types";
 
@@ -54,7 +55,7 @@ export class ObjectSystem implements SubSystem {
     }
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: RenderContext) {
     if (this.objects) {
       if (this._depthSort) {
         this.objects.sort((a, b) => a.y - b.y);

@@ -1,5 +1,6 @@
 import type { Control } from "../core/behaviours/control";
 import type { HealthKit } from "../core/behaviours/healtkit";
+import type { RenderContext } from "../core/renderer/type";
 import DynamicEntity from "./dynamic_entity";
 
 /**
@@ -91,9 +92,8 @@ export default class Player extends DynamicEntity {
    * @inheritDoc
    * @param ctx - The canvas 2-D rendering context.
    */
-  render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "blue";
-    ctx.fillRect(this.x, this.y, this.size.width, this.size.height);
+  render(ctx: RenderContext): void {
+    ctx.fillRect(this.x, this.y, this.size.width, this.size.height, "blue");
     this.renderBehaviours(ctx);
   }
 }

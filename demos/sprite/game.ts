@@ -1,19 +1,24 @@
 import {
+  Asset,
   Control,
   DynamicEntity,
   Engine,
+  type Entity,
   Input,
+  ObjectSystem,
   Player,
-  Asset,
+  type RenderContext,
   Sprite,
   SpriteRender,
+  WebRenderer,
 } from "../../src/index";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 const TILE = 48;
 
-const engine = new Engine("game", CANVAS_W, CANVAS_H, {
+const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+const engine = new Engine(renderer, {
   backgroundColor: "#1a1a2e",
 });
 
@@ -27,7 +32,7 @@ class SpriteEntity extends DynamicEntity {
   override update(dt: number): void {
     this.updateBehaviours(dt);
   }
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     this.renderBehaviours(ctx);
   }
 }
@@ -40,10 +45,11 @@ class Label extends DynamicEntity {
     this.text = text;
   }
   override update(_dt: number): void {}
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#6666aa";
-    ctx.font = "bold 8px monospace";
-    ctx.fillText(this.text, this.x, this.y);
+  override render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
+    c.fillStyle = "#6666aa";
+    c.font = "bold 8px monospace";
+    c.fillText(this.text, this.x, this.y);
   }
 }
 
@@ -90,16 +96,17 @@ class Hero extends Player {
     }
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
     this.renderBehaviours(ctx);
   }
 }
 
 const hero = new Hero(380, 400);
 hero.attachBehaviour(new Control(hero, input));
-engine.player = hero;
 
 engine.setup(async () => {
+  const objects: Entity[] = [];
+
   const image = await Asset.load("/sprite/assets/tiles.png");
   const cols = Math.floor(image.width / 16);
 
@@ -110,7 +117,7 @@ engine.setup(async () => {
   //  1 · STATIC SPRITES — single-frame, no animation
   // ═══════════════════════════════════════════════════════════
 
-  engine.attachObjects(new Label("lbl-s", "1 · Static Sprites", 30, 35));
+  objects.push(new Label("lbl-s", "1 · Static Sprites", 30, 35));
 
   const staticTiles = [
     { col: 0, row: 0 },
@@ -123,34 +130,21 @@ engine.setup(async () => {
 
   for (let i = 0; i < staticTiles.length; i++) {
     const t = staticTiles[i]!;
-    const entity = new SpriteEntity(
-      `static-${i}`,
-      30 + i * (TILE + 8),
-      45,
-      TILE,
-      TILE,
-    );
+    const entity = new SpriteEntity(`static-${i}`, 30 + i * (TILE + 8), 45, TILE, TILE);
     const sheet = new Sprite(image, 16, 16, {
       idle: { frames: [f(t.col, t.row)], duration: 1, loop: true },
     });
     const sr = new SpriteRender(entity, sheet);
     entity.attachBehaviour(sr);
     sr.play("idle");
-    engine.attachObjects(entity);
+    objects.push(entity);
   }
 
   // ═══════════════════════════════════════════════════════════
   //  2 · ANIMATED SPRITES — looping at different speeds
   // ═══════════════════════════════════════════════════════════
 
-  engine.attachObjects(
-    new Label(
-      "lbl-a",
-      "2 · Animated Sprites (looping at different speeds)",
-      30,
-      150,
-    ),
-  );
+  objects.push(new Label("lbl-a", "2 · Animated Sprites (looping at different speeds)", 30, 150));
 
   const animDefs = [
     { frames: [f(0, 0), f(1, 0), f(2, 0), f(3, 0)], dur: 0.4 },
@@ -170,25 +164,16 @@ engine.setup(async () => {
     const sr = new SpriteRender(entity, sheet);
     entity.attachBehaviour(sr);
     sr.play("loop");
-    engine.attachObjects(entity);
+    objects.push(entity);
 
-    engine.attachObjects(
-      new Label(`lbl-d${i}`, `${a.dur}s`, x + 12, 160 + TILE + 16),
-    );
+    objects.push(new Label(`lbl-d${i}`, `${a.dur}s`, x + 12, 160 + TILE + 16));
   }
 
   // ═══════════════════════════════════════════════════════════
   //  3 · PLAYER — key press changes animation + flipX demo
   // ═══════════════════════════════════════════════════════════
 
-  engine.attachObjects(
-    new Label(
-      "lbl-p",
-      "3 · Player (WASD / Arrows — animation changes direction, flipX for left)",
-      30,
-      310,
-    ),
-  );
+  objects.push(new Label("lbl-p", "3 · Player (WASD / Arrows — animation changes direction, flipX for left)", 30, 310));
 
   const heroSheet = new Sprite(image, 16, 16, {
     idle: { frames: [f(104, 0)], duration: 1, loop: true },
@@ -213,4 +198,6 @@ engine.setup(async () => {
   hero.attachBehaviour(sr);
   hero.bindSprite(sr);
   sr.play("idle");
+
+  engine.use(new ObjectSystem([hero, ...objects] as any));
 });

@@ -49,6 +49,7 @@
 import type Engine from "../core/engine";
 import type { Grid } from "../core/grid/grid";
 import type { IsometricProjection } from "../core/grid/isometric";
+import type { RenderContext } from "../core/renderer/type";
 import type World from "../core/world";
 import type { SubSystem } from "../subsystems/types";
 import type { GridDebugConfig } from "./grid_debug_types";
@@ -80,6 +81,7 @@ export class GridDebugSystem implements SubSystem {
   private mouseX = 0;
   private mouseY = 0;
   private mouseActive = false;
+  private canvasWidth = 0;
   private canvasHeight = 0;
   private canvas: HTMLCanvasElement | null = null;
 
@@ -187,17 +189,23 @@ export class GridDebugSystem implements SubSystem {
   /**
    * Renders all enabled debug overlays.
    *
-   * @param ctx - Canvas 2D rendering context.
+   * Only functional on canvas-backed `RenderContext` implementations.
+   * No-op on terminal renderers.
+   *
+   * @param ctx - The active render context.
    *
    * @since 0.4.0
    */
-  render(ctx: CanvasRenderingContext2D): void {
-    if (this.showGrid) this.renderGrid(ctx);
-    if (this.showCoordinates) this.renderCoordinates(ctx);
-    if (this.showCollisionBounds) this.renderCollisionBounds(ctx);
-    if (this.showPathfinding) this.renderPathfinding(ctx);
-    if (this.showTileInspector) this.renderTileInspector(ctx);
-    if (this.showWorldCoordinates) this.renderWorldCoordinates(ctx);
+  render(ctx: RenderContext): void {
+    // GridDebugSystem only supports canvas rendering
+    const canvasCtx = ctx.getCanvas?.();
+    if (!canvasCtx) return;
+    if (this.showGrid) this.renderGrid(canvasCtx);
+    if (this.showCoordinates) this.renderCoordinates(canvasCtx);
+    if (this.showCollisionBounds) this.renderCollisionBounds(canvasCtx);
+    if (this.showPathfinding) this.renderPathfinding(canvasCtx);
+    if (this.showTileInspector) this.renderTileInspector(canvasCtx);
+    if (this.showWorldCoordinates) this.renderWorldCoordinates(canvasCtx);
   }
 
   /**

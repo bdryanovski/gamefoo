@@ -1,4 +1,5 @@
-import { Asset, Engine, Input, PerlinNoise, Sprite } from "../../src/index";
+import type { RenderContext } from "../../src/core/renderer/type";
+import { Asset, Engine, Input, PerlinNoise, Sprite, WebRenderer } from "../../src/index";
 import {
   CANVAS_H,
   CANVAS_W,
@@ -17,7 +18,7 @@ import {
 import { Archer } from "./enemies/archer";
 import { Phantom } from "./enemies/phantom";
 import { Slime } from "./enemies/slime";
-import { DungenEnemy } from "./enemy";
+import type { DungenEnemy } from "./enemy";
 import { DungenPlayer } from "./player";
 import { drawTile } from "./utils";
 
@@ -86,8 +87,8 @@ class DungenEngine extends Engine {
     life: number;
   }[] = [];
 
-  constructor(canvasId: string, width: number, height: number) {
-    super(canvasId, width, height, {
+  constructor(width: number, height: number) {
+    super(new WebRenderer("game", width, height), {
       backgroundColor: "#000",
       gameScale: 1,
     });
@@ -177,7 +178,7 @@ class DungenEngine extends Engine {
 
       const col = Math.floor(p.x / TILE_SIZE);
       const row = Math.floor(p.y / TILE_SIZE);
-      if (row >= 0 && row < MAP_ROWS && col >= 0 && col < MAP_COLS && this.wallMap[row][col]) {
+      if (row >= 0 && row < MAP_ROWS && col >= 0 && col < MAP_COLS && this.wallMap[row]?.[col]) {
         return false;
       }
 
@@ -216,12 +217,7 @@ class DungenEngine extends Engine {
       }
 
       for (const enemy of this.enemies) {
-        if (
-          p.x > enemy.x &&
-          p.x < enemy.x + TILE_SIZE &&
-          p.y > enemy.y &&
-          p.y < enemy.y + TILE_SIZE
-        ) {
+        if (p.x > enemy.x && p.x < enemy.x + TILE_SIZE && p.y > enemy.y && p.y < enemy.y + TILE_SIZE) {
           enemy.takeDamage();
           enemy.applyKnockback(p.x, p.y);
           if (enemy.isDead()) {
@@ -288,10 +284,11 @@ class DungenEngine extends Engine {
     this.updateVisibility();
   }
 
-  override render(ctx: CanvasRenderingContext2D) {
+  override render(ctx: RenderContext) {
+    const c = ctx.getCanvas!()!
     if (!this.ready) return;
 
-    ctx.save();
+    c.save();
 
     let shakeX = 0;
     let shakeY = 0;
@@ -300,9 +297,9 @@ class DungenEngine extends Engine {
       shakeY = (Math.random() - 0.5) * 2 * this.shakeIntensity;
     }
 
-    ctx.translate(-this.cameraX + shakeX, -this.cameraY + shakeY);
+    c.translate(-this.cameraX + shakeX, -this.cameraY + shakeY);
 
-    // Draw only visible on the scree
+    // Draw only visible on screen
     const startCol = Math.max(0, Math.floor(this.cameraX / TILE_SIZE));
     const endCol = Math.min(MAP_COLS, Math.ceil((this.cameraX + CANVAS_W) / TILE_SIZE));
     const startRow = Math.max(0, Math.floor(this.cameraY / TILE_SIZE));
@@ -310,14 +307,14 @@ class DungenEngine extends Engine {
 
     for (let row = startRow; row < endRow; row++) {
       for (let col = startCol; col < endCol; col++) {
-        drawTile(ctx, this.assets, this.tileMap[row][col], col, row);
+        drawTile(ctx, this.assets, this.tileMap[row]?.[col] ?? 0, col, row);
       }
     }
 
     for (let row = startRow; row < endRow; row++) {
       for (let col = startCol; col < endCol; col++) {
-        const decor = this.decorMap[row][col];
-        if (decor !== null) {
+        const decor = this.decorMap[row]?.[col];
+        if (decor !== null && decor !== undefined) {
           drawTile(ctx, this.assets, decor, col, row);
         }
       }
@@ -330,76 +327,60 @@ class DungenEngine extends Engine {
       if (this.visMap[row]?.[col] !== VIS_VISIBLE) continue;
 
       const bob = Math.sin(d.timer * 4) * 2;
-      ctx.fillStyle = d.type === "hp" ? "#ff5050" : "#ffdd44";
-      ctx.fillRect(d.x + 4, d.y + 4 + bob, TILE_SIZE - 8, TILE_SIZE - 8);
-      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-      ctx.fillRect(d.x + 6, d.y + 5 + bob, 3, 3);
+      c.fillStyle = d.type === "hp" ? "#ff5050" : "#ffdd44";
+      c.fillRect(d.x + 4, d.y + 4 + bob, TILE_SIZE - 8, TILE_SIZE - 8);
+      c.fillStyle = "rgba(255, 255, 255, 0.5)";
+      c.fillRect(d.x + 6, d.y + 5 + bob, 3, 3);
     }
 
     const exitVis = this.visMap[this.exitRow]?.[this.exitCol];
     if (exitVis === VIS_VISIBLE || exitVis === VIS_SEEN) {
-      ctx.fillStyle = exitVis === VIS_VISIBLE ? "#50e050" : "#2a7a2a";
-      ctx.fillRect(
-        this.exitCol * TILE_SIZE + 2,
-        this.exitRow * TILE_SIZE + 2,
-        TILE_SIZE - 4,
-        TILE_SIZE - 4,
-      );
+      c.fillStyle = exitVis === VIS_VISIBLE ? "#50e050" : "#2a7a2a";
+      c.fillRect(this.exitCol * TILE_SIZE + 2, this.exitRow * TILE_SIZE + 2, TILE_SIZE - 4, TILE_SIZE - 4);
       if (exitVis === VIS_VISIBLE) {
-        ctx.strokeStyle = "#90ff90";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(
-          this.exitCol * TILE_SIZE + 1,
-          this.exitRow * TILE_SIZE + 1,
-          TILE_SIZE - 2,
-          TILE_SIZE - 2,
-        );
+        c.strokeStyle = "#90ff90";
+        c.lineWidth = 1;
+        c.strokeRect(this.exitCol * TILE_SIZE + 1, this.exitRow * TILE_SIZE + 1, TILE_SIZE - 2, TILE_SIZE - 2);
       }
     }
 
     this.player.render(ctx);
 
     for (const msg of this.messages) {
-      ctx.font = "bold 10px 'Courier New', monospace";
-      ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(1, msg.timer)})`;
-      ctx.fillText(msg.text, msg.x, msg.y);
+      c.font = "bold 10px 'Courier New', monospace";
+      c.fillStyle = `rgba(255, 255, 255, ${Math.min(1, msg.timer)})`;
+      c.fillText(msg.text, msg.x, msg.y);
     }
 
     for (let row = startRow; row < endRow; row++) {
       for (let col = startCol; col < endCol; col++) {
-        const vis = this.visMap[row][col];
+        const vis = this.visMap[row]?.[col];
         if (vis === VIS_VISIBLE) continue;
 
         if (vis === VIS_SEEN && this.lightMap[row]?.[col]) {
-          ctx.fillStyle = "rgba(20, 10, 0, 0.4)";
+          c.fillStyle = "rgba(20, 10, 0, 0.4)";
         } else if (vis === VIS_SEEN) {
-          ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+          c.fillStyle = "rgba(0, 0, 0, 0.6)";
         } else {
-          ctx.fillStyle = "rgba(0, 0, 0, 1)";
+          c.fillStyle = "rgba(0, 0, 0, 1)";
         }
-        ctx.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        c.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
       }
     }
 
     for (const p of this.particles) {
       const alpha = Math.min(1, p.life * 3);
       const size = 1 + p.life * 3;
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = p.color;
-      ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
+      c.globalAlpha = alpha;
+      c.fillStyle = p.color;
+      c.fillRect(p.x - size / 2, p.y - size / 2, size, size);
     }
-    ctx.globalAlpha = 1;
+    c.globalAlpha = 1;
 
     for (const enemy of this.enemies) {
       const ecol = Math.floor(enemy.x / TILE_SIZE);
       const erow = Math.floor(enemy.y / TILE_SIZE);
-      if (
-        erow >= 0 &&
-        erow < MAP_ROWS &&
-        ecol >= 0 &&
-        ecol < MAP_COLS &&
-        this.visMap[erow][ecol] === VIS_VISIBLE
-      ) {
+      if (erow >= 0 && erow < MAP_ROWS && ecol >= 0 && ecol < MAP_COLS && this.visMap[erow]?.[ecol] === VIS_VISIBLE) {
         enemy.render(ctx);
       }
     }
@@ -407,31 +388,25 @@ class DungenEngine extends Engine {
     for (const proj of this.projectiles) {
       const col = Math.floor(proj.x / TILE_SIZE);
       const row = Math.floor(proj.y / TILE_SIZE);
-      if (
-        row >= 0 &&
-        row < MAP_ROWS &&
-        col >= 0 &&
-        col < MAP_COLS &&
-        this.visMap[row][col] === VIS_VISIBLE
-      ) {
-        ctx.fillStyle = "#ff4444";
-        ctx.beginPath();
-        ctx.arc(proj.x, proj.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#ffaa00";
-        ctx.beginPath();
-        ctx.arc(proj.x, proj.y, 1.5, 0, Math.PI * 2);
-        ctx.fill();
+      if (row >= 0 && row < MAP_ROWS && col >= 0 && col < MAP_COLS && this.visMap[row]?.[col] === VIS_VISIBLE) {
+        c.fillStyle = "#ff4444";
+        c.beginPath();
+        c.arc(proj.x, proj.y, 3, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#ffaa00";
+        c.beginPath();
+        c.arc(proj.x, proj.y, 1.5, 0, Math.PI * 2);
+        c.fill();
       }
     }
 
     if (this.damageFlashTimer > 0) {
       const alpha = (this.damageFlashTimer / 0.3) * 0.3;
-      ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
-      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+      c.fillStyle = `rgba(255, 0, 0, ${alpha})`;
+      c.fillRect(0, 0, CANVAS_W, CANVAS_H);
     }
 
-    ctx.restore();
+    c.restore();
     this.renderMinimap(ctx);
     this.renderHUD(ctx);
   }
@@ -442,7 +417,7 @@ class DungenEngine extends Engine {
 
   private isWall(col: number, row: number): boolean {
     if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return true;
-    return this.wallMap[row][col];
+    return this.wallMap[row]?.[col] ?? false;
   }
 
   private autoTile() {
@@ -456,23 +431,23 @@ class DungenEngine extends Engine {
         const right = !this.isWall(col + 1, row);
 
         if (down && right) {
-          this.tileMap[row][col] = TILE.CORNER_TL;
+          this.tileMap[row]![col] = TILE.CORNER_TL;
         } else if (down && left) {
-          this.tileMap[row][col] = TILE.CORNER_TR;
+          this.tileMap[row]![col] = TILE.CORNER_TR;
         } else if (up && right) {
-          this.tileMap[row][col] = TILE.CORNER_BL;
+          this.tileMap[row]![col] = TILE.CORNER_BL;
         } else if (up && left) {
-          this.tileMap[row][col] = TILE.CORNER_BR;
+          this.tileMap[row]![col] = TILE.CORNER_BR;
         } else if (down) {
-          this.tileMap[row][col] = TILE.WALL_TOP;
+          this.tileMap[row]![col] = TILE.WALL_TOP;
         } else if (up) {
-          this.tileMap[row][col] = TILE.WALL_BOTTOM;
+          this.tileMap[row]![col] = TILE.WALL_BOTTOM;
         } else if (right) {
-          this.tileMap[row][col] = TILE.WALL_LEFT;
+          this.tileMap[row]![col] = TILE.WALL_LEFT;
         } else if (left) {
-          this.tileMap[row][col] = TILE.WALL_RIGHT;
+          this.tileMap[row]![col] = TILE.WALL_RIGHT;
         } else {
-          this.tileMap[row][col] = TILE.WALL_INNER;
+          this.tileMap[row]![col] = TILE.WALL_INNER;
         }
       }
     }
@@ -500,7 +475,7 @@ class DungenEngine extends Engine {
         } else {
           const noiseVal = perlin.fbm(col / scale, row / scale, 4, 2, 0.5);
           const groundIndex = Math.abs(Math.floor(noiseVal * 100)) % GROUNDS.length;
-          tileLine.push(GROUNDS[groundIndex]);
+          tileLine.push(GROUNDS[groundIndex] ?? 0);
         }
       }
       this.wallMap.push(wallLine);
@@ -526,7 +501,7 @@ class DungenEngine extends Engine {
     for (let row = 0; row < MAP_ROWS; row++) {
       const line: (number | null)[] = [];
       for (let col = 0; col < MAP_COLS; col++) {
-        if (this.wallMap[row][col]) {
+        if (this.wallMap[row]?.[col]) {
           line.push(null);
           continue;
         }
@@ -535,10 +510,10 @@ class DungenEngine extends Engine {
 
         if (val > 0.55) {
           line.push(TILE.CHEST_1);
-          this.wallMap[row][col] = true;
+          this.wallMap[row]![col] = true;
         } else if (val > 0.45) {
           line.push(TILE.FIRE_0);
-          this.wallMap[row][col] = false;
+          this.wallMap[row]![col] = false;
         } else {
           line.push(null);
         }
@@ -553,8 +528,8 @@ class DungenEngine extends Engine {
 
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        if (this.visMap[row][col] === VIS_VISIBLE) {
-          this.visMap[row][col] = VIS_SEEN;
+        if (this.visMap[row]?.[col] === VIS_VISIBLE) {
+          this.visMap[row]![col] = VIS_SEEN;
         }
       }
     }
@@ -569,7 +544,7 @@ class DungenEngine extends Engine {
         if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) continue;
 
         if (this.hasLineOfSight(px, py, col, row)) {
-          this.visMap[row][col] = VIS_VISIBLE;
+          this.visMap[row]![col] = VIS_VISIBLE;
         }
       }
     }
@@ -577,18 +552,18 @@ class DungenEngine extends Engine {
     // torch light — reveal as VIS_SEEN if still unseen
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        if (this.lightMap[row][col] && this.visMap[row][col] === VIS_UNSEEN) {
-          this.visMap[row][col] = VIS_SEEN;
+        if (this.lightMap[row]?.[col] && this.visMap[row]?.[col] === VIS_UNSEEN) {
+          this.visMap[row]![col] = VIS_SEEN;
         }
       }
     }
   }
 
   private hasLineOfSight(x0: number, y0: number, x1: number, y1: number): boolean {
-    let dx = Math.abs(x1 - x0);
-    let dy = Math.abs(y1 - y0);
-    let sx = x0 < x1 ? 1 : -1;
-    let sy = y0 < y1 ? 1 : -1;
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
     let err = dx - dy;
 
     while (true) {
@@ -612,7 +587,7 @@ class DungenEngine extends Engine {
   private findSpawnPoint(): { x: number; y: number } {
     for (let row = 1; row < MAP_ROWS - 1; row++) {
       for (let col = 1; col < MAP_COLS - 1; col++) {
-        if (!this.wallMap[row][col]) {
+        if (!this.wallMap[row]?.[col]) {
           return { x: col * TILE_SIZE, y: row * TILE_SIZE };
         }
       }
@@ -635,7 +610,8 @@ class DungenEngine extends Engine {
     if (this.cameraY > mapPixelH - CANVAS_H) this.cameraY = mapPixelH - CANVAS_H;
   }
 
-  private renderMinimap(ctx: CanvasRenderingContext2D) {
+  private renderMinimap(renderCtx: RenderContext) {
+    const ctx = renderCtx.getCanvas!()!
     const mmW = MAP_COLS * MINIMAP_SCALE;
     const mmH = MAP_ROWS * MINIMAP_SCALE;
     const mmX = CANVAS_W - mmW - MINIMAP_PADDING;
@@ -647,12 +623,12 @@ class DungenEngine extends Engine {
 
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        const vis = this.visMap[row][col];
+        const vis = this.visMap[row]?.[col];
         if (vis === VIS_UNSEEN) continue;
 
         const alpha = vis === VIS_VISIBLE ? 1.0 : 0.4;
 
-        if (this.wallMap[row][col]) {
+        if (this.wallMap[row]?.[col]) {
           ctx.fillStyle = `rgba(80, 60, 120, ${alpha})`;
         } else if (this.lightMap[row]?.[col] && vis === VIS_SEEN) {
           ctx.fillStyle = `rgba(200, 160, 80, ${alpha})`;
@@ -660,12 +636,7 @@ class DungenEngine extends Engine {
           ctx.fillStyle = `rgba(160, 140, 100, ${alpha})`;
         }
 
-        ctx.fillRect(
-          mmX + col * MINIMAP_SCALE,
-          mmY + row * MINIMAP_SCALE,
-          MINIMAP_SCALE,
-          MINIMAP_SCALE,
-        );
+        ctx.fillRect(mmX + col * MINIMAP_SCALE, mmY + row * MINIMAP_SCALE, MINIMAP_SCALE, MINIMAP_SCALE);
       }
     }
 
@@ -673,12 +644,7 @@ class DungenEngine extends Engine {
     const px = Math.floor(this.player.x / TILE_SIZE);
     const py = Math.floor(this.player.y / TILE_SIZE);
     ctx.fillStyle = "#7fdbca";
-    ctx.fillRect(
-      mmX + px * MINIMAP_SCALE,
-      mmY + py * MINIMAP_SCALE,
-      MINIMAP_SCALE + 1,
-      MINIMAP_SCALE + 1,
-    );
+    ctx.fillRect(mmX + px * MINIMAP_SCALE, mmY + py * MINIMAP_SCALE, MINIMAP_SCALE + 1, MINIMAP_SCALE + 1);
 
     const eVis = this.visMap[this.exitRow]?.[this.exitCol];
     if (eVis && eVis !== VIS_UNSEEN) {
@@ -707,12 +673,12 @@ class DungenEngine extends Engine {
         [px, py + 1],
       ];
 
-      for (const [col, row] of neighbors) {
+      for (const [col, row] of neighbors as [number, number][]) {
         if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) continue;
 
-        if (this.decorMap[row][col] === TILE.CHEST_1) {
-          this.decorMap[row][col] = TILE.CHEST_0;
-          this.wallMap[row][col] = false;
+        if (this.decorMap[row]?.[col] === TILE.CHEST_1) {
+          this.decorMap[row]![col] = TILE.CHEST_0;
+          this.wallMap[row]![col] = false;
           this.score += 1;
 
           if (this.player.getHp() < this.player.getMaxHp() && Math.random() < 0.5) {
@@ -741,7 +707,8 @@ class DungenEngine extends Engine {
   }
 
   // hud
-  private renderHUD(ctx: CanvasRenderingContext2D) {
+  private renderHUD(renderCtx: RenderContext) {
+    const ctx = renderCtx.getCanvas!()!
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(MINIMAP_PADDING, MINIMAP_PADDING, 165, 90);
 
@@ -750,8 +717,7 @@ class DungenEngine extends Engine {
     ctx.fillText(`Lv.${this.level}  Seed: ${SEED}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 16);
     ctx.fillText(`Chests: ${this.score}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 34);
 
-    const hearts =
-      "♥".repeat(this.player.getHp()) + "♡".repeat(this.player.getMaxHp() - this.player.getHp());
+    const hearts = "♥".repeat(this.player.getHp()) + "♡".repeat(this.player.getMaxHp() - this.player.getHp());
     ctx.fillStyle = "#e05050";
     ctx.fillText(`HP: ${hearts}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 52);
 
@@ -779,11 +745,7 @@ class DungenEngine extends Engine {
 
       ctx.font = "14px 'Courier New', monospace";
       ctx.fillStyle = "#aaa";
-      ctx.fillText(
-        `Score: ${this.score} chests, ${this.kills} kills`,
-        CANVAS_W / 2,
-        CANVAS_H / 2 + 24,
-      );
+      ctx.fillText(`Score: ${this.score} chests, ${this.kills} kills`, CANVAS_W / 2, CANVAS_H / 2 + 24);
 
       ctx.fillText("Press R to restart", CANVAS_W / 2, CANVAS_H / 2 + 44);
       ctx.textAlign = "left";
@@ -794,17 +756,14 @@ class DungenEngine extends Engine {
   private spawnEnemies(count: number) {
     const perlin = new PerlinNoise(SEED + 200);
     const spawn = this.findSpawnPoint();
-    const reachable = this.floodFill(
-      Math.floor(spawn.x / TILE_SIZE),
-      Math.floor(spawn.y / TILE_SIZE),
-    );
+    const reachable = this.floodFill(Math.floor(spawn.x / TILE_SIZE), Math.floor(spawn.y / TILE_SIZE));
     const candidates: { x: number; y: number }[] = [];
     const losCheck = this.hasLineOfSight.bind(this);
 
     for (let row = 2; row < MAP_ROWS - 2; row++) {
       for (let col = 2; col < MAP_COLS - 2; col++) {
-        if (this.wallMap[row][col]) continue;
-        if (this.decorMap[row][col] !== null) continue;
+        if (this.wallMap[row]?.[col]) continue;
+        if (this.decorMap[row]?.[col] !== null) continue;
         if (!reachable.has(`${col},${row}`)) continue;
 
         const val = perlin.noise2d(col * 5.3, row * 5.3);
@@ -818,7 +777,7 @@ class DungenEngine extends Engine {
     const archerChance = 0.3;
 
     for (let i = 0; i < Math.min(count, candidates.length); i++) {
-      const pos = candidates[i];
+      const pos = candidates[i]!;
       const roll = Math.random();
       let type: "slime" | "phantom" | "archer";
       if (roll < archerChance) {
@@ -829,7 +788,7 @@ class DungenEngine extends Engine {
         type = "slime";
       }
 
-      let enemy;
+      let enemy: DungenEnemy | undefined;
 
       if (type === "phantom") {
         enemy = new Phantom(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
@@ -847,7 +806,7 @@ class DungenEngine extends Engine {
         enemy = new Slime(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
       }
 
-      this.enemies.push(enemy);
+      if (enemy) this.enemies.push(enemy);
     }
   }
 
@@ -859,8 +818,7 @@ class DungenEngine extends Engine {
       const ex = enemy.x;
       const ey = enemy.y;
 
-      const overlap =
-        px < ex + TILE_SIZE && px + TILE_SIZE > ex && py < ey + TILE_SIZE && py + TILE_SIZE > ey;
+      const overlap = px < ex + TILE_SIZE && px + TILE_SIZE > ex && py < ey + TILE_SIZE && py + TILE_SIZE > ey;
 
       if (overlap) {
         const hpBefore = this.player.getHp();
@@ -914,8 +872,8 @@ class DungenEngine extends Engine {
 
     for (let row = 1; row < MAP_ROWS - 1; row++) {
       for (let col = 1; col < MAP_COLS - 1; col++) {
-        if (this.wallMap[row][col]) continue;
-        if (this.decorMap[row][col] !== null) continue;
+        if (this.wallMap[row]?.[col]) continue;
+        if (this.decorMap[row]?.[col] !== null) continue;
 
         const dist = Math.abs(col - spawnCol) + Math.abs(row - spawnRow);
         if (dist > bestDist) {
@@ -978,7 +936,7 @@ class DungenEngine extends Engine {
 
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        if (this.decorMap[row][col] !== TILE.FIRE_0) continue;
+        if (this.decorMap[row]?.[col] !== TILE.FIRE_0) continue;
 
         for (let dy = -TORCH_RADIUS; dy <= TORCH_RADIUS; dy++) {
           for (let dx = -TORCH_RADIUS; dx <= TORCH_RADIUS; dx++) {
@@ -989,7 +947,7 @@ class DungenEngine extends Engine {
             if (r < 0 || r >= MAP_ROWS || c < 0 || c >= MAP_COLS) continue;
 
             if (this.hasLineOfSight(col, row, c, r)) {
-              this.lightMap[r][c] = true;
+              this.lightMap[r]![c] = true;
             }
           }
         }
@@ -1007,7 +965,7 @@ class DungenEngine extends Engine {
 
       if (visited.has(key)) continue;
       if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) continue;
-      if (this.wallMap[row][col]) continue;
+      if (this.wallMap[row]?.[col]) continue;
 
       visited.add(key);
 
@@ -1029,8 +987,8 @@ class DungenEngine extends Engine {
 
     if (reachable.has(`${this.exitCol},${this.exitRow}`)) return;
 
-    let targetCol = this.exitCol;
-    let targetRow = this.exitRow;
+    const targetCol = this.exitCol;
+    const targetRow = this.exitRow;
     let col = spawnCol;
     let row = spawnRow;
 
@@ -1038,17 +996,17 @@ class DungenEngine extends Engine {
       if (col < targetCol) col++;
       else if (col > targetCol) col--;
 
-      if (this.wallMap[row][col]) {
-        this.wallMap[row][col] = false;
-        this.tileMap[row][col] = TILE.GROUND_0;
+      if (this.wallMap[row]?.[col]) {
+        this.wallMap[row]![col] = false;
+        this.tileMap[row]![col] = TILE.GROUND_0;
       }
 
       if (row < targetRow) row++;
       else if (row > targetRow) row--;
 
-      if (this.wallMap[row][col]) {
-        this.wallMap[row][col] = false;
-        this.tileMap[row][col] = TILE.GROUND_0;
+      if (this.wallMap[row]?.[col]) {
+        this.wallMap[row]![col] = false;
+        this.tileMap[row]![col] = TILE.GROUND_0;
       }
     }
 
@@ -1062,5 +1020,5 @@ class DungenEngine extends Engine {
   }
 }
 
-const engine = new DungenEngine("game", CANVAS_W, CANVAS_H);
+const engine = new DungenEngine(CANVAS_W, CANVAS_H);
 engine.setup();

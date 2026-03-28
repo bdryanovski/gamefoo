@@ -1,3 +1,4 @@
+import type { RenderContext } from "../renderer/type";
 import { metadata as FONT_3x5_METADATA } from "./internal/font_3x5";
 import { metadata as FONT_4x6_METADATA } from "./internal/font_4x6";
 import { metadata as FONT_5x5_METADATA } from "./internal/font_5x5";
@@ -247,7 +248,16 @@ export default class FontBitmap {
    * font.renderChar("G", 20, 40, ctx);
    * ```
    */
-  public renderChar(char: string, x: number, y: number, ctx: CanvasRenderingContext2D) {
+  public renderChar(char: string, x: number, y: number, ctx: RenderContext) {
+    const canvasCtx = ctx.getCanvas?.();
+
+    // For terminal / non-canvas contexts, delegate to drawText
+    if (!canvasCtx) {
+      ctx.drawText(char, x, y);
+      return;
+    }
+
+    // Canvas path: use pre-built Path2D for performance
     let path = this.glyphPaths.get(char);
     if (path === undefined) {
       const built = this.buildGlyphPath(char);
@@ -256,9 +266,9 @@ export default class FontBitmap {
       this.glyphPaths.set(char, path);
     }
 
-    ctx.translate(x, y);
-    ctx.fill(path);
-    ctx.translate(-x, -y);
+    canvasCtx.translate(x, y);
+    canvasCtx.fill(path);
+    canvasCtx.translate(-x, -y);
   }
 
   /**
@@ -277,7 +287,13 @@ export default class FontBitmap {
    * font.renderText("GAME OVER", 100, 50, ctx);
    * ```
    */
-  renderText(text: string, x: number, y: number, ctx: CanvasRenderingContext2D) {
+  renderText(text: string, x: number, y: number, ctx: RenderContext) {
+    // For terminal / non-canvas contexts, use drawText directly
+    if (!ctx.getCanvas?.()) {
+      ctx.drawText(text, x, y);
+      return;
+    }
+
     let offsetX = 0;
     for (const char of text) {
       this.renderChar(char, x + offsetX, y, ctx);

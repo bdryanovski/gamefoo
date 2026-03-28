@@ -1,16 +1,19 @@
+import type { RenderContext } from "../../src/core/renderer/type";
 import {
   Engine,
   Entity,
   IconBitmap,
-  InternalBitmapIconName,
+  type InternalBitmapIconName,
   ObjectSystem,
   type Vector2,
+  WebRenderer,
 } from "../../src/index";
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 
-const engine = new Engine("game", CANVAS_W, CANVAS_H, {
+const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+const engine = new Engine(renderer, {
   backgroundColor: "#000000",
   gameScale: 1,
 });
@@ -31,15 +34,16 @@ class KeyboardLayoutText extends Entity {
     // No dynamic behavior needed for this text, so we can leave it empty.
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#ffffff";
+  override render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
+    c.fillStyle = "#ffffff";
     const chars = this.icon.metadata?.keys || "";
     const charsPerRow = 10;
     const charWidth = this.icon.width + 5;
     const charHeight = this.icon.height + 5;
 
     for (let i = 0; i < chars.length; i++) {
-      const icon = chars[i];
+      const icon = chars[i] ?? "";
       const row = Math.floor(i / charsPerRow);
       const col = i % charsPerRow;
       const x = this.x + col * charWidth;

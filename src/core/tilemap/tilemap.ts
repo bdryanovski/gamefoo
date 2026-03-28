@@ -43,6 +43,7 @@ import Entity from "../../entities/entity";
 import { Collidable } from "../behaviours/collidable";
 import type { Grid } from "../grid/grid";
 import type { IsometricProjection } from "../grid/isometric";
+import type { RenderContext } from "../renderer/type";
 import type World from "../world";
 import type { TileLayer } from "./tile_layer";
 import type { TileMapConfig } from "./tilemap_types";
@@ -70,7 +71,7 @@ class WallEntity extends Entity {
   update(_dt: number): void {}
 
   /** Walls are invisible — collision only, tiles draw them. */
-  render(_ctx: CanvasRenderingContext2D): void {}
+  render(_ctx: RenderContext): void {}
 }
 
 export class TileMap {
@@ -132,7 +133,7 @@ export class TileMap {
    * tilemap.render(ctx, camera.getViewRect());
    * ```
    */
-  render(ctx: CanvasRenderingContext2D, viewport: { x: number; y: number; width: number; height: number }): void {
+  render(ctx: RenderContext, viewport: { x: number; y: number; width: number; height: number }): void {
     for (const layer of this.layers) {
       if (!layer.visible) continue;
 

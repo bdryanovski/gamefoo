@@ -31,6 +31,7 @@
  * @see {@link TileMap} — owns and renders multiple layers
  */
 import type { IsometricProjection } from "../grid/isometric";
+import type { RenderContext } from "../renderer/type";
 import type { TileLayerConfig } from "./tilemap_types";
 import type { TileSet } from "./tileset";
 
@@ -156,7 +157,7 @@ export class TileLayer {
    * ```
    */
   renderOrthogonal(
-    ctx: CanvasRenderingContext2D,
+    ctx: RenderContext,
     cellWidth: number,
     cellHeight: number,
     viewport: { x: number; y: number; width: number; height: number },
@@ -168,8 +169,10 @@ export class TileLayer {
     const endCol = Math.min(this.cols - 1, Math.ceil((viewport.x + viewport.width) / cellWidth) + 1);
     const endRow = Math.min(this.rows - 1, Math.ceil((viewport.y + viewport.height) / cellHeight) + 1);
 
-    const prevAlpha = ctx.globalAlpha;
-    if (this.opacity < 1) ctx.globalAlpha = this.opacity;
+    // globalAlpha is canvas-specific; for other renderers opacity is ignored
+    const canvasCtx = ctx.getCanvas?.() ?? null;
+    const prevAlpha = canvasCtx?.globalAlpha ?? 1;
+    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = this.opacity;
 
     const img = this.tileSet.sprite.image;
     const ox = this.offsetX;
@@ -185,7 +188,7 @@ export class TileLayer {
         const frame = this.tileSet.getFrame(tileId);
         if (!frame) continue;
 
-        ctx.drawImage(
+        ctx.drawSprite?.(
           img,
           frame.x,
           frame.y,
@@ -199,7 +202,7 @@ export class TileLayer {
       }
     }
 
-    if (this.opacity < 1) ctx.globalAlpha = prevAlpha;
+    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = prevAlpha;
   }
 
   /**
@@ -223,7 +226,7 @@ export class TileLayer {
    * ```
    */
   renderIsometric(
-    ctx: CanvasRenderingContext2D,
+    ctx: RenderContext,
     projection: IsometricProjection,
     viewport: { x: number; y: number; width: number; height: number },
     gridCols: number,
@@ -240,8 +243,10 @@ export class TileLayer {
       gridRows,
     );
 
-    const prevAlpha = ctx.globalAlpha;
-    if (this.opacity < 1) ctx.globalAlpha = this.opacity;
+    // globalAlpha is canvas-specific; for other renderers opacity is ignored
+    const canvasCtx = ctx.getCanvas?.() ?? null;
+    const prevAlpha = canvasCtx?.globalAlpha ?? 1;
+    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = this.opacity;
 
     const img = this.tileSet.sprite.image;
     const tw = projection.tileWidth;
@@ -259,7 +264,7 @@ export class TileLayer {
 
         const pos = projection.gridToScreenFast(col, row);
 
-        ctx.drawImage(
+        ctx.drawSprite?.(
           img,
           frame.x,
           frame.y,
@@ -273,6 +278,6 @@ export class TileLayer {
       }
     }
 
-    if (this.opacity < 1) ctx.globalAlpha = prevAlpha;
+    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = prevAlpha;
   }
 }

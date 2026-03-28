@@ -1,4 +1,15 @@
-import { Behaviour, DynamicEntity, Engine, Entity, Input, ObjectSystem, StateMachine, Text } from "../../src/index";
+import type { RenderContext } from "../../src/core/renderer/type";
+import {
+  Behaviour,
+  DynamicEntity,
+  Engine,
+  Entity,
+  Input,
+  ObjectSystem,
+  StateMachine,
+  Text,
+  WebRenderer,
+} from "../../src/index";
 
 // ---------------------------------------------------------------------------
 // Layout — shared by many classes, derived from game dimensions
@@ -72,7 +83,14 @@ class Bird extends DynamicEntity {
   private bobTimer = 0;
   private gs: FloppyState;
 
-  constructor(gs: FloppyState, startX = 20, startY = HEIGHT / 2 - 10, flapStrength = -75, gravity = 255, maxFallSpeed = 150) {
+  constructor(
+    gs: FloppyState,
+    startX = 20,
+    startY = HEIGHT / 2 - 10,
+    flapStrength = -75,
+    gravity = 255,
+    maxFallSpeed = 150,
+  ) {
     super("bird", startX, startY, 6, 5);
     this.velocity = { x: 0, y: 0 };
     this.gs = gs;
@@ -128,16 +146,17 @@ class Bird extends DynamicEntity {
     this.updateBehaviours(dt);
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
+  override render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
     const px = Math.round(this.x);
     const py = Math.round(this.y);
 
-    ctx.fillStyle = Colors.foreground;
+    c.fillStyle = Colors.foreground;
     for (let row = 0; row < this.birdH; row++) {
       const bits = Bird.MASK[row]!;
       for (let col = 0; col < this.birdW; col++) {
         if (bits & (1 << (this.birdW - 1 - col))) {
-          ctx.fillRect(px + col, py + row, 1, 1);
+          c.fillRect(px + col, py + row, 1, 1);
         }
       }
     }
@@ -216,16 +235,17 @@ class Ground extends DynamicEntity {
     }
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = Colors.foreground;
-    ctx.fillRect(0, GROUND_Y, WIDTH, 1);
+  override render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
+    c.fillStyle = Colors.foreground;
+    c.fillRect(0, GROUND_Y, WIDTH, 1);
 
-    ctx.fillStyle = Colors.background;
-    ctx.fillRect(0, GROUND_Y + 1, WIDTH, this.groundH - 1);
+    c.fillStyle = Colors.background;
+    c.fillRect(0, GROUND_Y + 1, WIDTH, this.groundH - 1);
 
-    ctx.fillStyle = Colors.middle;
+    c.fillStyle = Colors.middle;
     for (let gx = -Math.round(this.scrollX); gx < WIDTH; gx += this.tickSpacing) {
-      ctx.fillRect(gx, GROUND_Y + 1, 1, 2);
+      c.fillRect(gx, GROUND_Y + 1, 1, 2);
     }
   }
 }
@@ -254,7 +274,16 @@ class PipeManager extends Entity {
   private readonly gapRange: number;
   private readonly scorePerPipe: number;
 
-  constructor(bird: Bird, gs: FloppyState, speed = 48, gap = 22, pipeWidth = 11, spawnInterval = 1.4, minHeight = 8, scorePerPipe = 10) {
+  constructor(
+    bird: Bird,
+    gs: FloppyState,
+    speed = 48,
+    gap = 22,
+    pipeWidth = 11,
+    spawnInterval = 1.4,
+    minHeight = 8,
+    scorePerPipe = 10,
+  ) {
     super("pipes", 0, 0);
     this.bird = bird;
     this.gs = gs;
@@ -325,15 +354,16 @@ class PipeManager extends Entity {
     this.pipes.length = writeIdx;
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = Colors.foreground;
+  override render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
+    c.fillStyle = Colors.foreground;
     for (let i = 0; i < this.pipes.length; i++) {
       const pipe = this.pipes[i]!;
       const px = Math.round(pipe.x);
       const gapBottom = pipe.gapY + this.gap;
 
-      ctx.fillRect(px, 0, this.pipeWidth, pipe.gapY);
-      ctx.fillRect(px, gapBottom, this.pipeWidth, GROUND_Y - gapBottom);
+      c.fillRect(px, 0, this.pipeWidth, pipe.gapY);
+      c.fillRect(px, gapBottom, this.pipeWidth, GROUND_Y - gapBottom);
     }
   }
 }
@@ -373,8 +403,10 @@ class ScoreLabel extends Text {
     }
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = Colors.foreground;
+  override render(ctx: RenderContext): void {
+    const _rawCtx = ctx.getCanvas?.(); if (_rawCtx) {
+      _rawCtx.fillStyle = Colors.foreground;
+    }
     super.render(ctx);
   }
 }
@@ -409,8 +441,10 @@ class MessageLabel extends Text {
     this.x = Math.round((WIDTH - this.font.getTextWidth(text)) / 2);
   }
 
-  override render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = Colors.foreground;
+  override render(ctx: RenderContext): void {
+    const _rawCtx = ctx.getCanvas?.(); if (_rawCtx) {
+      _rawCtx.fillStyle = Colors.foreground;
+    }
     super.render(ctx);
   }
 }
@@ -426,9 +460,8 @@ class Floppy extends Engine {
   private pipes: PipeManager;
 
   constructor() {
-    super("game", WIDTH, HEIGHT, {
+    super(new WebRenderer("game", WIDTH, HEIGHT, 4), {
       backgroundColor: Colors.background,
-      gameScale: 4,
     });
 
     const input = new Input();
@@ -446,7 +479,7 @@ class Floppy extends Engine {
         new Ground(this.gs, scrollSpeed),
         new ScoreLabel(this.gs),
         new MessageLabel(this.gs),
-      ]),
+      ] as any),
     );
   }
 

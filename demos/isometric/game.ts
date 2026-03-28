@@ -1,3 +1,15 @@
+import { PathFollower } from "../../src/core/behaviours/path_follower";
+import { Grid } from "../../src/core/grid/grid";
+import { IsometricProjection } from "../../src/core/grid/isometric";
+import type { RenderContext } from "../../src/core/renderer/type";
+import Sprite from "../../src/core/sprite";
+import { TileMap } from "../../src/core/tilemap/tilemap";
+import { TilemapSystem } from "../../src/core/tilemap/tilemap_system";
+import { TileSet } from "../../src/core/tilemap/tileset";
+import { MapGenerator } from "../../src/core/utils/map_generator";
+import type { BiomeRule } from "../../src/core/utils/map_generator_types";
+import { Pathfinder } from "../../src/core/utils/pathfinding";
+import { GridDebugSystem } from "../../src/debug/grid_debug";
 import {
   Collidable,
   Control,
@@ -7,24 +19,13 @@ import {
   FontBitmap,
   Input,
   Player,
+  WebRenderer,
   World,
 } from "../../src/index";
-
-import Sprite from "../../src/core/sprite";
-import { Grid } from "../../src/core/grid/grid";
-import { IsometricProjection } from "../../src/core/grid/isometric";
-import { TileSet } from "../../src/core/tilemap/tileset";
-import { TileMap } from "../../src/core/tilemap/tilemap";
-import { TilemapSystem } from "../../src/core/tilemap/tilemap_system";
-import { IsometricCameraSystem } from "../../src/subsystems/iso_camera_system";
-import { Pathfinder } from "../../src/core/utils/pathfinding";
-import { PathFollower } from "../../src/core/behaviours/path_follower";
-import { MapGenerator } from "../../src/core/utils/map_generator";
-import { GridDebugSystem } from "../../src/debug/grid_debug";
-import { ObjectSystem } from "../../src/subsystems/object_system";
 import { CollisionSystem } from "../../src/subsystems/collision_system";
+import { IsometricCameraSystem } from "../../src/subsystems/iso_camera_system";
 import { MonitorSystem } from "../../src/subsystems/monitor_system";
-import type { BiomeRule } from "../../src/core/utils/map_generator_types";
+import { ObjectSystem } from "../../src/subsystems/object_system";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -52,12 +53,12 @@ const BIOME_COLORS = [
 ];
 
 const biomes: BiomeRule[] = [
-  { name: "deep_water", tileId: 0, minNoise: -1.0,  maxNoise: -0.35, walkable: false },
-  { name: "water",      tileId: 1, minNoise: -0.35, maxNoise: -0.1,  walkable: false },
-  { name: "sand",       tileId: 2, minNoise: -0.1,  maxNoise:  0.05, walkable: true },
-  { name: "grass",      tileId: 3, minNoise:  0.05, maxNoise:  0.45, walkable: true },
-  { name: "forest",     tileId: 4, minNoise:  0.45, maxNoise:  0.7,  walkable: true },
-  { name: "mountain",   tileId: 5, minNoise:  0.7,  maxNoise:  1.01, walkable: false },
+  { name: "deep_water", tileId: 0, minNoise: -1.0, maxNoise: -0.35, walkable: false },
+  { name: "water", tileId: 1, minNoise: -0.35, maxNoise: -0.1, walkable: false },
+  { name: "sand", tileId: 2, minNoise: -0.1, maxNoise: 0.05, walkable: true },
+  { name: "grass", tileId: 3, minNoise: 0.05, maxNoise: 0.45, walkable: true },
+  { name: "forest", tileId: 4, minNoise: 0.45, maxNoise: 0.7, walkable: true },
+  { name: "mountain", tileId: 5, minNoise: 0.7, maxNoise: 1.01, walkable: false },
 ];
 
 // ---------------------------------------------------------------------------
@@ -75,15 +76,15 @@ const BIOME_DECOS: Record<number, { items: DecoConfig[]; chance: number }> = {
   2: {
     chance: 0.06,
     items: [
-      { color: "#8a8060", type: "rock",   solid: true,  heightTiles: 1 },
-      { color: "#6a9a4a", type: "cactus", solid: true,  heightTiles: 2 },
+      { color: "#8a8060", type: "rock", solid: true, heightTiles: 1 },
+      { color: "#6a9a4a", type: "cactus", solid: true, heightTiles: 2 },
     ],
   },
   3: {
     chance: 0.25,
     items: [
-      { color: "#4a8a2a", type: "grass",  solid: true,  heightTiles: 1.5 },
-      { color: "#3a7a1a", type: "grass",  solid: true,  heightTiles: 1 },
+      { color: "#4a8a2a", type: "grass", solid: true, heightTiles: 1.5 },
+      { color: "#3a7a1a", type: "grass", solid: true, heightTiles: 1 },
       { color: "#e46a8a", type: "flower", solid: false, heightTiles: 1 },
       { color: "#eaaa3a", type: "flower", solid: false, heightTiles: 1 },
     ],
@@ -91,10 +92,10 @@ const BIOME_DECOS: Record<number, { items: DecoConfig[]; chance: number }> = {
   4: {
     chance: 0.35,
     items: [
-      { color: "#2a5a1a", type: "tree",  solid: true, heightTiles: 3 },
-      { color: "#1a4a0a", type: "tree",  solid: true, heightTiles: 3 },
-      { color: "#3a6a2a", type: "bush",  solid: true, heightTiles: 1.5 },
-      { color: "#4a5a3a", type: "rock",  solid: true, heightTiles: 1 },
+      { color: "#2a5a1a", type: "tree", solid: true, heightTiles: 3 },
+      { color: "#1a4a0a", type: "tree", solid: true, heightTiles: 3 },
+      { color: "#3a6a2a", type: "bush", solid: true, heightTiles: 1.5 },
+      { color: "#4a5a3a", type: "rock", solid: true, heightTiles: 1 },
     ],
   },
 };
@@ -103,11 +104,7 @@ const BIOME_DECOS: Record<number, { items: DecoConfig[]; chance: number }> = {
 // Procedural tileset — draws colored isometric diamonds onto a canvas
 // ---------------------------------------------------------------------------
 
-function generateTilesetImage(
-  colors: string[],
-  tileW: number,
-  tileH: number,
-): HTMLImageElement {
+function generateTilesetImage(colors: string[], tileW: number, tileH: number): HTMLImageElement {
   const count = colors.length;
   const canvas = document.createElement("canvas");
   canvas.width = tileW * count;
@@ -153,68 +150,69 @@ class DecorationEntity extends Entity {
 
   update(_dt: number): void {}
 
-  render(ctx: CanvasRenderingContext2D): void {
+  render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
     const { color, type } = this.config;
 
     switch (type) {
       case "tree": {
-        ctx.fillStyle = "#4a3520";
-        ctx.fillRect(this.x + 3, this.y + 6, 3, 8);
+        c.fillStyle = "#4a3520";
+        c.fillRect(this.x + 3, this.y + 6, 3, 8);
 
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(this.x + 5, this.y - 6);
-        ctx.lineTo(this.x + 12, this.y + 7);
-        ctx.lineTo(this.x - 2, this.y + 7);
-        ctx.closePath();
-        ctx.fill();
+        c.fillStyle = color;
+        c.beginPath();
+        c.moveTo(this.x + 5, this.y - 6);
+        c.lineTo(this.x + 12, this.y + 7);
+        c.lineTo(this.x - 2, this.y + 7);
+        c.closePath();
+        c.fill();
         break;
       }
       case "bush": {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.ellipse(this.x + 5, this.y + 4, 6, 4, 0, 0, Math.PI * 2);
-        ctx.fill();
+        c.fillStyle = color;
+        c.beginPath();
+        c.ellipse(this.x + 5, this.y + 4, 6, 4, 0, 0, Math.PI * 2);
+        c.fill();
         break;
       }
       case "rock": {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.ellipse(this.x + 4, this.y + 4, 5, 3, 0.3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.15)";
-        ctx.beginPath();
-        ctx.ellipse(this.x + 3, this.y + 3, 3, 2, 0.3, 0, Math.PI * 2);
-        ctx.fill();
+        c.fillStyle = color;
+        c.beginPath();
+        c.ellipse(this.x + 4, this.y + 4, 5, 3, 0.3, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "rgba(255,255,255,0.15)";
+        c.beginPath();
+        c.ellipse(this.x + 3, this.y + 3, 3, 2, 0.3, 0, Math.PI * 2);
+        c.fill();
         break;
       }
       case "grass": {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1;
+        c.strokeStyle = color;
+        c.lineWidth = 1;
         for (let i = 0; i < 5; i++) {
           const bx = this.x + i * 2;
           const h = 4 + (i % 3) * 2;
-          ctx.beginPath();
-          ctx.moveTo(bx, this.y + 6);
-          ctx.lineTo(bx + 1, this.y + 6 - h);
-          ctx.stroke();
+          c.beginPath();
+          c.moveTo(bx, this.y + 6);
+          c.lineTo(bx + 1, this.y + 6 - h);
+          c.stroke();
         }
         break;
       }
       case "cactus": {
-        ctx.fillStyle = color;
-        ctx.fillRect(this.x + 3, this.y - 2, 3, 10);
-        ctx.fillRect(this.x, this.y + 1, 3, 4);
-        ctx.fillRect(this.x + 6, this.y + 3, 3, 4);
+        c.fillStyle = color;
+        c.fillRect(this.x + 3, this.y - 2, 3, 10);
+        c.fillRect(this.x, this.y + 1, 3, 4);
+        c.fillRect(this.x + 6, this.y + 3, 3, 4);
         break;
       }
       case "flower": {
-        ctx.fillStyle = "#3a7a1a";
-        ctx.fillRect(this.x + 4, this.y + 2, 1, 5);
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(this.x + 4, this.y + 1, 3, 0, Math.PI * 2);
-        ctx.fill();
+        c.fillStyle = "#3a7a1a";
+        c.fillRect(this.x + 4, this.y + 2, 1, 5);
+        c.fillStyle = color;
+        c.beginPath();
+        c.arc(this.x + 4, this.y + 1, 3, 0, Math.PI * 2);
+        c.fill();
         break;
       }
     }
@@ -230,7 +228,7 @@ class StaticColliderEntity extends Entity {
     super(id, x, y, w, h);
   }
   update(_dt: number): void {}
-  render(_ctx: CanvasRenderingContext2D): void {}
+  render(_ctx: RenderContext): void {}
 }
 
 // ---------------------------------------------------------------------------
@@ -253,23 +251,24 @@ class NpcEntity extends DynamicEntity {
     this.updateBehaviours(dt);
   }
 
-  render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "rgba(0,0,0,0.3)";
-    ctx.beginPath();
-    ctx.ellipse(this.x + 5, this.y + 12, 6, 3, 0, 0, Math.PI * 2);
-    ctx.fill();
+  render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
+    c.fillStyle = "rgba(0,0,0,0.3)";
+    c.beginPath();
+    c.ellipse(this.x + 5, this.y + 12, 6, 3, 0, 0, Math.PI * 2);
+    c.fill();
 
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x + 2, this.y + 2, 6, 8);
+    c.fillStyle = this.color;
+    c.fillRect(this.x + 2, this.y + 2, 6, 8);
 
-    ctx.fillStyle = "#fdd";
-    ctx.fillRect(this.x + 3, this.y, 4, 4);
+    c.fillStyle = "#fdd";
+    c.fillRect(this.x + 3, this.y, 4, 4);
 
-    ctx.fillStyle = "#222";
-    ctx.fillRect(this.x + 3, this.y + 1, 1, 1);
-    ctx.fillRect(this.x + 6, this.y + 1, 1, 1);
+    c.fillStyle = "#222";
+    c.fillRect(this.x + 3, this.y + 1, 1, 1);
+    c.fillRect(this.x + 6, this.y + 1, 1, 1);
 
-    ctx.fillStyle = "#fff";
+    c.fillStyle = "#fff";
     this.font.renderText(this.label, this.x - 2, this.y - 8, ctx);
 
     this.renderBehaviours(ctx);
@@ -288,30 +287,31 @@ class HeroEntity extends Player {
     this.font = new FontBitmap("3x5");
   }
 
-  update(dt: number): void {
+  override update(dt: number): void {
     this.updateBehaviours(dt);
   }
 
-  render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "rgba(0,0,0,0.35)";
-    ctx.beginPath();
-    ctx.ellipse(this.x + 6, this.y + 14, 7, 3, 0, 0, Math.PI * 2);
-    ctx.fill();
+  override render(ctx: RenderContext): void {
+    const c = ctx.getCanvas!()!
+    c.fillStyle = "rgba(0,0,0,0.35)";
+    c.beginPath();
+    c.ellipse(this.x + 6, this.y + 14, 7, 3, 0, 0, Math.PI * 2);
+    c.fill();
 
-    ctx.fillStyle = "#4488ff";
-    ctx.fillRect(this.x + 2, this.y + 3, 8, 9);
+    c.fillStyle = "#4488ff";
+    c.fillRect(this.x + 2, this.y + 3, 8, 9);
 
-    ctx.fillStyle = "#fdd";
-    ctx.fillRect(this.x + 3, this.y, 6, 5);
+    c.fillStyle = "#fdd";
+    c.fillRect(this.x + 3, this.y, 6, 5);
 
-    ctx.fillStyle = "#222";
-    ctx.fillRect(this.x + 4, this.y + 2, 1, 1);
-    ctx.fillRect(this.x + 7, this.y + 2, 1, 1);
+    c.fillStyle = "#222";
+    c.fillRect(this.x + 4, this.y + 2, 1, 1);
+    c.fillRect(this.x + 7, this.y + 2, 1, 1);
 
-    ctx.fillStyle = "#543";
-    ctx.fillRect(this.x + 3, this.y, 6, 1);
+    c.fillStyle = "#543";
+    c.fillRect(this.x + 3, this.y, 6, 1);
 
-    ctx.fillStyle = "#4af";
+    c.fillStyle = "#4af";
     this.font.renderText("YOU", this.x, this.y - 8, ctx);
 
     this.renderBehaviours(ctx);
@@ -328,11 +328,7 @@ class HudEntity extends Entity {
   private projection: IsometricProjection;
   private font: FontBitmap;
 
-  constructor(
-    cam: IsometricCameraSystem,
-    player: HeroEntity,
-    projection: IsometricProjection,
-  ) {
+  constructor(cam: IsometricCameraSystem, player: HeroEntity, projection: IsometricProjection) {
     super("hud", 0, 0, 0, 0);
     this.cameraSystem = cam;
     this.player = player;
@@ -342,9 +338,11 @@ class HudEntity extends Entity {
 
   update(_dt: number): void {}
 
-  render(ctx: CanvasRenderingContext2D): void {
-    ctx.save();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  render(ctx: RenderContext): void {
+    const c = ctx.getCanvas?.();
+    if (!c) return;
+    c.save();
+    c.setTransform(1, 0, 0, 1, 0, 0);
 
     const cell = this.projection.screenToGrid(this.player.x, this.player.y);
     const zoom = this.cameraSystem.camera.zoom;
@@ -363,15 +361,15 @@ class HudEntity extends Entity {
     const px = 6;
     const py = 6;
 
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(px - 2, py - 2, 100, lines.length * lh + 6);
+    c.fillStyle = "rgba(0,0,0,0.6)";
+    c.fillRect(px - 2, py - 2, 100, lines.length * lh + 6);
 
     for (let i = 0; i < lines.length; i++) {
-      ctx.fillStyle = i === 0 ? "#7fdbca" : "#ccc";
+      c.fillStyle = i === 0 ? "#7fdbca" : "#ccc";
       this.font.renderText(lines[i]!, px, py + i * lh, ctx);
     }
 
-    ctx.restore();
+    c.restore();
   }
 }
 
@@ -380,9 +378,8 @@ class HudEntity extends Entity {
 // ---------------------------------------------------------------------------
 
 function main() {
-  const engine = new Engine("game", CANVAS_W, CANVAS_H, {
-    backgroundColor: "#1a2a3a",
-  });
+  const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+  const engine = new Engine(renderer, { backgroundColor: "#1a2a3a" });
 
   // ── Projection ──────────────────────────────────────────────────
   const projection = new IsometricProjection({
@@ -533,27 +530,15 @@ function main() {
     const cfg = biomeDecor.items[Math.floor(Math.random() * biomeDecor.items.length)]!;
 
     const pos = projection.gridToScreen(cell.col, cell.row);
-    const cx = cfg.solid
-      ? pos.x + TILE_W / 2
-      : pos.x + TILE_W / 2 + (Math.random() * 8 - 4);
-    const cy = cfg.solid
-      ? pos.y + TILE_H / 2
-      : pos.y + TILE_H / 2 + (Math.random() * 4 - 2);
+    const cx = cfg.solid ? pos.x + TILE_W / 2 : pos.x + TILE_W / 2 + (Math.random() * 8 - 4);
+    const cy = cfg.solid ? pos.y + TILE_H / 2 : pos.y + TILE_H / 2 + (Math.random() * 4 - 2);
 
-    decorations.push(
-      new DecorationEntity(`deco_${decoId++}`, cx, cy, cfg),
-    );
+    decorations.push(new DecorationEntity(`deco_${decoId++}`, cx, cy, cfg));
 
     if (cfg.solid) {
       const collW = TILE_W * 0.35;
       const collH = TILE_H * 0.5;
-      const collEntity = new StaticColliderEntity(
-        `dcol_${cell.col}_${cell.row}`,
-        cx - collW / 2,
-        cy,
-        collW,
-        collH,
-      );
+      const collEntity = new StaticColliderEntity(`dcol_${cell.col}_${cell.row}`, cx - collW / 2, cy, collW, collH);
       collEntity.attachBehaviour(
         new Collidable(collEntity, world, {
           shape: { type: "aabb", width: collW, height: collH },
@@ -568,13 +553,12 @@ function main() {
   });
 
   // ── Camera ─────────────────────────────────────────────────────
-  const cameraSystem = new IsometricCameraSystem(
-    CANVAS_W,
-    CANVAS_H,
-    () => player.getPosition(),
-    projection,
-    { zoom: 1.5, lerpSpeed: 0.08, minZoom: 0.5, maxZoom: 4 },
-  );
+  const cameraSystem = new IsometricCameraSystem(CANVAS_W, CANVAS_H, () => player.getPosition(), projection, {
+    zoom: 1.5,
+    lerpSpeed: 0.08,
+    minZoom: 0.5,
+    maxZoom: 4,
+  });
 
   // ── HUD ────────────────────────────────────────────────────────
   const hud = new HudEntity(cameraSystem, player, projection);
@@ -604,7 +588,7 @@ function main() {
 
   const tmSystem = new TilemapSystem(tilemap);
   engine.use(tmSystem);
-  tmSystem.attachCamera(cameraSystem);
+  tmSystem.attachCamera(cameraSystem as any);
 
   engine.use(objectSystem);
   engine.use(new CollisionSystem(world));

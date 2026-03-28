@@ -1,4 +1,5 @@
 import type { GameObject } from "../generic_types";
+import type { RenderContext } from "./renderer/type";
 
 /**
  * Central registry that stores and manages all non-player
@@ -156,9 +157,9 @@ export default class GameObjectRegister {
    * Calls {@link GameObject.render | render(ctx)} on every registered
    * object.
    *
-   * @param ctx - The canvas 2-D rendering context.
+   * @param ctx - The rendering context.
    */
-  renderAll(ctx: CanvasRenderingContext2D): void {
+  renderAll(ctx: RenderContext): void {
     for (const obj of this.getAll()) {
       obj.render(ctx);
     }

@@ -48,6 +48,7 @@
 import type { EnhancedCameraConfig } from "../core/enhanced_camera";
 import { EnhancedCamera } from "../core/enhanced_camera";
 import type { IsometricProjection } from "../core/grid/isometric";
+import type { RenderContext } from "../core/renderer/type";
 import type { Vector2 } from "../generic_types";
 import type { SubSystem } from "./types";
 
@@ -133,22 +134,24 @@ export class IsometricCameraSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  preRender(ctx: CanvasRenderingContext2D): void {
+  preRender(ctx: RenderContext): void {
     const view = this.camera.getViewRect();
     ctx.save();
     ctx.scale(this.camera.zoom, this.camera.zoom);
     ctx.translate(-view.x, -view.y);
-    ctx.imageSmoothingEnabled = false;
+    // Disable smoothing for pixel-art; no-op on non-canvas renderers
+    const raw = ctx.getCanvas?.();
+    if (raw) raw.imageSmoothingEnabled = false;
   }
 
   /**
    * Restores the context state after all rendering is complete.
    *
-   * @param ctx - Canvas 2D rendering context.
+   * @param ctx - The active render context.
    *
    * @since 0.4.0
    */
-  postRender(ctx: CanvasRenderingContext2D): void {
+  postRender(ctx: RenderContext): void {
     ctx.restore();
   }
 }

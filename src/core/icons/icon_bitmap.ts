@@ -1,5 +1,6 @@
 import { metadata as ICON_8x8_METADATA } from "../icons/internal/icons_8x8";
 import { metadata as ICON_16x16_METADATA } from "../icons/internal/icons_16x16";
+import type { RenderContext } from "../renderer/type";
 
 // import { metadata as ICON_32x32_METADATA } from "../icons/internal/icons_32x32";
 
@@ -168,16 +169,19 @@ export default class IconBitmap {
    * font.renderChar("heart", 20, 40, ctx);
    * ```
    */
-  renderIcon(icon: string, x: number, y: number, ctx: CanvasRenderingContext2D) {
+  renderIcon(icon: string, x: number, y: number, ctx: RenderContext) {
     const charData = this.getIconBitmask(icon);
     if (charData === null) {
       return;
     }
+    // Icon rendering is pixel-by-pixel; only meaningful on canvas contexts
+    const canvasCtx = ctx.getCanvas?.();
+    if (!canvasCtx) return;
     for (let row = 0; row < charData.length; row++) {
       const bits = charData[row]!;
       for (let col = 0; col < this.width - this.spacing; col++) {
         if ((bits & (1 << (this.width - this.spacing - 1 - col))) !== 0) {
-          ctx.fillRect(x + col, y + row, 1, 1);
+          canvasCtx.fillRect(x + col, y + row, 1, 1);
         }
       }
     }
