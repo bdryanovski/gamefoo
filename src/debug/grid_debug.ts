@@ -81,7 +81,6 @@ export class GridDebugSystem implements SubSystem {
   private mouseX = 0;
   private mouseY = 0;
   private mouseActive = false;
-  private canvasWidth = 0;
   private canvasHeight = 0;
   private canvas: HTMLCanvasElement | null = null;
 
@@ -137,7 +136,6 @@ export class GridDebugSystem implements SubSystem {
    */
   init(engine: Engine): void {
     const dims = engine.dementions;
-    this.canvasWidth = dims.width;
     this.canvasHeight = dims.height;
 
     const canvasEl = document.querySelector("canvas");
