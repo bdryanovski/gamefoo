@@ -1,1 +1,10 @@
-bun run check
+# 1. Format and lint only staged files.
+#    biome check --write applies all safe auto-fixes and re-stages the result.
+#    If anything unfixable remains, the second biome check (read-only) exits
+#    non-zero and the commit is blocked.
+bunx lint-staged
+
+# 2. Type-check the whole project.
+#    TypeScript has no concept of "staged files" — cross-file type inference
+#    requires the full source tree to be valid.
+bun run typecheck
