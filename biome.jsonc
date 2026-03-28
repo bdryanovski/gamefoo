@@ -1,0 +1,117 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
+
+  "files": {
+    // Only process src/ — dist and node_modules are excluded by default
+    "includes": ["src/**/*.ts", "src/**/*.tsx"]
+  },
+
+  "vcs": {
+    // Respect .gitignore patterns automatically
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+
+  // ─── Global formatter (applies to all languages) ────────────────────────────
+  "formatter": {
+    "enabled": true,
+
+    // Indentation: 2 spaces (not tabs)
+    "indentStyle": "space",
+    "indentWidth": 2,
+
+    // Print width: 80 chars — the classic terminal width
+    "lineWidth": 80,
+
+    // Line endings: LF (Unix-style) — consistent across macOS/Linux/git
+    "lineEnding": "lf",
+
+    // Spaces inside object brackets: { foo: bar }
+    "bracketSpacing": true,
+
+    // Always add a trailing newline at end of file
+    "trailingNewline": true,
+
+    // Array/object expansion: let the formatter decide based on content
+    "expand": "auto",
+
+    // Do NOT read .editorconfig — biome.jsonc is the single source of truth
+    "useEditorconfig": false
+  },
+
+  // ─── JavaScript / TypeScript formatter ──────────────────────────────────────
+  "javascript": {
+    "parser": {
+      // Required for decorator syntax used in this codebase
+      "unsafeParameterDecoratorsEnabled": true
+    },
+    "formatter": {
+      // Quotes: single quotes for strings
+      "quoteStyle": "single",
+
+      // JSX attributes also use double quotes (HTML convention in JSX)
+      "jsxQuoteStyle": "double",
+
+      // Only quote object properties when necessary
+      "quoteProperties": "asNeeded",
+
+      // Trailing commas everywhere valid (function params, arrays, objects)
+      "trailingCommas": "all",
+
+      // Always print semicolons
+      "semicolons": "always",
+
+      // Arrow function params always parenthesised: (x) => x
+      "arrowParentheses": "always",
+
+      // JSX closing > goes on its own line, not after the last attribute
+      "bracketSameLine": false,
+
+      // Binary operator goes at the START of the continuation line
+      // e.g.:   expr
+      //         && expr2
+      "operatorLinebreak": "before"
+    }
+  },
+
+  // ─── Linter ─────────────────────────────────────────────────────────────────
+  "linter": {
+    "enabled": true,
+    "rules": {
+      // Enable all recommended rules as a baseline
+      "recommended": true,
+
+      "correctness": {
+        // Warn on unused variables and imports (not errors — keeps noise low)
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "warn"
+      },
+
+      "style": {
+        // Allow non-null assertions (!) — common in game engine code
+        "noNonNullAssertion": "off"
+      },
+
+      "complexity": {
+        // Allow static-only classes — used for namespacing patterns here
+        "noStaticOnlyClass": "off"
+      },
+
+      "suspicious": {
+        // Allow explicit `any` — necessary for generic engine internals
+        "noExplicitAny": "off"
+      }
+    }
+  },
+
+  // ─── Assist (safe code actions on save) ─────────────────────────────────────
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "recommended": true
+      }
+    }
+  }
+}
