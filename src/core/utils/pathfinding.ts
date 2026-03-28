@@ -44,8 +44,12 @@
  * @see {@link PathFollower}   — behaviour that moves entities along a path
  * @see {@link PathfinderConfig} — configuration options
  */
-import type { Grid } from "../grid/grid";
-import type { HeuristicName, PathfinderConfig, PathNode } from "./pathfinding_types";
+import type { Grid } from '../grid/grid';
+import type {
+  HeuristicName,
+  PathfinderConfig,
+  PathNode,
+} from './pathfinding_types';
 
 /** 4-directional offsets (cardinal). @internal */
 const OFFSETS_4: ReadonlyArray<[number, number]> = [
@@ -99,7 +103,10 @@ class MinHeap {
     while (i > 0) {
       const parent = (i - 1) >> 1;
       if (this.items[i]!.f >= this.items[parent]!.f) break;
-      [this.items[i], this.items[parent]] = [this.items[parent]!, this.items[i]!];
+      [this.items[i], this.items[parent]] = [
+        this.items[parent]!,
+        this.items[i]!,
+      ];
       i = parent;
     }
   }
@@ -110,10 +117,15 @@ class MinHeap {
       let smallest = i;
       const left = 2 * i + 1;
       const right = 2 * i + 2;
-      if (left < len && this.items[left]!.f < this.items[smallest]!.f) smallest = left;
-      if (right < len && this.items[right]!.f < this.items[smallest]!.f) smallest = right;
+      if (left < len && this.items[left]!.f < this.items[smallest]!.f)
+        smallest = left;
+      if (right < len && this.items[right]!.f < this.items[smallest]!.f)
+        smallest = right;
       if (smallest === i) break;
-      [this.items[i], this.items[smallest]] = [this.items[smallest]!, this.items[i]!];
+      [this.items[i], this.items[smallest]] = [
+        this.items[smallest]!,
+        this.items[i]!,
+      ];
       i = smallest;
     }
   }
@@ -123,7 +135,10 @@ export class Pathfinder {
   private grid: Grid;
   private allowDiagonal: boolean;
   private diagonalCost: number;
-  private heuristicFn: (a: { col: number; row: number }, b: { col: number; row: number }) => number;
+  private heuristicFn: (
+    a: { col: number; row: number },
+    b: { col: number; row: number },
+  ) => number;
 
   /**
    * Creates a new pathfinder bound to a grid.
@@ -145,7 +160,7 @@ export class Pathfinder {
     this.grid = config.grid;
     this.allowDiagonal = config.allowDiagonal ?? false;
     this.diagonalCost = config.diagonalCost ?? Math.SQRT2;
-    this.heuristicFn = Pathfinder.getHeuristic(config.heuristic ?? "manhattan");
+    this.heuristicFn = Pathfinder.getHeuristic(config.heuristic ?? 'manhattan');
   }
 
   /**
@@ -176,7 +191,10 @@ export class Pathfinder {
     goalCol: number,
     goalRow: number,
   ): { col: number; row: number }[] | null {
-    if (!this.grid.isInBounds(startCol, startRow) || !this.grid.isInBounds(goalCol, goalRow)) {
+    if (
+      !this.grid.isInBounds(startCol, startRow)
+      || !this.grid.isInBounds(goalCol, goalRow)
+    ) {
       return null;
     }
 
@@ -282,7 +300,12 @@ export class Pathfinder {
    * }
    * ```
    */
-  isReachable(startCol: number, startRow: number, goalCol: number, goalRow: number): boolean {
+  isReachable(
+    startCol: number,
+    startRow: number,
+    goalCol: number,
+    goalRow: number,
+  ): boolean {
     return this.findPath(startCol, startRow, goalCol, goalRow) !== null;
   }
 
@@ -313,16 +336,20 @@ export class Pathfinder {
    */
   private static getHeuristic(
     name: HeuristicName,
-  ): (a: { col: number; row: number }, b: { col: number; row: number }) => number {
+  ): (
+    a: { col: number; row: number },
+    b: { col: number; row: number },
+  ) => number {
     switch (name) {
-      case "euclidean":
+      case 'euclidean':
         return (a, b) => {
           const dx = a.col - b.col;
           const dy = a.row - b.row;
           return Math.sqrt(dx * dx + dy * dy);
         };
-      case "chebyshev":
-        return (a, b) => Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row));
+      case 'chebyshev':
+        return (a, b) =>
+          Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row));
       default:
         return (a, b) => Math.abs(a.col - b.col) + Math.abs(a.row - b.row);
     }

@@ -1,5 +1,5 @@
-import type { WorldBounds } from "../generic_types";
-import type { Collidable } from "./behaviours/collidable";
+import type { WorldBounds } from '../generic_types';
+import type { Collidable } from './behaviours/collidable';
 
 /**
  * Spatial collision-detection world.
@@ -218,19 +218,25 @@ export default class World {
    *
    * @internal
    */
-  private intersects(a: Collidable, boundsA: WorldBounds, b: Collidable, boundsB: WorldBounds): boolean {
+  private intersects(
+    a: Collidable,
+    boundsA: WorldBounds,
+    b: Collidable,
+    boundsB: WorldBounds,
+  ): boolean {
     const shapeA = a.shape;
     const shapeB = b.shape;
 
-    if (shapeA.type === "aabb" && shapeB.type === "aabb") {
+    if (shapeA.type === 'aabb' && shapeB.type === 'aabb') {
       return this.aabbVSAabb(boundsA, boundsB);
     }
 
-    if (shapeA.type === "circle" && shapeB.type === "circle") {
+    if (shapeA.type === 'circle' && shapeB.type === 'circle') {
       return this.circleVSCircle(a, boundsA, b, boundsB);
     }
 
-    const [circle, circleBounds, rect] = shapeA.type === "circle" ? [a, boundsA, boundsB] : [b, boundsB, boundsA];
+    const [circle, circleBounds, rect] =
+      shapeA.type === 'circle' ? [a, boundsA, boundsB] : [b, boundsB, boundsA];
 
     return this.circleVSAAabb(circle, circleBounds, rect);
   }
@@ -245,7 +251,12 @@ export default class World {
    * @internal
    */
   private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
-    return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+    return (
+      a.x < b.x + b.width
+      && a.x + a.width > b.x
+      && a.y < b.y + b.height
+      && a.y + a.height > b.y
+    );
   }
 
   /**
@@ -260,8 +271,13 @@ export default class World {
    *
    * @internal
    */
-  private circleVSCircle(a: Collidable, boundsA: WorldBounds, b: Collidable, boundsB: WorldBounds): boolean {
-    if (a.shape.type !== "circle" || b.shape.type !== "circle") return false;
+  private circleVSCircle(
+    a: Collidable,
+    boundsA: WorldBounds,
+    b: Collidable,
+    boundsB: WorldBounds,
+  ): boolean {
+    if (a.shape.type !== 'circle' || b.shape.type !== 'circle') return false;
 
     const cx1 = boundsA.x + a.shape.radius;
     const cy1 = boundsA.y + a.shape.radius;
@@ -287,8 +303,12 @@ export default class World {
    *
    * @internal
    */
-  private circleVSAAabb(circle: Collidable, circleBounds: WorldBounds, rect: WorldBounds): boolean {
-    if (circle.shape.type !== "circle") return false;
+  private circleVSAAabb(
+    circle: Collidable,
+    circleBounds: WorldBounds,
+    rect: WorldBounds,
+  ): boolean {
+    if (circle.shape.type !== 'circle') return false;
 
     const cx = circleBounds.x + circle.shape.radius;
     const cy = circleBounds.y + circle.shape.radius;
@@ -317,9 +337,20 @@ export default class World {
    *
    * @internal
    */
-  private resolveOverlap(a: Collidable, boundsA: WorldBounds, b: Collidable, boundsB: WorldBounds): void {
-    const overlapX = Math.min(boundsA.x + boundsA.width - boundsB.x, boundsB.x + boundsB.width - boundsA.x);
-    const overlapY = Math.min(boundsA.y + boundsA.height - boundsB.y, boundsB.y + boundsB.height - boundsA.y);
+  private resolveOverlap(
+    a: Collidable,
+    boundsA: WorldBounds,
+    b: Collidable,
+    boundsB: WorldBounds,
+  ): void {
+    const overlapX = Math.min(
+      boundsA.x + boundsA.width - boundsB.x,
+      boundsB.x + boundsB.width - boundsA.x,
+    );
+    const overlapY = Math.min(
+      boundsA.y + boundsA.height - boundsB.y,
+      boundsB.y + boundsB.height - boundsA.y,
+    );
 
     let pushX = 0;
     let pushY = 0;

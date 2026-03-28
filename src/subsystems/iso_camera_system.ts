@@ -45,16 +45,16 @@
  * @see {@link CameraSystem}   — the simpler base camera subsystem
  */
 
-import type { EnhancedCameraConfig } from "../core/enhanced_camera";
-import { EnhancedCamera } from "../core/enhanced_camera";
-import type { IsometricProjection } from "../core/grid/isometric";
-import type { RenderContext } from "../core/renderer/type";
-import type { Vector2 } from "../generic_types";
-import type { SubSystem } from "./types";
+import type { EnhancedCameraConfig } from '../core/enhanced_camera';
+import { EnhancedCamera } from '../core/enhanced_camera';
+import type { IsometricProjection } from '../core/grid/isometric';
+import type { RenderContext } from '../core/renderer/type';
+import type { Vector2 } from '../generic_types';
+import type { SubSystem } from './types';
 
 export class IsometricCameraSystem implements SubSystem {
   /** Subsystem identifier. */
-  id = "camera";
+  id = 'camera';
 
   /**
    * Execution order. `10` ensures the camera transform is applied

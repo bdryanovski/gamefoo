@@ -1,6 +1,6 @@
-import type Entity from "../../entities/entity";
-import { Behaviour } from "../behaviour";
-import type Input from "../input";
+import type Entity from '../../entities/entity';
+import { Behaviour } from '../behaviour';
+import type Input from '../input';
 
 /**
  * Keyboard-driven movement behaviour for a {@link Entity}.
@@ -28,7 +28,7 @@ import type Input from "../input";
  */
 export class Control extends Behaviour<Entity> {
   /** @inheritDoc */
-  readonly type = "control";
+  readonly type = 'control';
 
   /** The input manager to poll each frame. */
   private input: Input;
@@ -66,10 +66,11 @@ export class Control extends Behaviour<Entity> {
     let dx = 0;
     let dy = 0;
 
-    if (this.input.isKeyDown("a") || this.input.isKeyDown("arrowleft")) dx -= 1;
-    if (this.input.isKeyDown("d") || this.input.isKeyDown("arrowright")) dx += 1;
-    if (this.input.isKeyDown("w") || this.input.isKeyDown("arrowup")) dy -= 1;
-    if (this.input.isKeyDown("s") || this.input.isKeyDown("arrowdown")) dy += 1;
+    if (this.input.isKeyDown('a') || this.input.isKeyDown('arrowleft')) dx -= 1;
+    if (this.input.isKeyDown('d') || this.input.isKeyDown('arrowright'))
+      dx += 1;
+    if (this.input.isKeyDown('w') || this.input.isKeyDown('arrowup')) dy -= 1;
+    if (this.input.isKeyDown('s') || this.input.isKeyDown('arrowdown')) dy += 1;
 
     const len = Math.sqrt(dx * dx + dy * dy);
     if (len > 0) {

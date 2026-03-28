@@ -1,10 +1,10 @@
-import type { RenderContext } from "../renderer/type";
-import { metadata as FONT_3x5_METADATA } from "./internal/font_3x5";
-import { metadata as FONT_4x6_METADATA } from "./internal/font_4x6";
-import { metadata as FONT_5x5_METADATA } from "./internal/font_5x5";
-import { metadata as FONT_6x8_METADATA } from "./internal/font_6x8";
-import { metadata as FONT_8x8_METADATA } from "./internal/font_8x8";
-import { metadata as FONT_8x13_METADATA } from "./internal/font_8x13";
+import type { RenderContext } from '../renderer/type';
+import { metadata as FONT_3x5_METADATA } from './internal/font_3x5';
+import { metadata as FONT_4x6_METADATA } from './internal/font_4x6';
+import { metadata as FONT_5x5_METADATA } from './internal/font_5x5';
+import { metadata as FONT_6x8_METADATA } from './internal/font_6x8';
+import { metadata as FONT_8x8_METADATA } from './internal/font_8x8';
+import { metadata as FONT_8x13_METADATA } from './internal/font_8x13';
 
 /**
  * Internal catalogue of registered bitmap font definitions.
@@ -33,7 +33,13 @@ Catalog.set(FONT_6x8_METADATA.name, FONT_6x8_METADATA);
 Catalog.set(FONT_8x13_METADATA.name, FONT_8x13_METADATA);
 Catalog.set(FONT_8x8_METADATA.name, FONT_8x8_METADATA);
 
-export type InternalBitmapFontName = "3x5" | "4x6" | "5x5" | "6x8" | "8x13" | "8x8";
+export type InternalBitmapFontName =
+  | '3x5'
+  | '4x6'
+  | '5x5'
+  | '6x8'
+  | '8x13'
+  | '8x8';
 
 /**
  * Pixel-perfect bitmap font renderer.

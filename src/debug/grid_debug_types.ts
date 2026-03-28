@@ -6,9 +6,9 @@
  * @since 0.4.0
  */
 
-import type { Grid } from "../core/grid/grid";
-import type { IsometricProjection } from "../core/grid/isometric";
-import type World from "../core/world";
+import type { Grid } from '../core/grid/grid';
+import type { IsometricProjection } from '../core/grid/isometric';
+import type World from '../core/world';
 
 /**
  * Configuration for the {@link GridDebugSystem} subsystem.

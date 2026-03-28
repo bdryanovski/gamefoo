@@ -1,6 +1,8 @@
-import FontBitmap, { type InternalBitmapFontName } from "../core/fonts/font_bitmap";
-import type { RenderContext } from "../core/renderer/type";
-import Entity from "./entity";
+import FontBitmap, {
+  type InternalBitmapFontName,
+} from '../core/fonts/font_bitmap';
+import type { RenderContext } from '../core/renderer/type';
+import Entity from './entity';
 
 /**
  * Abstract base class for Text and Label alike objects
@@ -22,14 +24,14 @@ export default abstract class Text extends Entity {
   protected font: FontBitmap;
 
   /** Internal state of the text needed to be update */
-  protected text: string = "";
+  protected text: string = '';
 
   /**
    * Text color (optional)
    *
    * @since 0.4.0
    */
-  protected color?: string = "#FFFFFF";
+  protected color?: string = '#FFFFFF';
 
   /**
    * Create new Text object that could be placed and render on the screen

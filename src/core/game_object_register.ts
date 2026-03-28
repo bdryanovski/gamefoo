@@ -1,5 +1,5 @@
-import type { GameObject } from "../generic_types";
-import type { RenderContext } from "./renderer/type";
+import type { GameObject } from '../generic_types';
+import type { RenderContext } from './renderer/type';
 
 /**
  * Central registry that stores and manages all non-player
@@ -114,7 +114,7 @@ export default class GameObjectRegister {
    * ```
    */
   getAll(filter?: () => true): GameObject[] {
-    if (typeof filter === "function") {
+    if (typeof filter === 'function') {
       return this.toArray().filter(filter);
     }
 

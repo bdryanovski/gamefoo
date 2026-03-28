@@ -90,7 +90,13 @@ export default class Animate {
    * );
    * ```
    */
-  constructor(key: string, frames: { col: number; row: number }[], frameW: number, frameH: number, fps: number) {
+  constructor(
+    key: string,
+    frames: { col: number; row: number }[],
+    frameW: number,
+    frameH: number,
+    fps: number,
+  ) {
     this.key = key;
     this.frames = frames;
     this.frameW = frameW;

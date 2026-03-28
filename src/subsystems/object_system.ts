@@ -1,7 +1,7 @@
-import GameObjectRegister from "../core/game_object_register";
-import type { RenderContext } from "../core/renderer/type";
-import type { GameObject } from "../generic_types";
-import type { SubSystem } from "./types";
+import GameObjectRegister from '../core/game_object_register';
+import type { RenderContext } from '../core/renderer/type';
+import type { GameObject } from '../generic_types';
+import type { SubSystem } from './types';
 
 /**
  * Configuration options for {@link ObjectSystem}.
@@ -28,7 +28,7 @@ export interface ObjectSystemConfig {
  * @category SubSystems
  */
 export class ObjectSystem implements SubSystem {
-  id = "objects";
+  id = 'objects';
 
   order = 20;
 

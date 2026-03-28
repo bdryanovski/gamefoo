@@ -1,6 +1,6 @@
-import type { Behaviour } from "../core/behaviour";
-import type { RenderContext } from "../core/renderer/type";
-import type { Demension, Vector2 } from "../generic_types";
+import type { Behaviour } from '../core/behaviour';
+import type { RenderContext } from '../core/renderer/type';
+import type { Demension, Vector2 } from '../generic_types';
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -58,7 +58,7 @@ export default abstract class Entity {
    * Used as the key in {@link GameObjectRegister} and for
    * collision-callback identification.
    */
-  public id: string = "";
+  public id: string = '';
 
   /**
    * World-space position of the entity's origin (top-left corner).
@@ -127,7 +127,13 @@ export default abstract class Entity {
    * }
    * ```
    */
-  constructor(id: string, x: number, y: number, width?: number, height?: number) {
+  constructor(
+    id: string,
+    x: number,
+    y: number,
+    width?: number,
+    height?: number,
+  ) {
     this.id = id;
     this.position = { x, y };
 
@@ -210,7 +216,9 @@ export default abstract class Entity {
    * const renderers = entity.getBehavioursByType(SpriteRender);
    * ```
    */
-  getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
+  getBehavioursByType<T extends Behaviour>(
+    type: new (...args: any[]) => T,
+  ): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 
@@ -284,7 +292,9 @@ export default abstract class Entity {
    */
   private get behaviors(): Behaviour[] {
     if (!this._sortedBehaviors) {
-      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort((a, b) => a.priority - b.priority);
+      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort(
+        (a, b) => a.priority - b.priority,
+      );
     }
     return this._sortedBehaviors;
   }

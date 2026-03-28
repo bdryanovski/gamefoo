@@ -44,8 +44,8 @@
  * @see {@link TileMap}    — renders tiles using a projection
  * @see {@link Pathfinder} — navigates the grid
  */
-import type { Vector2 } from "../../generic_types";
-import type { IsoConfig, IsoLayout, VisibleRange } from "./isometric_types";
+import type { Vector2 } from '../../generic_types';
+import type { IsoConfig, IsoLayout, VisibleRange } from './isometric_types';
 
 export class IsometricProjection {
   /** Full width of an isometric tile in pixels. */
@@ -93,7 +93,7 @@ export class IsometricProjection {
     this.tileWidth = config.tileWidth;
     this.tileHeight = config.tileHeight;
     this.origin = config.origin ?? { x: 0, y: 0 };
-    this.layout = config.layout ?? "diamond";
+    this.layout = config.layout ?? 'diamond';
     this.hw = this.tileWidth / 2;
     this.hh = this.tileHeight / 2;
   }
@@ -129,7 +129,7 @@ export class IsometricProjection {
    * ```
    */
   gridToScreen(col: number, row: number): Vector2 {
-    if (this.layout === "staggered") {
+    if (this.layout === 'staggered') {
       return this.gridToScreenStaggered(col, row);
     }
     return this.gridToScreenDiamond(col, row);
@@ -157,7 +157,7 @@ export class IsometricProjection {
    * ```
    */
   screenToGrid(screenX: number, screenY: number): { col: number; row: number } {
-    if (this.layout === "staggered") {
+    if (this.layout === 'staggered') {
       return this.screenToGridStaggered(screenX, screenY);
     }
     return this.screenToGridDiamond(screenX, screenY);
@@ -178,7 +178,7 @@ export class IsometricProjection {
    * @since 0.4.0
    */
   gridToScreenFast(col: number, row: number): Vector2 {
-    if (this.layout === "staggered") {
+    if (this.layout === 'staggered') {
       const offsetX = row % 2 === 1 ? this.hw : 0;
       this._screenOut.x = this.origin.x + col * this.tileWidth + offsetX;
       this._screenOut.y = this.origin.y + row * this.hh;
@@ -200,8 +200,11 @@ export class IsometricProjection {
    *
    * @since 0.4.0
    */
-  screenToGridFast(screenX: number, screenY: number): { col: number; row: number } {
-    if (this.layout === "staggered") {
+  screenToGridFast(
+    screenX: number,
+    screenY: number,
+  ): { col: number; row: number } {
+    if (this.layout === 'staggered') {
       const sx = screenX - this.origin.x;
       const sy = screenY - this.origin.y;
       const roughRow = Math.floor(sy / this.hh);
@@ -268,7 +271,10 @@ export class IsometricProjection {
    * ctx.stroke();
    * ```
    */
-  getTileDiamond(col: number, row: number): [Vector2, Vector2, Vector2, Vector2] {
+  getTileDiamond(
+    col: number,
+    row: number,
+  ): [Vector2, Vector2, Vector2, Vector2] {
     const center = this.gridToScreenDiamond(col, row);
     const cx = center.x + this.hw;
     const cy = center.y + this.hh;
@@ -331,9 +337,15 @@ export class IsometricProjection {
     const bottomRight = this.screenToGrid(viewX + viewW, viewY + viewH);
 
     const minCol = Math.max(0, Math.min(topLeft.col, bottomLeft.col) - pad);
-    const maxCol = Math.min(gridCols - 1, Math.max(topRight.col, bottomRight.col) + pad);
+    const maxCol = Math.min(
+      gridCols - 1,
+      Math.max(topRight.col, bottomRight.col) + pad,
+    );
     const minRow = Math.max(0, Math.min(topLeft.row, topRight.row) - pad);
-    const maxRow = Math.min(gridRows - 1, Math.max(bottomLeft.row, bottomRight.row) + pad);
+    const maxRow = Math.min(
+      gridRows - 1,
+      Math.max(bottomLeft.row, bottomRight.row) + pad,
+    );
 
     return { minCol, maxCol, minRow, maxRow };
   }
@@ -367,7 +379,10 @@ export class IsometricProjection {
    *
    * @internal
    */
-  private screenToGridDiamond(screenX: number, screenY: number): { col: number; row: number } {
+  private screenToGridDiamond(
+    screenX: number,
+    screenY: number,
+  ): { col: number; row: number } {
     const sx = screenX - this.origin.x;
     const sy = screenY - this.origin.y;
     return {
@@ -398,7 +413,10 @@ export class IsometricProjection {
    *
    * @internal
    */
-  private screenToGridStaggered(screenX: number, screenY: number): { col: number; row: number } {
+  private screenToGridStaggered(
+    screenX: number,
+    screenY: number,
+  ): { col: number; row: number } {
     const sx = screenX - this.origin.x;
     const sy = screenY - this.origin.y;
 

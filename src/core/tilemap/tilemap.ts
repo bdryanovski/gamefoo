@@ -39,14 +39,14 @@
  * @see {@link IsometricProjection} — coordinate conversion
  * @see {@link Grid}                — underlying grid data
  */
-import Entity from "../../entities/entity";
-import { Collidable } from "../behaviours/collidable";
-import type { Grid } from "../grid/grid";
-import type { IsometricProjection } from "../grid/isometric";
-import type { RenderContext } from "../renderer/type";
-import type World from "../world";
-import type { TileLayer } from "./tile_layer";
-import type { TileMapConfig } from "./tilemap_types";
+import Entity from '../../entities/entity';
+import { Collidable } from '../behaviours/collidable';
+import type { Grid } from '../grid/grid';
+import type { IsometricProjection } from '../grid/isometric';
+import type { RenderContext } from '../renderer/type';
+import type World from '../world';
+import type { TileLayer } from './tile_layer';
+import type { TileMapConfig } from './tilemap_types';
 
 /**
  * Internal entity used by {@link TileMap.buildColliders} to represent
@@ -63,7 +63,14 @@ class WallEntity extends Entity {
    * @param width  - Width in pixels.
    * @param height - Height in pixels.
    */
-  constructor(col: number, row: number, x: number, y: number, width: number, height: number) {
+  constructor(
+    col: number,
+    row: number,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) {
     super(`wall_${col}_${row}`, x, y, width, height);
   }
 
@@ -133,14 +140,28 @@ export class TileMap {
    * tilemap.render(ctx, camera.getViewRect());
    * ```
    */
-  render(ctx: RenderContext, viewport: { x: number; y: number; width: number; height: number }): void {
+  render(
+    ctx: RenderContext,
+    viewport: { x: number; y: number; width: number; height: number },
+  ): void {
     for (const layer of this.layers) {
       if (!layer.visible) continue;
 
       if (this.projection) {
-        layer.renderIsometric(ctx, this.projection, viewport, this.grid.cols, this.grid.rows);
+        layer.renderIsometric(
+          ctx,
+          this.projection,
+          viewport,
+          this.grid.cols,
+          this.grid.rows,
+        );
       } else {
-        layer.renderOrthogonal(ctx, this.grid.cellWidth, this.grid.cellHeight, viewport);
+        layer.renderOrthogonal(
+          ctx,
+          this.grid.cellWidth,
+          this.grid.cellHeight,
+          viewport,
+        );
       }
     }
   }
@@ -252,14 +273,14 @@ export class TileMap {
         wall.attachBehaviour(
           new Collidable(wall, world, {
             shape: {
-              type: "aabb",
+              type: 'aabb',
               width: colliderW,
               height: colliderH,
             },
             solid: true,
             fixed: true,
-            tags: new Set(["wall"]),
-            collidesWith: new Set(["player", "enemy", "npc"]),
+            tags: new Set(['wall']),
+            collidesWith: new Set(['player', 'enemy', 'npc']),
           }),
         );
 

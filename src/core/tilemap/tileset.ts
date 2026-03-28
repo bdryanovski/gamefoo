@@ -39,8 +39,8 @@
  * @see {@link Sprite}    — the underlying spritesheet
  * @see {@link TileLayer} — consumes TileSet for rendering
  */
-import type Sprite from "../sprite";
-import type { TileSetConfig } from "./tilemap_types";
+import type Sprite from '../sprite';
+import type { TileSetConfig } from './tilemap_types';
 
 interface SpriteFrame {
   x: number;

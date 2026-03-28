@@ -50,8 +50,8 @@
  * @see {@link IsometricCameraSystem} — subsystem using this camera
  */
 
-import type { Vector2 } from "../generic_types";
-import Camera from "./camera";
+import type { Vector2 } from '../generic_types';
+import Camera from './camera';
 
 /**
  * Configuration options for {@link EnhancedCamera}.
@@ -228,7 +228,12 @@ export class EnhancedCamera extends Camera {
    * // Use for viewport culling or coordinate conversion
    * ```
    */
-  override getViewRect(): { x: number; y: number; width: number; height: number } {
+  override getViewRect(): {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } {
     const base = super.getViewRect();
     const invZoom = 1 / this._zoom;
     const w = base.width * invZoom;

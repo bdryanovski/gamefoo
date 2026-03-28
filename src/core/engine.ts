@@ -1,7 +1,7 @@
-import type { SubSystem } from "../subsystems/types";
-import type { LoopDriver } from "./renderer/loops/loop";
-import { RAFLoopDriver } from "./renderer/loops/loop";
-import type { RenderContext } from "./renderer/type";
+import type { SubSystem } from '../subsystems/types';
+import type { LoopDriver } from './renderer/loops/loop';
+import { RAFLoopDriver } from './renderer/loops/loop';
+import type { RenderContext } from './renderer/type';
 
 const DEFAULT_GAME_SCALE = 1;
 
@@ -186,7 +186,7 @@ export default class Engine {
    * Merged configuration. Combines caller-supplied values with defaults.
    */
   private cnf: EngineConfig = {
-    backgroundColor: "#000000",
+    backgroundColor: '#000000',
     gameScale: 1,
   };
 
@@ -307,7 +307,7 @@ export default class Engine {
     for (const subsystem of this.subsystems) {
       if (subsystem.enabled === false) continue;
       const fun = subsystem[hook];
-      if (typeof fun === "function") {
+      if (typeof fun === 'function') {
         // @ts-expect-error
         fun.apply(subsystem, args);
       }
@@ -353,9 +353,9 @@ export default class Engine {
   private tick(deltaTime: number): void {
     if (!this.running) return;
 
-    this.run("preUpdate", deltaTime);
-    this.run("update", deltaTime);
-    this.run("postUpdate", deltaTime);
+    this.run('preUpdate', deltaTime);
+    this.run('update', deltaTime);
+    this.run('postUpdate', deltaTime);
 
     this.update(deltaTime);
 
@@ -363,9 +363,9 @@ export default class Engine {
 
     this.render(this.ctx);
 
-    this.run("preRender", this.ctx);
-    this.run("render", this.ctx);
-    this.run("postRender", this.ctx);
+    this.run('preRender', this.ctx);
+    this.run('render', this.ctx);
+    this.run('postRender', this.ctx);
 
     // Flush buffered output (terminal dirty-cell diff; no-op on canvas).
     this.ctx.flush?.();
@@ -402,14 +402,14 @@ export default class Engine {
    */
   public async setup(setupFn?: () => void) {
     if (this._initialized) {
-      console.warn("Engine is already initialized.");
+      console.warn('Engine is already initialized.');
       return;
     }
 
     this.lastTime = 0;
     this.clearScrean();
 
-    if (typeof setupFn === "function") {
+    if (typeof setupFn === 'function') {
       setupFn();
     }
 
@@ -498,7 +498,7 @@ export default class Engine {
    * ```
    */
   public clearScrean() {
-    this.ctx.clear(this.cnf.backgroundColor ?? "#000000");
+    this.ctx.clear(this.cnf.backgroundColor ?? '#000000');
   }
 
   /**

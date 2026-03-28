@@ -40,11 +40,15 @@
  * @see {@link TileLayer}   — receives tile ID data
  */
 
-import { Grid } from "../grid/grid";
-import { TileLayer } from "../tilemap/tile_layer";
-import type { TileSet } from "../tilemap/tileset";
-import type { BiomeRule, GeneratedMapData, MapGeneratorConfig } from "./map_generator_types";
-import { PerlinNoise } from "./perlin_noise";
+import { Grid } from '../grid/grid';
+import { TileLayer } from '../tilemap/tile_layer';
+import type { TileSet } from '../tilemap/tileset';
+import type {
+  BiomeRule,
+  GeneratedMapData,
+  MapGeneratorConfig,
+} from './map_generator_types';
+import { PerlinNoise } from './perlin_noise';
 
 export class MapGenerator {
   private noise: PerlinNoise;
@@ -101,7 +105,13 @@ export class MapGenerator {
     for (let row = 0; row < rows; row++) {
       const offset = row * cols;
       for (let col = 0; col < cols; col++) {
-        map[offset + col] = this.noise.fbm(col * scale, row * scale, octaves, lacunarity, persistence);
+        map[offset + col] = this.noise.fbm(
+          col * scale,
+          row * scale,
+          octaves,
+          lacunarity,
+          persistence,
+        );
       }
     }
     return map;
@@ -177,7 +187,12 @@ export class MapGenerator {
    * });
    * ```
    */
-  buildLayer(tileSet: TileSet, layerName: string, cellWidth = 64, cellHeight = 32): { grid: Grid; layer: TileLayer } {
+  buildLayer(
+    tileSet: TileSet,
+    layerName: string,
+    cellWidth = 64,
+    cellHeight = 32,
+  ): { grid: Grid; layer: TileLayer } {
     const { cols, rows } = this.config;
     const { data, walkableMap } = this.generateTileData();
 

@@ -1,6 +1,6 @@
-import type Engine from "../core/engine";
+import type Engine from '../core/engine';
 
-import type { RenderContext } from "../core/renderer/type";
+import type { RenderContext } from '../core/renderer/type';
 
 /**
  * SubSystem is a modular component of the game engine that can be added or removed as needed.

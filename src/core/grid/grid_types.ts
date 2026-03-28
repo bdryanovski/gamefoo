@@ -11,7 +11,7 @@
  * @since 0.4.0
  */
 
-import type { Vector2 } from "../../generic_types";
+import type { Vector2 } from '../../generic_types';
 
 /**
  * A single cell within a {@link Grid}.

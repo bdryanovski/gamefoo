@@ -1,6 +1,6 @@
-import type Entity from "../../entities/entity";
-import { Behaviour } from "../behaviour";
-import type { RenderContext } from "../renderer/type";
+import type Entity from '../../entities/entity';
+import { Behaviour } from '../behaviour';
+import type { RenderContext } from '../renderer/type';
 
 /**
  * Describes the visual appearance of an entity in terminal mode.
@@ -107,7 +107,7 @@ export interface TerminalGlyph {
  */
 export class TerminalRender extends Behaviour<Entity> {
   /** @inheritDoc */
-  readonly type = "terminal_render";
+  readonly type = 'terminal_render';
 
   /**
    * Execution priority. Lower values run first in the behaviour pipeline.
@@ -191,6 +191,12 @@ export class TerminalRender extends Behaviour<Entity> {
    * @since 0.4.0
    */
   override render(ctx: RenderContext): void {
-    ctx.drawChar(this.glyph.char, this.owner.x, this.owner.y, this.glyph.fg, this.glyph.bg ?? "#000000");
+    ctx.drawChar(
+      this.glyph.char,
+      this.owner.x,
+      this.owner.y,
+      this.glyph.fg,
+      this.glyph.bg ?? '#000000',
+    );
   }
 }

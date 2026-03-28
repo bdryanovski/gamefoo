@@ -29,7 +29,7 @@
  *
  * @since 0.4.0
  */
-export const ESC = "\x1b";
+export const ESC = '\x1b';
 
 /**
  * Control Sequence Introducer — `ESC[`.
@@ -120,7 +120,8 @@ export const showCursor = () => `${CSI}?25h`;
  * process.stdout.write(ansi.fgRGB(0, 255, 0) + "GREEN TEXT" + ansi.reset());
  * ```
  */
-export const fgRGB = (r: number, g: number, b: number) => `${CSI}38;2;${r};${g};${b}m`;
+export const fgRGB = (r: number, g: number, b: number) =>
+  `${CSI}38;2;${r};${g};${b}m`;
 
 /**
  * Sets the background colour using 24-bit truecolour.
@@ -139,7 +140,8 @@ export const fgRGB = (r: number, g: number, b: number) => `${CSI}38;2;${r};${g};
  * process.stdout.write(ansi.bgRGB(255, 0, 0) + "RED BG" + ansi.reset());
  * ```
  */
-export const bgRGB = (r: number, g: number, b: number) => `${CSI}48;2;${r};${g};${b}m`;
+export const bgRGB = (r: number, g: number, b: number) =>
+  `${CSI}48;2;${r};${g};${b}m`;
 
 /**
  * Resets all ANSI text attributes (colour, bold, underline, etc.)
@@ -177,6 +179,6 @@ export const reset = () => `${CSI}0m`;
  * ```
  */
 export const hexToRGB = (hex: string): [number, number, number] => {
-  const n = parseInt(hex.replace("#", ""), 16);
+  const n = parseInt(hex.replace('#', ''), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 };

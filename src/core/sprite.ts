@@ -1,4 +1,4 @@
-import Asset from "./asset";
+import Asset from './asset';
 
 /**
  * Describes a single named animation within a {@link Sprite} sheet.
@@ -250,11 +250,25 @@ export default class Sprite {
    *  The source rectangles are in pixel coordinates relative to the top-left corner
    *  of the source image.
    */
-  private static generateGridFrames(image: HTMLImageElement, config: GridConfig): Map<number, SpriteFrame> {
-    const { frameWidth, frameHeight, offsetX = 0, offsetY = 0, spacingX = 0, spacingY = 0 } = config;
+  private static generateGridFrames(
+    image: HTMLImageElement,
+    config: GridConfig,
+  ): Map<number, SpriteFrame> {
+    const {
+      frameWidth,
+      frameHeight,
+      offsetX = 0,
+      offsetY = 0,
+      spacingX = 0,
+      spacingY = 0,
+    } = config;
 
-    const cols = Math.floor((image.width - offsetX + spacingX) / (frameWidth + spacingX));
-    const rows = Math.floor((image.height - offsetY + spacingY) / (frameHeight + spacingY));
+    const cols = Math.floor(
+      (image.width - offsetX + spacingX) / (frameWidth + spacingX),
+    );
+    const rows = Math.floor(
+      (image.height - offsetY + spacingY) / (frameHeight + spacingY),
+    );
     const total = config.count ?? cols * rows;
     const frames = new Map<number, SpriteFrame>();
 
@@ -283,8 +297,14 @@ export default class Sprite {
     return sprite;
   }
 
-  static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
-    const [image, response] = await Promise.all([Asset.load(imagePath), fetch(jsonPath)]);
+  static async fromAseprite(
+    imagePath: string,
+    jsonPath: string,
+  ): Promise<Sprite> {
+    const [image, response] = await Promise.all([
+      Asset.load(imagePath),
+      fetch(jsonPath),
+    ]);
     const data = await response.json();
 
     const regions: Record<string, SpriteFrame> = {};
@@ -303,8 +323,9 @@ export default class Sprite {
         }
         animations[tag.name] = {
           frames: frameNames,
-          duration: ((data.frames[frameNames[0]!] as any)?.duration ?? 100) / 1000,
-          loop: tag.direction !== "forward_once",
+          duration:
+            ((data.frames[frameNames[0]!] as any)?.duration ?? 100) / 1000,
+          loop: tag.direction !== 'forward_once',
         };
       }
     }

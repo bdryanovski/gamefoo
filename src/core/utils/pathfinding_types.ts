@@ -6,7 +6,7 @@
  * @since 0.4.0
  */
 
-import type { Grid } from "../grid/grid";
+import type { Grid } from '../grid/grid';
 
 /**
  * Heuristic function name for A* distance estimation.
@@ -25,7 +25,7 @@ import type { Grid } from "../grid/grid";
  * const h: HeuristicName = "manhattan";
  * ```
  */
-export type HeuristicName = "manhattan" | "euclidean" | "chebyshev";
+export type HeuristicName = 'manhattan' | 'euclidean' | 'chebyshev';
 
 /**
  * A single node in the A* open/closed sets.

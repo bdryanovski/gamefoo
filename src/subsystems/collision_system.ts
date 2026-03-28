@@ -1,5 +1,5 @@
-import World from "../core/world";
-import type { SubSystem } from "./types";
+import World from '../core/world';
+import type { SubSystem } from './types';
 
 /**
  * CollisionSystem is responsible for detecting collisions between game objects.
@@ -10,7 +10,7 @@ import type { SubSystem } from "./types";
  * @category SubSystems
  */
 export class CollisionSystem implements SubSystem {
-  id = "collision";
+  id = 'collision';
   order = 30;
 
   private world: World;

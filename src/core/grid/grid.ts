@@ -39,8 +39,8 @@
  * @see {@link IsometricProjection} — screen-space conversion for iso grids
  * @see {@link Pathfinder}           — A* search over a Grid
  */
-import type { Vector2 } from "../../generic_types";
-import type { GridCell, GridConfig } from "./grid_types";
+import type { Vector2 } from '../../generic_types';
+import type { GridCell, GridConfig } from './grid_types';
 
 /** 4-directional offsets (cardinal). @internal */
 const CARDINALS: ReadonlyArray<[number, number]> = [
@@ -281,7 +281,9 @@ export class Grid<T = number> {
    * });
    * ```
    */
-  forEach(callback: (cell: GridCell<T>, col: number, row: number) => void): void {
+  forEach(
+    callback: (cell: GridCell<T>, col: number, row: number) => void,
+  ): void {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         callback(this.cells[row]![col]!, col, row);
@@ -316,7 +318,11 @@ export class Grid<T = number> {
    * // Up to 8 cells
    * ```
    */
-  getNeighbours(col: number, row: number, includeDiagonals = false): GridCell<T>[] {
+  getNeighbours(
+    col: number,
+    row: number,
+    includeDiagonals = false,
+  ): GridCell<T>[] {
     const offsets = includeDiagonals ? ALL_DIRS : CARDINALS;
     const result: GridCell<T>[] = [];
 

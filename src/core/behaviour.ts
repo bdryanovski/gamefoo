@@ -1,5 +1,5 @@
-import type Entity from "../entities/entity";
-import type { RenderContext } from "./renderer/type";
+import type Entity from '../entities/entity';
+import type { RenderContext } from './renderer/type';
 
 /**
  * Abstract base class for all entity behaviours in the GameFoo engine.

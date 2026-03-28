@@ -47,11 +47,11 @@
  * @see {@link Behaviour}           — base behaviour class
  */
 
-import type DynamicEntity from "../../entities/dynamic_entity";
-import { Behaviour } from "../behaviour";
-import type { Grid } from "../grid/grid";
-import type { IsometricProjection } from "../grid/isometric";
-import type { Pathfinder } from "../utils/pathfinding";
+import type DynamicEntity from '../../entities/dynamic_entity';
+import { Behaviour } from '../behaviour';
+import type { Grid } from '../grid/grid';
+import type { IsometricProjection } from '../grid/isometric';
+import type { Pathfinder } from '../utils/pathfinding';
 
 /**
  * Configuration options for {@link PathFollower}.
@@ -104,7 +104,7 @@ export interface PathFollowerConfig {
 
 export class PathFollower extends Behaviour<DynamicEntity> {
   /** @inheritdoc */
-  readonly type = "pathfollower";
+  readonly type = 'pathfollower';
 
   private pathfinder: Pathfinder;
   private grid: Grid;
@@ -143,7 +143,12 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * npc.attachBehaviour(pf);
    * ```
    */
-  constructor(owner: DynamicEntity, pathfinder: Pathfinder, grid: Grid, config?: PathFollowerConfig) {
+  constructor(
+    owner: DynamicEntity,
+    pathfinder: Pathfinder,
+    grid: Grid,
+    config?: PathFollowerConfig,
+  ) {
     super(owner);
     this.pathfinder = pathfinder;
     this.grid = grid;
@@ -212,7 +217,12 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   moveTo(goalCol: number, goalRow: number): boolean {
     const ownerWorld = this.getOwnerGridPosition();
 
-    const result = this.pathfinder.findPath(ownerWorld.col, ownerWorld.row, goalCol, goalRow);
+    const result = this.pathfinder.findPath(
+      ownerWorld.col,
+      ownerWorld.row,
+      goalCol,
+      goalRow,
+    );
 
     if (!result) {
       this._isMoving = false;
@@ -253,7 +263,11 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * @since 0.4.0
    */
   update(deltaTime: number): void {
-    if (!this._isMoving || this.path.length === 0 || this.currentIndex >= this.path.length) {
+    if (
+      !this._isMoving
+      || this.path.length === 0
+      || this.currentIndex >= this.path.length
+    ) {
       return;
     }
 

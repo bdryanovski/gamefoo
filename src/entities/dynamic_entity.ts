@@ -1,5 +1,5 @@
-import type { Vector2 } from "../generic_types";
-import Entity from "./entity";
+import type { Vector2 } from '../generic_types';
+import Entity from './entity';
 
 /**
  * Abstract entity with built-in velocity and speed, suitable for any

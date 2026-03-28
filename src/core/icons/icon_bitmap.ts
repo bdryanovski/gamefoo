@@ -1,6 +1,6 @@
-import { metadata as ICON_8x8_METADATA } from "../icons/internal/icons_8x8";
-import { metadata as ICON_16x16_METADATA } from "../icons/internal/icons_16x16";
-import type { RenderContext } from "../renderer/type";
+import { metadata as ICON_8x8_METADATA } from '../icons/internal/icons_8x8';
+import { metadata as ICON_16x16_METADATA } from '../icons/internal/icons_16x16';
+import type { RenderContext } from '../renderer/type';
 
 // import { metadata as ICON_32x32_METADATA } from "../icons/internal/icons_32x32";
 
@@ -27,7 +27,7 @@ Catalog.set(ICON_8x8_METADATA.name, ICON_8x8_METADATA);
 Catalog.set(ICON_16x16_METADATA.name, ICON_16x16_METADATA);
 // Catalog.set(ICON_32x32_METADATA.name, ICON_32x32_METADATA);
 
-export type InternalBitmapIconName = "icons_8x8" | "icons_16x16";
+export type InternalBitmapIconName = 'icons_8x8' | 'icons_16x16';
 
 /**
  * Pixel-perfect bitmap icons set

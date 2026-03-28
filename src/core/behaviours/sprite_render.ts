@@ -1,8 +1,8 @@
-import type Entity from "../../entities/entity";
-import type { Vector2 } from "../../generic_types";
-import { Behaviour } from "../behaviour";
-import type { RenderContext } from "../renderer/type";
-import type Sprite from "../sprite";
+import type Entity from '../../entities/entity';
+import type { Vector2 } from '../../generic_types';
+import { Behaviour } from '../behaviour';
+import type { RenderContext } from '../renderer/type';
+import type Sprite from '../sprite';
 
 /**
  * Sprite animation renderer that can be attached to any {@link Entity}.
@@ -47,7 +47,7 @@ import type Sprite from "../sprite";
  */
 export default class SpriteRender extends Behaviour<Entity> {
   /** @inheritDoc */
-  readonly type = "sprite";
+  readonly type = 'sprite';
 
   /** The spritesheet this renderer draws from. */
   private sheet: Sprite;
@@ -163,7 +163,9 @@ export default class SpriteRender extends Behaviour<Entity> {
     const animation = this.sheet.animations.get(this.currentFrame);
 
     if (!animation) {
-      console.warn(`Animation "${this.currentFrame}" not found in sprite sheet.`);
+      console.warn(
+        `Animation "${this.currentFrame}" not found in sprite sheet.`,
+      );
       return;
     }
 
@@ -174,7 +176,9 @@ export default class SpriteRender extends Behaviour<Entity> {
       this.currentFrameIndex++;
 
       if (this.currentFrameIndex >= animation.frames.length) {
-        this.currentFrameIndex = animation.loop ? 0 : animation.frames.length - 1;
+        this.currentFrameIndex = animation.loop
+          ? 0
+          : animation.frames.length - 1;
       }
     }
   }
@@ -208,10 +212,30 @@ export default class SpriteRender extends Behaviour<Entity> {
     if (this.flipX) {
       ctx.save();
       ctx.scale(-1, 1);
-      ctx.drawSprite?.(this.sheet.image, x, y, width, height, -(drawX + size.width), drawY, size.width, size.height);
+      ctx.drawSprite?.(
+        this.sheet.image,
+        x,
+        y,
+        width,
+        height,
+        -(drawX + size.width),
+        drawY,
+        size.width,
+        size.height,
+      );
       ctx.restore();
     } else {
-      ctx.drawSprite?.(this.sheet.image, x, y, width, height, drawX, drawY, size.width, size.height);
+      ctx.drawSprite?.(
+        this.sheet.image,
+        x,
+        y,
+        width,
+        height,
+        drawX,
+        drawY,
+        size.width,
+        size.height,
+      );
     }
   }
 }

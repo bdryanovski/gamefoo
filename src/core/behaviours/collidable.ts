@@ -1,7 +1,12 @@
-import type Entity from "../../entities/entity";
-import type { ColliderShape, CollisionInfo, GameObject, WorldBounds } from "../../generic_types";
-import { Behaviour } from "../behaviour";
-import type World from "../world";
+import type Entity from '../../entities/entity';
+import type {
+  ColliderShape,
+  CollisionInfo,
+  GameObject,
+  WorldBounds,
+} from '../../generic_types';
+import { Behaviour } from '../behaviour';
+import type World from '../world';
 
 /**
  * Options for constructing a {@link Collidable} behaviour.
@@ -139,7 +144,7 @@ type CollidableOptions = {
  */
 export class Collidable extends Behaviour<GameObject> {
   /** @inheritDoc */
-  readonly type = "collidable";
+  readonly type = 'collidable';
 
   /**
    * Geometric shape used for intersection tests.
@@ -209,7 +214,7 @@ export class Collidable extends Behaviour<GameObject> {
     const size = owner.getSize();
 
     this.shape = options.shape ?? {
-      type: "aabb",
+      type: 'aabb',
       width: size.width,
       height: size.height,
     };
@@ -274,9 +279,12 @@ export class Collidable extends Behaviour<GameObject> {
    */
   getWorldBounds(): WorldBounds {
     const pos = this.owner.getPosition();
-    const offset = "offset" in this.shape && this.shape.offset ? this.shape.offset : { x: 0, y: 0 };
+    const offset =
+      'offset' in this.shape && this.shape.offset
+        ? this.shape.offset
+        : { x: 0, y: 0 };
 
-    if (this.shape.type === "aabb") {
+    if (this.shape.type === 'aabb') {
       return {
         x: pos.x + offset.x,
         y: pos.y + offset.y,

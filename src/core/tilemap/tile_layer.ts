@@ -30,10 +30,10 @@
  * @see {@link TileSet} — maps tile IDs to sprite frames
  * @see {@link TileMap} — owns and renders multiple layers
  */
-import type { IsometricProjection } from "../grid/isometric";
-import type { RenderContext } from "../renderer/type";
-import type { TileLayerConfig } from "./tilemap_types";
-import type { TileSet } from "./tileset";
+import type { IsometricProjection } from '../grid/isometric';
+import type { RenderContext } from '../renderer/type';
+import type { TileLayerConfig } from './tilemap_types';
+import type { TileSet } from './tileset';
 
 export class TileLayer {
   /** Human-readable name of this layer. */
@@ -166,8 +166,14 @@ export class TileLayer {
 
     const startCol = Math.max(0, Math.floor(viewport.x / cellWidth) - 1);
     const startRow = Math.max(0, Math.floor(viewport.y / cellHeight) - 1);
-    const endCol = Math.min(this.cols - 1, Math.ceil((viewport.x + viewport.width) / cellWidth) + 1);
-    const endRow = Math.min(this.rows - 1, Math.ceil((viewport.y + viewport.height) / cellHeight) + 1);
+    const endCol = Math.min(
+      this.cols - 1,
+      Math.ceil((viewport.x + viewport.width) / cellWidth) + 1,
+    );
+    const endRow = Math.min(
+      this.rows - 1,
+      Math.ceil((viewport.y + viewport.height) / cellHeight) + 1,
+    );
 
     // globalAlpha is canvas-specific; for other renderers opacity is ignored
     const canvasCtx = ctx.getCanvas?.() ?? null;

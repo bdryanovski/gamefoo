@@ -1,6 +1,6 @@
-import type { RenderContext } from "../core/renderer/type";
-import Monitor from "../debug/monitor";
-import type { SubSystem } from "./types";
+import type { RenderContext } from '../core/renderer/type';
+import Monitor from '../debug/monitor';
+import type { SubSystem } from './types';
 
 /**
  * MonitorSystem is responsible for displaying debug information on the screen.
@@ -11,7 +11,7 @@ import type { SubSystem } from "./types";
  * @category SubSystems
  */
 export class MonitorSystem implements SubSystem {
-  id = "monitor";
+  id = 'monitor';
 
   order = 100;
 

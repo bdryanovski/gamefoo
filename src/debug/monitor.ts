@@ -1,7 +1,7 @@
-import FontBitmap from "../core/fonts/font_bitmap";
-import type { RenderContext } from "../core/renderer/type";
+import FontBitmap from '../core/fonts/font_bitmap';
+import type { RenderContext } from '../core/renderer/type';
 
-const font = new FontBitmap("5x5");
+const font = new FontBitmap('5x5');
 
 export default class Monitor {
   private fps: number = 0;
@@ -40,19 +40,24 @@ export default class Monitor {
 
     // Set white fill for canvas-backed renderers before using Path2D fonts
     const raw = ctx.getCanvas?.();
-    if (raw) raw.fillStyle = "#ffffff";
+    if (raw) raw.fillStyle = '#ffffff';
 
     font.renderText(`FPS: ${this.fps.toFixed(1)}`, this.x, this.y, ctx);
 
     if (this.memory) {
-      font.renderText(`MEM: ${this.memory.toFixed(1)} MB`, this.x, this.y + font.height + 3, ctx);
+      font.renderText(
+        `MEM: ${this.memory.toFixed(1)} MB`,
+        this.x,
+        this.y + font.height + 3,
+        ctx,
+      );
     }
 
     // Frame graph is canvas-only (uses beginPath/lineTo/stroke)
     const _canvasForGraph = ctx.getCanvas?.();
     if (_canvasForGraph && this.frames.length >= 1) {
       const canvasCtx = _canvasForGraph;
-      canvasCtx.strokeStyle = "#fff";
+      canvasCtx.strokeStyle = '#fff';
       canvasCtx.beginPath();
       for (let i = 0; i < this.frames.length; i++) {
         const x = this.x + i;

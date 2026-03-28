@@ -25,15 +25,15 @@
  * @see {@link SubSystem}  — the subsystem interface
  */
 
-import type { CameraSystem } from "../../subsystems/camera_system";
-import type { SubSystem } from "../../subsystems/types";
-import type Engine from "../engine";
-import type { RenderContext } from "../renderer/type";
-import type { TileMap } from "./tilemap";
+import type { CameraSystem } from '../../subsystems/camera_system';
+import type { SubSystem } from '../../subsystems/types';
+import type Engine from '../engine';
+import type { RenderContext } from '../renderer/type';
+import type { TileMap } from './tilemap';
 
 export class TilemapSystem implements SubSystem {
   /** Subsystem identifier. */
-  id = "tilemap";
+  id = 'tilemap';
 
   /**
    * Execution order. `15` places this after camera (10) and before

@@ -1,5 +1,5 @@
-import type Entity from "../../entities/entity";
-import { Behaviour } from "../behaviour";
+import type Entity from '../../entities/entity';
+import { Behaviour } from '../behaviour';
 
 /**
  * Health-tracking behaviour for a {@link Entity}.
@@ -36,7 +36,7 @@ import { Behaviour } from "../behaviour";
  */
 export class HealthKit extends Behaviour<Entity> {
   /** @inheritDoc */
-  readonly type = "healthkit";
+  readonly type = 'healthkit';
 
   /** Current health points. */
   private health: number;

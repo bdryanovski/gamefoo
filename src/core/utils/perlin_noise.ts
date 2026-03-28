@@ -148,7 +148,11 @@ export class PerlinNoise {
     const bb = this.perm[this.perm[xi + 1]! + yi + 1]!;
 
     const x1 = this.lerp(this.grad(aa, xf, yf), this.grad(ba, xf - 1, yf), u);
-    const x2 = this.lerp(this.grad(ab, xf, yf - 1), this.grad(bb, xf - 1, yf - 1), u);
+    const x2 = this.lerp(
+      this.grad(ab, xf, yf - 1),
+      this.grad(bb, xf - 1, yf - 1),
+      u,
+    );
 
     return this.lerp(x1, x2, v);
   }
@@ -178,7 +182,13 @@ export class PerlinNoise {
    * const height = noise.fbm(x * 0.01, y * 0.01, 6, 2.0, 0.5);
    * ```
    */
-  fbm(x: number, y: number, octaves = 4, lacunarity = 2, persistence = 0.5): number {
+  fbm(
+    x: number,
+    y: number,
+    octaves = 4,
+    lacunarity = 2,
+    persistence = 0.5,
+  ): number {
     let value = 0;
     let amplitude = 1;
     let frequency = 1;

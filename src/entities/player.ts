@@ -1,7 +1,7 @@
-import type { Control } from "../core/behaviours/control";
-import type { HealthKit } from "../core/behaviours/healtkit";
-import type { RenderContext } from "../core/renderer/type";
-import DynamicEntity from "./dynamic_entity";
+import type { Control } from '../core/behaviours/control';
+import type { HealthKit } from '../core/behaviours/healtkit';
+import type { RenderContext } from '../core/renderer/type';
+import DynamicEntity from './dynamic_entity';
 
 /**
  * Default player entity with convenience accessors for common
@@ -59,7 +59,7 @@ export default class Player extends DynamicEntity {
    * @returns The `Control` instance, or `undefined` if not attached.
    */
   get control(): Control | undefined {
-    return this.getBehaviour<Control>("control");
+    return this.getBehaviour<Control>('control');
   }
 
   /**
@@ -68,7 +68,7 @@ export default class Player extends DynamicEntity {
    * @returns The `HealthKit` instance, or `undefined` if not attached.
    */
   get healthkit(): HealthKit | undefined {
-    return this.getBehaviour<HealthKit>("healthkit");
+    return this.getBehaviour<HealthKit>('healthkit');
   }
 
   /**
@@ -93,7 +93,7 @@ export default class Player extends DynamicEntity {
    * @param ctx - The canvas 2-D rendering context.
    */
   render(ctx: RenderContext): void {
-    ctx.fillRect(this.x, this.y, this.size.width, this.size.height, "blue");
+    ctx.fillRect(this.x, this.y, this.size.width, this.size.height, 'blue');
     this.renderBehaviours(ctx);
   }
 }

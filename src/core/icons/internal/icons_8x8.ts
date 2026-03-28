@@ -40,7 +40,7 @@
  */
 
 /** Catalogue name used by an IconBitmap renderer to look up this set. */
-export const ICONS_8x8_NAME = "icons_8x8";
+export const ICONS_8x8_NAME = 'icons_8x8';
 
 /**
  * Icon width in pixels (excluding spacing).
@@ -65,46 +65,46 @@ export const ICONS_8x8_SPACING = 2;
  */
 export const ICONS_8x8_KEYS: string[] = [
   // Game UI
-  "heart_full",
-  "heart_empty",
-  "coin",
-  "star",
-  "gem",
-  "arrow_up",
-  "arrow_down",
-  "arrow_left",
-  "arrow_right",
-  "cross",
-  "checkmark",
-  "exclaim",
+  'heart_full',
+  'heart_empty',
+  'coin',
+  'star',
+  'gem',
+  'arrow_up',
+  'arrow_down',
+  'arrow_left',
+  'arrow_right',
+  'cross',
+  'checkmark',
+  'exclaim',
   // Controls / Input
-  "dpad",
-  "button_round",
-  "button_filled",
-  "button_cross",
-  "button_square",
-  "key_cap",
-  "mouse",
-  "cursor",
-  "gamepad",
+  'dpad',
+  'button_round',
+  'button_filled',
+  'button_cross',
+  'button_square',
+  'key_cap',
+  'mouse',
+  'cursor',
+  'gamepad',
   // Status / HUD
-  "shield",
-  "skull",
-  "mana_drop",
-  "bar_full",
-  "bar_half",
-  "bar_empty",
-  "bubble",
-  "lock",
-  "map_pin",
+  'shield',
+  'skull',
+  'mana_drop',
+  'bar_full',
+  'bar_half',
+  'bar_empty',
+  'bubble',
+  'lock',
+  'map_pin',
   // Objects / Items
-  "sword",
-  "key_item",
-  "potion",
-  "chest",
-  "bomb",
-  "scroll",
-  "fire",
+  'sword',
+  'key_item',
+  'potion',
+  'chest',
+  'bomb',
+  'scroll',
+  'fire',
 ] as const;
 
 /**

@@ -67,23 +67,23 @@ export default class Input {
    * to clear tracked state.
    */
   constructor() {
-    window.addEventListener("keydown", (e) => {
+    window.addEventListener('keydown', (e) => {
       this.keys.add(e.key.toLowerCase());
     });
 
-    window.addEventListener("keyup", (e) => {
+    window.addEventListener('keyup', (e) => {
       this.keys.delete(e.key.toLowerCase());
     });
 
-    window.addEventListener("mousedown", (e) => {
+    window.addEventListener('mousedown', (e) => {
       this.mouseButtons.add(e.button);
     });
 
-    window.addEventListener("mouseup", (e) => {
+    window.addEventListener('mouseup', (e) => {
       this.mouseButtons.delete(e.button);
     });
 
-    window.addEventListener("mousemove", (e) => {
+    window.addEventListener('mousemove', (e) => {
       this.mousePosition.x = e.clientX;
       this.mousePosition.y = e.clientY;
     });

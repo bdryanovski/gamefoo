@@ -1,4 +1,4 @@
-import type { Vector2 } from "../generic_types";
+import type { Vector2 } from '../generic_types';
 
 /**
  * A 2-D viewport camera that tracks a target position within the game

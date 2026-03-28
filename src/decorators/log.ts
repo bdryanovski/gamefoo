@@ -29,10 +29,14 @@
  *  ◀ myMethod → "test - 42"
  * ```
  */
-export function log(target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor): PropertyDescriptor {
+export function log(
+  target: object,
+  propertyKey: string | symbol,
+  descriptor: PropertyDescriptor,
+): PropertyDescriptor {
   const originalMethod = descriptor.value;
 
-  const prefix = `${target.constructor.name || "anonymous"}.${String(propertyKey)}`;
+  const prefix = `${target.constructor.name || 'anonymous'}.${String(propertyKey)}`;
 
   descriptor.value = function (this: unknown, ...args: unknown[]) {
     console.log(`▶ ${prefix}(${JSON.stringify(args)})`);

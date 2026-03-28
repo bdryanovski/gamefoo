@@ -9,8 +9,8 @@
  * @since 0.1.0
  */
 
-import type DynamicEntity from "./entities/dynamic_entity";
-import type Entity from "./entities/entity";
+import type DynamicEntity from './entities/dynamic_entity';
+import type Entity from './entities/entity';
 
 /**
  * A two-dimensional vector representing a position, direction, or offset.
@@ -103,7 +103,7 @@ export type GameObject = Entity | DynamicEntity;
 export type ColliderShape =
   | {
       /** Discriminant for an axis-aligned bounding box. */
-      type: "aabb";
+      type: 'aabb';
       /** Width of the bounding box in pixels. */
       width: number;
       /** Height of the bounding box in pixels. */
@@ -116,7 +116,7 @@ export type ColliderShape =
     }
   | {
       /** Discriminant for a circular collider. */
-      type: "circle";
+      type: 'circle';
       /** Radius of the circle in pixels. */
       radius: number;
       /**

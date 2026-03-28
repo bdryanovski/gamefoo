@@ -46,17 +46,17 @@
  * @see {@link GridDebugConfig} — configuration options
  * @see {@link MonitorSystem}   — FPS/memory debug overlay (existing)
  */
-import type Engine from "../core/engine";
-import type { Grid } from "../core/grid/grid";
-import type { IsometricProjection } from "../core/grid/isometric";
-import type { RenderContext } from "../core/renderer/type";
-import type World from "../core/world";
-import type { SubSystem } from "../subsystems/types";
-import type { GridDebugConfig } from "./grid_debug_types";
+import type Engine from '../core/engine';
+import type { Grid } from '../core/grid/grid';
+import type { IsometricProjection } from '../core/grid/isometric';
+import type { RenderContext } from '../core/renderer/type';
+import type World from '../core/world';
+import type { SubSystem } from '../subsystems/types';
+import type { GridDebugConfig } from './grid_debug_types';
 
 export class GridDebugSystem implements SubSystem {
   /** Subsystem identifier. */
-  id = "grid-debug";
+  id = 'grid-debug';
 
   /** Execution order. `90` renders on top of most subsystems. */
   order = 90;
@@ -118,9 +118,9 @@ export class GridDebugSystem implements SubSystem {
     this.showPathfinding = config.showPathfinding ?? false;
     this.showTileInspector = config.showTileInspector ?? false;
 
-    this.gridColor = config.gridColor ?? "rgba(255,255,0,0.3)";
-    this.pathColor = config.pathColor ?? "rgba(0,255,0,0.8)";
-    this.collisionColor = config.collisionColor ?? "rgba(255,0,0,0.5)";
+    this.gridColor = config.gridColor ?? 'rgba(255,255,0,0.3)';
+    this.pathColor = config.pathColor ?? 'rgba(0,255,0,0.8)';
+    this.collisionColor = config.collisionColor ?? 'rgba(255,0,0,0.5)';
     this.fontSize = config.fontSize ?? 8;
   }
 
@@ -138,11 +138,11 @@ export class GridDebugSystem implements SubSystem {
     const dims = engine.dementions;
     this.canvasHeight = dims.height;
 
-    const canvasEl = document.querySelector("canvas");
+    const canvasEl = document.querySelector('canvas');
     if (canvasEl) {
       this.canvas = canvasEl;
-      canvasEl.addEventListener("mousemove", this.handleMouseMove);
-      canvasEl.addEventListener("mouseleave", this.handleMouseLeave);
+      canvasEl.addEventListener('mousemove', this.handleMouseMove);
+      canvasEl.addEventListener('mouseleave', this.handleMouseLeave);
     }
   }
 
@@ -213,8 +213,8 @@ export class GridDebugSystem implements SubSystem {
    */
   destroy(): void {
     if (this.canvas) {
-      this.canvas.removeEventListener("mousemove", this.handleMouseMove);
-      this.canvas.removeEventListener("mouseleave", this.handleMouseLeave);
+      this.canvas.removeEventListener('mousemove', this.handleMouseMove);
+      this.canvas.removeEventListener('mouseleave', this.handleMouseLeave);
     }
   }
 
@@ -296,7 +296,10 @@ export class GridDebugSystem implements SubSystem {
 
     for (let row = range.minRow; row <= range.maxRow; row++) {
       for (let col = range.minCol; col <= range.maxCol; col++) {
-        const [top, right, bottom, left] = this.projection.getTileDiamond(col, row);
+        const [top, right, bottom, left] = this.projection.getTileDiamond(
+          col,
+          row,
+        );
         ctx.beginPath();
         ctx.moveTo(top.x, top.y);
         ctx.lineTo(right.x, right.y);
@@ -316,10 +319,10 @@ export class GridDebugSystem implements SubSystem {
    * @internal
    */
   private renderCoordinates(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.font = `${this.fontSize}px monospace`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
     let minCol = 0;
     let maxCol = this.grid.cols - 1;
@@ -343,9 +346,15 @@ export class GridDebugSystem implements SubSystem {
       const cw = this.grid.cellWidth;
       const ch = this.grid.cellHeight;
       minCol = Math.max(0, Math.floor(this.viewX / cw) - 1);
-      maxCol = Math.min(this.grid.cols - 1, Math.ceil((this.viewX + this.viewW) / cw) + 1);
+      maxCol = Math.min(
+        this.grid.cols - 1,
+        Math.ceil((this.viewX + this.viewW) / cw) + 1,
+      );
       minRow = Math.max(0, Math.floor(this.viewY / ch) - 1);
-      maxRow = Math.min(this.grid.rows - 1, Math.ceil((this.viewY + this.viewH) / ch) + 1);
+      maxRow = Math.min(
+        this.grid.rows - 1,
+        Math.ceil((this.viewY + this.viewH) / ch) + 1,
+      );
     }
 
     for (let row = minRow; row <= maxRow; row++) {
@@ -358,16 +367,22 @@ export class GridDebugSystem implements SubSystem {
           cx = pos.x + this.projection.tileWidth / 2;
           cy = pos.y + this.projection.tileHeight / 2;
         } else {
-          cx = this.grid.origin.x + col * this.grid.cellWidth + this.grid.cellWidth / 2;
-          cy = this.grid.origin.y + row * this.grid.cellHeight + this.grid.cellHeight / 2;
+          cx =
+            this.grid.origin.x
+            + col * this.grid.cellWidth
+            + this.grid.cellWidth / 2;
+          cy =
+            this.grid.origin.y
+            + row * this.grid.cellHeight
+            + this.grid.cellHeight / 2;
         }
 
         ctx.fillText(`${col},${row}`, cx, cy);
       }
     }
 
-    ctx.textAlign = "start";
-    ctx.textBaseline = "alphabetic";
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'alphabetic';
   }
 
   // ── Collision bounds ──────────────────────────────────────────────
@@ -389,11 +404,17 @@ export class GridDebugSystem implements SubSystem {
       const bounds = collider.getWorldBounds();
       const shape = collider.shape;
 
-      if (shape.type === "aabb") {
+      if (shape.type === 'aabb') {
         ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
-      } else if (shape.type === "circle") {
+      } else if (shape.type === 'circle') {
         ctx.beginPath();
-        ctx.arc(bounds.x + shape.radius, bounds.y + shape.radius, shape.radius, 0, Math.PI * 2);
+        ctx.arc(
+          bounds.x + shape.radius,
+          bounds.y + shape.radius,
+          shape.radius,
+          0,
+          Math.PI * 2,
+        );
         ctx.stroke();
       }
     }
@@ -467,8 +488,11 @@ export class GridDebugSystem implements SubSystem {
     if (!gridCell) return;
 
     if (this.projection) {
-      const [top, right, bottom, left] = this.projection.getTileDiamond(col, row);
-      ctx.fillStyle = "rgba(255,255,255,0.15)";
+      const [top, right, bottom, left] = this.projection.getTileDiamond(
+        col,
+        row,
+      );
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
       ctx.beginPath();
       ctx.moveTo(top.x, top.y);
       ctx.lineTo(right.x, right.y);
@@ -479,19 +503,24 @@ export class GridDebugSystem implements SubSystem {
     } else {
       const wx = this.grid.origin.x + col * this.grid.cellWidth;
       const wy = this.grid.origin.y + row * this.grid.cellHeight;
-      ctx.fillStyle = "rgba(255,255,255,0.15)";
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
       ctx.fillRect(wx, wy, this.grid.cellWidth, this.grid.cellHeight);
     }
 
-    const text = `(${col},${row}) id:${gridCell.value} ${gridCell.walkable ? "walk" : "solid"}`;
+    const text = `(${col},${row}) id:${gridCell.value} ${gridCell.walkable ? 'walk' : 'solid'}`;
     const pos = this.getCellCenter(col, row);
 
-    ctx.fillStyle = "rgba(0,0,0,0.7)";
-    ctx.fillRect(pos.x - 2, pos.y - this.fontSize - 4, ctx.measureText(text).width + 4, this.fontSize + 4);
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(
+      pos.x - 2,
+      pos.y - this.fontSize - 4,
+      ctx.measureText(text).width + 4,
+      this.fontSize + 4,
+    );
 
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = '#fff';
     ctx.font = `${this.fontSize}px monospace`;
-    ctx.textAlign = "start";
+    ctx.textAlign = 'start';
     ctx.fillText(text, pos.x, pos.y - 4);
   }
 
@@ -522,7 +551,7 @@ export class GridDebugSystem implements SubSystem {
     const lines = [
       `screen: (${this.mouseX.toFixed(0)}, ${this.mouseY.toFixed(0)})`,
       `grid:   (${col}, ${row})`,
-      `bounds: ${this.grid.isInBounds(col, row) ? "yes" : "no"}`,
+      `bounds: ${this.grid.isInBounds(col, row) ? 'yes' : 'no'}`,
     ];
 
     const padding = 4;
@@ -530,19 +559,19 @@ export class GridDebugSystem implements SubSystem {
     const x = padding;
     const y = this.canvasHeight - lines.length * lineHeight - padding;
 
-    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
     ctx.fillRect(x, y, 160, lines.length * lineHeight + padding);
 
-    ctx.fillStyle = "#0f0";
+    ctx.fillStyle = '#0f0';
     ctx.font = `${this.fontSize}px monospace`;
-    ctx.textAlign = "start";
-    ctx.textBaseline = "top";
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'top';
 
     for (let i = 0; i < lines.length; i++) {
       ctx.fillText(lines[i]!, x + padding, y + padding + i * lineHeight);
     }
 
-    ctx.textBaseline = "alphabetic";
+    ctx.textBaseline = 'alphabetic';
   }
 
   // ── Helpers ───────────────────────────────────────────────────────
@@ -561,8 +590,14 @@ export class GridDebugSystem implements SubSystem {
       };
     }
     return {
-      x: this.grid.origin.x + col * this.grid.cellWidth + this.grid.cellWidth / 2,
-      y: this.grid.origin.y + row * this.grid.cellHeight + this.grid.cellHeight / 2,
+      x:
+        this.grid.origin.x
+        + col * this.grid.cellWidth
+        + this.grid.cellWidth / 2,
+      y:
+        this.grid.origin.y
+        + row * this.grid.cellHeight
+        + this.grid.cellHeight / 2,
     };
   }
 }

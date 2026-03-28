@@ -1,7 +1,7 @@
-import Camera from "../core/camera";
-import type { RenderContext } from "../core/renderer/type";
-import type { Vector2 } from "../generic_types";
-import type { SubSystem } from "./types";
+import Camera from '../core/camera';
+import type { RenderContext } from '../core/renderer/type';
+import type { Vector2 } from '../generic_types';
+import type { SubSystem } from './types';
 
 /**
  * CameraSystem is responsible for managing the camera's position and view.
@@ -15,7 +15,7 @@ export class CameraSystem implements SubSystem {
   /**
    * The unique identifier for this subsystem.
    */
-  id = "camera";
+  id = 'camera';
   order = 10;
 
   camera: Camera;
