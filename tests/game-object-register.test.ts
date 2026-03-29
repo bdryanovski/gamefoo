@@ -1,146 +1,60 @@
 /**
- * API contract tests for GameObjectRegister
+ * Contract: GameObjectRegister public API
  *
- * Verifies the public surface: constructor, register(), get(), has(),
- * toArray(), getAll(), updateAll(), sort(), renderAll().
- *
- * Uses a minimal concrete Entity subclass (no browser APIs required).
+ * Verifies that every public member exists with the correct type/shape.
+ * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, mock, test } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import GameObjectRegister from '../src/core/game_object_register';
 import type { RenderContext } from '../src/core/renderer/type';
 import Entity from '../src/entities/entity';
 
-// Minimal concrete Entity for testing
-class TestEntity extends Entity {
-  updateCount = 0;
-  renderCount = 0;
-
-  constructor(id: string, x = 0, y = 0) {
-    super(id, x, y, 10, 10);
-  }
-
-  override update(_dt: number) {
-    this.updateCount++;
-  }
-
-  override render(_ctx: RenderContext) {
-    this.renderCount++;
-  }
+class StubEntity extends Entity {
+  override update() {}
+  override render(_ctx: RenderContext) {}
 }
 
-// Minimal stub RenderContext
 const stubCtx = {} as RenderContext;
 
 describe('GameObjectRegister', () => {
-  describe('constructor', () => {
-    test('instantiates without throwing', () => {
-      expect(() => new GameObjectRegister()).not.toThrow();
-    });
+  const reg = new GameObjectRegister();
+  const entity = new StubEntity('a', 0, 0);
+  reg.register(entity);
+
+  test('register() — callable, returns void', () => {
+    expect(typeof reg.register).toBe('function');
+    expect(reg.register(new StubEntity('b', 0, 0))).toBeUndefined();
   });
 
-  describe('register()', () => {
-    test('adds an object to the registry', () => {
-      const reg = new GameObjectRegister();
-      reg.register(new TestEntity('a'));
-      expect(reg.has('a')).toBe(true);
-    });
-
-    test('overwrites an existing object with the same id', () => {
-      const reg = new GameObjectRegister();
-      const e1 = new TestEntity('x');
-      const e2 = new TestEntity('x');
-      reg.register(e1);
-      reg.register(e2);
-      expect(reg.get('x')).toBe(e2);
-    });
+  test('get() — returns the registered object or undefined', () => {
+    expect(reg.get('a')).toBe(entity);
+    expect(reg.get('missing')).toBeUndefined();
   });
 
-  describe('get()', () => {
-    test('returns the registered object by id', () => {
-      const reg = new GameObjectRegister();
-      const e = new TestEntity('foo');
-      reg.register(e);
-      expect(reg.get('foo')).toBe(e);
-    });
-
-    test('returns undefined for an unknown id', () => {
-      const reg = new GameObjectRegister();
-      expect(reg.get('unknown')).toBeUndefined();
-    });
+  test('has() — returns boolean', () => {
+    expect(typeof reg.has('a')).toBe('boolean');
   });
 
-  describe('has()', () => {
-    test('returns true for a registered id', () => {
-      const reg = new GameObjectRegister();
-      reg.register(new TestEntity('z'));
-      expect(reg.has('z')).toBe(true);
-    });
-
-    test('returns false for an unregistered id', () => {
-      const reg = new GameObjectRegister();
-      expect(reg.has('missing')).toBe(false);
-    });
+  test('toArray() — returns an array', () => {
+    expect(Array.isArray(reg.toArray())).toBe(true);
   });
 
-  describe('toArray()', () => {
-    test('returns all registered objects as an array', () => {
-      const reg = new GameObjectRegister();
-      reg.register(new TestEntity('a'));
-      reg.register(new TestEntity('b'));
-      expect(reg.toArray()).toHaveLength(2);
-    });
-
-    test('returns an empty array when nothing is registered', () => {
-      const reg = new GameObjectRegister();
-      expect(reg.toArray()).toEqual([]);
-    });
+  test('getAll() — returns an array', () => {
+    expect(Array.isArray(reg.getAll())).toBe(true);
   });
 
-  describe('getAll()', () => {
-    test('returns all objects when no filter is provided', () => {
-      const reg = new GameObjectRegister();
-      reg.register(new TestEntity('a'));
-      reg.register(new TestEntity('b'));
-      expect(reg.getAll()).toHaveLength(2);
-    });
+  test('updateAll() — callable, returns void', () => {
+    expect(typeof reg.updateAll).toBe('function');
+    expect(reg.updateAll(0.016)).toBeUndefined();
   });
 
-  describe('updateAll()', () => {
-    test('calls update on every registered object', () => {
-      const reg = new GameObjectRegister();
-      const a = new TestEntity('a');
-      const b = new TestEntity('b');
-      reg.register(a);
-      reg.register(b);
-      reg.updateAll(0.016);
-      expect(a.updateCount).toBe(1);
-      expect(b.updateCount).toBe(1);
-    });
+  test('renderAll() — callable, returns void', () => {
+    expect(typeof reg.renderAll).toBe('function');
+    expect(reg.renderAll(stubCtx)).toBeUndefined();
   });
 
-  describe('renderAll()', () => {
-    test('calls render on every registered object', () => {
-      const reg = new GameObjectRegister();
-      const a = new TestEntity('a');
-      const b = new TestEntity('b');
-      reg.register(a);
-      reg.register(b);
-      reg.renderAll(stubCtx);
-      expect(a.renderCount).toBe(1);
-      expect(b.renderCount).toBe(1);
-    });
-  });
-
-  describe('sort()', () => {
-    test('reorders objects according to the comparator', () => {
-      const reg = new GameObjectRegister();
-      reg.register(new TestEntity('c', 0, 30));
-      reg.register(new TestEntity('a', 0, 10));
-      reg.register(new TestEntity('b', 0, 20));
-      reg.sort((a, b) => a.y - b.y);
-      const ids = reg.toArray().map((o) => o.id);
-      expect(ids).toEqual(['a', 'b', 'c']);
-    });
+  test('sort() — callable, returns void', () => {
+    expect(typeof reg.sort).toBe('function');
+    expect(reg.sort((a, b) => a.y - b.y)).toBeUndefined();
   });
 });

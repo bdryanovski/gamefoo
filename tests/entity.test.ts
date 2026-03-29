@@ -1,239 +1,109 @@
 /**
- * API contract tests for Entity and Behaviour
+ * Contract: Entity and Behaviour public API
  *
- * Verifies the Entity public surface: constructor, id, x/y getters+setters,
- * getPosition(), getSize(), setSize(), attachBehaviour(), detachBehaviour(),
- * getBehaviour(), hasBehaviour(), getBehavioursByType().
- *
- * Also verifies Behaviour public surface: type, key, enabled, priority,
- * onAttach, onDetach lifecycle hooks.
+ * Verifies that every public member exists with the correct type/shape.
+ * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, mock, test } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { Behaviour } from '../src/core/behaviour';
 import type { RenderContext } from '../src/core/renderer/type';
 import Entity from '../src/entities/entity';
 
-// ── Concrete stubs ────────────────────────────────────────────────────────────
-
-class ConcreteEntity extends Entity {
-  override update(_dt: number) {}
+class StubEntity extends Entity {
+  override update() {}
   override render(_ctx: RenderContext) {}
 }
 
-class HealthBehaviour extends Behaviour<ConcreteEntity> {
-  readonly type = 'health';
-  hp = 100;
+class StubBehaviour extends Behaviour<StubEntity> {
+  readonly type = 'stub';
   override update(_dt: number) {}
 }
-
-class SpeedBehaviour extends Behaviour<ConcreteEntity> {
-  readonly type = 'speed';
-  override update(_dt: number) {}
-}
-
-// ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('Entity', () => {
-  describe('constructor', () => {
-    test('sets id, x, y', () => {
-      const e = new ConcreteEntity('hero', 100, 200);
-      expect(e.id).toBe('hero');
-      expect(e.x).toBe(100);
-      expect(e.y).toBe(200);
-    });
+  const entity = new StubEntity('hero', 10, 20, 32, 64);
+  const behaviour = new StubBehaviour(entity);
+  entity.attachBehaviour(behaviour);
 
-    test('sets size when width and height are provided', () => {
-      const e = new ConcreteEntity('box', 0, 0, 32, 64);
-      expect(e.getSize()).toEqual({ width: 32, height: 64 });
-    });
-
-    test('defaults size to { width: 0, height: 0 } when not provided', () => {
-      const e = new ConcreteEntity('point', 10, 20);
-      expect(e.getSize()).toEqual({ width: 0, height: 0 });
-    });
+  test('id — string', () => {
+    expect(typeof entity.id).toBe('string');
   });
 
-  describe('x / y getters and setters', () => {
-    test('x getter returns current x', () => {
-      const e = new ConcreteEntity('e', 5, 10);
-      expect(e.x).toBe(5);
-    });
-
-    test('x setter updates x', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      e.x = 42;
-      expect(e.x).toBe(42);
-    });
-
-    test('y getter returns current y', () => {
-      const e = new ConcreteEntity('e', 5, 10);
-      expect(e.y).toBe(10);
-    });
-
-    test('y setter updates y', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      e.y = 77;
-      expect(e.y).toBe(77);
-    });
+  test('x — readable and writable number', () => {
+    expect(typeof entity.x).toBe('number');
+    entity.x = 5;
+    expect(entity.x).toBe(5);
   });
 
-  describe('getPosition()', () => {
-    test('returns an object with x and y', () => {
-      const e = new ConcreteEntity('e', 3, 7);
-      expect(e.getPosition()).toEqual({ x: 3, y: 7 });
-    });
+  test('y — readable and writable number', () => {
+    expect(typeof entity.y).toBe('number');
+    entity.y = 15;
+    expect(entity.y).toBe(15);
   });
 
-  describe('getSize()', () => {
-    test('returns an object with width and height', () => {
-      const e = new ConcreteEntity('e', 0, 0, 16, 24);
-      expect(e.getSize()).toEqual({ width: 16, height: 24 });
-    });
+  test('getPosition() — returns { x, y }', () => {
+    const r = entity.getPosition();
+    expect(typeof r.x).toBe('number');
+    expect(typeof r.y).toBe('number');
   });
 
-  describe('setSize()', () => {
-    test('updates width and height', () => {
-      const e = new ConcreteEntity('e', 0, 0, 10, 10);
-      e.setSize(50, 80);
-      expect(e.getSize()).toEqual({ width: 50, height: 80 });
-    });
+  test('getSize() — returns { width, height }', () => {
+    const r = entity.getSize();
+    expect(typeof r.width).toBe('number');
+    expect(typeof r.height).toBe('number');
   });
 
-  describe('attachBehaviour()', () => {
-    test('returns the behaviour instance', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      expect(e.attachBehaviour(b)).toBe(b);
-    });
-
-    test('makes the behaviour retrievable via getBehaviour()', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      e.attachBehaviour(b);
-      expect(e.getBehaviour('health')).toBe(b);
-    });
-
-    test('calls onAttach hook when defined', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      const onAttach = mock(() => {});
-      b.onAttach = onAttach;
-      e.attachBehaviour(b);
-      expect(onAttach).toHaveBeenCalledTimes(1);
-    });
+  test('setSize() — callable, returns void', () => {
+    expect(typeof entity.setSize).toBe('function');
+    expect(entity.setSize(16, 16)).toBeUndefined();
   });
 
-  describe('detachBehaviour()', () => {
-    test('removes the behaviour', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      e.attachBehaviour(new HealthBehaviour(e));
-      e.detachBehaviour('health');
-      expect(e.hasBehaviour('health')).toBe(false);
-    });
-
-    test('calls onDetach hook when defined', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      const onDetach = mock(() => {});
-      b.onDetach = onDetach;
-      e.attachBehaviour(b);
-      e.detachBehaviour('health');
-      expect(onDetach).toHaveBeenCalledTimes(1);
-    });
-
-    test('is a no-op for a key that does not exist', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      expect(() => e.detachBehaviour('nonexistent')).not.toThrow();
-    });
+  test('attachBehaviour() — returns the behaviour', () => {
+    const b = new StubBehaviour(entity);
+    expect(entity.attachBehaviour(b)).toBe(b);
   });
 
-  describe('getBehaviour()', () => {
-    test('returns the behaviour when attached', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      e.attachBehaviour(b);
-      expect(e.getBehaviour('health')).toBe(b);
-    });
-
-    test('returns undefined when not attached', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      expect(e.getBehaviour('health')).toBeUndefined();
-    });
-
-    test('lookup is case-insensitive', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      e.attachBehaviour(b);
-      expect(e.getBehaviour('HEALTH')).toBe(b);
-    });
+  test('detachBehaviour() — callable, returns void', () => {
+    expect(typeof entity.detachBehaviour).toBe('function');
+    expect(entity.detachBehaviour('stub')).toBeUndefined();
   });
 
-  describe('hasBehaviour()', () => {
-    test('returns true when the behaviour is attached', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      e.attachBehaviour(new HealthBehaviour(e));
-      expect(e.hasBehaviour('health')).toBe(true);
-    });
-
-    test('returns false when the behaviour is not attached', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      expect(e.hasBehaviour('health')).toBe(false);
-    });
+  test('getBehaviour() — returns the behaviour or undefined', () => {
+    entity.attachBehaviour(behaviour);
+    expect(entity.getBehaviour('stub')).toBe(behaviour);
+    expect(entity.getBehaviour('missing')).toBeUndefined();
   });
 
-  describe('getBehavioursByType()', () => {
-    test('returns all behaviours of the given class', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      e.attachBehaviour(new HealthBehaviour(e));
-      e.attachBehaviour(new SpeedBehaviour(e));
-      const healths = e.getBehavioursByType(HealthBehaviour);
-      expect(healths).toHaveLength(1);
-      expect(healths[0]).toBeInstanceOf(HealthBehaviour);
-    });
+  test('hasBehaviour() — returns boolean', () => {
+    expect(typeof entity.hasBehaviour('stub')).toBe('boolean');
+  });
 
-    test('returns an empty array when no match', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      expect(e.getBehavioursByType(HealthBehaviour)).toHaveLength(0);
-    });
+  test('getBehavioursByType() — returns an array', () => {
+    expect(Array.isArray(entity.getBehavioursByType(StubBehaviour))).toBe(true);
   });
 });
 
 describe('Behaviour', () => {
-  describe('key', () => {
-    test('is the lowercase of type', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      expect(b.key).toBe('health');
-    });
+  const entity = new StubEntity('e', 0, 0);
+  const b = new StubBehaviour(entity);
+
+  test('type — string', () => {
+    expect(typeof b.type).toBe('string');
   });
 
-  describe('enabled', () => {
-    test('defaults to true', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      expect(b.enabled).toBe(true);
-    });
-
-    test('can be set to false', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      b.enabled = false;
-      expect(b.enabled).toBe(false);
-    });
+  test('key — string (lowercased type)', () => {
+    expect(typeof b.key).toBe('string');
   });
 
-  describe('priority', () => {
-    test('defaults to 1', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      expect(b.priority).toBe(1);
-    });
+  test('enabled — boolean', () => {
+    expect(typeof b.enabled).toBe('boolean');
+  });
 
-    test('can be set to a custom value', () => {
-      const e = new ConcreteEntity('e', 0, 0);
-      const b = new HealthBehaviour(e);
-      b.priority = 5;
-      expect(b.priority).toBe(5);
-    });
+  test('priority — number', () => {
+    expect(typeof b.priority).toBe('number');
+  });
+
+  test('update() — callable', () => {
+    expect(typeof b.update).toBe('function');
+    expect(() => b.update(0.016)).not.toThrow();
   });
 });

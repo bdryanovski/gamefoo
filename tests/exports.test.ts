@@ -1,81 +1,72 @@
 /**
- * API contract test: public exports surface
+ * Contract: public exports surface
  *
- * Verifies that every symbol declared in src/index.ts is exported and
- * resolves to the expected kind (class constructor / function / object).
- *
- * This test intentionally imports from the source barrel so it catches
- * regressions caused by accidentally removing or renaming an export.
+ * One test per exported name. Fails if a symbol is removed or renamed.
+ * Add a new test here whenever a new export is added to src/index.ts.
  */
 import { describe, expect, test } from 'bun:test';
 import * as Gamefoo from '../src/index';
 
-describe('Public exports — existence', () => {
-  // ── Classes (constructors) ────────────────────────────────────────
-
+describe('exports — classes', () => {
   const classes = [
     'Asset',
     'Behaviour',
+    'Camera',
     'Collidable',
     'Control',
-    'HealthKit',
-    'PathFollower',
-    'SpriteRender',
-    'TerminalRender',
-    'Camera',
+    'DynamicEntity',
     'Engine',
     'EnhancedCamera',
+    'Entity',
     'FontBitmap',
     'GameObjectRegister',
     'Grid',
-    'IsometricProjection',
+    'GridDebugSystem',
+    'HealthKit',
     'IconBitmap',
     'Input',
-    'TerminalInputDriver',
     'IntervalLoopDriver',
+    'IsometricCameraSystem',
+    'IsometricProjection',
+    'MapGenerator',
+    'Monitor',
+    'MonitorSystem',
+    'ObjectSystem',
+    'PathFollower',
+    'Pathfinder',
+    'PerlinNoise',
+    'Player',
     'RAFLoopDriver',
-    'TerminalRenderContext',
-    'WebRenderer',
+    'CameraSystem',
+    'CollisionSystem',
     'Sprite',
+    'SpriteRender',
     'StateMachine',
+    'Text',
+    'TerminalInputDriver',
+    'TerminalRender',
+    'TerminalRenderContext',
     'TileLayer',
     'TileMap',
     'TilemapSystem',
     'TileSet',
-    'MapGenerator',
-    'Pathfinder',
-    'PerlinNoise',
+    'WebRenderer',
     'World',
-    'GridDebugSystem',
-    'Monitor',
-    'DynamicEntity',
-    'Entity',
-    'Player',
-    'Text',
-    'CameraSystem',
-    'CollisionSystem',
-    'IsometricCameraSystem',
-    'MonitorSystem',
-    'ObjectSystem',
   ] as const;
 
   for (const name of classes) {
-    test(`${name} is exported as a constructor`, () => {
-      const exported = (Gamefoo as Record<string, unknown>)[name];
-      expect(exported).toBeDefined();
-      expect(typeof exported).toBe('function');
+    test(name, () => {
+      expect(typeof (Gamefoo as Record<string, unknown>)[name]).toBe('function');
     });
   }
+});
 
-  // ── Functions ─────────────────────────────────────────────────────
+describe('exports — functions', () => {
+  const fns = ['createBunLoop', 'createTerminalLoop', 'log'] as const;
 
-  const functions = ['createBunLoop', 'createTerminalLoop', 'log'] as const;
-
-  for (const name of functions) {
-    test(`${name} is exported as a function`, () => {
-      const exported = (Gamefoo as Record<string, unknown>)[name];
-      expect(exported).toBeDefined();
-      expect(typeof exported).toBe('function');
+  for (const name of fns) {
+    test(name, () => {
+      expect(typeof (Gamefoo as Record<string, unknown>)[name]).toBe('function');
     });
   }
 });
