@@ -48,6 +48,7 @@
     "docs:dev": "npm run docs:generate && astro dev --root ./docs",
     "docs:preview": "astro preview --root ./docs",
     "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial",
+    "test": "bun test tests/",
     "test:publish": "bun run --cwd publish-test sanity"
   },
   "dependencies": {
