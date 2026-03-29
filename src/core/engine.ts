@@ -3,8 +3,6 @@ import type { LoopDriver } from './renderer/loops/loop';
 import { RAFLoopDriver } from './renderer/loops/loop';
 import type { RenderContext } from './renderer/type';
 
-const DEFAULT_GAME_SCALE = 1;
-
 /**
  * Configuration options for the {@link Engine}.
  *
@@ -16,7 +14,6 @@ const DEFAULT_GAME_SCALE = 1;
  * ```ts
  * const config: EngineConfig = {
  *   backgroundColor: "#1a1a2e",
- *   gameScale: 2,
  * };
  * const engine = new Engine(renderer, config);
  * ```
@@ -32,17 +29,6 @@ interface EngineConfig {
    * @defaultValue `"#000000"`
    */
   backgroundColor?: string;
-
-  /**
-   * Global scale factor passed to the renderer once on construction.
-   *
-   * Values > 1 zoom the output in; < 1 zoom out. Note that the engine's
-   * logical `width` / `height` (from the renderer) remain unchanged — only
-   * the rendered output is scaled.
-   *
-   * @defaultValue `1`
-   */
-  gameScale?: number;
 
   /**
    * The {@link LoopDriver} that drives the frame loop.
@@ -187,16 +173,7 @@ export default class Engine {
    */
   private cnf: EngineConfig = {
     backgroundColor: '#000000',
-    gameScale: 1,
   };
-
-  /**
-   * The global scale factor applied to the renderer on construction.
-   *
-   * Exposed as `public` for read access; to change scale after
-   * construction call `renderer.scale(x, y)` directly.
-   */
-  public scale: number = DEFAULT_GAME_SCALE;
 
   /**
    * The {@link LoopDriver} responsible for invoking the game tick.
@@ -242,7 +219,6 @@ export default class Engine {
     this.cnf = { ...this.cnf, ...config };
     this.width = renderer.width;
     this.height = renderer.height;
-    this.scale = this.cnf.gameScale ?? DEFAULT_GAME_SCALE;
     this.loopDriver = config.loopDriver ?? new RAFLoopDriver();
   }
 

@@ -2,7 +2,7 @@
 title: 'Class: Collidable'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: Collidable'
 
 # Class: Collidable
 
-Defined in: [core/behaviours/collidable.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L140)
+Defined in: [core/behaviours/collidable.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L145)
 
 Collision behaviour that can be attached to any [Entity](Entity.md).
 
@@ -76,7 +76,7 @@ new Collidable(
    options: CollidableOptions): Collidable;
 ```
 
-Defined in: [core/behaviours/collidable.ts:204](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L204)
+Defined in: [core/behaviours/collidable.ts:209](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L209)
 
 Creates a new collidable behaviour.
 
@@ -100,18 +100,18 @@ Creates a new collidable behaviour.
 
 | Property | Modifier | Type | Default value | Description | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="collideswith"></a> `collidesWith` | `public` | `Set`\<`string`\> | empty `Set` | Tags this collider wants to be notified about. | - | - | [core/behaviours/collidable.ts:171](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L171) |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L91) |
-| <a id="fixed"></a> `fixed` | `public` | `boolean` | `false` | Whether the owning entity is immovable during overlap resolution. | - | - | [core/behaviours/collidable.ts:185](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L185) |
-| <a id="layer"></a> `layer` | `public` | `number` | `0` | Collision layer. Only colliders sharing the same layer value are tested. | - | - | [core/behaviours/collidable.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L157) |
-| <a id="oncollision"></a> `onCollision` | `public` | (`info`: [`CollisionInfo`](../interfaces/CollisionInfo.md)) => `void` | `undefined` | User-supplied callback invoked when a tag-matched collision is detected. | - | - | [core/behaviours/collidable.ts:191](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L191) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L81) |
-| <a id="shape"></a> `shape` | `public` | [`ColliderShape`](../type-aliases/ColliderShape.md) | `undefined` | Geometric shape used for intersection tests. **See** [ColliderShape](../type-aliases/ColliderShape.md) | - | - | [core/behaviours/collidable.ts:149](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L149) |
-| <a id="solid"></a> `solid` | `public` | `boolean` | `false` | Whether this collider participates in overlap resolution. | - | - | [core/behaviours/collidable.ts:178](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L178) |
-| <a id="tags"></a> `tags` | `public` | `Set`\<`string`\> | empty `Set` | Tags identifying this collider (e.g. `"player"`, `"enemy"`). | - | - | [core/behaviours/collidable.ts:164](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L164) |
-| <a id="type"></a> `type` | `readonly` | `"collidable"` | `"collidable"` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/collidable.ts:142](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L142) |
-| <a id="owner"></a> `owner` | `protected` | [`GameObject`](../type-aliases/GameObject.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
-| <a id="world"></a> `world` | `private` | [`World`](World.md) | `undefined` | Reference to the [World](World.md) this collider is registered with. | - | - | [core/behaviours/collidable.ts:194](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L194) |
+| <a id="collideswith"></a> `collidesWith` | `public` | `Set`\<`string`\> | empty `Set` | Tags this collider wants to be notified about. | - | - | [core/behaviours/collidable.ts:176](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L176) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L92) |
+| <a id="fixed"></a> `fixed` | `public` | `boolean` | `false` | Whether the owning entity is immovable during overlap resolution. | - | - | [core/behaviours/collidable.ts:190](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L190) |
+| <a id="layer"></a> `layer` | `public` | `number` | `0` | Collision layer. Only colliders sharing the same layer value are tested. | - | - | [core/behaviours/collidable.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L162) |
+| <a id="oncollision"></a> `onCollision` | `public` | (`info`: [`CollisionInfo`](../interfaces/CollisionInfo.md)) => `void` | `undefined` | User-supplied callback invoked when a tag-matched collision is detected. | - | - | [core/behaviours/collidable.ts:196](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L196) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L82) |
+| <a id="shape"></a> `shape` | `public` | [`ColliderShape`](../type-aliases/ColliderShape.md) | `undefined` | Geometric shape used for intersection tests. **See** [ColliderShape](../type-aliases/ColliderShape.md) | - | - | [core/behaviours/collidable.ts:154](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L154) |
+| <a id="solid"></a> `solid` | `public` | `boolean` | `false` | Whether this collider participates in overlap resolution. | - | - | [core/behaviours/collidable.ts:183](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L183) |
+| <a id="tags"></a> `tags` | `public` | `Set`\<`string`\> | empty `Set` | Tags identifying this collider (e.g. `"player"`, `"enemy"`). | - | - | [core/behaviours/collidable.ts:169](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L169) |
+| <a id="type"></a> `type` | `readonly` | `"collidable"` | `'collidable'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/collidable.ts:147](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L147) |
+| <a id="owner"></a> `owner` | `protected` | [`GameObject`](../type-aliases/GameObject.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L55) |
+| <a id="world"></a> `world` | `private` | [`World`](World.md) | `undefined` | Reference to the [World](World.md) this collider is registered with. | - | - | [core/behaviours/collidable.ts:199](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L199) |
 
 ## Accessors
 
@@ -123,7 +123,7 @@ Creates a new collidable behaviour.
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L99)
+Defined in: [core/behaviour.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L100)
 
 Derived look-up key, equal to [Behaviour.type](Behaviour.md#type) in lowercase.
 
@@ -146,7 +146,7 @@ case-insensitive.
 getOwner(): Entity;
 ```
 
-Defined in: [core/behaviours/collidable.ts:259](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L259)
+Defined in: [core/behaviours/collidable.ts:264](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L264)
 
 Returns the [Entity](Entity.md) that owns this behaviour.
 
@@ -167,7 +167,7 @@ The owning entity.
 getWorldBounds(): WorldBounds;
 ```
 
-Defined in: [core/behaviours/collidable.ts:275](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L275)
+Defined in: [core/behaviours/collidable.ts:280](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L280)
 
 Computes this collider's axis-aligned bounding rectangle in
 world-space, accounting for the shape's optional offset.
@@ -193,7 +193,7 @@ const bounds = collidable.getWorldBounds();
 onAttach(): void;
 ```
 
-Defined in: [core/behaviours/collidable.ts:237](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L237)
+Defined in: [core/behaviours/collidable.ts:242](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L242)
 
 Lifecycle hook: registers this collider with the [World](World.md)
 when the behaviour is attached to an entity.
@@ -218,7 +218,7 @@ when the behaviour is attached to an entity.
 onDetach(): void;
 ```
 
-Defined in: [core/behaviours/collidable.ts:247](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L247)
+Defined in: [core/behaviours/collidable.ts:252](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L252)
 
 Lifecycle hook: removes this collider from the [World](World.md)
 when the behaviour is detached.
@@ -240,10 +240,10 @@ when the behaviour is detached.
 ### render()?
 
 ```ts
-optional render(ctx: CanvasRenderingContext2D): void;
+optional render(ctx: RenderContext): void;
 ```
 
-Defined in: [core/behaviour.ts:127](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L127)
+Defined in: [core/behaviour.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L128)
 
 Optional rendering hook invoked after the entity's own
 [Entity.render](Entity.md#render) call.
@@ -254,7 +254,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context. |
 
 #### Returns
 
@@ -272,7 +272,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 update(_deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/collidable.ts:229](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L229)
+Defined in: [core/behaviours/collidable.ts:234](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/collidable.ts#L234)
 
 No-op — collision logic lives in [World.detect](World.md#detect).
 

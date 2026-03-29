@@ -2,7 +2,7 @@
 title: 'Class: Asset'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 

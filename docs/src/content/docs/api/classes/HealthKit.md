@@ -2,7 +2,7 @@
 title: 'Class: HealthKit'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -86,10 +86,10 @@ Creates a new health behaviour.
 
 | Property | Modifier | Type | Default value | Description | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L91) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L81) |
-| <a id="type"></a> `type` | `readonly` | `"healthkit"` | `"healthkit"` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:39](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L39) |
-| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L54) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L92) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L82) |
+| <a id="type"></a> `type` | `readonly` | `"healthkit"` | `'healthkit'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:39](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L39) |
+| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L55) |
 | <a id="health"></a> `health` | `private` | `number` | `undefined` | Current health points. | - | - | [core/behaviours/healtkit.ts:42](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L42) |
 | <a id="maxhp"></a> `maxHP` | `private` | `number` | `undefined` | Maximum health points (healing cap). | - | - | [core/behaviours/healtkit.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L45) |
 
@@ -103,7 +103,7 @@ Creates a new health behaviour.
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L99)
+Defined in: [core/behaviour.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L100)
 
 Derived look-up key, equal to [Behaviour.type](Behaviour.md#type) in lowercase.
 
@@ -244,7 +244,7 @@ if (healthkit.isDead()) {
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L136)
+Defined in: [core/behaviour.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L137)
 
 Lifecycle hook called immediately after the behaviour is attached
 to an entity via [Entity.attachBehaviour](Entity.md#attachbehaviour).
@@ -268,7 +268,7 @@ collision [World](World.md).
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:144](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L144)
+Defined in: [core/behaviour.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L145)
 
 Lifecycle hook called when the behaviour is removed from an entity
 via [Entity.detachBehaviour](Entity.md#detachbehaviour).
@@ -288,10 +288,10 @@ Use this to unregister from external systems or release resources.
 ### render()?
 
 ```ts
-optional render(ctx: CanvasRenderingContext2D): void;
+optional render(ctx: RenderContext): void;
 ```
 
-Defined in: [core/behaviour.ts:127](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L127)
+Defined in: [core/behaviour.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L128)
 
 Optional rendering hook invoked after the entity's own
 [Entity.render](Entity.md#render) call.
@@ -302,7 +302,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context. |
 
 #### Returns
 

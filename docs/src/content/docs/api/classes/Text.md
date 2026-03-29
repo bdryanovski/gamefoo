@@ -2,7 +2,7 @@
 title: 'Abstract Class: Text'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Abstract Class: Text'
 
 # Abstract Class: Text
 
-Defined in: [entities/text.ts:16](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L16)
+Defined in: [entities/text.ts:19](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L19)
 
 Abstract base class for Text and Label alike objects
 
@@ -35,10 +35,13 @@ keep track of text objects and interact with them
 ### Constructor
 
 ```ts
-new Text(id: string, fontName: string): Text;
+new Text(
+   id: string, 
+   fontName: InternalBitmapFontName, 
+   color?: string): Text;
 ```
 
-Defined in: [entities/text.ts:36](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L36)
+Defined in: [entities/text.ts:47](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L47)
 
 Create new Text object that could be placed and render on the screen
 
@@ -47,7 +50,8 @@ Create new Text object that could be placed and render on the screen
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `id` | `string` | - |
-| `fontName` | `string` | the FontBitmap valid name to load |
+| `fontName` | [`InternalBitmapFontName`](../type-aliases/InternalBitmapFontName.md) | the FontBitmap valid name to load |
+| `color?` | `string` | text color (optional) |
 
 #### Returns
 
@@ -56,7 +60,7 @@ Create new Text object that could be placed and render on the screen
 #### Example
 
 ```ts
-const Label = new Text('5x5', 20, 20);
+const Label = new Text('CustomLabel', '5x5');
 ```
 
 #### Overrides
@@ -67,12 +71,13 @@ const Label = new Text('5x5', 20, 20);
 
 | Property | Modifier | Type | Default value | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [`Entity`](Entity.md).[`id`](Entity.md#id) | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
-| <a id="font"></a> `font` | `protected` | [`FontBitmap`](FontBitmap.md) | `undefined` | BitmapFont instance used to manipulate the font | - | [entities/text.ts:21](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L21) |
-| <a id="fontname"></a> `fontName` | `protected` | `string` | `undefined` | Bitmap font name to load internally | - | [entities/text.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L18) |
-| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [`Entity`](Entity.md).[`position`](Entity.md#position) | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
-| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [`Entity`](Entity.md).[`size`](Entity.md#size) | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
-| <a id="text"></a> `text` | `protected` | `string` | `""` | Internal state of the text needed to be update | - | [entities/text.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L24) |
+| <a id="id"></a> `id` | `public` | `string` | `''` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [`Entity`](Entity.md).[`id`](Entity.md#id) | [entities/entity.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L61) |
+| <a id="color"></a> `color?` | `protected` | `string` | `'#FFFFFF'` | Text color (optional) **Since** 0.4.0 | - | [entities/text.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L34) |
+| <a id="font"></a> `font` | `protected` | [`FontBitmap`](FontBitmap.md) | `undefined` | BitmapFont instance used to manipulate the font | - | [entities/text.ts:24](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L24) |
+| <a id="fontname"></a> `fontName` | `protected` | `string` | `undefined` | Bitmap font name to load internally | - | [entities/text.ts:21](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L21) |
+| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [`Entity`](Entity.md).[`position`](Entity.md#position) | [entities/entity.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L66) |
+| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [`Entity`](Entity.md).[`size`](Entity.md#size) | [entities/entity.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L71) |
+| <a id="text"></a> `text` | `protected` | `string` | `''` | Internal state of the text needed to be update | - | [entities/text.ts:27](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L27) |
 
 ## Accessors
 
@@ -84,7 +89,7 @@ const Label = new Text('5x5', 20, 20);
 get x(): number;
 ```
 
-Defined in: [entities/entity.ts:88](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L88)
+Defined in: [entities/entity.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L89)
 
 Horizontal position of the entity (shorthand for
 `position.x`).
@@ -99,7 +104,7 @@ Horizontal position of the entity (shorthand for
 set x(value: number): void;
 ```
 
-Defined in: [entities/entity.ts:93](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L93)
+Defined in: [entities/entity.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L94)
 
 Sets the horizontal position.
 
@@ -127,7 +132,7 @@ Sets the horizontal position.
 get y(): number;
 ```
 
-Defined in: [entities/entity.ts:101](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L101)
+Defined in: [entities/entity.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L102)
 
 Vertical position of the entity (shorthand for
 `position.y`).
@@ -142,7 +147,7 @@ Vertical position of the entity (shorthand for
 set y(value: number): void;
 ```
 
-Defined in: [entities/entity.ts:106](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L106)
+Defined in: [entities/entity.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L107)
 
 Sets the vertical position.
 
@@ -170,7 +175,7 @@ Sets the vertical position.
 get private behaviors(): Behaviour<Entity>[];
 ```
 
-Defined in: [entities/entity.ts:284](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L284)
+Defined in: [entities/entity.ts:293](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L293)
 
 **`Internal`**
 
@@ -194,7 +199,7 @@ only re-computed when behaviours are added or removed.
 attachBehaviour<T>(behavior: T): T;
 ```
 
-Defined in: [entities/entity.ts:244](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L244)
+Defined in: [entities/entity.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L253)
 
 Attaches a behaviour to this entity.
 
@@ -239,7 +244,7 @@ hk.takeDamage(10);
 detachBehaviour(key: string): void;
 ```
 
-Defined in: [entities/entity.ts:266](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L266)
+Defined in: [entities/entity.ts:275](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L275)
 
 Detaches a behaviour by its key and calls
 [onDetach](Behaviour.md#ondetach) if defined.
@@ -272,7 +277,7 @@ entity.detachBehaviour("collidable");
 getBehaviour<T>(key: string): T | undefined;
 ```
 
-Defined in: [entities/entity.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L195)
+Defined in: [entities/entity.ts:202](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L202)
 
 Retrieves a behaviour by its key (case-insensitive).
 
@@ -313,7 +318,7 @@ if (ctrl) ctrl.enabled = false;
 getBehavioursByType<T>(type: (...args: any[]) => T): T[];
 ```
 
-Defined in: [entities/entity.ts:212](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L212)
+Defined in: [entities/entity.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L219)
 
 Returns all attached behaviours that are instances of the given
 class.
@@ -354,7 +359,7 @@ const renderers = entity.getBehavioursByType(SpriteRender);
 getPosition(): Vector2;
 ```
 
-Defined in: [entities/entity.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L157)
+Defined in: [entities/entity.ts:164](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L164)
 
 Returns a **copy** of the entity's current position.
 
@@ -376,7 +381,7 @@ A new [Vector2](../interfaces/Vector2.md) with the entity's `x` and `y`.
 getSize(): Demension;
 ```
 
-Defined in: [entities/entity.ts:166](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L166)
+Defined in: [entities/entity.ts:173](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L173)
 
 Returns a **copy** of the entity's bounding dimensions.
 
@@ -398,7 +403,7 @@ An object with `width` and `height`.
 getText(): string;
 ```
 
-Defined in: [entities/text.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L62)
+Defined in: [entities/text.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L77)
 
 Get the internal state of the object
 
@@ -416,7 +421,7 @@ string
 hasBehaviour(key: string): boolean;
 ```
 
-Defined in: [entities/entity.ts:223](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L223)
+Defined in: [entities/entity.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L232)
 
 Checks whether a behaviour with the given key is attached.
 
@@ -441,18 +446,20 @@ Checks whether a behaviour with the given key is attached.
 ### render()
 
 ```ts
-render(ctx: CanvasRenderingContext2D): void;
+render(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/text.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L66)
+Defined in: [entities/text.ts:86](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L86)
 
-Draws the entity to the canvas.
+Render the text using the BitmapFont instance.
+On canvas: uses Path2D glyph rendering.
+On terminal: delegates to drawText.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The 2-D rendering context. |
+| Parameter | Type |
+| ------ | ------ |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) |
 
 #### Returns
 
@@ -470,7 +477,7 @@ Draws the entity to the canvas.
 setSize(width: number, height: number): void;
 ```
 
-Defined in: [entities/entity.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L177)
+Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
 
 Set size of the entity
 
@@ -503,7 +510,7 @@ void
 setText(text: string): void;
 ```
 
-Defined in: [entities/text.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L51)
+Defined in: [entities/text.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/text.ts#L66)
 
 Set internal state value
 
@@ -527,7 +534,7 @@ void
 abstract update(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L143)
+Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
 
 Advances the entity's state by one frame.
 
@@ -550,10 +557,10 @@ Advances the entity's state by one frame.
 ### renderBehaviours()
 
 ```ts
-protected renderBehaviours(ctx: CanvasRenderingContext2D): void;
+protected renderBehaviours(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/entity.ts:315](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L315)
+Defined in: [entities/entity.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L326)
 
 Calls [render(ctx)](Behaviour.md#render) on every enabled
 behaviour that defines a render method, in priority order.
@@ -564,7 +571,7 @@ Typically called from a subclass's `render` implementation.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context. |
 
 #### Returns
 
@@ -582,7 +589,7 @@ Typically called from a subclass's `render` implementation.
 protected updateBehaviours(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:299](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L299)
+Defined in: [entities/entity.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L310)
 
 Calls [update(deltaTime)](Behaviour.md#update) on every
 enabled behaviour, in priority order.

@@ -2,7 +2,7 @@
 title: 'Abstract Class: Entity'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Abstract Class: Entity'
 
 # Abstract Class: Entity
 
-Defined in: [entities/entity.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L53)
+Defined in: [entities/entity.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L54)
 
 Abstract base class for every game entity in the GameFoo engine.
 
@@ -41,7 +41,7 @@ class Wall extends Entity {
 
   update(_dt: number) {}
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: RenderContext) {
     ctx.fillStyle = "#888";
     ctx.fillRect(this.x, this.y, this.size.width, this.size.height);
   }
@@ -81,7 +81,7 @@ new Entity(
    height?: number): Entity;
 ```
 
-Defined in: [entities/entity.ts:129](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L129)
+Defined in: [entities/entity.ts:130](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L130)
 
 Creates a new entity.
 
@@ -114,11 +114,11 @@ class Crate extends Entity {
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `public` | `string` | `""` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [entities/entity.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L60) |
-| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [entities/entity.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L65) |
-| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
-| <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | Priority-sorted cache of behaviours. Invalidated (`null`) whenever a behaviour is attached or detached. | [entities/entity.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L82) |
-| <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | Internal map from behaviour key (lowercased type) to [Behaviour](Behaviour.md) instance. | [entities/entity.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L76) |
+| <a id="id"></a> `id` | `public` | `string` | `''` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [entities/entity.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L61) |
+| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [entities/entity.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L66) |
+| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L71) |
+| <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | Priority-sorted cache of behaviours. Invalidated (`null`) whenever a behaviour is attached or detached. | [entities/entity.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L83) |
+| <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | Internal map from behaviour key (lowercased type) to [Behaviour](Behaviour.md) instance. | [entities/entity.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L77) |
 
 ## Accessors
 
@@ -130,7 +130,7 @@ class Crate extends Entity {
 get x(): number;
 ```
 
-Defined in: [entities/entity.ts:88](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L88)
+Defined in: [entities/entity.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L89)
 
 Horizontal position of the entity (shorthand for
 `position.x`).
@@ -145,7 +145,7 @@ Horizontal position of the entity (shorthand for
 set x(value: number): void;
 ```
 
-Defined in: [entities/entity.ts:93](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L93)
+Defined in: [entities/entity.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L94)
 
 Sets the horizontal position.
 
@@ -169,7 +169,7 @@ Sets the horizontal position.
 get y(): number;
 ```
 
-Defined in: [entities/entity.ts:101](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L101)
+Defined in: [entities/entity.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L102)
 
 Vertical position of the entity (shorthand for
 `position.y`).
@@ -184,7 +184,7 @@ Vertical position of the entity (shorthand for
 set y(value: number): void;
 ```
 
-Defined in: [entities/entity.ts:106](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L106)
+Defined in: [entities/entity.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L107)
 
 Sets the vertical position.
 
@@ -208,7 +208,7 @@ Sets the vertical position.
 get private behaviors(): Behaviour<Entity>[];
 ```
 
-Defined in: [entities/entity.ts:284](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L284)
+Defined in: [entities/entity.ts:293](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L293)
 
 **`Internal`**
 
@@ -228,7 +228,7 @@ only re-computed when behaviours are added or removed.
 attachBehaviour<T>(behavior: T): T;
 ```
 
-Defined in: [entities/entity.ts:244](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L244)
+Defined in: [entities/entity.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L253)
 
 Attaches a behaviour to this entity.
 
@@ -269,7 +269,7 @@ hk.takeDamage(10);
 detachBehaviour(key: string): void;
 ```
 
-Defined in: [entities/entity.ts:266](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L266)
+Defined in: [entities/entity.ts:275](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L275)
 
 Detaches a behaviour by its key and calls
 [onDetach](Behaviour.md#ondetach) if defined.
@@ -298,7 +298,7 @@ entity.detachBehaviour("collidable");
 getBehaviour<T>(key: string): T | undefined;
 ```
 
-Defined in: [entities/entity.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L195)
+Defined in: [entities/entity.ts:202](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L202)
 
 Retrieves a behaviour by its key (case-insensitive).
 
@@ -335,7 +335,7 @@ if (ctrl) ctrl.enabled = false;
 getBehavioursByType<T>(type: (...args: any[]) => T): T[];
 ```
 
-Defined in: [entities/entity.ts:212](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L212)
+Defined in: [entities/entity.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L219)
 
 Returns all attached behaviours that are instances of the given
 class.
@@ -372,7 +372,7 @@ const renderers = entity.getBehavioursByType(SpriteRender);
 getPosition(): Vector2;
 ```
 
-Defined in: [entities/entity.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L157)
+Defined in: [entities/entity.ts:164](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L164)
 
 Returns a **copy** of the entity's current position.
 
@@ -390,7 +390,7 @@ A new [Vector2](../interfaces/Vector2.md) with the entity's `x` and `y`.
 getSize(): Demension;
 ```
 
-Defined in: [entities/entity.ts:166](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L166)
+Defined in: [entities/entity.ts:173](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L173)
 
 Returns a **copy** of the entity's bounding dimensions.
 
@@ -408,7 +408,7 @@ An object with `width` and `height`.
 hasBehaviour(key: string): boolean;
 ```
 
-Defined in: [entities/entity.ts:223](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L223)
+Defined in: [entities/entity.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L232)
 
 Checks whether a behaviour with the given key is attached.
 
@@ -429,18 +429,18 @@ Checks whether a behaviour with the given key is attached.
 ### render()
 
 ```ts
-abstract render(ctx: CanvasRenderingContext2D): void;
+abstract render(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
+Defined in: [entities/entity.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L157)
 
-Draws the entity to the canvas.
+Draws the entity .
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The 2-D rendering context. |
 
 #### Returns
 
@@ -454,7 +454,7 @@ Draws the entity to the canvas.
 setSize(width: number, height: number): void;
 ```
 
-Defined in: [entities/entity.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L177)
+Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
 
 Set size of the entity
 
@@ -483,7 +483,7 @@ void
 abstract update(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L143)
+Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
 
 Advances the entity's state by one frame.
 
@@ -502,10 +502,10 @@ Advances the entity's state by one frame.
 ### renderBehaviours()
 
 ```ts
-protected renderBehaviours(ctx: CanvasRenderingContext2D): void;
+protected renderBehaviours(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/entity.ts:315](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L315)
+Defined in: [entities/entity.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L326)
 
 Calls [render(ctx)](Behaviour.md#render) on every enabled
 behaviour that defines a render method, in priority order.
@@ -516,7 +516,7 @@ Typically called from a subclass's `render` implementation.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context. |
 
 #### Returns
 
@@ -530,7 +530,7 @@ Typically called from a subclass's `render` implementation.
 protected updateBehaviours(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:299](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L299)
+Defined in: [entities/entity.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L310)
 
 Calls [update(deltaTime)](Behaviour.md#update) on every
 enabled behaviour, in priority order.

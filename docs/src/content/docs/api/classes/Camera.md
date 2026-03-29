@@ -2,7 +2,7 @@
 title: 'Class: Camera'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -42,6 +42,10 @@ console.log(camera.getPosition());    // { x: 0, y: 0 }
 ## See
 
 [Engine](Engine.md) — owns and drives the camera each frame
+
+## Extended by
+
+- [`EnhancedCamera`](EnhancedCamera.md)
 
 ## Constructors
 

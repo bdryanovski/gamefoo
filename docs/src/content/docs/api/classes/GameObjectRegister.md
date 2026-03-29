@@ -2,7 +2,7 @@
 title: 'Class: GameObjectRegister'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: GameObjectRegister'
 
 # Class: GameObjectRegister
 
-Defined in: [core/game\_object\_register.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L34)
+Defined in: [core/game\_object\_register.ts:35](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L35)
 
 Central registry that stores and manages all non-player
 [game objects](../type-aliases/GameObject.md) within the engine.
@@ -43,7 +43,7 @@ register.renderAll(ctx);
 
 ## See
 
-[Engine.attachObjects](Engine.md#attachobjects) — convenience method that delegates here
+Engine.attachObjects — convenience method that delegates here
 
 ## Constructors
 
@@ -61,8 +61,8 @@ new GameObjectRegister(): GameObjectRegister;
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="_cache"></a> `_cache` | `private` | [`GameObject`](../type-aliases/GameObject.md)[] \| `null` | `null` | - | [core/game\_object\_register.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L40) |
-| <a id="objects"></a> `objects` | `private` | `Map`\<`string`, [`GameObject`](../type-aliases/GameObject.md)\> | `undefined` | Internal map from entity ID to its [GameObject](../type-aliases/GameObject.md) instance. | [core/game\_object\_register.ts:38](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L38) |
+| <a id="_cache"></a> `_cache` | `private` | [`GameObject`](../type-aliases/GameObject.md)[] \| `null` | `null` | - | [core/game\_object\_register.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L41) |
+| <a id="objects"></a> `objects` | `private` | `Map`\<`string`, [`GameObject`](../type-aliases/GameObject.md)\> | `undefined` | Internal map from entity ID to its [GameObject](../type-aliases/GameObject.md) instance. | [core/game\_object\_register.ts:39](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L39) |
 
 ## Methods
 
@@ -72,7 +72,7 @@ new GameObjectRegister(): GameObjectRegister;
 get(id: string): GameObject | undefined;
 ```
 
-Defined in: [core/game\_object\_register.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L72)
+Defined in: [core/game\_object\_register.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L73)
 
 Retrieves a registered object by its unique ID.
 
@@ -103,7 +103,7 @@ if (crate) crate.x += 10;
 getAll(filter?: () => true): GameObject[];
 ```
 
-Defined in: [core/game\_object\_register.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L115)
+Defined in: [core/game\_object\_register.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L116)
 
 Returns all registered objects that pass the supplied filter.
 
@@ -133,7 +133,7 @@ const enemies = register.getAll(() => true);
 has(id: string): boolean;
 ```
 
-Defined in: [core/game\_object\_register.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L82)
+Defined in: [core/game\_object\_register.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L83)
 
 Checks whether an object with the given ID is registered.
 
@@ -157,7 +157,7 @@ Checks whether an object with the given ID is registered.
 register(object: GameObject): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L55)
+Defined in: [core/game\_object\_register.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L56)
 
 Adds a game object to the registry.
 
@@ -185,10 +185,10 @@ register.register(new Crate("crate_1", 200, 150, 32, 32));
 ### renderAll()
 
 ```ts
-renderAll(ctx: CanvasRenderingContext2D): void;
+renderAll(ctx: RenderContext): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L141)
+Defined in: [core/game\_object\_register.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L162)
 
 Calls [render(ctx)](Entity.md#render) on every registered
 object.
@@ -197,11 +197,47 @@ object.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | `CanvasRenderingContext2D` | The canvas 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context. |
 
 #### Returns
 
 `void`
+
+***
+
+### sort()
+
+```ts
+sort(compareFn: (a: GameObject, b: GameObject) => number): void;
+```
+
+Defined in: [core/game\_object\_register.ts:152](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L152)
+
+Sorts the internal object cache using the given comparator.
+
+Call before [renderAll](#renderall) to control draw order (e.g. Y-sort
+for isometric depth).
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `compareFn` | (`a`: [`GameObject`](../type-aliases/GameObject.md), `b`: [`GameObject`](../type-aliases/GameObject.md)) => `number` | Standard `Array.sort` comparator. |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.4.0
+
+#### Example
+
+```ts
+register.sort((a, b) => a.y - b.y);
+register.renderAll(ctx);
+```
 
 ***
 
@@ -211,7 +247,7 @@ object.
 toArray(): GameObject[];
 ```
 
-Defined in: [core/game\_object\_register.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L95)
+Defined in: [core/game\_object\_register.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L96)
 
 Returns all registered objects as an array.
 
@@ -235,7 +271,7 @@ An array of all [GameObject](../type-aliases/GameObject.md) instances in the reg
 updateAll(deltaTime: number): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:129](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L129)
+Defined in: [core/game\_object\_register.ts:130](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L130)
 
 Calls [update(deltaTime)](Entity.md#update) on every
 registered object.

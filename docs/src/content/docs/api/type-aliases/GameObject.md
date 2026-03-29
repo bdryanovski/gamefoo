@@ -2,7 +2,7 @@
 title: 'Type Alias: GameObject'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -16,7 +16,7 @@ type GameObject =
   | DynamicEntity;
 ```
 
-Defined in: [types.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/types.ts#L70)
+Defined in: [generic\_types.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L70)
 
 Union of all entity types that can be managed by the engine's
 [GameObjectRegister](../classes/GameObjectRegister.md).

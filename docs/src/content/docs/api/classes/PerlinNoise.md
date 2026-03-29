@@ -2,7 +2,7 @@
 title: 'Class: PerlinNoise'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -99,7 +99,7 @@ fbm(
    persistence?: number): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:181](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L181)
+Defined in: [core/utils/perlin\_noise.ts:185](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L185)
 
 Computes fractal Brownian motion (fBm) by layering multiple
 octaves of [PerlinNoise.noise2d](#noise2d) with increasing frequency

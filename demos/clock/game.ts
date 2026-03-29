@@ -1,5 +1,11 @@
 import type { RenderContext } from "../../src/core/renderer/type";
-import { Engine, Entity, ObjectSystem, Text, WebRenderer } from "../../src/index";
+import {
+  Engine,
+  Entity,
+  ObjectSystem,
+  Text,
+  WebRenderer,
+} from "../../src/index";
 
 const CANVAS_W = 250;
 const CANVAS_H = 200;
@@ -7,7 +13,6 @@ const CANVAS_H = 200;
 const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
 const engine = new Engine(renderer, {
   backgroundColor: "#000000",
-  gameScale: 1,
 });
 
 class Circle extends Entity {
@@ -23,7 +28,13 @@ class Circle extends Entity {
 
   protected everyX = 5;
 
-  constructor(name: string, x: number, y: number, width: number, height: number) {
+  constructor(
+    name: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+  ) {
     super(name, x, y, width, height);
   }
 
@@ -45,7 +56,8 @@ class Circle extends Entity {
       const x1 = (Math.cos(angle) * this.size.width) / 2;
       const y1 = (Math.sin(angle) * this.size.width) / 2;
 
-      const length = i % this.everyX === 0 ? this.tickLength - 5 : this.tickLength;
+      const length =
+        i % this.everyX === 0 ? this.tickLength - 5 : this.tickLength;
 
       const x2 = Math.cos(angle) * (this.size.width / 2 - length);
       const y2 = Math.sin(angle) * (this.size.width / 2 - length);
@@ -103,10 +115,9 @@ class ClockTime extends Text {
 
   override update(_delta: number) {
     const time = new Date();
-    const text = `${String(time.getHours()).padStart(2, "0")}:${String(time.getMinutes()).padStart(
-      2,
-      "0",
-    )}:${String(time.getSeconds()).padStart(2, "0")}`;
+    const text = `${String(time.getHours()).padStart(2, "0")}:${String(
+      time.getMinutes(),
+    ).padStart(2, "0")}:${String(time.getSeconds()).padStart(2, "0")}`;
     this.setText(text);
   }
 }

@@ -2,7 +2,7 @@
 title: 'Class: Sprite'
 ---
 
-[**@dryanovski/gamefoo v0.0.1**](../README.md)
+[**@dryanovski/gamefoo v0.3.0**](../README.md)
 
 ***
 
@@ -106,7 +106,7 @@ const sprite = new Sprite(img, 64, 64, {
 static fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite>;
 ```
 
-Defined in: [core/sprite.ts:286](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L286)
+Defined in: [core/sprite.ts:300](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L300)
 
 #### Parameters
 
@@ -130,7 +130,7 @@ static fromAtlas(
    animations?: Record<string, AnimationDefinition>): Sprite;
 ```
 
-Defined in: [core/sprite.ts:274](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L274)
+Defined in: [core/sprite.ts:288](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L288)
 
 #### Parameters
 
@@ -235,7 +235,7 @@ A map of frame indices to their corresponding source rectangles.
 getFrameRect(frame: string | number): SpriteFrame;
 ```
 
-Defined in: [core/sprite.ts:332](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L332)
+Defined in: [core/sprite.ts:353](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L353)
 
 Computes the source rectangle for a given frame index within the
 spritesheet.
