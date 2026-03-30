@@ -10,14 +10,43 @@ title: 'Class: CameraSystem'
 
 # Class: CameraSystem
 
-Defined in: [subsystems/camera\_system.ts:14](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L14)
+Defined in: [subsystems/camera\_system.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L45)
 
-CameraSystem is responsible for managing the camera's position and view.
-It can follow a target (like a player) and adjust the view accordingly.
+Camera subsystem with optional zoom, smooth follow, and isometric-aware
+viewport transforms.
+
+`CameraSystem` manages an [EnhancedCamera](EnhancedCamera.md) and applies the correct
+canvas transform (translation + optional zoom scaling) every frame. It
+works for both orthogonal (top-down) and isometric games.
+
+Defaults (`zoom=1`, `lerpSpeed=1`) produce instant-follow behaviour
+identical to the original simple camera, so existing code requires
+no changes.
 
 ## Since
 
 0.2.0
+
+## Examples
+
+```ts
+engine.use(new CameraSystem(800, 600, () => player.getPosition()));
+```
+
+```ts
+engine.use(new CameraSystem(800, 600, () => player.getPosition(), undefined, {
+  zoom: 2,
+  lerpSpeed: 0.08,
+  pixelPerfect: true,
+}));
+```
+
+```ts
+engine.use(new CameraSystem(800, 600, () => player.getPosition(), isoProjection, {
+  zoom: 2,
+  lerpSpeed: 0.05,
+}));
+```
 
 ## Implements
 
@@ -31,31 +60,49 @@ It can follow a target (like a player) and adjust the view accordingly.
 new CameraSystem(
    width: number, 
    height: number, 
-   target: () => Vector2 | null): CameraSystem;
+   target: () => Vector2 | null, 
+   projection?: IsometricProjection, 
+   config?: EnhancedCameraConfig): CameraSystem;
 ```
 
-Defined in: [subsystems/camera\_system.ts:25](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L25)
+Defined in: [subsystems/camera\_system.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L84)
+
+Creates a new camera subsystem.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `width` | `number` |
-| `height` | `number` |
-| `target` | () => [`Vector2`](../interfaces/Vector2.md) \| `null` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `width` | `number` | Viewport width in pixels. |
+| `height` | `number` | Viewport height in pixels. |
+| `target` | () => [`Vector2`](../interfaces/Vector2.md) \| `null` | Function returning the world-space position to follow. |
+| `projection?` | [`IsometricProjection`](IsometricProjection.md) | Optional isometric projection (stored for reference). |
+| `config?` | [`EnhancedCameraConfig`](../interfaces/EnhancedCameraConfig.md) | Optional camera configuration (zoom, lerpSpeed, etc.). |
 
 #### Returns
 
 `CameraSystem`
 
+#### Since
+
+0.2.0
+
+#### Example
+
+```ts
+const camSys = new CameraSystem(800, 600, () => player.getPosition());
+engine.use(camSys);
+```
+
 ## Properties
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="camera"></a> `camera` | `public` | [`Camera`](Camera.md) | `undefined` | - | [subsystems/camera\_system.ts:21](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L21) |
-| <a id="id"></a> `id` | `public` | `string` | `'camera'` | The unique identifier for this subsystem. | [subsystems/camera\_system.ts:18](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L18) |
-| <a id="order"></a> `order` | `public` | `number` | `10` | Determines the order in which subsystems are updated and rendered. Subsystems with lower order values are processed first. | [subsystems/camera\_system.ts:19](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L19) |
-| <a id="target"></a> `target` | `private` | () => [`Vector2`](../interfaces/Vector2.md) \| `null` | `undefined` | - | [subsystems/camera\_system.ts:23](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L23) |
+| <a id="camera"></a> `camera` | `public` | [`EnhancedCamera`](EnhancedCamera.md) | `undefined` | The underlying enhanced camera. Exposed for external consumers. | [subsystems/camera\_system.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L56) |
+| <a id="id"></a> `id` | `public` | `string` | `'camera'` | Subsystem identifier. | [subsystems/camera\_system.ts:47](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L47) |
+| <a id="order"></a> `order` | `public` | `number` | `10` | Execution order. `10` ensures the camera transform is applied before tilemap (15) and entity (20) rendering. | [subsystems/camera\_system.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L53) |
+| <a id="projection"></a> `projection` | `public` | [`IsometricProjection`](IsometricProjection.md) \| `null` | `undefined` | Optional isometric projection reference, stored for convenience. `null` for orthogonal games. | [subsystems/camera\_system.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L62) |
+| <a id="target"></a> `target` | `private` | () => [`Vector2`](../interfaces/Vector2.md) \| `null` | `undefined` | Target position supplier. Returns `null` for free camera. | [subsystems/camera\_system.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L65) |
 
 ## Methods
 
@@ -65,13 +112,15 @@ Defined in: [subsystems/camera\_system.ts:25](https://github.com/bdryanovski/gam
 postRender(ctx: RenderContext): void;
 ```
 
-Defined in: [subsystems/camera\_system.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L50)
+Defined in: [subsystems/camera\_system.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L137)
+
+Restores the context state after all rendering is complete.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The active render context. |
 
 #### Returns
 
@@ -89,13 +138,19 @@ Defined in: [subsystems/camera\_system.ts:50](https://github.com/bdryanovski/gam
 preRender(ctx: RenderContext): void;
 ```
 
-Defined in: [subsystems/camera\_system.ts:44](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L44)
+Defined in: [subsystems/camera\_system.ts:121](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L121)
+
+Applies the camera transform before rendering.
+
+Saves the context state, applies zoom scaling and translates to
+the camera viewport. Image smoothing is explicitly disabled when
+zoom != 1 to preserve pixel-art crispness.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | Canvas 2D rendering context. |
 
 #### Returns
 
@@ -110,10 +165,18 @@ Defined in: [subsystems/camera\_system.ts:44](https://github.com/bdryanovski/gam
 ### update()
 
 ```ts
-update(): void;
+update(deltaTime: number): void;
 ```
 
-Defined in: [subsystems/camera\_system.ts:33](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L33)
+Defined in: [subsystems/camera\_system.ts:105](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/camera_system.ts#L105)
+
+Updates the camera position each frame using smooth interpolation.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `deltaTime` | `number` | Seconds since the last frame. |
 
 #### Returns
 

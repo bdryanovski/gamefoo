@@ -10,7 +10,7 @@ title: 'Class: TileSet'
 
 # Class: TileSet
 
-Defined in: [core/tilemap/tileset.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L53)
+Defined in: [core/tilemap/tileset.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L46)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/tilemap/tileset.ts:53](https://github.com/bdryanovski/gamefoo/
 new TileSet(config: TileSetConfig): TileSet;
 ```
 
-Defined in: [core/tilemap/tileset.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L82)
+Defined in: [core/tilemap/tileset.ts:75](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L75)
 
 Creates a new tileset from the given config.
 
@@ -51,9 +51,9 @@ const tileSet = new TileSet({
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="firstgid"></a> `firstGid` | `readonly` | `number` | First global tile ID for this tileset. Tile IDs in layer data that fall in `[firstGid, firstGid + frameCount)` belong to this set. | [core/tilemap/tileset.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L62) |
-| <a id="properties"></a> `properties` | `readonly` | `Map`\<`number`, `Record`\<`string`, `unknown`\>\> | Per-tile custom properties indexed by **local** tile index. | [core/tilemap/tileset.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L65) |
-| <a id="sprite"></a> `sprite` | `readonly` | [`Sprite`](Sprite.md) | The sprite sheet containing all tile frames. | [core/tilemap/tileset.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L55) |
+| <a id="firstgid"></a> `firstGid` | `readonly` | `number` | First global tile ID for this tileset. Tile IDs in layer data that fall in `[firstGid, firstGid + frameCount)` belong to this set. | [core/tilemap/tileset.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L55) |
+| <a id="properties"></a> `properties` | `readonly` | `Map`\<`number`, `Record`\<`string`, `unknown`\>\> | Per-tile custom properties indexed by **local** tile index. | [core/tilemap/tileset.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L58) |
+| <a id="sprite"></a> `sprite` | `readonly` | [`Sprite`](Sprite.md) | The sprite sheet containing all tile frames. | [core/tilemap/tileset.ts:48](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L48) |
 
 ## Methods
 
@@ -63,7 +63,7 @@ const tileSet = new TileSet({
 containsTile(tileId: number): boolean;
 ```
 
-Defined in: [core/tilemap/tileset.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L137)
+Defined in: [core/tilemap/tileset.ts:130](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L130)
 
 Checks whether a global tile ID belongs to this tileset.
 
@@ -99,9 +99,9 @@ if (tileSet.containsTile(7)) {
 getFrame(tileId: number): SpriteFrame | undefined;
 ```
 
-Defined in: [core/tilemap/tileset.ts:112](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L112)
+Defined in: [core/tilemap/tileset.ts:105](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L105)
 
-Returns the SpriteFrame for a **global** tile ID.
+Returns the [SpriteFrame](../interfaces/SpriteFrame.md) for a **global** tile ID.
 
 The global ID is offset by [TileSet.firstGid](#firstgid) to obtain the
 local frame index used by the sprite sheet.
@@ -114,7 +114,7 @@ local frame index used by the sprite sheet.
 
 #### Returns
 
-`SpriteFrame` \| `undefined`
+[`SpriteFrame`](../interfaces/SpriteFrame.md) \| `undefined`
 
 The source rectangle, or `undefined` if the ID does not
   belong to this tileset.
@@ -144,7 +144,7 @@ if (frame) {
 getProperties(localIndex: number): Record<string, unknown> | undefined;
 ```
 
-Defined in: [core/tilemap/tileset.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L157)
+Defined in: [core/tilemap/tileset.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tileset.ts#L150)
 
 Returns custom properties for a **local** tile index.
 

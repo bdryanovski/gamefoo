@@ -13,43 +13,51 @@
     "label": "⚙️ API Reference",
     "items": [
       {
-        "label": "README",
-        "link": "/api/README"
-      },
-      {
         "label": "Classes",
         "items": [
           {
-            "label": "Asset",
-            "link": "/api/classes/Asset"
+            "label": "SpriteRender",
+            "link": "/api/classes/SpriteRender"
+          },
+          {
+            "label": "Text",
+            "link": "/api/classes/Text"
+          },
+          {
+            "label": "GridDebugSystem",
+            "link": "/api/classes/GridDebugSystem"
+          },
+          {
+            "label": "Input",
+            "link": "/api/classes/Input"
+          },
+          {
+            "label": "GameObjectRegister",
+            "link": "/api/classes/GameObjectRegister"
+          },
+          {
+            "label": "Entity",
+            "link": "/api/classes/Entity"
+          },
+          {
+            "label": "Sprite",
+            "link": "/api/classes/Sprite"
           },
           {
             "label": "Behaviour",
             "link": "/api/classes/Behaviour"
           },
           {
-            "label": "Camera",
-            "link": "/api/classes/Camera"
+            "label": "ObjectSystem",
+            "link": "/api/classes/ObjectSystem"
+          },
+          {
+            "label": "Player",
+            "link": "/api/classes/Player"
           },
           {
             "label": "CameraSystem",
             "link": "/api/classes/CameraSystem"
-          },
-          {
-            "label": "Collidable",
-            "link": "/api/classes/Collidable"
-          },
-          {
-            "label": "CollisionSystem",
-            "link": "/api/classes/CollisionSystem"
-          },
-          {
-            "label": "Control",
-            "link": "/api/classes/Control"
-          },
-          {
-            "label": "DynamicEntity",
-            "link": "/api/classes/DynamicEntity"
           },
           {
             "label": "Engine",
@@ -60,92 +68,8 @@
             "link": "/api/classes/EnhancedCamera"
           },
           {
-            "label": "Entity",
-            "link": "/api/classes/Entity"
-          },
-          {
-            "label": "FontBitmap",
-            "link": "/api/classes/FontBitmap"
-          },
-          {
-            "label": "GameObjectRegister",
-            "link": "/api/classes/GameObjectRegister"
-          },
-          {
-            "label": "Grid",
-            "link": "/api/classes/Grid"
-          },
-          {
-            "label": "GridDebugSystem",
-            "link": "/api/classes/GridDebugSystem"
-          },
-          {
-            "label": "HealthKit",
-            "link": "/api/classes/HealthKit"
-          },
-          {
-            "label": "IconBitmap",
-            "link": "/api/classes/IconBitmap"
-          },
-          {
-            "label": "Input",
-            "link": "/api/classes/Input"
-          },
-          {
-            "label": "IntervalLoopDriver",
-            "link": "/api/classes/IntervalLoopDriver"
-          },
-          {
-            "label": "IsometricCameraSystem",
-            "link": "/api/classes/IsometricCameraSystem"
-          },
-          {
-            "label": "IsometricProjection",
-            "link": "/api/classes/IsometricProjection"
-          },
-          {
-            "label": "MapGenerator",
-            "link": "/api/classes/MapGenerator"
-          },
-          {
-            "label": "Monitor",
-            "link": "/api/classes/Monitor"
-          },
-          {
-            "label": "MonitorSystem",
-            "link": "/api/classes/MonitorSystem"
-          },
-          {
-            "label": "ObjectSystem",
-            "link": "/api/classes/ObjectSystem"
-          },
-          {
-            "label": "PathFollower",
-            "link": "/api/classes/PathFollower"
-          },
-          {
-            "label": "Pathfinder",
-            "link": "/api/classes/Pathfinder"
-          },
-          {
-            "label": "PerlinNoise",
-            "link": "/api/classes/PerlinNoise"
-          },
-          {
-            "label": "Player",
-            "link": "/api/classes/Player"
-          },
-          {
-            "label": "RAFLoopDriver",
-            "link": "/api/classes/RAFLoopDriver"
-          },
-          {
-            "label": "Sprite",
-            "link": "/api/classes/Sprite"
-          },
-          {
-            "label": "SpriteRender",
-            "link": "/api/classes/SpriteRender"
+            "label": "Camera",
+            "link": "/api/classes/Camera"
           },
           {
             "label": "StateMachine",
@@ -156,24 +80,72 @@
             "link": "/api/classes/TerminalInputDriver"
           },
           {
-            "label": "TerminalRender",
-            "link": "/api/classes/TerminalRender"
+            "label": "CollisionSystem",
+            "link": "/api/classes/CollisionSystem"
           },
           {
             "label": "TerminalRenderContext",
             "link": "/api/classes/TerminalRenderContext"
           },
           {
-            "label": "Text",
-            "link": "/api/classes/Text"
+            "label": "MonitorSystem",
+            "link": "/api/classes/MonitorSystem"
           },
           {
             "label": "TileLayer",
             "link": "/api/classes/TileLayer"
           },
           {
+            "label": "RAFLoopDriver",
+            "link": "/api/classes/RAFLoopDriver"
+          },
+          {
+            "label": "PerlinNoise",
+            "link": "/api/classes/PerlinNoise"
+          },
+          {
+            "label": "TerminalRender",
+            "link": "/api/classes/TerminalRender"
+          },
+          {
+            "label": "FontBitmap",
+            "link": "/api/classes/FontBitmap"
+          },
+          {
+            "label": "PathFollower",
+            "link": "/api/classes/PathFollower"
+          },
+          {
+            "label": "IsometricProjection",
+            "link": "/api/classes/IsometricProjection"
+          },
+          {
+            "label": "Asset",
+            "link": "/api/classes/Asset"
+          },
+          {
             "label": "TileMap",
             "link": "/api/classes/TileMap"
+          },
+          {
+            "label": "MapGenerator",
+            "link": "/api/classes/MapGenerator"
+          },
+          {
+            "label": "Pathfinder",
+            "link": "/api/classes/Pathfinder"
+          },
+          {
+            "label": "Grid",
+            "link": "/api/classes/Grid"
+          },
+          {
+            "label": "World",
+            "link": "/api/classes/World"
+          },
+          {
+            "label": "IconBitmap",
+            "link": "/api/classes/IconBitmap"
           },
           {
             "label": "TileSet",
@@ -184,12 +156,88 @@
             "link": "/api/classes/TilemapSystem"
           },
           {
+            "label": "Collidable",
+            "link": "/api/classes/Collidable"
+          },
+          {
+            "label": "HealthKit",
+            "link": "/api/classes/HealthKit"
+          },
+          {
+            "label": "IntervalLoopDriver",
+            "link": "/api/classes/IntervalLoopDriver"
+          },
+          {
+            "label": "DynamicEntity",
+            "link": "/api/classes/DynamicEntity"
+          },
+          {
             "label": "WebRenderer",
             "link": "/api/classes/WebRenderer"
           },
           {
-            "label": "World",
-            "link": "/api/classes/World"
+            "label": "Control",
+            "link": "/api/classes/Control"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "Type Aliases",
+        "items": [
+          {
+            "label": "GameObject",
+            "link": "/api/type-aliases/GameObject"
+          },
+          {
+            "label": "ColliderShape",
+            "link": "/api/type-aliases/ColliderShape"
+          },
+          {
+            "label": "InternalBitmapFontName",
+            "link": "/api/type-aliases/InternalBitmapFontName"
+          },
+          {
+            "label": "Dimension",
+            "link": "/api/type-aliases/Dimension"
+          },
+          {
+            "label": "IsoLayout",
+            "link": "/api/type-aliases/IsoLayout"
+          },
+          {
+            "label": "CollidableOptions",
+            "link": "/api/type-aliases/CollidableOptions"
+          },
+          {
+            "label": "HeuristicName",
+            "link": "/api/type-aliases/HeuristicName"
+          },
+          {
+            "label": "TerminalBuffer",
+            "link": "/api/type-aliases/TerminalBuffer"
+          },
+          {
+            "label": "IsometricCameraSystem",
+            "link": "/api/type-aliases/IsometricCameraSystem"
+          },
+          {
+            "label": "InternalBitmapIconName",
+            "link": "/api/type-aliases/InternalBitmapIconName"
+          }
+        ],
+        "collapsed": true
+      },
+      {
+        "label": "README",
+        "link": "/api/README"
+      },
+      {
+        "label": "Variables",
+        "items": [
+          {
+            "label": "IsometricCameraSystem",
+            "link": "/api/variables/IsometricCameraSystem"
           }
         ],
         "collapsed": true
@@ -198,16 +246,12 @@
         "label": "Functions",
         "items": [
           {
-            "label": "CreateBunLoop",
-            "link": "/api/functions/createBunLoop"
-          },
-          {
-            "label": "CreateTerminalLoop",
-            "link": "/api/functions/createTerminalLoop"
-          },
-          {
             "label": "Log",
             "link": "/api/functions/log"
+          },
+          {
+            "label": "CreateBunLoop",
+            "link": "/api/functions/createBunLoop"
           }
         ],
         "collapsed": true
@@ -216,16 +260,64 @@
         "label": "Interfaces",
         "items": [
           {
-            "label": "BiomeRule",
-            "link": "/api/interfaces/BiomeRule"
-          },
-          {
-            "label": "CollisionInfo",
-            "link": "/api/interfaces/CollisionInfo"
+            "label": "GridCell",
+            "link": "/api/interfaces/GridCell"
           },
           {
             "label": "Demension",
             "link": "/api/interfaces/Demension"
+          },
+          {
+            "label": "IsoConfig",
+            "link": "/api/interfaces/IsoConfig"
+          },
+          {
+            "label": "InputDriver",
+            "link": "/api/interfaces/InputDriver"
+          },
+          {
+            "label": "TerminalGlyph",
+            "link": "/api/interfaces/TerminalGlyph"
+          },
+          {
+            "label": "GridDebugConfig",
+            "link": "/api/interfaces/GridDebugConfig"
+          },
+          {
+            "label": "MapGeneratorConfig",
+            "link": "/api/interfaces/MapGeneratorConfig"
+          },
+          {
+            "label": "VisibleRange",
+            "link": "/api/interfaces/VisibleRange"
+          },
+          {
+            "label": "BiomeRule",
+            "link": "/api/interfaces/BiomeRule"
+          },
+          {
+            "label": "PathNode",
+            "link": "/api/interfaces/PathNode"
+          },
+          {
+            "label": "LoopDriver",
+            "link": "/api/interfaces/LoopDriver"
+          },
+          {
+            "label": "WorldBounds",
+            "link": "/api/interfaces/WorldBounds"
+          },
+          {
+            "label": "TileSetConfig",
+            "link": "/api/interfaces/TileSetConfig"
+          },
+          {
+            "label": "ObjectSystemConfig",
+            "link": "/api/interfaces/ObjectSystemConfig"
+          },
+          {
+            "label": "GridConfig",
+            "link": "/api/interfaces/GridConfig"
           },
           {
             "label": "EnhancedCameraConfig",
@@ -236,118 +328,48 @@
             "link": "/api/interfaces/GeneratedMapData"
           },
           {
-            "label": "GridCell",
-            "link": "/api/interfaces/GridCell"
+            "label": "TileLayerConfig",
+            "link": "/api/interfaces/TileLayerConfig"
           },
           {
-            "label": "GridConfig",
-            "link": "/api/interfaces/GridConfig"
-          },
-          {
-            "label": "GridDebugConfig",
-            "link": "/api/interfaces/GridDebugConfig"
-          },
-          {
-            "label": "InputDriver",
-            "link": "/api/interfaces/InputDriver"
-          },
-          {
-            "label": "IsoConfig",
-            "link": "/api/interfaces/IsoConfig"
-          },
-          {
-            "label": "LoopConfig",
-            "link": "/api/interfaces/LoopConfig"
-          },
-          {
-            "label": "LoopDriver",
-            "link": "/api/interfaces/LoopDriver"
-          },
-          {
-            "label": "MapGeneratorConfig",
-            "link": "/api/interfaces/MapGeneratorConfig"
-          },
-          {
-            "label": "ObjectSystemConfig",
-            "link": "/api/interfaces/ObjectSystemConfig"
+            "label": "SpriteFrame",
+            "link": "/api/interfaces/SpriteFrame"
           },
           {
             "label": "PathFollowerConfig",
             "link": "/api/interfaces/PathFollowerConfig"
           },
           {
-            "label": "PathNode",
-            "link": "/api/interfaces/PathNode"
-          },
-          {
-            "label": "PathfinderConfig",
-            "link": "/api/interfaces/PathfinderConfig"
-          },
-          {
-            "label": "RenderContext",
-            "link": "/api/interfaces/RenderContext"
+            "label": "CollisionInfo",
+            "link": "/api/interfaces/CollisionInfo"
           },
           {
             "label": "SubSystem",
             "link": "/api/interfaces/SubSystem"
           },
           {
-            "label": "TerminalGlyph",
-            "link": "/api/interfaces/TerminalGlyph"
+            "label": "RenderContext",
+            "link": "/api/interfaces/RenderContext"
           },
           {
             "label": "TerminalRenderConfig",
             "link": "/api/interfaces/TerminalRenderConfig"
           },
           {
-            "label": "TileLayerConfig",
-            "link": "/api/interfaces/TileLayerConfig"
-          },
-          {
-            "label": "TileMapConfig",
-            "link": "/api/interfaces/TileMapConfig"
-          },
-          {
-            "label": "TileSetConfig",
-            "link": "/api/interfaces/TileSetConfig"
+            "label": "TerminalCell",
+            "link": "/api/interfaces/TerminalCell"
           },
           {
             "label": "Vector2",
             "link": "/api/interfaces/Vector2"
           },
           {
-            "label": "VisibleRange",
-            "link": "/api/interfaces/VisibleRange"
-          }
-        ],
-        "collapsed": true
-      },
-      {
-        "label": "Type Aliases",
-        "items": [
-          {
-            "label": "ColliderShape",
-            "link": "/api/type-aliases/ColliderShape"
+            "label": "TileMapConfig",
+            "link": "/api/interfaces/TileMapConfig"
           },
           {
-            "label": "GameObject",
-            "link": "/api/type-aliases/GameObject"
-          },
-          {
-            "label": "HeuristicName",
-            "link": "/api/type-aliases/HeuristicName"
-          },
-          {
-            "label": "InternalBitmapFontName",
-            "link": "/api/type-aliases/InternalBitmapFontName"
-          },
-          {
-            "label": "InternalBitmapIconName",
-            "link": "/api/type-aliases/InternalBitmapIconName"
-          },
-          {
-            "label": "IsoLayout",
-            "link": "/api/type-aliases/IsoLayout"
+            "label": "PathfinderConfig",
+            "link": "/api/interfaces/PathfinderConfig"
           }
         ],
         "collapsed": true

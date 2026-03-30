@@ -14,4 +14,4 @@ title: 'Type Alias: InternalBitmapIconName'
 type InternalBitmapIconName = "icons_8x8" | "icons_16x16";
 ```
 
-Defined in: [core/icons/icon\_bitmap.ts:30](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L30)
+Defined in: [core/icons/icon\_bitmap.ts:17](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L17)

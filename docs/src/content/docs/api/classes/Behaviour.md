@@ -10,7 +10,7 @@ title: 'Abstract Class: Behaviour<T>'
 
 # Abstract Class: Behaviour\<T\>
 
-Defined in: [core/behaviour.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L50)
+Defined in: [core/behaviour.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L52)
 
 Abstract base class for all entity behaviours in the GameFoo engine.
 
@@ -21,6 +21,8 @@ attached to any [Entity](Entity.md) at runtime via
 
 Subclasses **must** implement:
 - [type](#type) — a unique string identifier (e.g. `"control"`, `"healthkit"`).
+
+Subclasses **may** override:
 - [update](#update) — called once per frame with `deltaTime`.
 
 Subclasses **may** override:
@@ -79,7 +81,7 @@ entity.attachBehaviour(new Gravity(entity));
 new Behaviour<T>(owner: T): Behaviour<T>;
 ```
 
-Defined in: [core/behaviour.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L109)
+Defined in: [core/behaviour.ts:111](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L111)
 
 Creates a new behaviour bound to the given entity.
 
@@ -97,10 +99,10 @@ Creates a new behaviour bound to the given entity.
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | [core/behaviour.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L92) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | [core/behaviour.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L82) |
-| <a id="type"></a> `type` | `abstract` | `string` | `undefined` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [core/behaviour.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L72) |
-| <a id="owner"></a> `owner` | `protected` | `T` | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | [core/behaviour.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L55) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
+| <a id="type"></a> `type` | `abstract` | `string` | `undefined` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [core/behaviour.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L74) |
+| <a id="owner"></a> `owner` | `protected` | `T` | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
 
 ## Accessors
 
@@ -112,7 +114,7 @@ Creates a new behaviour bound to the given entity.
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L100)
+Defined in: [core/behaviour.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L102)
 
 Derived look-up key, equal to [Behaviour.type](#type) in lowercase.
 
@@ -125,13 +127,35 @@ case-insensitive.
 
 ## Methods
 
+### getOwner()
+
+```ts
+getOwner(): T;
+```
+
+Defined in: [core/behaviour.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L122)
+
+Returns the entity this behaviour is attached to.
+
+#### Returns
+
+`T`
+
+The owning entity.
+
+#### Since
+
+0.5.0
+
+***
+
 ### onAttach()?
 
 ```ts
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L137)
+Defined in: [core/behaviour.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L155)
 
 Lifecycle hook called immediately after the behaviour is attached
 to an entity via [Entity.attachBehaviour](Entity.md#attachbehaviour).
@@ -151,7 +175,7 @@ collision [World](World.md).
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L145)
+Defined in: [core/behaviour.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L163)
 
 Lifecycle hook called when the behaviour is removed from an entity
 via [Entity.detachBehaviour](Entity.md#detachbehaviour).
@@ -170,7 +194,7 @@ Use this to unregister from external systems or release resources.
 optional render(ctx: RenderContext): void;
 ```
 
-Defined in: [core/behaviour.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L128)
+Defined in: [core/behaviour.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L146)
 
 Optional rendering hook invoked after the entity's own
 [Entity.render](Entity.md#render) call.
@@ -192,18 +216,22 @@ Override this to draw debug shapes, health bars, status effects, etc.
 ### update()
 
 ```ts
-abstract update(deltaTime: number): void;
+update(_deltaTime: number): void;
 ```
 
-Defined in: [core/behaviour.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L118)
+Defined in: [core/behaviour.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L136)
 
 Called once per frame to advance this behaviour's logic.
+
+Override in subclasses that need per-frame logic. Behaviours that
+are purely reactive (collision, health, terminal render) can omit
+this — the default is a no-op.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `deltaTime` | `number` | Seconds elapsed since the previous frame. |
+| `_deltaTime` | `number` | Seconds elapsed since the previous frame. |
 
 #### Returns
 

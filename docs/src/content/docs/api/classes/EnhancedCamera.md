@@ -244,7 +244,7 @@ camera.follow(player.getPosition());
 getPosition(): Vector2;
 ```
 
-Defined in: [core/camera.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L97)
+Defined in: [core/camera.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L96)
 
 Returns the current centre position of the camera.
 
@@ -358,7 +358,7 @@ camera.moveTo({ x: 500, y: 300 });
 resize(width: number, height: number): void;
 ```
 
-Defined in: [core/camera.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L141)
+Defined in: [core/camera.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L140)
 
 Updates the viewport dimensions, e.g. after a window resize.
 

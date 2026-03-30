@@ -1,5 +1,5 @@
 ---
-title: 'Class: Player'
+title: 'Abstract Class: Player'
 ---
 
 [**@dryanovski/gamefoo v0.3.0**](../README.md)
@@ -8,22 +8,23 @@ title: 'Class: Player'
 
 [@dryanovski/gamefoo](../README.md) / Player
 
-# Class: Player
+# Abstract Class: Player
 
-Defined in: [entities/player.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L55)
+Defined in: [entities/player.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L57)
 
 Default player entity with convenience accessors for common
 behaviours.
 
 `Player` extends [DynamicEntity](DynamicEntity.md) and automatically delegates
-its [update](#update) and [render](#render)
+its [update](#update) and [render](Entity.md#render)
 calls to all attached [behaviours](Behaviour.md). It also
 provides typed getters for the [Control](Control.md) and
 [HealthKit](HealthKit.md) behaviours so game code can access them without
 manual casting.
 
-Subclass `Player` to customise rendering, add game-specific logic,
-or bind additional behaviours.
+Subclass `Player` and implement [render](Entity.md#render) to provide
+custom visuals. The [update](Entity.md#update) lifecycle (apply velocity,
+tick behaviours) is handled automatically by [DynamicEntity](DynamicEntity.md).
 
 ## Since
 
@@ -32,15 +33,17 @@ or bind additional behaviours.
 ## Examples
 
 ```ts
-import { Player, Control, HealthKit, Input } from "gamefoo";
+import { Player, Control, HealthKit, Input, SpriteRender } from "gamefoo";
 
-const player = new Player("hero", 400, 300, 50, 50);
+class Hero extends Player {
+  render(ctx: RenderContext) {
+    this.renderBehaviours(ctx); // SpriteRender handles drawing
+  }
+}
 
-player.attachBehaviour(new Control(player, new Input()));
-player.attachBehaviour(new HealthKit(player, 100));
-
-player.control?.enabled;           // true
-player.healthkit?.getHealth();      // 100
+const hero = new Hero("hero", 400, 300, 50, 50);
+hero.attachBehaviour(new Control(hero, new Input()));
+hero.attachBehaviour(new HealthKit(hero, 100));
 ```
 
 ```ts
@@ -133,7 +136,7 @@ class Crate extends Entity {
 get control(): Control | undefined;
 ```
 
-Defined in: [entities/player.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L61)
+Defined in: [entities/player.ts:63](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L63)
 
 Convenience getter for the attached [Control](Control.md) behaviour.
 
@@ -153,7 +156,7 @@ The `Control` instance, or `undefined` if not attached.
 get healthkit(): HealthKit | undefined;
 ```
 
-Defined in: [entities/player.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L70)
+Defined in: [entities/player.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L72)
 
 Convenience getter for the attached [HealthKit](HealthKit.md) behaviour.
 
@@ -556,10 +559,10 @@ Checks whether a behaviour with the given key is attached.
 ### render()
 
 ```ts
-render(ctx: RenderContext): void;
+abstract render(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/player.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L95)
+Defined in: [entities/entity.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L157)
 
 Draws the entity .
 
@@ -567,48 +570,15 @@ Draws the entity .
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The canvas 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The 2-D rendering context. |
 
 #### Returns
 
 `void`
-
-#### Overrides
-
-[`DynamicEntity`](DynamicEntity.md).[`render`](DynamicEntity.md#render)
-
-***
-
-### setSize()
-
-```ts
-setSize(width: number, height: number): void;
-```
-
-Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
-
-Set size of the entity
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `width` | `number` |
-| `height` | `number` |
-
-#### Returns
-
-`void`
-
-void
-
-#### Since
-
-0.2.0
 
 #### Inherited from
 
-[`DynamicEntity`](DynamicEntity.md).[`setSize`](DynamicEntity.md#setsize)
+[`DynamicEntity`](DynamicEntity.md).[`render`](DynamicEntity.md#render)
 
 ***
 
@@ -682,9 +652,13 @@ entity.setVelocity({ x: -1, y: 0 }); // moving left
 update(deltaTime: number): void;
 ```
 
-Defined in: [entities/player.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L80)
+Defined in: [entities/player.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/player.ts#L82)
 
-Advances the entity's state by one frame.
+Applies the current velocity and speed to the entity's position,
+then delegates to all attached behaviours.
+
+Behaviours run first so that input (e.g. [Control](Control.md)) can set
+velocity before it is integrated into position — no one-frame lag.
 
 #### Parameters
 
@@ -695,6 +669,10 @@ Advances the entity's state by one frame.
 #### Returns
 
 `void`
+
+#### Since
+
+0.5.0
 
 #### Overrides
 
@@ -728,6 +706,39 @@ Typically called from a subclass's `render` implementation.
 #### Inherited from
 
 [`DynamicEntity`](DynamicEntity.md).[`renderBehaviours`](DynamicEntity.md#renderbehaviours)
+
+***
+
+### setSize()
+
+```ts
+protected setSize(width: number, height: number): void;
+```
+
+Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
+
+Set size of the entity
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `width` | `number` |
+| `height` | `number` |
+
+#### Returns
+
+`void`
+
+void
+
+#### Since
+
+0.2.0
+
+#### Inherited from
+
+[`DynamicEntity`](DynamicEntity.md).[`setSize`](DynamicEntity.md#setsize)
 
 ***
 

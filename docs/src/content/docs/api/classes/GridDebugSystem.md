@@ -32,33 +32,17 @@ Each subsystem can have its own logic and state, and can interact with the engin
 new GridDebugSystem(config: GridDebugConfig): GridDebugSystem;
 ```
 
-Defined in: [debug/grid\_debug.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L109)
-
-Creates a new grid debug subsystem.
+Defined in: [debug/grid\_debug.ts:112](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L112)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `config` | [`GridDebugConfig`](../interfaces/GridDebugConfig.md) | Debug overlay configuration. |
+| Parameter | Type |
+| ------ | ------ |
+| `config` | [`GridDebugConfig`](../interfaces/GridDebugConfig.md) |
 
 #### Returns
 
 `GridDebugSystem`
-
-#### Since
-
-0.4.0
-
-#### Example
-
-```ts
-const debug = new GridDebugSystem({
-  grid: myGrid,
-  showGrid: true,
-});
-engine.use(debug);
-```
 
 ## Properties
 
@@ -69,6 +53,7 @@ engine.use(debug);
 | <a id="canvas"></a> `canvas` | `private` | `HTMLCanvasElement` \| `null` | `null` | - | [debug/grid\_debug.ts:85](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L85) |
 | <a id="canvasheight"></a> `canvasHeight` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L84) |
 | <a id="collisioncolor"></a> `collisionColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L77) |
+| <a id="configcanvas"></a> `configCanvas` | `private` | `HTMLCanvasElement` \| `undefined` | `undefined` | Stored canvas reference from config for use in init(). | [debug/grid\_debug.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L110) |
 | <a id="debugpath"></a> `debugPath` | `private` | \{ `col`: `number`; `row`: `number`; \}[] | `[]` | - | [debug/grid\_debug.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L80) |
 | <a id="fontsize"></a> `fontSize` | `private` | `number` | `undefined` | - | [debug/grid\_debug.ts:78](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L78) |
 | <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | `undefined` | - | [debug/grid\_debug.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L64) |
@@ -98,7 +83,7 @@ engine.use(debug);
 destroy(): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:214](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L214)
+Defined in: [debug/grid\_debug.ts:223](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L223)
 
 Cleans up event listeners when the subsystem is destroyed.
 
@@ -122,7 +107,7 @@ Cleans up event listeners when the subsystem is destroyed.
 init(engine: Engine): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L137)
+Defined in: [debug/grid\_debug.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L141)
 
 Called by the engine when this subsystem is attached.
 
@@ -155,7 +140,7 @@ readout.
 render(ctx: RenderContext): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:197](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L197)
+Defined in: [debug/grid\_debug.ts:206](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L206)
 
 Renders all enabled debug overlays.
 
@@ -191,7 +176,7 @@ setDebugPath(path: {
 }[]): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:183](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L183)
+Defined in: [debug/grid\_debug.ts:192](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L192)
 
 Sets a pathfinding result to visualise.
 
@@ -231,7 +216,7 @@ setViewport(
    h: number): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:160](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L160)
+Defined in: [debug/grid\_debug.ts:169](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L169)
 
 Sets the viewport rectangle for culling. Call once per frame
 before render with the camera's view rect.
@@ -264,7 +249,7 @@ private getCellCenter(col: number, row: number): {
 };
 ```
 
-Defined in: [debug/grid\_debug.ts:584](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L584)
+Defined in: [debug/grid\_debug.ts:593](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L593)
 
 **`Internal`**
 
@@ -288,8 +273,8 @@ Returns the screen-space center of a grid cell.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `x` | `number` | [debug/grid\_debug.ts:584](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L584) |
-| `y` | `number` | [debug/grid\_debug.ts:584](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L584) |
+| `x` | `number` | [debug/grid\_debug.ts:593](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L593) |
+| `y` | `number` | [debug/grid\_debug.ts:593](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L593) |
 
 ***
 
@@ -299,7 +284,7 @@ Returns the screen-space center of a grid cell.
 private handleMouseLeave(): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:229](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L229)
+Defined in: [debug/grid\_debug.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L238)
 
 #### Returns
 
@@ -313,7 +298,7 @@ Defined in: [debug/grid\_debug.ts:229](https://github.com/bdryanovski/gamefoo/bl
 private handleMouseMove(e: MouseEvent): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:223](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L223)
+Defined in: [debug/grid\_debug.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L232)
 
 #### Parameters
 
@@ -333,7 +318,7 @@ Defined in: [debug/grid\_debug.ts:223](https://github.com/bdryanovski/gamefoo/bl
 private renderCollisionBounds(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:395](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L395)
+Defined in: [debug/grid\_debug.ts:404](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L404)
 
 **`Internal`**
 
@@ -357,7 +342,7 @@ Draws outlines for all active colliders in the world.
 private renderCoordinates(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:321](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L321)
+Defined in: [debug/grid\_debug.ts:330](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L330)
 
 **`Internal`**
 
@@ -381,7 +366,7 @@ Draws `(col, row)` labels in each visible cell.
 private renderGrid(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:241](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L241)
+Defined in: [debug/grid\_debug.ts:250](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L250)
 
 **`Internal`**
 
@@ -406,7 +391,7 @@ diamond outlines for isometric.
 private renderIsometricGrid(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:282](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L282)
+Defined in: [debug/grid\_debug.ts:291](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L291)
 
 **`Internal`**
 
@@ -430,7 +415,7 @@ Draws isometric diamond outlines for each tile.
 private renderOrthogonalGrid(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:254](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L254)
+Defined in: [debug/grid\_debug.ts:263](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L263)
 
 **`Internal`**
 
@@ -454,7 +439,7 @@ Draws orthogonal grid lines.
 private renderPathfinding(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:431](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L431)
+Defined in: [debug/grid\_debug.ts:440](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L440)
 
 **`Internal`**
 
@@ -479,7 +464,7 @@ dots at each waypoint.
 private renderTileInspector(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:469](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L469)
+Defined in: [debug/grid\_debug.ts:478](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L478)
 
 **`Internal`**
 
@@ -503,7 +488,7 @@ Highlights the tile under the cursor and shows a tooltip.
 private renderWorldCoordinates(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:535](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L535)
+Defined in: [debug/grid\_debug.ts:544](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L544)
 
 **`Internal`**
 

@@ -448,35 +448,6 @@ Draws the entity .
 
 ***
 
-### setSize()
-
-```ts
-setSize(width: number, height: number): void;
-```
-
-Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
-
-Set size of the entity
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `width` | `number` |
-| `height` | `number` |
-
-#### Returns
-
-`void`
-
-void
-
-#### Since
-
-0.2.0
-
-***
-
 ### update()
 
 ```ts
@@ -521,6 +492,35 @@ Typically called from a subclass's `render` implementation.
 #### Returns
 
 `void`
+
+***
+
+### setSize()
+
+```ts
+protected setSize(width: number, height: number): void;
+```
+
+Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
+
+Set size of the entity
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `width` | `number` |
+| `height` | `number` |
+
+#### Returns
+
+`void`
+
+void
+
+#### Since
+
+0.2.0
 
 ***
 

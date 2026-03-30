@@ -100,7 +100,7 @@ if (crate) crate.x += 10;
 ### getAll()
 
 ```ts
-getAll(filter?: () => true): GameObject[];
+getAll(filter?: (obj: GameObject) => boolean): GameObject[];
 ```
 
 Defined in: [core/game\_object\_register.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L116)
@@ -111,7 +111,7 @@ Returns all registered objects that pass the supplied filter.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `filter?` | () => `true` | (optional) A predicate function. Return `true` to include the object in the result. |
+| `filter?` | (`obj`: [`GameObject`](../type-aliases/GameObject.md)) => `boolean` | (optional) A predicate function. Return `true` to include the object in the result. |
 
 #### Returns
 
@@ -122,7 +122,7 @@ An array of matching [GameObject](../type-aliases/GameObject.md) instances.
 #### Example
 
 ```ts
-const enemies = register.getAll(() => true);
+const enemies = register.getAll(obj => obj.id.startsWith("enemy"));
 ```
 
 ***
@@ -273,7 +273,7 @@ updateAll(deltaTime: number): void;
 
 Defined in: [core/game\_object\_register.ts:130](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L130)
 
-Calls [update(deltaTime)](Entity.md#update) on every
+Calls GameObject.update \| update(deltaTime) on every
 registered object.
 
 #### Parameters

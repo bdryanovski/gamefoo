@@ -241,7 +241,7 @@ optional drawSprite(
    sourceX: number, 
    sourceY: number, 
    sourceWidth: number, 
-   souceHeight: number, 
+   sourceHeight: number, 
    destinationX: number, 
    destinationY: number, 
    destinationWidth: number, 
@@ -263,7 +263,7 @@ delegate to `ctx.drawImage(...)`.
 | `sourceX` | `number` | X offset inside the source image. |
 | `sourceY` | `number` | Y offset inside the source image. |
 | `sourceWidth` | `number` | Width of the source region. |
-| `souceHeight` | `number` | Height of the source region. |
+| `sourceHeight` | `number` | Height of the source region. |
 | `destinationX` | `number` | X position on the canvas. |
 | `destinationY` | `number` | Y position on the canvas. |
 | `destinationWidth` | `number` | Rendered width. |

@@ -21,6 +21,8 @@ attached to any [Entity](Entity.md) at runtime via
 
 Subclasses **must** implement:
 - [type](Behaviour.md#type) — a unique string identifier (e.g. `"control"`, `"healthkit"`).
+
+Subclasses **may** override:
 - [update](Behaviour.md#update) — called once per frame with `deltaTime`.
 
 Subclasses **may** override:
@@ -111,10 +113,10 @@ npc.attachBehaviour(pf);
 
 | Property | Modifier | Type | Default value | Description | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L92) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L82) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
 | <a id="type"></a> `type` | `readonly` | `"pathfollower"` | `'pathfollower'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/path\_follower.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L107) |
-| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L55) |
+| <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
 | <a id="_ismoving"></a> `_isMoving` | `private` | `boolean` | `false` | Whether the entity is actively following a path. | - | - | [core/behaviours/path\_follower.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L125) |
 | <a id="arrivalthreshold"></a> `arrivalThreshold` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L113) |
 | <a id="arrivalthresholdsq"></a> `arrivalThresholdSq` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:114](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L114) |
@@ -205,7 +207,7 @@ if (follower.isMoving) {
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L100)
+Defined in: [core/behaviour.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L102)
 
 Derived look-up key, equal to [Behaviour.type](Behaviour.md#type) in lowercase.
 
@@ -228,26 +230,23 @@ case-insensitive.
 getOwner(): DynamicEntity;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:346](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L346)
+Defined in: [core/behaviour.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L122)
 
-Provides access to the owner entity for external systems.
+Returns the entity this behaviour is attached to.
 
 #### Returns
 
 [`DynamicEntity`](DynamicEntity.md)
 
-The entity this behaviour is attached to.
+The owning entity.
 
 #### Since
 
-0.4.0
+0.5.0
 
-#### Example
+#### Inherited from
 
-```ts
-const entity = follower.getOwner();
-console.log(entity.id);
-```
+[`Behaviour`](Behaviour.md).[`getOwner`](Behaviour.md#getowner)
 
 ***
 
@@ -298,7 +297,7 @@ if (!success) {
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L137)
+Defined in: [core/behaviour.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L155)
 
 Lifecycle hook called immediately after the behaviour is attached
 to an entity via [Entity.attachBehaviour](Entity.md#attachbehaviour).
@@ -322,7 +321,7 @@ collision [World](World.md).
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L145)
+Defined in: [core/behaviour.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L163)
 
 Lifecycle hook called when the behaviour is removed from an entity
 via [Entity.detachBehaviour](Entity.md#detachbehaviour).
@@ -345,7 +344,7 @@ Use this to unregister from external systems or release resources.
 optional render(ctx: RenderContext): void;
 ```
 
-Defined in: [core/behaviour.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L128)
+Defined in: [core/behaviour.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L146)
 
 Optional rendering hook invoked after the entity's own
 [Entity.render](Entity.md#render) call.
@@ -374,7 +373,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 stop(): void;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:252](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L252)
+Defined in: [core/behaviours/path\_follower.ts:250](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L250)
 
 Cancels the current path and stops the entity.
 
@@ -401,7 +400,7 @@ follower.stop();
 update(deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:265](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L265)
+Defined in: [core/behaviours/path\_follower.ts:263](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L263)
 
 Called every frame. Moves the entity toward the next waypoint.
 
@@ -434,7 +433,7 @@ private getOwnerGridPosition(): {
 };
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:313](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L313)
+Defined in: [core/behaviours/path\_follower.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L311)
 
 **`Internal`**
 
@@ -452,8 +451,8 @@ coordinates.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/behaviours/path\_follower.ts:313](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L313) |
-| `row` | `number` | [core/behaviours/path\_follower.ts:313](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L313) |
+| `col` | `number` | [core/behaviours/path\_follower.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L311) |
+| `row` | `number` | [core/behaviours/path\_follower.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L311) |
 
 ***
 
@@ -466,7 +465,7 @@ private gridToWorld(col: number, row: number): {
 };
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L326)
+Defined in: [core/behaviours/path\_follower.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L324)
 
 **`Internal`**
 
@@ -491,5 +490,5 @@ configured projection or orthogonal fallback.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `x` | `number` | [core/behaviours/path\_follower.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L326) |
-| `y` | `number` | [core/behaviours/path\_follower.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L326) |
+| `x` | `number` | [core/behaviours/path\_follower.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L324) |
+| `y` | `number` | [core/behaviours/path\_follower.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L324) |

@@ -151,7 +151,7 @@ Side effects on construction:
 clear(color?: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:322](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L322)
+Defined in: [core/renderer/terminal\_renderer.ts:325](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L325)
 
 Fills the entire back buffer with blank cells using `color` as the
 background.
@@ -184,7 +184,7 @@ The actual TTY is not written until [TerminalRenderContext.flush](#flush).
 destroy(): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:658](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L658)
+Defined in: [core/renderer/terminal\_renderer.ts:661](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L661)
 
 Restores the terminal to its normal state.
 
@@ -219,7 +219,7 @@ drawChar(
    bgColor?: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:433](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L433)
+Defined in: [core/renderer/terminal\_renderer.ts:436](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L436)
 
 Writes a single character into the cell buffer at `(x, y)`.
 
@@ -266,7 +266,7 @@ drawCircle(
    _fill?: boolean): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:511](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L511)
+Defined in: [core/renderer/terminal\_renderer.ts:514](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L514)
 
 Draws a circle outline using the midpoint circle algorithm.
 
@@ -307,7 +307,7 @@ drawLine(
    color: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:471](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L471)
+Defined in: [core/renderer/terminal\_renderer.ts:474](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L474)
 
 Draws a line between two world positions using Bresenham's line
 algorithm.
@@ -345,7 +345,7 @@ Cells along the line are filled with `"─"` (horizontal), `"│"`
 drawSprite(): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:452](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L452)
+Defined in: [core/renderer/terminal\_renderer.ts:455](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L455)
 
 No-op — sprites cannot be rendered in terminal mode.
 
@@ -377,7 +377,7 @@ drawText(
    bgColor?: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:402](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L402)
+Defined in: [core/renderer/terminal\_renderer.ts:405](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L405)
 
 Writes a text string into the cell buffer starting at `(x, y)`.
 
@@ -419,7 +419,7 @@ fillRect(
    color: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:349](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L349)
+Defined in: [core/renderer/terminal\_renderer.ts:352](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L352)
 
 Fills a rectangular region of cells with `color`.
 
@@ -456,7 +456,7 @@ cell indices automatically.
 flush(): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:563](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L563)
+Defined in: [core/renderer/terminal\_renderer.ts:566](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L566)
 
 Flushes changed cells to `process.stdout`.
 
@@ -487,7 +487,7 @@ Called automatically by the [Engine](Engine.md) at the end of every tick.
 resize(cols: number, rows: number): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:620](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L620)
+Defined in: [core/renderer/terminal\_renderer.ts:623](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L623)
 
 Reallocates the cell buffers for a new terminal size and forces a
 full-screen redraw on the next [TerminalRenderContext.flush](#flush).
@@ -530,7 +530,7 @@ process.stdout.on("resize", () => {
 restore(): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:237](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L237)
+Defined in: [core/renderer/terminal\_renderer.ts:240](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L240)
 
 Pops and restores the most recently saved translation.
 
@@ -554,7 +554,7 @@ Pops and restores the most recently saved translation.
 save(): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:228](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L228)
+Defined in: [core/renderer/terminal\_renderer.ts:231](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L231)
 
 Pushes the current translation onto the transform stack.
 
@@ -578,7 +578,7 @@ Pushes the current translation onto the transform stack.
 scale(_x: number, _y: number): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:266](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L266)
+Defined in: [core/renderer/terminal\_renderer.ts:269](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L269)
 
 No-op in terminal mode — character cells cannot scale arbitrarily.
 
@@ -614,7 +614,7 @@ strokeRect(
    color: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:371](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L371)
+Defined in: [core/renderer/terminal\_renderer.ts:374](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L374)
 
 Draws a box outline using Unicode box-drawing characters
 (`─`, `│`, `┌`, `┐`, `└`, `┘`).
@@ -649,7 +649,7 @@ Draws a box outline using Unicode box-drawing characters
 translate(x: number, y: number): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:256](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L256)
+Defined in: [core/renderer/terminal\_renderer.ts:259](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L259)
 
 Adds `(x, y)` to the current translation offset.
 
@@ -688,7 +688,7 @@ private setCell(
    bg: string): void;
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:295](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L295)
+Defined in: [core/renderer/terminal\_renderer.ts:298](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L298)
 
 **`Internal`**
 
@@ -718,7 +718,7 @@ Out-of-bounds writes are silently discarded.
 private worldToCell(x: number, y: number): [number, number];
 ```
 
-Defined in: [core/renderer/terminal\_renderer.ts:282](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L282)
+Defined in: [core/renderer/terminal\_renderer.ts:285](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/terminal_renderer.ts#L285)
 
 **`Internal`**
 

@@ -117,7 +117,7 @@ camera.follow(player.getPosition());
 getPosition(): Vector2;
 ```
 
-Defined in: [core/camera.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L97)
+Defined in: [core/camera.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L96)
 
 Returns the current centre position of the camera.
 
@@ -140,7 +140,7 @@ getViewRect(): {
 };
 ```
 
-Defined in: [core/camera.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L119)
+Defined in: [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118)
 
 Computes the axis-aligned rectangle that represents the visible
 area in world-space.
@@ -163,10 +163,10 @@ An object with `x` (left edge), `y` (top edge), `width`,
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `height` | `number` | [core/camera.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L119) |
-| `width` | `number` | [core/camera.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L119) |
-| `x` | `number` | [core/camera.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L119) |
-| `y` | `number` | [core/camera.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L119) |
+| `height` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
+| `width` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
+| `x` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
+| `y` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
 
 #### Example
 
@@ -218,7 +218,7 @@ camera.moveTo({ x: 500, y: 300 });
 resize(width: number, height: number): void;
 ```
 
-Defined in: [core/camera.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L141)
+Defined in: [core/camera.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L140)
 
 Updates the viewport dimensions, e.g. after a window resize.
 

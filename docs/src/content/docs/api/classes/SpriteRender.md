@@ -90,11 +90,11 @@ Creates a sprite renderer bound to the given entity and sheet.
 
 | Property | Modifier | Type | Default value | Description | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L92) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
 | <a id="offset"></a> `offset` | `public` | [`Vector2`](../interfaces/Vector2.md) | `{ x: 0, y: 0 }` | Pixel offset applied to the draw position, relative to the entity's origin. | - | - | [core/behaviours/sprite\_render.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L89) |
-| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L82) |
+| <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
 | <a id="type"></a> `type` | `readonly` | `"sprite"` | `'sprite'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/sprite\_render.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L50) |
-| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L55) |
+| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
 | <a id="currentframe"></a> `currentFrame` | `private` | `string` \| `null` | `null` | Name of the currently playing animation, or `null` if stopped. | - | - | [core/behaviours/sprite\_render.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L60) |
 | <a id="currentframeindex"></a> `currentFrameIndex` | `private` | `number` | `0` | Index into the current animation's `frames` array. | - | - | [core/behaviours/sprite\_render.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L67) |
 | <a id="elapsedtime"></a> `elapsedTime` | `private` | `number` | `0` | Seconds accumulated towards the next frame advance. | - | - | [core/behaviours/sprite\_render.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L74) |
@@ -111,7 +111,7 @@ Creates a sprite renderer bound to the given entity and sheet.
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L100)
+Defined in: [core/behaviour.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L102)
 
 Derived look-up key, equal to [Behaviour.type](Behaviour.md#type) in lowercase.
 
@@ -128,13 +128,39 @@ case-insensitive.
 
 ## Methods
 
+### getOwner()
+
+```ts
+getOwner(): Entity;
+```
+
+Defined in: [core/behaviour.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L122)
+
+Returns the entity this behaviour is attached to.
+
+#### Returns
+
+[`Entity`](Entity.md)
+
+The owning entity.
+
+#### Since
+
+0.5.0
+
+#### Inherited from
+
+[`Behaviour`](Behaviour.md).[`getOwner`](Behaviour.md#getowner)
+
+***
+
 ### onAttach()?
 
 ```ts
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L137)
+Defined in: [core/behaviour.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L155)
 
 Lifecycle hook called immediately after the behaviour is attached
 to an entity via [Entity.attachBehaviour](Entity.md#attachbehaviour).
@@ -158,7 +184,7 @@ collision [World](World.md).
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L145)
+Defined in: [core/behaviour.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L163)
 
 Lifecycle hook called when the behaviour is removed from an entity
 via [Entity.detachBehaviour](Entity.md#detachbehaviour).

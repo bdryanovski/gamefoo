@@ -10,7 +10,7 @@ title: 'Class: Pathfinder'
 
 # Class: Pathfinder
 
-Defined in: [core/utils/pathfinding.ts:134](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L134)
+Defined in: [core/utils/pathfinding.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L116)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/utils/pathfinding.ts:134](https://github.com/bdryanovski/gamef
 new Pathfinder(config: PathfinderConfig): Pathfinder;
 ```
 
-Defined in: [core/utils/pathfinding.ts:159](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L159)
+Defined in: [core/utils/pathfinding.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L141)
 
 Creates a new pathfinder bound to a grid.
 
@@ -52,10 +52,10 @@ const pf = new Pathfinder({
 
 | Property | Modifier | Type | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="allowdiagonal"></a> `allowDiagonal` | `private` | `boolean` | [core/utils/pathfinding.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L136) |
-| <a id="diagonalcost"></a> `diagonalCost` | `private` | `number` | [core/utils/pathfinding.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L137) |
-| <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | [core/utils/pathfinding.ts:135](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L135) |
-| <a id="heuristicfn"></a> `heuristicFn` | `private` | (`a`: \{ `col`: `number`; `row`: `number`; \}, `b`: \{ `col`: `number`; `row`: `number`; \}) => `number` | [core/utils/pathfinding.ts:138](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L138) |
+| <a id="allowdiagonal"></a> `allowDiagonal` | `private` | `boolean` | [core/utils/pathfinding.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L118) |
+| <a id="diagonalcost"></a> `diagonalCost` | `private` | `number` | [core/utils/pathfinding.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L119) |
+| <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | [core/utils/pathfinding.ts:117](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L117) |
+| <a id="heuristicfn"></a> `heuristicFn` | `private` | (`a`: \{ `col`: `number`; `row`: `number`; \}, `b`: \{ `col`: `number`; `row`: `number`; \}) => `number` | [core/utils/pathfinding.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L120) |
 
 ## Methods
 
@@ -71,7 +71,7 @@ private static getHeuristic(name: HeuristicName): (a: {
 }) => number;
 ```
 
-Defined in: [core/utils/pathfinding.ts:337](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L337)
+Defined in: [core/utils/pathfinding.ts:319](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L319)
 
 **`Internal`**
 
@@ -129,7 +129,7 @@ findPath(
   | null;
 ```
 
-Defined in: [core/utils/pathfinding.ts:188](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L188)
+Defined in: [core/utils/pathfinding.ts:170](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L170)
 
 Finds the shortest path between two grid cells.
 
@@ -180,7 +180,7 @@ isReachable(
    goalRow: number): boolean;
 ```
 
-Defined in: [core/utils/pathfinding.ts:303](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L303)
+Defined in: [core/utils/pathfinding.ts:285](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L285)
 
 Checks whether a cell is reachable from another.
 
@@ -225,7 +225,7 @@ private reconstructPath(node: PathNode): {
 }[];
 ```
 
-Defined in: [core/utils/pathfinding.ts:318](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L318)
+Defined in: [core/utils/pathfinding.ts:300](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L300)
 
 **`Internal`**
 

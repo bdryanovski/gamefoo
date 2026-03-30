@@ -120,7 +120,7 @@ renderIsometric(
    gridRows: number): void;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:234](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L234)
+Defined in: [core/tilemap/tile\_layer.ts:243](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L243)
 
 Renders visible tiles in **isometric** mode using the given
 projection for coordinate conversion.
@@ -173,40 +173,24 @@ renderOrthogonal(
 }): void;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:159](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L159)
-
-Renders visible tiles in **orthogonal** (top-down) mode.
-
-Only tiles within the viewport rectangle are drawn. Each tile is
-rendered at its world position calculated from column/row times
-cell dimensions.
+Defined in: [core/tilemap/tile\_layer.ts:173](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L173)
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | Canvas 2D rendering context. |
-| `cellWidth` | `number` | Width of a single cell in pixels. |
-| `cellHeight` | `number` | Height of a single cell in pixels. |
-| `viewport` | \{ `height`: `number`; `width`: `number`; `x`: `number`; `y`: `number`; \} | Visible viewport rectangle in world-space. |
-| `viewport.height` | `number` | - |
-| `viewport.width` | `number` | - |
-| `viewport.x` | `number` | - |
-| `viewport.y` | `number` | - |
+| Parameter | Type |
+| ------ | ------ |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) |
+| `cellWidth` | `number` |
+| `cellHeight` | `number` |
+| `viewport` | \{ `height`: `number`; `width`: `number`; `x`: `number`; `y`: `number`; \} |
+| `viewport.height` | `number` |
+| `viewport.width` | `number` |
+| `viewport.x` | `number` |
+| `viewport.y` | `number` |
 
 #### Returns
 
 `void`
-
-#### Since
-
-0.4.0
-
-#### Example
-
-```ts
-layer.renderOrthogonal(ctx, 32, 32, camera.getViewRect());
-```
 
 ***
 
@@ -247,3 +231,29 @@ Does nothing if the coordinates are out of bounds.
 layer.setTile(5, 3, 2); // place grass tile
 layer.setTile(5, 4, -1); // clear tile
 ```
+
+***
+
+### withOpacity()
+
+```ts
+private withOpacity(ctx: RenderContext, fn: () => void): void;
+```
+
+Defined in: [core/tilemap/tile\_layer.ts:165](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L165)
+
+**`Internal`**
+
+Applies layer opacity around a render callback.
+Saves and restores globalAlpha on canvas contexts.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) |
+| `fn` | () => `void` |
+
+#### Returns
+
+`void`

@@ -471,39 +471,6 @@ On terminal: delegates to drawText.
 
 ***
 
-### setSize()
-
-```ts
-setSize(width: number, height: number): void;
-```
-
-Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
-
-Set size of the entity
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `width` | `number` |
-| `height` | `number` |
-
-#### Returns
-
-`void`
-
-void
-
-#### Since
-
-0.2.0
-
-#### Inherited from
-
-[`Entity`](Entity.md).[`setSize`](Entity.md#setsize)
-
-***
-
 ### setText()
 
 ```ts
@@ -580,6 +547,39 @@ Typically called from a subclass's `render` implementation.
 #### Inherited from
 
 [`Entity`](Entity.md).[`renderBehaviours`](Entity.md#renderbehaviours)
+
+***
+
+### setSize()
+
+```ts
+protected setSize(width: number, height: number): void;
+```
+
+Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
+
+Set size of the entity
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `width` | `number` |
+| `height` | `number` |
+
+#### Returns
+
+`void`
+
+void
+
+#### Since
+
+0.2.0
+
+#### Inherited from
+
+[`Entity`](Entity.md).[`setSize`](Entity.md#setsize)
 
 ***
 

@@ -207,8 +207,8 @@ AABB-vs-AABB overlap test.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `a` | `WorldBounds` | First bounding rectangle. |
-| `b` | `WorldBounds` | Second bounding rectangle. |
+| `a` | [`WorldBounds`](../interfaces/WorldBounds.md) | First bounding rectangle. |
+| `b` | [`WorldBounds`](../interfaces/WorldBounds.md) | Second bounding rectangle. |
 
 #### Returns
 
@@ -239,8 +239,8 @@ rectangle to the circle centre and checks the squared distance.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `circle` | [`Collidable`](Collidable.md) | The collidable with a `circle` shape. |
-| `circleBounds` | `WorldBounds` | World bounds of the circle collider. |
-| `rect` | `WorldBounds` | World bounds of the AABB collider. |
+| `circleBounds` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of the circle collider. |
+| `rect` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of the AABB collider. |
 
 #### Returns
 
@@ -272,9 +272,9 @@ Circle-vs-circle overlap test using squared-distance comparison
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `a` | [`Collidable`](Collidable.md) | First collidable (must have `circle` shape). |
-| `boundsA` | `WorldBounds` | World bounds of `a`. |
+| `boundsA` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of `a`. |
 | `b` | [`Collidable`](Collidable.md) | Second collidable (must have `circle` shape). |
-| `boundsB` | `WorldBounds` | World bounds of `b`. |
+| `boundsB` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of `b`. |
 
 #### Returns
 
@@ -308,9 +308,9 @@ Supports AABB-vs-AABB, circle-vs-circle, and circle-vs-AABB.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `a` | [`Collidable`](Collidable.md) | First collidable. |
-| `boundsA` | `WorldBounds` | World bounds of `a`. |
+| `boundsA` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of `a`. |
 | `b` | [`Collidable`](Collidable.md) | Second collidable. |
-| `boundsB` | `WorldBounds` | World bounds of `b`. |
+| `boundsB` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of `b`. |
 
 #### Returns
 
@@ -346,9 +346,9 @@ occurs.
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `a` | [`Collidable`](Collidable.md) | First collidable. |
-| `boundsA` | `WorldBounds` | World bounds of `a`. |
+| `boundsA` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of `a`. |
 | `b` | [`Collidable`](Collidable.md) | Second collidable. |
-| `boundsB` | `WorldBounds` | World bounds of `b`. |
+| `boundsB` | [`WorldBounds`](../interfaces/WorldBounds.md) | World bounds of `b`. |
 
 #### Returns
 

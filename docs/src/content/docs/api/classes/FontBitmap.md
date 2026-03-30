@@ -10,7 +10,7 @@ title: 'Class: FontBitmap'
 
 # Class: FontBitmap
 
-Defined in: [core/fonts/font\_bitmap.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L76)
+Defined in: [core/fonts/font\_bitmap.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L65)
 
 Pixel-perfect bitmap font renderer.
 
@@ -46,6 +46,10 @@ const width = font.getTextWidth("SCORE 999");
 
 FONT\_5x5 — the built-in 5x5 pixel font data
 
+## Extends
+
+- `BitmapDataRenderer`
+
 ## Constructors
 
 ### Constructor
@@ -54,13 +58,9 @@ FONT\_5x5 — the built-in 5x5 pixel font data
 new FontBitmap(name: InternalBitmapFontName): FontBitmap;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:134](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L134)
+Defined in: [core/fonts/font\_bitmap.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L83)
 
 Creates a font renderer for the named catalogue entry.
-
-If the name does not match any registered font the instance will
-have empty data and zero dimensions — calls to `renderChar` /
-`renderText` will be no-ops.
 
 #### Parameters
 
@@ -82,16 +82,22 @@ Error if the name is not found in the catalogue.
 const font = new FontBitmap("5x5");
 ```
 
+#### Overrides
+
+```ts
+BitmapDataRenderer.constructor
+```
+
 ## Properties
 
-| Property | Modifier | Type | Default value | Description | Defined in |
-| ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `public` | `number` | `0` (populated from catalogue on construction) | Character cell height in pixels. | [core/fonts/font\_bitmap.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L100) |
-| <a id="name"></a> `name` | `readonly` | `string` | `undefined` | The catalogue name of the loaded font (e.g. `"5x5"`). | [core/fonts/font\_bitmap.ts:78](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L78) |
-| <a id="width"></a> `width` | `public` | `number` | `0` (populated from catalogue on construction) | Character cell width in pixels (including spacing). | [core/fonts/font\_bitmap.ts:93](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L93) |
-| <a id="data"></a> `data` | `readonly` | `Record`\<`string`, `number`[]\> | `undefined` | Character bitmask data keyed by character string. Each value is an array of integers where each integer represents one row of pixels (MSB = leftmost pixel). | [core/fonts/font\_bitmap.ts:86](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L86) |
-| <a id="spacing"></a> `spacing` | `protected` | `number` | `0` | Horizontal spacing between the drawable area and the full cell width, in pixels. | [core/fonts/font\_bitmap.ts:108](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L108) |
-| <a id="glyphpaths"></a> `glyphPaths` | `private` | `Map`\<`string`, `Path2D`\> | `undefined` | Map of pre-built `Path2D` objects for each character. Keys are characters, values are their corresponding paths. This cache is used to store pre-built paths for characters that have been rendered at least once, allowing for faster rendering on subsequent calls. | [core/fonts/font\_bitmap.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L116) |
+| Property | Modifier | Type | Default value | Description | Inherited from | Defined in |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="height"></a> `height` | `public` | `number` | `0` (populated from catalogue on construction) | Cell height in pixels. | `BitmapDataRenderer.height` | [core/shared/bitmap\_data\_renderer.ts:44](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L44) |
+| <a id="name"></a> `name` | `readonly` | `string` | `undefined` | The catalogue name of the loaded resource. | `BitmapDataRenderer.name` | [core/shared/bitmap\_data\_renderer.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L22) |
+| <a id="width"></a> `width` | `public` | `number` | `0` (populated from catalogue on construction) | Cell width in pixels (including spacing). | `BitmapDataRenderer.width` | [core/shared/bitmap\_data\_renderer.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L37) |
+| <a id="data"></a> `data` | `readonly` | `Record`\<`string`, `number`[]\> | `undefined` | Bitmask data keyed by character / icon name. Each value is an array of integers where each integer represents one row of pixels (MSB = leftmost pixel). | `BitmapDataRenderer.data` | [core/shared/bitmap\_data\_renderer.ts:30](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L30) |
+| <a id="spacing"></a> `spacing` | `protected` | `number` | `0` | Horizontal spacing between the drawable area and the full cell width, in pixels. | `BitmapDataRenderer.spacing` | [core/shared/bitmap\_data\_renderer.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L52) |
+| <a id="glyphpaths"></a> `glyphPaths` | `private` | `Map`\<`string`, `Path2D`\> | `undefined` | Map of pre-built `Path2D` objects for each character. Keys are characters, values are their corresponding paths. | - | [core/fonts/font\_bitmap.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L70) |
 
 ## Accessors
 
@@ -100,34 +106,17 @@ const font = new FontBitmap("5x5");
 #### Get Signature
 
 ```ts
-get metadata(): 
-  | {
-  chars: string;
-  data: Record<string, number[]>;
-  height: number;
-  name: string;
-  spacing: number;
-  width: number;
-}
-  | null;
+get metadata(): BitmapCatalogEntry | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:156](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L156)
+Defined in: [core/fonts/font\_bitmap.ts:93](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L93)
 
 Returns the raw catalogue entry for this font, or `null` if the
 font name was not found.
 
 ##### Returns
 
-  \| \{
-  `chars`: `string`;
-  `data`: `Record`\<`string`, `number`[]\>;
-  `height`: `number`;
-  `name`: `string`;
-  `spacing`: `number`;
-  `width`: `number`;
-\}
-  \| `null`
+`BitmapCatalogEntry` \| `null`
 
 Font metadata object or `null`.
 
@@ -139,7 +128,7 @@ Font metadata object or `null`.
 getChar(char: string): number[] | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:221](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L221)
+Defined in: [core/fonts/font\_bitmap.ts:147](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L147)
 
 Retrieves the bitmask rows for a single character.
 
@@ -160,7 +149,6 @@ An array of row bitmasks, or `null` if the character is
 
 ```ts
 const rows = font.getChar("A");
-// rows → [14, 17, 31, 17, 17] for the 5x5 font
 ```
 
 ***
@@ -171,7 +159,7 @@ const rows = font.getChar("A");
 getTextWidth(text: string): number;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:236](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L236)
+Defined in: [core/fonts/font\_bitmap.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L162)
 
 Computes the pixel width required to render the given text string.
 
@@ -201,11 +189,10 @@ const w = font.getTextWidth("HI"); // 12 for the 5x5 font
 prebuildGlyphs(chars?: string[]): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:197](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L197)
+Defined in: [core/fonts/font\_bitmap.ts:124](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L124)
 
 Pre-builds `Path2D` objects for a set of characters, storing them in the `glyphPaths`
-cache. This method can be called with a list of characters that are expected to
-be rendered frequently,
+cache.
 
 #### Parameters
 
@@ -229,12 +216,9 @@ renderChar(
    ctx: RenderContext): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:257](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L257)
+Defined in: [core/fonts/font\_bitmap.ts:180](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L180)
 
 Renders a single character at the given pixel position.
-
-Each set bit in the character's row bitmask produces a 1x1
-`fillRect` call using the context's current `fillStyle`.
 
 #### Parameters
 
@@ -268,11 +252,9 @@ renderText(
    ctx: RenderContext): void;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:296](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L296)
+Defined in: [core/fonts/font\_bitmap.ts:217](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L217)
 
 Renders a full text string by drawing each character sequentially.
-
-Characters are spaced according to the font's cell width.
 
 #### Parameters
 
@@ -302,11 +284,9 @@ font.renderText("GAME OVER", 100, 50, ctx);
 private buildGlyphPath(char: string): Path2D | null;
 ```
 
-Defined in: [core/fonts/font\_bitmap.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L175)
+Defined in: [core/fonts/font\_bitmap.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/core/fonts/font_bitmap.ts#L103)
 
 Builds a `Path2D` object for the specified character based on its bitmap data.
-This method reads the character's bitmap data and constructs a path that
-represents the filled pixels of the character.
 
 #### Parameters
 
@@ -318,11 +298,4 @@ represents the filled pixels of the character.
 
 `Path2D` \| `null`
 
-A `Path2D` object representing the character's shape, or `null` if the character is not found in the font data.
-
-#### Remarks
-
-This method is called internally when a character is rendered for the first time
-or when pre-building glyphs. It converts the bitmap representation of the character
-into a vector path that can be efficiently rendered using `CanvasRenderingContext2D`.
-The resulting `Path2D` object is cached in the `glyphPaths` map for future use, reducing the overhead of path construction on subsequent renders.
+A `Path2D` object representing the character's shape, or `null` if not found.

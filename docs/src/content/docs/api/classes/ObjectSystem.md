@@ -65,7 +65,7 @@ Defined in: [subsystems/object\_system.ts:45](https://github.com/bdryanovski/gam
 render(ctx: RenderContext): void;
 ```
 
-Defined in: [subsystems/object\_system.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/object_system.ts#L58)
+Defined in: [subsystems/object\_system.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/subsystems/object_system.ts#L56)
 
 #### Parameters
 

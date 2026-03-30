@@ -78,7 +78,6 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | [IntervalLoopDriver](classes/IntervalLoopDriver.md) | Terminal / server game loop driver using `setInterval`. |
 | [IsometricProjection](classes/IsometricProjection.md) | - |
 | [MapGenerator](classes/MapGenerator.md) | - |
-| [Monitor](classes/Monitor.md) | - |
 | [Pathfinder](classes/Pathfinder.md) | - |
 | [RAFLoopDriver](classes/RAFLoopDriver.md) | Browser game loop driver using `requestAnimationFrame`. |
 | [TerminalInputDriver](classes/TerminalInputDriver.md) | Terminal keyboard input driver using `process.stdin` in raw mode. |
@@ -98,11 +97,10 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 
 | Class | Description |
 | ------ | ------ |
-| [CameraSystem](classes/CameraSystem.md) | CameraSystem is responsible for managing the camera's position and view. It can follow a target (like a player) and adjust the view accordingly. |
+| [CameraSystem](classes/CameraSystem.md) | Camera subsystem with optional zoom, smooth follow, and isometric-aware viewport transforms. |
 | [CollisionSystem](classes/CollisionSystem.md) | CollisionSystem is responsible for detecting collisions between game objects. It uses the World class to manage and detect collisions based on registered collidable objects. |
 | [GridDebugSystem](classes/GridDebugSystem.md) | SubSystem is a modular component of the game engine that can be added or removed as needed. It provides hooks for initialization, updating, rendering, and destruction. Each subsystem can have its own logic and state, and can interact with the engine and other subsystems. |
-| [IsometricCameraSystem](classes/IsometricCameraSystem.md) | SubSystem is a modular component of the game engine that can be added or removed as needed. It provides hooks for initialization, updating, rendering, and destruction. Each subsystem can have its own logic and state, and can interact with the engine and other subsystems. |
-| [MonitorSystem](classes/MonitorSystem.md) | MonitorSystem is responsible for displaying debug information on the screen. It uses the Monitor class to track and render various performance metrics, |
+| [MonitorSystem](classes/MonitorSystem.md) | SubSystem is a modular component of the game engine that can be added or removed as needed. It provides hooks for initialization, updating, rendering, and destruction. Each subsystem can have its own logic and state, and can interact with the engine and other subsystems. |
 | [ObjectSystem](classes/ObjectSystem.md) | ObjectSystem is responsible for managing all non-player game objects within the engine. It maintains a central registry of game objects and delegates per-frame update and render calls to them. |
 | [TilemapSystem](classes/TilemapSystem.md) | SubSystem is a modular component of the game engine that can be added or removed as needed. It provides hooks for initialization, updating, rendering, and destruction. Each subsystem can have its own logic and state, and can interact with the engine and other subsystems. |
 
@@ -113,6 +111,7 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | Interface | Description |
 | ------ | ------ |
 | [EnhancedCameraConfig](interfaces/EnhancedCameraConfig.md) | Configuration options for [EnhancedCamera](classes/EnhancedCamera.md). |
+| [SpriteFrame](interfaces/SpriteFrame.md) | Describes the position and size of a single frame within a [Sprite](classes/Sprite.md) sheet. |
 
 ### Utilities
 
@@ -141,9 +140,9 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | Interface | Description |
 | ------ | ------ |
 | [InputDriver](interfaces/InputDriver.md) | Abstraction over platform-specific keyboard input. |
-| [LoopConfig](interfaces/LoopConfig.md) | - |
 | [LoopDriver](interfaces/LoopDriver.md) | Abstraction over the mechanism that drives the game loop. |
 | [RenderContext](interfaces/RenderContext.md) | The unified rendering surface interface used throughout the engine. |
+| [TerminalCell](interfaces/TerminalCell.md) | A single terminal character cell. |
 | [TerminalGlyph](interfaces/TerminalGlyph.md) | Describes the visual appearance of an entity in terminal mode. |
 | [TerminalRenderConfig](interfaces/TerminalRenderConfig.md) | Configuration for [TerminalRenderContext](classes/TerminalRenderContext.md). |
 
@@ -178,6 +177,7 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | [CollisionInfo](interfaces/CollisionInfo.md) | Payload delivered to a [Collidable.onCollision](classes/Collidable.md#oncollision) callback when two colliders overlap. |
 | [Demension](interfaces/Demension.md) | An object representin 2D demensions of anything |
 | [Vector2](interfaces/Vector2.md) | A two-dimensional vector representing a position, direction, or offset. |
+| [WorldBounds](interfaces/WorldBounds.md) | Axis-aligned rectangle used internally by the collision detection system ([World](classes/World.md)) to represent an entity's bounding volume in world-space. |
 
 ## Type Aliases
 
@@ -187,12 +187,20 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | ------ | ------ |
 | [HeuristicName](type-aliases/HeuristicName.md) | Heuristic function name for A* distance estimation. |
 
+### Behaviours
+
+| Type Alias | Description |
+| ------ | ------ |
+| [CollidableOptions](type-aliases/CollidableOptions.md) | Options for constructing a [Collidable](classes/Collidable.md) behaviour. |
+
 ### General
 
 | Type Alias | Description |
 | ------ | ------ |
 | [InternalBitmapFontName](type-aliases/InternalBitmapFontName.md) | - |
 | [InternalBitmapIconName](type-aliases/InternalBitmapIconName.md) | - |
+| [~~IsometricCameraSystem~~](type-aliases/IsometricCameraSystem.md) | - |
+| [TerminalBuffer](type-aliases/TerminalBuffer.md) | A 2-D grid of [TerminalCell](interfaces/TerminalCell.md) objects representing the full terminal screen (`buffer[row][col]`). |
 
 ### Grid
 
@@ -205,6 +213,7 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | Type Alias | Description |
 | ------ | ------ |
 | [ColliderShape](type-aliases/ColliderShape.md) | Discriminated union describing the shape of a collision volume. |
+| [~~Dimension~~](type-aliases/Dimension.md) | Alias for [Demension](interfaces/Demension.md) with correct spelling. |
 | [GameObject](type-aliases/GameObject.md) | Union of all entity types that can be managed by the engine's [GameObjectRegister](classes/GameObjectRegister.md). |
 
 ## Functions
@@ -220,4 +229,9 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | Function | Description |
 | ------ | ------ |
 | [createBunLoop](functions/createBunLoop.md) | - |
-| [createTerminalLoop](functions/createTerminalLoop.md) | - |
+
+## Variables
+
+| Variable | Description |
+| ------ | ------ |
+| [~~IsometricCameraSystem~~](variables/IsometricCameraSystem.md) | - |

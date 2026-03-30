@@ -525,39 +525,6 @@ Draws the entity .
 
 ***
 
-### setSize()
-
-```ts
-setSize(width: number, height: number): void;
-```
-
-Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
-
-Set size of the entity
-
-#### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `width` | `number` |
-| `height` | `number` |
-
-#### Returns
-
-`void`
-
-void
-
-#### Since
-
-0.2.0
-
-#### Inherited from
-
-[`Entity`](Entity.md).[`setSize`](Entity.md#setsize)
-
-***
-
 ### setSpeed()
 
 ```ts
@@ -617,12 +584,16 @@ entity.setVelocity({ x: -1, y: 0 }); // moving left
 ### update()
 
 ```ts
-abstract update(deltaTime: number): void;
+update(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
+Defined in: [entities/dynamic\_entity.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/dynamic_entity.ts#L118)
 
-Advances the entity's state by one frame.
+Applies the current velocity and speed to the entity's position,
+then delegates to all attached behaviours.
+
+Behaviours run first so that input (e.g. [Control](Control.md)) can set
+velocity before it is integrated into position — no one-frame lag.
 
 #### Parameters
 
@@ -634,7 +605,11 @@ Advances the entity's state by one frame.
 
 `void`
 
-#### Inherited from
+#### Since
+
+0.5.0
+
+#### Overrides
 
 [`Entity`](Entity.md).[`update`](Entity.md#update)
 
@@ -666,6 +641,39 @@ Typically called from a subclass's `render` implementation.
 #### Inherited from
 
 [`Entity`](Entity.md).[`renderBehaviours`](Entity.md#renderbehaviours)
+
+***
+
+### setSize()
+
+```ts
+protected setSize(width: number, height: number): void;
+```
+
+Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
+
+Set size of the entity
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `width` | `number` |
+| `height` | `number` |
+
+#### Returns
+
+`void`
+
+void
+
+#### Since
+
+0.2.0
+
+#### Inherited from
+
+[`Entity`](Entity.md).[`setSize`](Entity.md#setsize)
 
 ***
 

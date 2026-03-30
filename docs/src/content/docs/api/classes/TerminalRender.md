@@ -88,7 +88,7 @@ tr.setGlyph({ char: "@", fg: "#88ff00", bg: "#004400" });
 ### Constructor
 
 ```ts
-new TerminalRender(entity: Entity, glyph: TerminalGlyph): TerminalRender;
+new TerminalRender(owner: Entity, glyph: TerminalGlyph): TerminalRender;
 ```
 
 Defined in: [core/behaviours/terminal\_render.ts:139](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L139)
@@ -99,7 +99,7 @@ Creates a new `TerminalRender` behaviour.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `entity` | [`Entity`](Entity.md) | The owning entity whose position determines where the glyph is drawn. |
+| `owner` | [`Entity`](Entity.md) | The owning entity whose position determines where the glyph is drawn. |
 | `glyph` | [`TerminalGlyph`](../interfaces/TerminalGlyph.md) | The character and colours to render. |
 
 #### Returns
@@ -125,10 +125,10 @@ enemy.attachBehaviour(tr);
 
 | Property | Modifier | Type | Default value | Description | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L92) |
+| <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
 | <a id="priority"></a> `priority` | `public` | `number` | `10` | Execution priority. Lower values run first in the behaviour pipeline. Defaults to `10` (after physics-related behaviours). **Since** 0.4.0 | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | - | [core/behaviours/terminal\_render.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L119) |
 | <a id="type"></a> `type` | `readonly` | `"terminal_render"` | `'terminal_render'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/terminal\_render.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L110) |
-| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L55) |
+| <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
 | <a id="glyph"></a> `glyph` | `private` | [`TerminalGlyph`](../interfaces/TerminalGlyph.md) | `undefined` | The current glyph definition. | - | - | [core/behaviours/terminal\_render.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L122) |
 
 ## Accessors
@@ -141,7 +141,7 @@ enemy.attachBehaviour(tr);
 get key(): string;
 ```
 
-Defined in: [core/behaviour.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L100)
+Defined in: [core/behaviour.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L102)
 
 Derived look-up key, equal to [Behaviour.type](Behaviour.md#type) in lowercase.
 
@@ -178,13 +178,39 @@ Returns the current glyph definition.
 
 ***
 
+### getOwner()
+
+```ts
+getOwner(): Entity;
+```
+
+Defined in: [core/behaviour.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L122)
+
+Returns the entity this behaviour is attached to.
+
+#### Returns
+
+[`Entity`](Entity.md)
+
+The owning entity.
+
+#### Since
+
+0.5.0
+
+#### Inherited from
+
+[`Behaviour`](Behaviour.md).[`getOwner`](Behaviour.md#getowner)
+
+***
+
 ### onAttach()?
 
 ```ts
 optional onAttach(): void;
 ```
 
-Defined in: [core/behaviour.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L137)
+Defined in: [core/behaviour.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L155)
 
 Lifecycle hook called immediately after the behaviour is attached
 to an entity via [Entity.attachBehaviour](Entity.md#attachbehaviour).
@@ -208,7 +234,7 @@ collision [World](World.md).
 optional onDetach(): void;
 ```
 
-Defined in: [core/behaviour.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L145)
+Defined in: [core/behaviour.ts:163](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L163)
 
 Lifecycle hook called when the behaviour is removed from an entity
 via [Entity.detachBehaviour](Entity.md#detachbehaviour).
@@ -231,7 +257,7 @@ Use this to unregister from external systems or release resources.
 render(ctx: RenderContext): void;
 ```
 
-Defined in: [core/behaviours/terminal\_render.ts:193](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L193)
+Defined in: [core/behaviours/terminal\_render.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L184)
 
 Draws the glyph at the entity's current `(x, y)` position.
 
@@ -298,27 +324,27 @@ setTimeout(() => tr.setGlyph({ char: "@", fg: "#00ff00" }), 200);
 ### update()
 
 ```ts
-update(_dt: number): void;
+update(_deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/terminal\_render.ts:180](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/terminal_render.ts#L180)
+Defined in: [core/behaviour.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L136)
 
-No-op — `TerminalRender` has no per-frame logic.
+Called once per frame to advance this behaviour's logic.
+
+Override in subclasses that need per-frame logic. Behaviours that
+are purely reactive (collision, health, terminal render) can omit
+this — the default is a no-op.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `_dt` | `number` | Unused delta time. |
+| `_deltaTime` | `number` | Seconds elapsed since the previous frame. |
 
 #### Returns
 
 `void`
 
-#### Since
-
-0.4.0
-
-#### Overrides
+#### Inherited from
 
 [`Behaviour`](Behaviour.md).[`update`](Behaviour.md#update)

@@ -16,7 +16,7 @@ type GameObject =
   | DynamicEntity;
 ```
 
-Defined in: [generic\_types.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L70)
+Defined in: [entities/types.ts:27](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/types.ts#L27)
 
 Union of all entity types that can be managed by the engine's
 [GameObjectRegister](../classes/GameObjectRegister.md).

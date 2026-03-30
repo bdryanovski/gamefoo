@@ -11,19 +11,24 @@ title: 'Function: createBunLoop()'
 # Function: createBunLoop()
 
 ```ts
-function createBunLoop(config: LoopConfig): {
+function createBunLoop(config: {
+  fps?: number;
+  onTick: (dt: number) => void;
+}): {
   start: void;
   stop: void;
 };
 ```
 
-Defined in: [core/renderer/loops/terminal\_loop.ts:29](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/terminal_loop.ts#L29)
+Defined in: [core/renderer/loops/terminal\_loop.ts:1](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/terminal_loop.ts#L1)
 
 ## Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `config` | [`LoopConfig`](../interfaces/LoopConfig.md) |
+| `config` | \{ `fps?`: `number`; `onTick`: (`dt`: `number`) => `void`; \} |
+| `config.fps?` | `number` |
+| `config.onTick` | (`dt`: `number`) => `void` |
 
 ## Returns
 
@@ -36,5 +41,5 @@ Defined in: [core/renderer/loops/terminal\_loop.ts:29](https://github.com/bdryan
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `start()` | () => `void` | [core/renderer/loops/terminal\_loop.ts:47](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/terminal_loop.ts#L47) |
-| `stop()` | () => `void` | [core/renderer/loops/terminal\_loop.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/terminal_loop.ts#L52) |
+| `start()` | () => `void` | [core/renderer/loops/terminal\_loop.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/terminal_loop.ts#L22) |
+| `stop()` | () => `void` | [core/renderer/loops/terminal\_loop.ts:27](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/terminal_loop.ts#L27) |

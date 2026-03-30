@@ -92,7 +92,7 @@ const sprite = new Sprite(img, 64, 64, {
 | ------ | ------ | ------ | ------ | ------ |
 | <a id="animations"></a> `animations` | `public` | `Map`\<`string`, `AnimationDefinition`\> | Named animation definitions keyed by animation name. Populated from the optional `animations` parameter passed to the constructor. | [core/sprite.ts:151](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L151) |
 | <a id="columns"></a> `columns` | `readonly` | `number` | Number of frame columns in the spritesheet, computed as `Math.floor(image.width / width)`. | [core/sprite.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L137) |
-| <a id="frames"></a> `frames` | `public` | `Map`\<`string` \| `number`, `SpriteFrame`\> | **Since** 0.2.0 | [core/sprite.ts:156](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L156) |
+| <a id="frames"></a> `frames` | `public` | `Map`\<`string` \| `number`, [`SpriteFrame`](../interfaces/SpriteFrame.md)\> | **Since** 0.2.0 | [core/sprite.ts:156](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L156) |
 | <a id="height"></a> `height` | `readonly` | `number` | Height of a single frame cell in pixels. | [core/sprite.ts:131](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L131) |
 | <a id="image"></a> `image` | `public` | `HTMLImageElement` | The underlying image element containing the full spritesheet. | [core/sprite.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L125) |
 | <a id="rows"></a> `rows` | `readonly` | `number` | Number of frame rows in the spritesheet, computed as `Math.floor(image.height / height)`. | [core/sprite.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L143) |
@@ -137,7 +137,7 @@ Defined in: [core/sprite.ts:288](https://github.com/bdryanovski/gamefoo/blob/mai
 | Parameter | Type |
 | ------ | ------ |
 | `image` | `HTMLImageElement` |
-| `regions` | `Record`\<`string`, `SpriteFrame`\> |
+| `regions` | `Record`\<`string`, [`SpriteFrame`](../interfaces/SpriteFrame.md)\> |
 | `animations?` | `Record`\<`string`, `AnimationDefinition`\> |
 
 #### Returns
@@ -216,7 +216,7 @@ uniform grid.
 
 #### Returns
 
-`Map`\<`number`, `SpriteFrame`\>
+`Map`\<`number`, [`SpriteFrame`](../interfaces/SpriteFrame.md)\>
 
 A map of frame indices to their corresponding source rectangles.
  Frame indices are zero-based and laid out left-to-right, top-to-bottom.
@@ -251,7 +251,7 @@ top-to-bottom.
 
 #### Returns
 
-`SpriteFrame`
+[`SpriteFrame`](../interfaces/SpriteFrame.md)
 
 An `{ x, y, width, height }` rectangle in pixel coordinates
   relative to the top-left corner of the source image.

@@ -10,7 +10,7 @@ title: 'Class: Grid<T>'
 
 # Class: Grid\<T\>
 
-Defined in: [core/grid/grid.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L65)
+Defined in: [core/grid/grid.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L46)
 
 ## Type Parameters
 
@@ -26,7 +26,7 @@ Defined in: [core/grid/grid.ts:65](https://github.com/bdryanovski/gamefoo/blob/m
 new Grid<T>(config: GridConfig, defaultValue: T): Grid<T>;
 ```
 
-Defined in: [core/grid/grid.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L100)
+Defined in: [core/grid/grid.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L81)
 
 Creates a new grid, pre-filling every cell with `defaultValue`.
 
@@ -58,12 +58,12 @@ const grid = new Grid<number>(
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="cellheight"></a> `cellHeight` | `readonly` | `number` | Height of a single cell in world-space pixels. | [core/grid/grid.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L76) |
-| <a id="cellwidth"></a> `cellWidth` | `readonly` | `number` | Width of a single cell in world-space pixels. | [core/grid/grid.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L73) |
-| <a id="cols"></a> `cols` | `readonly` | `number` | Number of columns in the grid. | [core/grid/grid.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L67) |
-| <a id="origin"></a> `origin` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | World-space offset of cell (0, 0). | [core/grid/grid.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L79) |
-| <a id="rows"></a> `rows` | `readonly` | `number` | Number of rows in the grid. | [core/grid/grid.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L70) |
-| <a id="cells"></a> `cells` | `private` | [`GridCell`](../interfaces/GridCell.md)\<`T`\>[][] | Internal 2-D array storing all cells, indexed `[row][col]`. | [core/grid/grid.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L82) |
+| <a id="cellheight"></a> `cellHeight` | `readonly` | `number` | Height of a single cell in world-space pixels. | [core/grid/grid.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L57) |
+| <a id="cellwidth"></a> `cellWidth` | `readonly` | `number` | Width of a single cell in world-space pixels. | [core/grid/grid.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L54) |
+| <a id="cols"></a> `cols` | `readonly` | `number` | Number of columns in the grid. | [core/grid/grid.ts:48](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L48) |
+| <a id="origin"></a> `origin` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | World-space offset of cell (0, 0). | [core/grid/grid.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L60) |
+| <a id="rows"></a> `rows` | `readonly` | `number` | Number of rows in the grid. | [core/grid/grid.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L51) |
+| <a id="cells"></a> `cells` | `private` | [`GridCell`](../interfaces/GridCell.md)\<`T`\>[][] | Internal 2-D array storing all cells, indexed `[row][col]`. | [core/grid/grid.ts:63](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L63) |
 
 ## Methods
 
@@ -73,7 +73,7 @@ const grid = new Grid<number>(
 cellToWorld(col: number, row: number): Vector2;
 ```
 
-Defined in: [core/grid/grid.ts:230](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L230)
+Defined in: [core/grid/grid.ts:211](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L211)
 
 Converts grid coordinates to world-space pixel position.
 
@@ -113,7 +113,7 @@ const pos = grid.cellToWorld(3, 2);
 fill(value: T): void;
 ```
 
-Defined in: [core/grid/grid.ts:354](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L354)
+Defined in: [core/grid/grid.ts:335](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L335)
 
 Fills every cell in the grid with the given value.
 
@@ -152,7 +152,7 @@ fillRect(
    value: T): void;
 ```
 
-Defined in: [core/grid/grid.ts:379](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L379)
+Defined in: [core/grid/grid.ts:360](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L360)
 
 Fills a rectangular sub-region of the grid with the given value.
 
@@ -191,7 +191,7 @@ grid.fillRect(2, 2, 4, 3, 5);
 forEach(callback: (cell: GridCell<T>, col: number, row: number) => void): void;
 ```
 
-Defined in: [core/grid/grid.ts:284](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L284)
+Defined in: [core/grid/grid.ts:265](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L265)
 
 Iterates every cell in the grid, calling `callback` for each.
 
@@ -228,7 +228,7 @@ grid.forEach((cell) => {
 getCell(col: number, row: number): GridCell<T> | undefined;
 ```
 
-Defined in: [core/grid/grid.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L141)
+Defined in: [core/grid/grid.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L122)
 
 Returns the cell at the given grid coordinates, or `undefined` if
 the coordinates are out of bounds.
@@ -270,7 +270,7 @@ getNeighbours(
    includeDiagonals?: boolean): GridCell<T>[];
 ```
 
-Defined in: [core/grid/grid.ts:321](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L321)
+Defined in: [core/grid/grid.ts:302](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L302)
 
 Returns the direct neighbours of a cell.
 
@@ -317,7 +317,7 @@ const all = grid.getNeighbours(5, 5, true);
 isInBounds(col: number, row: number): boolean;
 ```
 
-Defined in: [core/grid/grid.ts:205](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L205)
+Defined in: [core/grid/grid.ts:186](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L186)
 
 Checks whether a column/row pair falls within the grid boundaries.
 
@@ -357,7 +357,7 @@ setCell(
    value: T): void;
 ```
 
-Defined in: [core/grid/grid.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L162)
+Defined in: [core/grid/grid.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L143)
 
 Sets the value of a cell at the given grid coordinates.
 
@@ -396,7 +396,7 @@ setWalkable(
    walkable: boolean): void;
 ```
 
-Defined in: [core/grid/grid.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L184)
+Defined in: [core/grid/grid.ts:165](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L165)
 
 Sets the walkability flag of a cell.
 
@@ -436,7 +436,7 @@ worldToCell(wx: number, wy: number): {
 };
 ```
 
-Defined in: [core/grid/grid.ts:257](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L257)
+Defined in: [core/grid/grid.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L238)
 
 Converts a world-space position to grid coordinates.
 
@@ -463,8 +463,8 @@ Grid column and row (may be out of bounds).
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/grid/grid.ts:257](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L257) |
-| `row` | `number` | [core/grid/grid.ts:257](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L257) |
+| `col` | `number` | [core/grid/grid.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L238) |
+| `row` | `number` | [core/grid/grid.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid.ts#L238) |
 
 #### Since
 

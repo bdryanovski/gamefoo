@@ -10,7 +10,7 @@ title: 'Class: IconBitmap'
 
 # Class: IconBitmap
 
-Defined in: [core/icons/icon\_bitmap.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L49)
+Defined in: [core/icons/icon\_bitmap.ts:36](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L36)
 
 Pixel-perfect bitmap icons set
 
@@ -29,6 +29,10 @@ ctx.fillStyle = "#ffffff";
 Icon.renderIcon("heart", 10, 10, ctx);
 ```
 
+## Extends
+
+- `BitmapDataRenderer`
+
 ## Constructors
 
 ### Constructor
@@ -37,19 +41,15 @@ Icon.renderIcon("heart", 10, 10, ctx);
 new IconBitmap(name: InternalBitmapIconName): IconBitmap;
 ```
 
-Defined in: [core/icons/icon\_bitmap.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L99)
+Defined in: [core/icons/icon\_bitmap.ts:48](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L48)
 
-Creates a font renderer for the named catalogue entry.
-
-If the name does not match any registered font the instance will
-have empty data and zero dimensions — calls to `renderChar` /
-`renderText` will be no-ops.
+Creates an icon renderer for the named catalogue entry.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | [`InternalBitmapIconName`](../type-aliases/InternalBitmapIconName.md) | The catalogue key (e.g. `"icon_8x8"`). |
+| `name` | [`InternalBitmapIconName`](../type-aliases/InternalBitmapIconName.md) | The catalogue key (e.g. `"icons_8x8"`). |
 
 #### Returns
 
@@ -57,23 +57,29 @@ have empty data and zero dimensions — calls to `renderChar` /
 
 #### Throws
 
-Error if the name is not icon set in the catalogue.
+Error if the name is not found in the catalogue.
 
 #### Example
 
 ```ts
-const icon = new IconBitmap("icon_8x8");
+const icon = new IconBitmap("icons_8x8");
+```
+
+#### Overrides
+
+```ts
+BitmapDataRenderer.constructor
 ```
 
 ## Properties
 
-| Property | Modifier | Type | Default value | Description | Defined in |
-| ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `public` | `number` | `0` (populated from catalogue on construction) | Character cell height in pixels. | [core/icons/icon\_bitmap.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L73) |
-| <a id="name"></a> `name` | `readonly` | `string` | `undefined` | The catalogue icon name. | [core/icons/icon\_bitmap.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L51) |
-| <a id="width"></a> `width` | `public` | `number` | `0` (populated from catalogue on construction) | Character cell width in pixels (including spacing). | [core/icons/icon\_bitmap.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L66) |
-| <a id="data"></a> `data` | `readonly` | `Record`\<`string`, `number`[]\> | `undefined` | Character bitmask data keyed by character string. Each value is an array of integers where each integer represents one row of pixels (MSB = leftmost pixel). | [core/icons/icon\_bitmap.ts:59](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L59) |
-| <a id="spacing"></a> `spacing` | `protected` | `number` | `0` | Horizontal spacing between the drawable area and the full cell width, in pixels. | [core/icons/icon\_bitmap.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L81) |
+| Property | Modifier | Type | Default value | Description | Inherited from | Defined in |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="height"></a> `height` | `public` | `number` | `0` (populated from catalogue on construction) | Cell height in pixels. | `BitmapDataRenderer.height` | [core/shared/bitmap\_data\_renderer.ts:44](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L44) |
+| <a id="name"></a> `name` | `readonly` | `string` | `undefined` | The catalogue name of the loaded resource. | `BitmapDataRenderer.name` | [core/shared/bitmap\_data\_renderer.ts:22](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L22) |
+| <a id="width"></a> `width` | `public` | `number` | `0` (populated from catalogue on construction) | Cell width in pixels (including spacing). | `BitmapDataRenderer.width` | [core/shared/bitmap\_data\_renderer.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L37) |
+| <a id="data"></a> `data` | `readonly` | `Record`\<`string`, `number`[]\> | `undefined` | Bitmask data keyed by character / icon name. Each value is an array of integers where each integer represents one row of pixels (MSB = leftmost pixel). | `BitmapDataRenderer.data` | [core/shared/bitmap\_data\_renderer.ts:30](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L30) |
+| <a id="spacing"></a> `spacing` | `protected` | `number` | `0` | Horizontal spacing between the drawable area and the full cell width, in pixels. | `BitmapDataRenderer.spacing` | [core/shared/bitmap\_data\_renderer.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/shared/bitmap_data_renderer.ts#L52) |
 
 ## Accessors
 
@@ -82,33 +88,16 @@ const icon = new IconBitmap("icon_8x8");
 #### Get Signature
 
 ```ts
-get metadata(): 
-  | {
-  data: Record<string, number[]>;
-  height: number;
-  keys: string[];
-  name: string;
-  spacing: number;
-  width: number;
-}
-  | null;
+get metadata(): BitmapCatalogEntry | null;
 ```
 
-Defined in: [core/icons/icon\_bitmap.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L120)
+Defined in: [core/icons/icon\_bitmap.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L57)
 
-Returns the raw catalogue entry for this icon set, or `null` if the icons are not found
+Returns the raw catalogue entry for this icon set, or `null` if not found.
 
 ##### Returns
 
-  \| \{
-  `data`: `Record`\<`string`, `number`[]\>;
-  `height`: `number`;
-  `keys`: `string`[];
-  `name`: `string`;
-  `spacing`: `number`;
-  `width`: `number`;
-\}
-  \| `null`
+`BitmapCatalogEntry` \| `null`
 
 Icon metadata object or `null`.
 
@@ -120,27 +109,26 @@ Icon metadata object or `null`.
 getIconBitmask(icon: string): number[] | null;
 ```
 
-Defined in: [core/icons/icon\_bitmap.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L136)
+Defined in: [core/icons/icon\_bitmap.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L72)
 
-Retrieves the bitmask rows for a single character.
+Retrieves the bitmask rows for a single icon.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `icon` | `string` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `icon` | `string` | Icon name (e.g. `"heart"`). |
 
 #### Returns
 
 `number`[] \| `null`
 
-An array of row bitmasks, or `null` if the character is
-  not defined in this icon.
+An array of row bitmasks, or `null` if not found.
 
 #### Example
 
 ```ts
-const rows = font.getIcon("heart");
+const rows = icon.getIconBitmask("heart");
 ```
 
 ***
@@ -151,21 +139,13 @@ const rows = font.getIcon("heart");
 getTextWidth(): number;
 ```
 
-Defined in: [core/icons/icon\_bitmap.ts:151](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L151)
+Defined in: [core/icons/icon\_bitmap.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L79)
 
-Computes the pixel width required to render the given text string.
+Returns the width of a single icon cell.
 
 #### Returns
 
 `number`
-
-Width in pixels (`text.length * cellWidth`).
-
-#### Example
-
-```ts
-const w = font.getTextWidth("heart");
-```
 
 ***
 
@@ -179,18 +159,18 @@ renderIcon(
    ctx: RenderContext): void;
 ```
 
-Defined in: [core/icons/icon\_bitmap.ts:172](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L172)
+Defined in: [core/icons/icon\_bitmap.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/core/icons/icon_bitmap.ts#L100)
 
 Renders a single icon at the given pixel position.
 
-Each set bit in the character's row bitmask produces a 1x1
+Each set bit in the icon's row bitmask produces a 1x1
 `fillRect` call using the context's current `fillStyle`.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `icon` | `string` | The character to draw. |
+| `icon` | `string` | The icon name to draw. |
 | `x` | `number` | Left edge X coordinate in canvas pixels. |
 | `y` | `number` | Top edge Y coordinate in canvas pixels. |
 | `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The 2-D rendering context to draw into. |
@@ -203,5 +183,5 @@ Each set bit in the character's row bitmask produces a 1x1
 
 ```ts
 ctx.fillStyle = "#00ff00";
-font.renderChar("heart", 20, 40, ctx);
+icon.renderIcon("heart", 20, 40, ctx);
 ```
