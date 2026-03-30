@@ -1,32 +1,7 @@
-export interface LoopConfig {
-  fps?: number; // target FPS, default 30
+export function createBunLoop(config: {
+  fps?: number;
   onTick: (dt: number) => void;
-}
-
-export function createTerminalLoop(config: LoopConfig) {
-  const fps = config.fps ?? 30;
-  const interval = Math.floor(1000 / fps);
-  let lastTime = Date.now();
-  let handle: ReturnType<typeof setInterval> | null = null;
-
-  const tick = () => {
-    const now = Date.now();
-    const dt = (now - lastTime) / 1000;
-    lastTime = now;
-    config.onTick(dt);
-  };
-
-  return {
-    start() {
-      handle = setInterval(tick, interval);
-    },
-    stop() {
-      if (handle !== null) clearInterval(handle);
-    },
-  };
-}
-
-export function createBunLoop(config: LoopConfig) {
+}) {
   const fps = config.fps ?? 30;
   const targetMs = 1000 / fps;
   let running = false;

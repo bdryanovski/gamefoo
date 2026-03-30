@@ -40,15 +40,8 @@
  * @see {@link TileLayer} — consumes TileSet for rendering
  */
 import type Sprite from '../sprite';
+import type { SpriteFrame } from '../sprite';
 import type { TileSetConfig } from './tilemap_types';
-
-interface SpriteFrame {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  anchor?: { x: number; y: number };
-}
 
 export class TileSet {
   /** The sprite sheet containing all tile frames. */

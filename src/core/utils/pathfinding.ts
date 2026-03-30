@@ -44,32 +44,14 @@
  * @see {@link PathFollower}   — behaviour that moves entities along a path
  * @see {@link PathfinderConfig} — configuration options
  */
+
 import type { Grid } from '../grid/grid';
+import { DIR_4, DIR_8 } from '../grid/grid_constants';
 import type {
   HeuristicName,
   PathfinderConfig,
   PathNode,
 } from './pathfinding_types';
-
-/** 4-directional offsets (cardinal). @internal */
-const OFFSETS_4: ReadonlyArray<[number, number]> = [
-  [0, -1],
-  [0, 1],
-  [-1, 0],
-  [1, 0],
-];
-
-/** 8-directional offsets (cardinal + diagonal). @internal */
-const OFFSETS_8: ReadonlyArray<[number, number]> = [
-  [0, -1],
-  [0, 1],
-  [-1, 0],
-  [1, 0],
-  [-1, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1],
-];
 
 /**
  * Binary min-heap for {@link PathNode} ordered by `f` cost.
@@ -223,7 +205,7 @@ export class Pathfinder {
     openHeap.push(startNode);
     gScores[startRow * cols + startCol] = 0;
 
-    const offsets = this.allowDiagonal ? OFFSETS_8 : OFFSETS_4;
+    const offsets = this.allowDiagonal ? DIR_8 : DIR_4;
 
     while (openHeap.size > 0) {
       const current = openHeap.pop()!;

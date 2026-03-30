@@ -85,8 +85,7 @@ export default class Camera {
    * ```
    */
   moveTo(target: Vector2): void {
-    this.x = target.x;
-    this.y = target.y;
+    this.follow(target);
   }
 
   /**

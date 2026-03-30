@@ -45,7 +45,7 @@ import type Sprite from '../sprite';
  * @see {@link Asset}     — image loader
  * @see {@link Behaviour} — abstract base class
  */
-export default class SpriteRender extends Behaviour<Entity> {
+export class SpriteRender extends Behaviour<Entity> {
   /** @inheritDoc */
   readonly type = 'sprite';
 
@@ -155,7 +155,7 @@ export default class SpriteRender extends Behaviour<Entity> {
    *
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     if (!this.currentFrame) {
       return;
     }

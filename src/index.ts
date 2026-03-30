@@ -17,12 +17,13 @@
 export { default as Asset } from './core/asset';
 // ── Core ────────────────────────────────────────────────────────────
 export { Behaviour } from './core/behaviour';
+export type { CollidableOptions } from './core/behaviours/collidable';
 export { Collidable } from './core/behaviours/collidable';
 export { Control } from './core/behaviours/control';
 export { HealthKit } from './core/behaviours/healtkit';
 export type { PathFollowerConfig } from './core/behaviours/path_follower';
 export { PathFollower } from './core/behaviours/path_follower';
-export { default as SpriteRender } from './core/behaviours/sprite_render';
+export { SpriteRender } from './core/behaviours/sprite_render';
 export type { TerminalGlyph } from './core/behaviours/terminal_render';
 export { TerminalRender } from './core/behaviours/terminal_render';
 export { default as Camera } from './core/camera';
@@ -51,15 +52,16 @@ export { TerminalInputDriver } from './core/input/terminal';
 // ── Renderer / Loop ─────────────────────────────────────────────────
 export type { LoopDriver } from './core/renderer/loops/loop';
 export { IntervalLoopDriver, RAFLoopDriver } from './core/renderer/loops/loop';
-export type { LoopConfig } from './core/renderer/loops/terminal_loop';
-export {
-  createBunLoop,
-  createTerminalLoop,
-} from './core/renderer/loops/terminal_loop';
+export { createBunLoop } from './core/renderer/loops/terminal_loop';
 export type { TerminalRenderConfig } from './core/renderer/terminal_renderer';
 export { TerminalRenderContext } from './core/renderer/terminal_renderer';
-export type { RenderContext } from './core/renderer/type';
+export type {
+  RenderContext,
+  TerminalBuffer,
+  TerminalCell,
+} from './core/renderer/type';
 export { WebRenderer } from './core/renderer/web_renderer';
+export type { SpriteFrame } from './core/sprite';
 export { default as Sprite } from './core/sprite';
 export { default as StateMachine } from './core/state_machine';
 // ── Tilemap ─────────────────────────────────────────────────────────
@@ -91,7 +93,6 @@ export { default as World } from './core/world';
 // ── Debug ───────────────────────────────────────────────────────────
 export { GridDebugSystem } from './debug/grid_debug';
 export type { GridDebugConfig } from './debug/grid_debug_types';
-export { default as Monitor } from './debug/monitor';
 // ── Decorators ──────────────────────────────────────────────────────
 export { log } from './decorators/index';
 // ── Entities ────────────────────────────────────────────────────────
@@ -99,13 +100,20 @@ export { default as DynamicEntity } from './entities/dynamic_entity';
 export { default as Entity } from './entities/entity';
 export { default as Player } from './entities/player';
 export { default as Text } from './entities/text';
+// ── Entity types ────────────────────────────────────────────────────────────
+export type { GameObject } from './entities/types';
 // ── Type-only exports ───────────────────────────────────────────────
 export type {
   ColliderShape,
   CollisionInfo,
+  /**
+   * @deprecated Use {@link Dimension} instead (correct spelling).
+   */
   Demension,
-  GameObject,
+  /** @since 0.5.0 */
+  Dimension,
   Vector2,
+  WorldBounds,
 } from './generic_types';
 export { CameraSystem } from './subsystems/camera_system';
 // ── Subsystems ──────────────────────────────────────────────────────

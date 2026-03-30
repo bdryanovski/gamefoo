@@ -42,7 +42,7 @@ interface AnimationDefinition {
  *  };
  *  ```
  */
-interface SpriteFrame {
+export interface SpriteFrame {
   x: number;
   y: number;
   width: number;

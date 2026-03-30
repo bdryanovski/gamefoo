@@ -1,8 +1,8 @@
 import type Entity from '../../entities/entity';
+import type { GameObject } from '../../entities/types';
 import type {
   ColliderShape,
   CollisionInfo,
-  GameObject,
   WorldBounds,
 } from '../../generic_types';
 import { Behaviour } from '../behaviour';
@@ -36,7 +36,7 @@ import type World from '../world';
  * };
  * ```
  */
-type CollidableOptions = {
+export type CollidableOptions = {
   /**
    * The geometric shape used for intersection tests.
    *
@@ -223,15 +223,8 @@ export class Collidable extends Behaviour<GameObject> {
     this.solid = options.solid ?? false;
     this.fixed = options.fixed ?? false;
     this.collidesWith = options.collidesWith ?? new Set();
-    this.onCollision = options.onCollision || (() => {});
+    this.onCollision = options.onCollision ?? (() => {});
   }
-
-  /**
-   * No-op — collision logic lives in {@link World.detect}.
-   *
-   * @param _deltaTime - Unused.
-   */
-  update(_deltaTime: number): void {}
 
   /**
    * Lifecycle hook: registers this collider with the {@link World}
@@ -251,18 +244,6 @@ export class Collidable extends Behaviour<GameObject> {
    */
   override onDetach(): void {
     this.world.unregister(this);
-  }
-
-  /**
-   * Returns the {@link Entity} that owns this behaviour.
-   *
-   * Used by the {@link World} to read and mutate entity position
-   * during overlap resolution.
-   *
-   * @returns The owning entity.
-   */
-  getOwner(): Entity {
-    return this.owner;
   }
 
   /**

@@ -9,7 +9,6 @@
  * @since 0.1.0
  */
 
-import type DynamicEntity from './entities/dynamic_entity';
 import type Entity from './entities/entity';
 
 /**
@@ -53,21 +52,6 @@ export interface Demension {
   width: number;
   height: number;
 }
-
-/**
- * Union of all entity types that can be managed by the engine's
- * {@link GameObjectRegister}.
- *
- * Covers both static entities ({@link Entity}) and physics-capable
- * entities ({@link DynamicEntity}).
- *
- * @category Types
- * @since 0.1.0
- *
- * @see {@link Entity}        — base abstract entity
- * @see {@link DynamicEntity}  — entity with velocity and speed
- */
-export type GameObject = Entity | DynamicEntity;
 
 /**
  * Discriminated union describing the shape of a collision volume.
@@ -176,3 +160,12 @@ export interface WorldBounds {
   /** Vertical extent in pixels. */
   height: number;
 }
+
+/**
+ * Alias for {@link Demension} with correct spelling.
+ *
+ * @deprecated Use `Dimension` instead of `Demension`.
+ * @category Types
+ * @since 0.5.0
+ */
+export type Dimension = Demension;

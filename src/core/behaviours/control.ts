@@ -1,4 +1,4 @@
-import type Entity from '../../entities/entity';
+import type DynamicEntity from '../../entities/dynamic_entity';
 import { Behaviour } from '../behaviour';
 import type Input from '../input';
 
@@ -26,7 +26,7 @@ import type Input from '../input';
  * @see {@link Input}     — the polling input manager consumed by this behaviour
  * @see {@link Behaviour} — abstract base class
  */
-export class Control extends Behaviour<Entity> {
+export class Control extends Behaviour<DynamicEntity> {
   /** @inheritDoc */
   readonly type = 'control';
 
@@ -43,10 +43,10 @@ export class Control extends Behaviour<Entity> {
   /**
    * Creates a new keyboard control behaviour.
    *
-   * @param owner - The game object entity whose position will be updated.
+   * @param owner - The dynamic entity whose velocity will be updated.
    * @param input - The {@link Input} instance to read key state from.
    */
-  constructor(owner: Entity, input: Input) {
+  constructor(owner: DynamicEntity, input: Input) {
     super(owner);
     this.input = input;
   }
@@ -62,7 +62,7 @@ export class Control extends Behaviour<Entity> {
    *
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  update(deltaTime: number): void {
+  override update(_deltaTime: number): void {
     let dx = 0;
     let dy = 0;
 
@@ -74,8 +74,13 @@ export class Control extends Behaviour<Entity> {
 
     const len = Math.sqrt(dx * dx + dy * dy);
     if (len > 0) {
-      this.owner.x += (dx / len) * this.speed * deltaTime;
-      this.owner.y += (dy / len) * this.speed * deltaTime;
+      // Write normalised direction and speed to the entity; DynamicEntity.update
+      // applies them to position after all behaviours have run.
+      this.owner.setVelocity({ x: dx / len, y: dy / len });
+      this.owner.setSpeed(this.speed);
+    } else {
+      // No input — zero out velocity so the entity stops
+      this.owner.setVelocity({ x: 0, y: 0 });
     }
   }
 }

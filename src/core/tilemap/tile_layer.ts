@@ -156,6 +156,20 @@ export class TileLayer {
    * layer.renderOrthogonal(ctx, 32, 32, camera.getViewRect());
    * ```
    */
+  /**
+   * Applies layer opacity around a render callback.
+   * Saves and restores globalAlpha on canvas contexts.
+   *
+   * @internal
+   */
+  private withOpacity(ctx: RenderContext, fn: () => void): void {
+    const canvasCtx = ctx.getCanvas?.() ?? null;
+    const prevAlpha = canvasCtx?.globalAlpha ?? 1;
+    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = this.opacity;
+    fn();
+    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = prevAlpha;
+  }
+
   renderOrthogonal(
     ctx: RenderContext,
     cellWidth: number,
@@ -175,40 +189,35 @@ export class TileLayer {
       Math.ceil((viewport.y + viewport.height) / cellHeight) + 1,
     );
 
-    // globalAlpha is canvas-specific; for other renderers opacity is ignored
-    const canvasCtx = ctx.getCanvas?.() ?? null;
-    const prevAlpha = canvasCtx?.globalAlpha ?? 1;
-    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = this.opacity;
-
     const img = this.tileSet.sprite.image;
     const ox = this.offsetX;
     const oy = this.offsetY;
     const dataCols = this.cols;
 
-    for (let row = startRow; row <= endRow; row++) {
-      const rowOffset = row * dataCols;
-      for (let col = startCol; col <= endCol; col++) {
-        const tileId = this.data[rowOffset + col] ?? -1;
-        if (tileId < 0) continue;
+    this.withOpacity(ctx, () => {
+      for (let row = startRow; row <= endRow; row++) {
+        const rowOffset = row * dataCols;
+        for (let col = startCol; col <= endCol; col++) {
+          const tileId = this.data[rowOffset + col] ?? -1;
+          if (tileId < 0) continue;
 
-        const frame = this.tileSet.getFrame(tileId);
-        if (!frame) continue;
+          const frame = this.tileSet.getFrame(tileId);
+          if (!frame) continue;
 
-        ctx.drawSprite?.(
-          img,
-          frame.x,
-          frame.y,
-          frame.width,
-          frame.height,
-          Math.round(col * cellWidth + ox),
-          Math.round(row * cellHeight + oy),
-          cellWidth,
-          cellHeight,
-        );
+          ctx.drawSprite?.(
+            img,
+            frame.x,
+            frame.y,
+            frame.width,
+            frame.height,
+            Math.round(col * cellWidth + ox),
+            Math.round(row * cellHeight + oy),
+            cellWidth,
+            cellHeight,
+          );
+        }
       }
-    }
-
-    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = prevAlpha;
+    });
   }
 
   /**
@@ -249,41 +258,36 @@ export class TileLayer {
       gridRows,
     );
 
-    // globalAlpha is canvas-specific; for other renderers opacity is ignored
-    const canvasCtx = ctx.getCanvas?.() ?? null;
-    const prevAlpha = canvasCtx?.globalAlpha ?? 1;
-    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = this.opacity;
-
     const img = this.tileSet.sprite.image;
     const tw = projection.tileWidth;
     const th = projection.tileHeight;
     const ox = this.offsetX;
     const oy = this.offsetY;
 
-    for (let row = range.minRow; row <= range.maxRow; row++) {
-      for (let col = range.minCol; col <= range.maxCol; col++) {
-        const tileId = this.data[row * this.cols + col] ?? -1;
-        if (tileId < 0) continue;
+    this.withOpacity(ctx, () => {
+      for (let row = range.minRow; row <= range.maxRow; row++) {
+        for (let col = range.minCol; col <= range.maxCol; col++) {
+          const tileId = this.data[row * this.cols + col] ?? -1;
+          if (tileId < 0) continue;
 
-        const frame = this.tileSet.getFrame(tileId);
-        if (!frame) continue;
+          const frame = this.tileSet.getFrame(tileId);
+          if (!frame) continue;
 
-        const pos = projection.gridToScreenFast(col, row);
+          const pos = projection.gridToScreenFast(col, row);
 
-        ctx.drawSprite?.(
-          img,
-          frame.x,
-          frame.y,
-          frame.width,
-          frame.height,
-          Math.round(pos.x + ox),
-          Math.round(pos.y + oy),
-          tw,
-          th,
-        );
+          ctx.drawSprite?.(
+            img,
+            frame.x,
+            frame.y,
+            frame.width,
+            frame.height,
+            Math.round(pos.x + ox),
+            Math.round(pos.y + oy),
+            tw,
+            th,
+          );
+        }
       }
-    }
-
-    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = prevAlpha;
+    });
   }
 }

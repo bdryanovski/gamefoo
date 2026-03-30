@@ -25,7 +25,13 @@
  * @see {@link SubSystem}  — the subsystem interface
  */
 
-import type { CameraSystem } from '../../subsystems/camera_system';
+/** Minimal interface required by TilemapSystem to get the camera viewport. */
+interface CameraLike {
+  camera: {
+    getViewRect(): { x: number; y: number; width: number; height: number };
+  };
+}
+
 import type { SubSystem } from '../../subsystems/types';
 import type Engine from '../engine';
 import type { RenderContext } from '../renderer/type';
@@ -45,7 +51,7 @@ export class TilemapSystem implements SubSystem {
   private tilemap: TileMap;
 
   /** Cached reference to the camera subsystem, resolved in `init`. */
-  private cameraSystem: CameraSystem | null = null;
+  private cameraSystem: CameraLike | null = null;
 
   /** Canvas dimensions fallback when no camera is available. */
   private canvasWidth = 0;
@@ -104,7 +110,7 @@ export class TilemapSystem implements SubSystem {
    * tmSys.attachCamera(camSys);
    * ```
    */
-  attachCamera(cameraSystem: CameraSystem): void {
+  attachCamera(cameraSystem: CameraLike): void {
     this.cameraSystem = cameraSystem;
   }
 

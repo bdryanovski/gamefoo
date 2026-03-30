@@ -59,13 +59,6 @@ export class HealthKit extends Behaviour<Entity> {
   }
 
   /**
-   * No-op — health does not change passively each frame.
-   *
-   * @param _deltaTime - Unused.
-   */
-  update(_deltaTime: number): void {}
-
-  /**
    * Reduces health by the given amount, clamping at zero.
    *
    * @param amount - Damage to apply (positive number).

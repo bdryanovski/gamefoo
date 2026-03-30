@@ -68,7 +68,7 @@ export default class Asset {
         resolve(image);
       };
       image.onerror = (_error) => {
-        reject(new Error(`Failed to load image: ${src}`));
+        reject(new Error(`Failed to load image: ${src}`, { cause: _error }));
       };
       image.src = src;
     });

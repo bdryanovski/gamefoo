@@ -247,7 +247,7 @@ export interface RenderContext {
    * @param sourceX          - X offset inside the source image.
    * @param sourceY          - Y offset inside the source image.
    * @param sourceWidth      - Width of the source region.
-   * @param souceHeight      - Height of the source region.
+   * @param sourceHeight     - Height of the source region.
    * @param destinationX     - X position on the canvas.
    * @param destinationY     - Y position on the canvas.
    * @param destinationWidth - Rendered width.
@@ -260,7 +260,7 @@ export interface RenderContext {
     sourceX: number,
     sourceY: number,
     sourceWidth: number,
-    souceHeight: number,
+    sourceHeight: number,
     destinationX: number,
     destinationY: number,
     destinationWidth: number,

@@ -40,27 +40,8 @@
  * @see {@link Pathfinder}           — A* search over a Grid
  */
 import type { Vector2 } from '../../generic_types';
+import { DIR_4, DIR_8 } from './grid_constants';
 import type { GridCell, GridConfig } from './grid_types';
-
-/** 4-directional offsets (cardinal). @internal */
-const CARDINALS: ReadonlyArray<[number, number]> = [
-  [0, -1],
-  [0, 1],
-  [-1, 0],
-  [1, 0],
-];
-
-/** 8-directional offsets (cardinal + diagonal). @internal */
-const ALL_DIRS: ReadonlyArray<[number, number]> = [
-  [0, -1],
-  [0, 1],
-  [-1, 0],
-  [1, 0],
-  [-1, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1],
-];
 
 export class Grid<T = number> {
   /** Number of columns in the grid. */
@@ -323,7 +304,7 @@ export class Grid<T = number> {
     row: number,
     includeDiagonals = false,
   ): GridCell<T>[] {
-    const offsets = includeDiagonals ? ALL_DIRS : CARDINALS;
+    const offsets = includeDiagonals ? DIR_8 : DIR_4;
     const result: GridCell<T>[] = [];
 
     for (let i = 0; i < offsets.length; i++) {

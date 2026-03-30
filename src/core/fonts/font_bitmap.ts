@@ -1,4 +1,6 @@
 import type { RenderContext } from '../renderer/type';
+import type { BitmapCatalogEntry } from '../shared/bitmap_data_renderer';
+import { BitmapDataRenderer } from '../shared/bitmap_data_renderer';
 import { metadata as FONT_3x5_METADATA } from './internal/font_3x5';
 import { metadata as FONT_4x6_METADATA } from './internal/font_4x6';
 import { metadata as FONT_5x5_METADATA } from './internal/font_5x5';
@@ -9,22 +11,9 @@ import { metadata as FONT_8x13_METADATA } from './internal/font_8x13';
 /**
  * Internal catalogue of registered bitmap font definitions.
  *
- * Fonts are added at module load time. Currently ships with the
- * built-in {@link FONT_5x5 | 5x5} pixel font.
- *
  * @internal
  */
-const Catalog = new Map<
-  string,
-  {
-    name: string;
-    width: number;
-    height: number;
-    chars: string;
-    spacing: number;
-    data: Record<string, number[]>;
-  }
->();
+const Catalog = new Map<string, BitmapCatalogEntry>();
 
 Catalog.set(FONT_3x5_METADATA.name, FONT_3x5_METADATA);
 Catalog.set(FONT_4x6_METADATA.name, FONT_4x6_METADATA);
@@ -73,57 +62,17 @@ export type InternalBitmapFontName =
  *
  * @see {@link FONT_5x5} — the built-in 5x5 pixel font data
  */
-export default class FontBitmap {
-  /** The catalogue name of the loaded font (e.g. `"5x5"`). */
-  public readonly name: string;
-
-  /**
-   * Character bitmask data keyed by character string.
-   *
-   * Each value is an array of integers where each integer represents
-   * one row of pixels (MSB = leftmost pixel).
-   */
-  protected readonly data: Record<string, number[]>;
-
-  /**
-   * Character cell width in pixels (including spacing).
-   *
-   * @defaultValue `0` (populated from catalogue on construction)
-   */
-  public width: number = 0;
-
-  /**
-   * Character cell height in pixels.
-   *
-   * @defaultValue `0` (populated from catalogue on construction)
-   */
-  public height: number = 0;
-
-  /**
-   * Horizontal spacing between the drawable area and the full cell
-   * width, in pixels.
-   *
-   * @defaultValue `0`
-   */
-  protected spacing: number = 0;
-
+export default class FontBitmap extends BitmapDataRenderer {
   /**
    * Map of pre-built `Path2D` objects for each character. Keys are characters,
    * values are their corresponding paths.
-   * This cache is used to store pre-built paths for characters that have been
-   * rendered at least once, allowing for faster rendering on subsequent calls.
    */
   private glyphPaths: Map<string, Path2D> = new Map();
 
   /**
    * Creates a font renderer for the named catalogue entry.
    *
-   * If the name does not match any registered font the instance will
-   * have empty data and zero dimensions — calls to `renderChar` /
-   * `renderText` will be no-ops.
-   *
    * @param name - The catalogue key (e.g. `"5x5"`).
-   *
    * @throws Error if the name is not found in the catalogue.
    *
    * @example
@@ -132,19 +81,7 @@ export default class FontBitmap {
    * ```
    */
   constructor(name: InternalBitmapFontName) {
-    this.name = name;
-
-    this.data = {};
-
-    if (Catalog.has(name)) {
-      this.data = Catalog.get(name)!.data;
-    } else {
-      throw new Error(`FontBitmap: No font found for name "${name}".`);
-    }
-
-    this.width = this.metadata?.width || 0;
-    this.height = this.metadata?.height || 0;
-    this.spacing = this.metadata?.spacing || 0;
+    super(name, Catalog, 'FontBitmap');
   }
 
   /**
@@ -159,18 +96,9 @@ export default class FontBitmap {
 
   /**
    * Builds a `Path2D` object for the specified character based on its bitmap data.
-   * This method reads the character's bitmap data and constructs a path that
-   * represents the filled pixels of the character.
    *
    * @param char The character to build a path for.
-   *
-   * @returns A `Path2D` object representing the character's shape, or `null` if the character is not found in the font data.
-   *
-   * @remarks
-   * This method is called internally when a character is rendered for the first time
-   * or when pre-building glyphs. It converts the bitmap representation of the character
-   * into a vector path that can be efficiently rendered using `CanvasRenderingContext2D`.
-   * The resulting `Path2D` object is cached in the `glyphPaths` map for future use, reducing the overhead of path construction on subsequent renders.
+   * @returns A `Path2D` object representing the character's shape, or `null` if not found.
    */
   private buildGlyphPath(char: string): Path2D | null {
     const charData = this.getChar(char);
@@ -191,8 +119,7 @@ export default class FontBitmap {
 
   /**
    * Pre-builds `Path2D` objects for a set of characters, storing them in the `glyphPaths`
-   * cache. This method can be called with a list of characters that are expected to
-   * be rendered frequently,
+   * cache.
    */
   public prebuildGlyphs(chars: string[] = []): void {
     for (const char of chars) {
@@ -215,7 +142,6 @@ export default class FontBitmap {
    * @example
    * ```ts
    * const rows = font.getChar("A");
-   * // rows → [14, 17, 31, 17, 17] for the 5x5 font
    * ```
    */
   getChar(char: string): number[] | null {
@@ -239,9 +165,6 @@ export default class FontBitmap {
 
   /**
    * Renders a single character at the given pixel position.
-   *
-   * Each set bit in the character's row bitmask produces a 1x1
-   * `fillRect` call using the context's current `fillStyle`.
    *
    * @param char - The character to draw.
    * @param x    - Left edge X coordinate in canvas pixels.
@@ -279,8 +202,6 @@ export default class FontBitmap {
 
   /**
    * Renders a full text string by drawing each character sequentially.
-   *
-   * Characters are spaced according to the font's cell width.
    *
    * @param text - The string to render.
    * @param x    - Left edge X coordinate of the first character.

@@ -124,7 +124,7 @@ export class TerminalRender extends Behaviour<Entity> {
   /**
    * Creates a new `TerminalRender` behaviour.
    *
-   * @param entity - The owning entity whose position determines where the
+   * @param owner - The owning entity whose position determines where the
    *   glyph is drawn.
    * @param glyph  - The character and colours to render.
    *
@@ -136,8 +136,8 @@ export class TerminalRender extends Behaviour<Entity> {
    * enemy.attachBehaviour(tr);
    * ```
    */
-  constructor(entity: Entity, glyph: TerminalGlyph) {
-    super(entity);
+  constructor(owner: Entity, glyph: TerminalGlyph) {
+    super(owner);
     this.glyph = glyph;
   }
 
@@ -169,15 +169,6 @@ export class TerminalRender extends Behaviour<Entity> {
   getGlyph(): TerminalGlyph {
     return this.glyph;
   }
-
-  /**
-   * No-op — `TerminalRender` has no per-frame logic.
-   *
-   * @param _dt - Unused delta time.
-   *
-   * @since 0.4.0
-   */
-  override update(_dt: number): void {}
 
   /**
    * Draws the glyph at the entity's current `(x, y)` position.

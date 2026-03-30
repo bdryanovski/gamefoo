@@ -47,6 +47,27 @@ export interface GridDebugConfig {
   grid: Grid;
 
   /**
+   * The canvas element to attach mouse event listeners to.
+   *
+   * Required for {@link GridDebugConfig.showTileInspector} and
+   * {@link GridDebugConfig.showWorldCoordinates} to respond to mouse
+   * movement. When omitted, `GridDebugSystem` falls back to
+   * `document.querySelector("canvas")` (browser-only).
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * const debug = new GridDebugSystem({
+   *   grid: myGrid,
+   *   canvas: document.getElementById("game") as HTMLCanvasElement,
+   *   showTileInspector: true,
+   * });
+   * ```
+   */
+  canvas?: HTMLCanvasElement;
+
+  /**
    * Isometric projection. When provided, the debug overlay renders
    * diamond outlines instead of rectangular grid lines.
    */

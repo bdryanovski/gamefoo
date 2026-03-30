@@ -1,6 +1,5 @@
 import type { Control } from '../core/behaviours/control';
 import type { HealthKit } from '../core/behaviours/healtkit';
-import type { RenderContext } from '../core/renderer/type';
 import DynamicEntity from './dynamic_entity';
 
 /**
@@ -14,23 +13,26 @@ import DynamicEntity from './dynamic_entity';
  * {@link HealthKit} behaviours so game code can access them without
  * manual casting.
  *
- * Subclass `Player` to customise rendering, add game-specific logic,
- * or bind additional behaviours.
+ * Subclass `Player` and implement {@link Entity.render | render} to provide
+ * custom visuals. The {@link Entity.update | update} lifecycle (apply velocity,
+ * tick behaviours) is handled automatically by {@link DynamicEntity}.
  *
  * @category Entities
  * @since 0.1.0
  *
- * @example Basic usage
+ * @example Subclassing (required — Player is abstract)
  * ```ts
- * import { Player, Control, HealthKit, Input } from "gamefoo";
+ * import { Player, Control, HealthKit, Input, SpriteRender } from "gamefoo";
  *
- * const player = new Player("hero", 400, 300, 50, 50);
+ * class Hero extends Player {
+ *   render(ctx: RenderContext) {
+ *     this.renderBehaviours(ctx); // SpriteRender handles drawing
+ *   }
+ * }
  *
- * player.attachBehaviour(new Control(player, new Input()));
- * player.attachBehaviour(new HealthKit(player, 100));
- *
- * player.control?.enabled;           // true
- * player.healthkit?.getHealth();      // 100
+ * const hero = new Hero("hero", 400, 300, 50, 50);
+ * hero.attachBehaviour(new Control(hero, new Input()));
+ * hero.attachBehaviour(new HealthKit(hero, 100));
  * ```
  *
  * @example Subclassing for custom rendering
@@ -52,7 +54,7 @@ import DynamicEntity from './dynamic_entity';
  * @see {@link Control}       — keyboard movement behaviour
  * @see {@link HealthKit}     — health-tracking behaviour
  */
-export default class Player extends DynamicEntity {
+export default abstract class Player extends DynamicEntity {
   /**
    * Convenience getter for the attached {@link Control} behaviour.
    *
@@ -77,23 +79,7 @@ export default class Player extends DynamicEntity {
    * @inheritDoc
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     this.updateBehaviours(deltaTime);
-  }
-
-  /**
-   * Draws a default blue rectangle and then renders all attached
-   * behaviours (e.g. sprite overlays, health bars).
-   *
-   * Override this in a subclass for custom visuals.
-   *
-   * TODO: write a better default player object
-   *
-   * @inheritDoc
-   * @param ctx - The canvas 2-D rendering context.
-   */
-  render(ctx: RenderContext): void {
-    ctx.fillRect(this.x, this.y, this.size.width, this.size.height, 'blue');
-    this.renderBehaviours(ctx);
   }
 }

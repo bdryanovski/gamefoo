@@ -225,9 +225,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
     );
 
     if (!result) {
-      this._isMoving = false;
-      this.path = [];
-      this.currentIndex = 0;
+      this.stop();
       this.onPathBlocked?.();
       return false;
     }
@@ -262,7 +260,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    *
    * @since 0.4.0
    */
-  update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     if (
       !this._isMoving
       || this.path.length === 0
@@ -328,22 +326,5 @@ export class PathFollower extends Behaviour<DynamicEntity> {
       return this.projection.gridToScreen(col, row);
     }
     return this.grid.cellToWorld(col, row);
-  }
-
-  /**
-   * Provides access to the owner entity for external systems.
-   *
-   * @returns The entity this behaviour is attached to.
-   *
-   * @since 0.4.0
-   *
-   * @example
-   * ```ts
-   * const entity = follower.getOwner();
-   * console.log(entity.id);
-   * ```
-   */
-  getOwner(): DynamicEntity {
-    return this.owner;
   }
 }

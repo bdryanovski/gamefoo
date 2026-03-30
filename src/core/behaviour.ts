@@ -11,6 +11,8 @@ import type { RenderContext } from './renderer/type';
  *
  * Subclasses **must** implement:
  * - {@link Behaviour.type | type} — a unique string identifier (e.g. `"control"`, `"healthkit"`).
+ *
+ * Subclasses **may** override:
  * - {@link Behaviour.update | update} — called once per frame with `deltaTime`.
  *
  * Subclasses **may** override:
@@ -111,11 +113,27 @@ export abstract class Behaviour<T extends Entity = Entity> {
   }
 
   /**
+   * Returns the entity this behaviour is attached to.
+   *
+   * @returns The owning entity.
+   *
+   * @since 0.5.0
+   */
+  getOwner(): T {
+    return this.owner;
+  }
+
+  /**
    * Called once per frame to advance this behaviour's logic.
    *
-   * @param deltaTime - Seconds elapsed since the previous frame.
+   * Override in subclasses that need per-frame logic. Behaviours that
+   * are purely reactive (collision, health, terminal render) can omit
+   * this — the default is a no-op.
+   *
+   * @param _deltaTime - Seconds elapsed since the previous frame.
    */
-  abstract update(deltaTime: number): void;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update(_deltaTime: number): void {}
 
   /**
    * Optional rendering hook invoked after the entity's own

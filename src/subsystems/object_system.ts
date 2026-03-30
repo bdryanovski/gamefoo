@@ -1,6 +1,6 @@
 import GameObjectRegister from '../core/game_object_register';
 import type { RenderContext } from '../core/renderer/type';
-import type { GameObject } from '../generic_types';
+import type { GameObject } from '../entities/types';
 import type { SubSystem } from './types';
 
 /**
@@ -50,17 +50,13 @@ export class ObjectSystem implements SubSystem {
   }
 
   update(deltaTime: number) {
-    if (this.objects) {
-      this.objects.updateAll(deltaTime);
-    }
+    this.objects.updateAll(deltaTime);
   }
 
   render(ctx: RenderContext) {
-    if (this.objects) {
-      if (this._depthSort) {
-        this.objects.sort((a, b) => a.y - b.y);
-      }
-      this.objects.renderAll(ctx);
+    if (this._depthSort) {
+      this.objects.sort((a, b) => a.y - b.y);
     }
+    this.objects.renderAll(ctx);
   }
 }

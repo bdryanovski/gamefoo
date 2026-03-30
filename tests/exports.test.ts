@@ -29,7 +29,6 @@ describe('exports — classes', () => {
     'IsometricCameraSystem',
     'IsometricProjection',
     'MapGenerator',
-    'Monitor',
     'MonitorSystem',
     'ObjectSystem',
     'PathFollower',
@@ -62,7 +61,7 @@ describe('exports — classes', () => {
 });
 
 describe('exports — functions', () => {
-  const fns = ['createBunLoop', 'createTerminalLoop', 'log'] as const;
+  const fns = ['createBunLoop', 'log'] as const;
 
   for (const name of fns) {
     test(name, () => {

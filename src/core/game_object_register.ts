@@ -1,4 +1,4 @@
-import type { GameObject } from '../generic_types';
+import type { GameObject } from '../entities/types';
 import type { RenderContext } from './renderer/type';
 
 /**
@@ -110,10 +110,10 @@ export default class GameObjectRegister {
    *
    * @example
    * ```ts
-   * const enemies = register.getAll(() => true);
+   * const enemies = register.getAll(obj => obj.id.startsWith("enemy"));
    * ```
    */
-  getAll(filter?: () => true): GameObject[] {
+  getAll(filter?: (obj: GameObject) => boolean): GameObject[] {
     if (typeof filter === 'function') {
       return this.toArray().filter(filter);
     }

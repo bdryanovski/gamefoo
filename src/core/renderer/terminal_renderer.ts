@@ -192,8 +192,11 @@ export class TerminalRenderContext implements RenderContext {
    * @since 0.4.0
    */
   constructor(config: TerminalRenderConfig) {
-    this.cols = config.cols;
-    this.rows = config.rows;
+    const cols = process.stdout.columns ?? 80;
+    const rows = process.stdout.rows ?? 24;
+
+    this.cols = config.cols ?? cols;
+    this.rows = config.rows ?? rows;
     this.cellWidth = config.cellWidth ?? 8;
     this.cellHeight = config.cellHeight ?? 8;
     this.defaultBg = config.defaultBg ?? '#000000';

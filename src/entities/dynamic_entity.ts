@@ -103,4 +103,21 @@ export default abstract class DynamicEntity extends Entity {
   getSpeed(): number {
     return this.speed;
   }
+
+  /**
+   * Applies the current velocity and speed to the entity's position,
+   * then delegates to all attached behaviours.
+   *
+   * Behaviours run first so that input (e.g. {@link Control}) can set
+   * velocity before it is integrated into position — no one-frame lag.
+   *
+   * @param deltaTime - Seconds elapsed since the previous frame.
+   *
+   * @since 0.5.0
+   */
+  update(deltaTime: number): void {
+    this.updateBehaviours(deltaTime);
+    this.x += this.velocity.x * this.speed * deltaTime;
+    this.y += this.velocity.y * this.speed * deltaTime;
+  }
 }

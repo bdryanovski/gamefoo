@@ -106,8 +106,12 @@ export class GridDebugSystem implements SubSystem {
    * engine.use(debug);
    * ```
    */
+  /** Stored canvas reference from config for use in init(). */
+  private configCanvas: HTMLCanvasElement | undefined;
+
   constructor(config: GridDebugConfig) {
     this.grid = config.grid;
+    this.configCanvas = config.canvas;
     this.projection = config.projection ?? null;
     this.world = config.world ?? null;
 
@@ -138,7 +142,12 @@ export class GridDebugSystem implements SubSystem {
     const dims = engine.dementions;
     this.canvasHeight = dims.height;
 
-    const canvasEl = document.querySelector('canvas');
+    // Prefer the canvas provided via config; fall back to DOM query (browser-only)
+    const canvasEl =
+      this.configCanvas
+      ?? (typeof document !== 'undefined'
+        ? document.querySelector('canvas')
+        : null);
     if (canvasEl) {
       this.canvas = canvasEl;
       canvasEl.addEventListener('mousemove', this.handleMouseMove);

@@ -181,7 +181,7 @@ export default abstract class Entity {
    *
    * @return void
    */
-  setSize(width: number, height: number): void {
+  protected setSize(width: number, height: number): void {
     this.size.width = width;
     this.size.height = height;
   }
