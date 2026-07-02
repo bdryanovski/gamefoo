@@ -27,6 +27,9 @@ export { SpriteRender } from './core/behaviours/sprite_render';
 export type { TerminalGlyph } from './core/behaviours/terminal_render';
 export { TerminalRender } from './core/behaviours/terminal_render';
 export { default as Camera } from './core/camera';
+// ── Consoles (unified) ──────────────────────────────────────────────
+/** @since 0.5.0 */
+export * from './core/consoles';
 export { default as Engine } from './core/engine';
 export type { EnhancedCameraConfig } from './core/enhanced_camera';
 export { EnhancedCamera } from './core/enhanced_camera';
@@ -51,6 +54,9 @@ export type { InputDriver } from './core/input/terminal';
 export { TerminalInputDriver } from './core/input/terminal';
 /** @since 0.4.0 */
 export * from './core/input.types';
+// ── Palettes ────────────────────────────────────────────────────────
+/** @since 0.5.0 */
+export * from './core/palettes';
 // ── Renderer / Loop ─────────────────────────────────────────────────
 export type { LoopDriver } from './core/renderer/loops/loop';
 export { IntervalLoopDriver, RAFLoopDriver } from './core/renderer/loops/loop';

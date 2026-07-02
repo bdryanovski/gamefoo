@@ -8,6 +8,7 @@ import icons from './icons/index.html';
 import clock from './clock/index.html';
 import isometric from './isometric/index.html';
 import duel from './duel/index.html';
+import palette from './palette/index.html';
 
 import dungen from './dungen/index.html';
 
@@ -25,6 +26,7 @@ const server = Bun.serve({
     '/isometric': isometric,
     '/dungen': dungen,
     '/duel': duel,
+    '/palette': palette,
   },
   async fetch(req) {
     const path = new URL(req.url).pathname;
