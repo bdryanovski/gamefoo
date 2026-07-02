@@ -1,8 +1,9 @@
 {
   "name": "@dryanovski/gamefoo",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A lightweight 2D game engine with behavior-based component system",
   "license": "MIT",
+  "source": "./src/index.ts",
   "files": [
     "dist",
     "src",
@@ -10,7 +11,6 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "source": "./src/index.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
