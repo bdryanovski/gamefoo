@@ -282,3 +282,10 @@ export function getPalette(name: ConsoleName): ColorPalette | GeneratedPalette {
 export function listConsoles(): ConsoleName[] {
   return Object.keys(CONSOLES) as ConsoleName[];
 }
+
+// ── Controls Integration ────────────────────────────────────────────
+export {
+  CONSOLE_DEFAULT_CONTROLS,
+  getControlSchemeName,
+  getDefaultControls,
+} from './controls';

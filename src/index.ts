@@ -30,6 +30,9 @@ export { default as Camera } from './core/camera';
 // ── Consoles (unified) ──────────────────────────────────────────────
 /** @since 0.5.0 */
 export * from './core/consoles';
+// ── Controls ────────────────────────────────────────────────────────
+/** @since 0.5.0 */
+export * from './core/controls';
 export { default as Engine } from './core/engine';
 export type { EnhancedCameraConfig } from './core/enhanced_camera';
 export { EnhancedCamera } from './core/enhanced_camera';
@@ -52,8 +55,6 @@ export { default as Input } from './core/input';
 // ── Input Drivers ───────────────────────────────────────────────────
 export type { InputDriver } from './core/input/terminal';
 export { TerminalInputDriver } from './core/input/terminal';
-/** @since 0.4.0 */
-export * from './core/input.types';
 // ── Palettes ────────────────────────────────────────────────────────
 /** @since 0.5.0 */
 export * from './core/palettes';
