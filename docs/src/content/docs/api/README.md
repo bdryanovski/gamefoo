@@ -197,9 +197,11 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 
 | Type Alias | Description |
 | ------ | ------ |
+| [ConsoleName](type-aliases/ConsoleName.md) | Predefined supported console resolutions |
 | [InternalBitmapFontName](type-aliases/InternalBitmapFontName.md) | - |
 | [InternalBitmapIconName](type-aliases/InternalBitmapIconName.md) | - |
 | [~~IsometricCameraSystem~~](type-aliases/IsometricCameraSystem.md) | - |
+| [ScreenResolution](type-aliases/ScreenResolution.md) | Resolution definition object |
 | [TerminalBuffer](type-aliases/TerminalBuffer.md) | A 2-D grid of [TerminalCell](interfaces/TerminalCell.md) objects representing the full terminal screen (`buffer[row][col]`). |
 
 ### Grid
@@ -215,6 +217,13 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 | [ColliderShape](type-aliases/ColliderShape.md) | Discriminated union describing the shape of a collision volume. |
 | [~~Dimension~~](type-aliases/Dimension.md) | Alias for [Demension](interfaces/Demension.md) with correct spelling. |
 | [GameObject](type-aliases/GameObject.md) | Union of all entity types that can be managed by the engine's [GameObjectRegister](classes/GameObjectRegister.md). |
+
+## Enumerations
+
+| Enumeration | Description |
+| ------ | ------ |
+| [INPUT\_CONTROLS](enumerations/INPUT_CONTROLS.md) | Input controls is developer friendly name for predefined controlled scheme |
+| [INPUT\_KEY](enumerations/INPUT_KEY.md) | Representation of input keys provided from external controllers |
 
 ## Functions
 
@@ -234,4 +243,5 @@ import { Engine, Player, Input, Collidable } from "gamefoo";
 
 | Variable | Description |
 | ------ | ------ |
+| [CONSOLE\_RESOLUTION](variables/CONSOLE_RESOLUTION.md) | Standart Console resolution |
 | [~~IsometricCameraSystem~~](variables/IsometricCameraSystem.md) | - |

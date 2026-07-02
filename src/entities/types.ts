@@ -5,7 +5,7 @@
  * module does not need to import from the entity layer.
  *
  * @category Types
- * @since 0.5.0
+ * @since 0.4.0
  */
 
 import type DynamicEntity from './dynamic_entity';

@@ -49,6 +49,11 @@ export class Control extends Behaviour<DynamicEntity> {
   constructor(owner: DynamicEntity, input: Input) {
     super(owner);
     this.input = input;
+
+    if (owner?.getSpeed()) {
+      console.log(owner.getSpeed());
+      this.speed = owner.getSpeed();
+    }
   }
 
   /**

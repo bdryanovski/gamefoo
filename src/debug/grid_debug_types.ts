@@ -54,7 +54,7 @@ export interface GridDebugConfig {
    * movement. When omitted, `GridDebugSystem` falls back to
    * `document.querySelector("canvas")` (browser-only).
    *
-   * @since 0.5.0
+   * @since 0.4.0
    *
    * @example
    * ```ts

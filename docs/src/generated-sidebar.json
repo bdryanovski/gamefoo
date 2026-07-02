@@ -13,6 +13,20 @@
     "label": "⚙️ API Reference",
     "items": [
       {
+        "label": "Enumerations",
+        "items": [
+          {
+            "label": "INPUT CONTROLS",
+            "link": "/api/enumerations/INPUT_CONTROLS"
+          },
+          {
+            "label": "INPUT KEY",
+            "link": "/api/enumerations/INPUT_KEY"
+          }
+        ],
+        "collapsed": true
+      },
+      {
         "label": "Classes",
         "items": [
           {
@@ -198,6 +212,10 @@
             "link": "/api/type-aliases/InternalBitmapFontName"
           },
           {
+            "label": "ScreenResolution",
+            "link": "/api/type-aliases/ScreenResolution"
+          },
+          {
             "label": "Dimension",
             "link": "/api/type-aliases/Dimension"
           },
@@ -208,6 +226,10 @@
           {
             "label": "CollidableOptions",
             "link": "/api/type-aliases/CollidableOptions"
+          },
+          {
+            "label": "ConsoleName",
+            "link": "/api/type-aliases/ConsoleName"
           },
           {
             "label": "HeuristicName",
@@ -235,6 +257,10 @@
       {
         "label": "Variables",
         "items": [
+          {
+            "label": "CONSOLE RESOLUTION",
+            "link": "/api/variables/CONSOLE_RESOLUTION"
+          },
           {
             "label": "IsometricCameraSystem",
             "link": "/api/variables/IsometricCameraSystem"

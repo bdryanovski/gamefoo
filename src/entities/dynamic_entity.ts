@@ -113,7 +113,7 @@ export default abstract class DynamicEntity extends Entity {
    *
    * @param deltaTime - Seconds elapsed since the previous frame.
    *
-   * @since 0.5.0
+   * @since 0.4.0
    */
   update(deltaTime: number): void {
     this.updateBehaviours(deltaTime);

@@ -672,7 +672,7 @@ velocity before it is integrated into position — no one-frame lag.
 
 #### Since
 
-0.5.0
+0.4.0
 
 #### Overrides
 

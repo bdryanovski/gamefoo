@@ -126,7 +126,7 @@ The owning entity.
 
 #### Since
 
-0.5.0
+0.4.0
 
 #### Inherited from
 
@@ -216,7 +216,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 update(_deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/control.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L65)
+Defined in: [core/behaviours/control.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L70)
 
 Reads the current key state and moves the owner entity.
 

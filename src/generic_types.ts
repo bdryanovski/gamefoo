@@ -166,6 +166,6 @@ export interface WorldBounds {
  *
  * @deprecated Use `Dimension` instead of `Demension`.
  * @category Types
- * @since 0.5.0
+ * @since 0.4.0
  */
 export type Dimension = Demension;

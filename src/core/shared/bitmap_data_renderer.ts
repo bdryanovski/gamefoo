@@ -5,7 +5,7 @@
  * accessor used by both {@link FontBitmap} and {@link IconBitmap}.
  *
  * @category Core
- * @since 0.5.0
+ * @since 0.4.0
  */
 
 /** Catalog entry shape shared by fonts and icon sets. @internal */

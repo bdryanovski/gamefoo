@@ -117,7 +117,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @returns The owning entity.
    *
-   * @since 0.5.0
+   * @since 0.4.0
    */
   getOwner(): T {
     return this.owner;

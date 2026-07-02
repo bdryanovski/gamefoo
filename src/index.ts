@@ -49,10 +49,13 @@ export { default as Input } from './core/input';
 // ── Input Drivers ───────────────────────────────────────────────────
 export type { InputDriver } from './core/input/terminal';
 export { TerminalInputDriver } from './core/input/terminal';
+/** @since 0.4.0 */
+export * from './core/input.types';
 // ── Renderer / Loop ─────────────────────────────────────────────────
 export type { LoopDriver } from './core/renderer/loops/loop';
 export { IntervalLoopDriver, RAFLoopDriver } from './core/renderer/loops/loop';
 export { createBunLoop } from './core/renderer/loops/terminal_loop';
+export * from './core/renderer/resolutions';
 export type { TerminalRenderConfig } from './core/renderer/terminal_renderer';
 export { TerminalRenderContext } from './core/renderer/terminal_renderer';
 export type {
@@ -110,7 +113,7 @@ export type {
    * @deprecated Use {@link Dimension} instead (correct spelling).
    */
   Demension,
-  /** @since 0.5.0 */
+  /** @since 0.4.0 */
   Dimension,
   Vector2,
   WorldBounds,
