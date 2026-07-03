@@ -168,6 +168,12 @@ export class TerminalRenderContext implements RenderContext {
   private defaultBg: string;
   private defaultFg: string;
 
+  readonly gameScale: number;
+
+  readGameScale(): number {
+    return this.gameScale;
+  }
+
   /** The back buffer — drawn into each frame. */
   private buffer: Cell[][];
 
@@ -214,6 +220,8 @@ export class TerminalRenderContext implements RenderContext {
     this.prevBuffer = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.cols }, empty),
     );
+
+    this.gameScale = 1;
 
     // Switch to alternate screen, hide cursor, clear.
     process.stdout.write(`${ansi.ESC}[?1049h`);

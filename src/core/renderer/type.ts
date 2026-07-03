@@ -70,6 +70,20 @@ export interface RenderContext {
    */
   readonly height: number;
 
+  /**
+   * Rendered scalling factor
+   *
+   * @since 0.5.0
+   */
+  readonly gameScale: number;
+
+  /**
+   * Read the rendering scale factor
+   *
+   * @since 0.5.0
+   */
+  readGameScale(): number;
+
   // ── Transform stack ─────────────────────────────────────────────────────
 
   /**

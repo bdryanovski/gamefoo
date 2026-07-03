@@ -154,6 +154,13 @@ export default class Engine {
   private height: number;
 
   /**
+   * Curent game enegine game scale
+   *
+   * @since 0.5.0
+   */
+  public readonly gameScale: number;
+
+  /**
    * Guards against calling {@link Engine.setup} more than once.
    *
    * Flipped to `true` after the first successful setup invocation.
@@ -220,6 +227,7 @@ export default class Engine {
     this.width = renderer.width;
     this.height = renderer.height;
     this.loopDriver = config.loopDriver ?? new RAFLoopDriver();
+    this.gameScale = renderer.readGameScale();
   }
 
   /**

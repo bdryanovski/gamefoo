@@ -74,7 +74,16 @@ export class WebRenderer implements RenderContext {
    * Stored so that `clear()` can reset the full buffer regardless of
    * accumulated transforms.
    */
-  private readonly gameScale: number;
+  readonly gameScale: number;
+
+  /**
+   * Return the actual game scale
+   *
+   * @since 0.5.0
+   */
+  public readGameScale(): number {
+    return this.gameScale;
+  }
 
   /**
    * Creates a new `WebRenderer` and configures the target canvas.
