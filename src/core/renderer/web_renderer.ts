@@ -9,16 +9,21 @@ import type { RenderContext } from './type';
  *
  * ### Scaling
  *
- * When `gameScale > 1` (e.g. `4` for a 200×75 pixel-art game displayed
- * at 800×300):
+ * The `gameScale` parameter controls how large the game appears on screen:
+ *
+ * - `gameScale = 1`: 1:1 pixel mapping. A 200×75 game displays at 200×75 CSS pixels.
+ * - `gameScale = 2`: 2× scale. A 200×75 game displays at 400×150 CSS pixels.
+ * - `gameScale = 4`: 4× scale. A 200×75 game displays at 800×300 CSS pixels.
+ *
+ * Internally:
  *
  * - The canvas **backing buffer** is sized to `width × gameScale` ×
  *   `height × gameScale` so there is a physical pixel for each logical
  *   pixel in the up-scaled view.
+ * - The canvas **CSS size** is also set to `width × gameScale` ×
+ *   `height × gameScale` so the game appears at the scaled size.
  * - `ctx.scale(gameScale, gameScale)` is applied once at construction so
  *   all subsequent draw calls use logical (`width × height`) coordinates.
- * - CSS is set to `width × height` so the browser displays the canvas at
- *   its intended logical size.
  * - `imageSmoothingEnabled` is disabled globally to preserve crisp
  *   pixel-art edges.
  *
@@ -114,9 +119,10 @@ export class WebRenderer implements RenderContext {
     canvas.width = width * gameScale;
     canvas.height = height * gameScale;
 
-    // Display at logical size (browser scales CSS pixels → device pixels separately).
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    // Display at scaled size so the game appears larger on screen.
+    // A 200×75 game with gameScale=4 displays as 800×300 CSS pixels.
+    canvas.style.width = `${width * gameScale}px`;
+    canvas.style.height = `${height * gameScale}px`;
 
     // Prevent the browser compositor from blurring the canvas when it is
     // displayed at a non-native resolution.
