@@ -336,6 +336,17 @@ export class TerminalRenderContext implements RenderContext {
   }
 
   /**
+   * No-op in terminal mode. Path2D rendering is not supported.
+   *
+   * @param _path - Ignored in terminal mode.
+   *
+   * @since 0.5.0
+   */
+  fill(_path?: Path2D): void {
+    // Terminal does not support Path2D rendering
+  }
+
+  /**
    * Fills a rectangular region of cells with `color`.
    *
    * The region is defined in game-world coordinates and converted to

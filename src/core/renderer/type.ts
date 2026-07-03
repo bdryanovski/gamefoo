@@ -142,6 +142,41 @@ export interface RenderContext {
   clear(color?: string): void;
 
   /**
+   * Fills the current path or a provided Path2D.
+   *
+   * Mirrors the Canvas 2D `fill()` API.
+   *
+   * @param path - Optional Path2D to fill. If omitted, fills the current path.
+   *
+   * @since 0.5.0
+   *
+   * @example Fill current path
+   * ```ts
+   * ctx.beginPath();
+   * ctx.moveTo(10, 10);
+   * ctx.lineTo(50, 50);
+   * ctx.lineTo(10, 50);
+   * ctx.closePath();
+   * ctx.fill();
+   * ```
+   *
+   * @example Fill a Path2D
+   * ```ts
+   * const path = new Path2D();
+   * path.rect(10, 10, 50, 50);
+   * ctx.fill(path);
+   * ```
+   *
+   * @example Fill a Bitmap (call render() to get Path2D)
+   * ```ts
+   * const bitmap = new Bitmap('icon', [0b11111, 0b10001, 0b11111], { width: 5, height: 3 });
+   * ctx.translate(100, 100);
+   * ctx.fill(bitmap.render());
+   * ```
+   */
+  fill(path?: Path2D): void;
+
+  /**
    * Draws a filled rectangle.
    *
    * @param x      - Left edge in logical units.

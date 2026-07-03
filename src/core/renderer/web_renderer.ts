@@ -237,6 +237,26 @@ export class WebRenderer implements RenderContext {
   }
 
   /**
+   * Fills the current path or a provided Path2D.
+   *
+   * Mirrors the Canvas 2D `fill()` API.
+   *
+   * @param path - Optional Path2D to fill. If omitted, fills the current path.
+   * @param fillRule - Optional fill rule: "nonzero" (default) or "evenodd".
+   *
+   * @since 0.5.0
+   */
+  fill(path?: Path2D, fillRule?: CanvasFillRule): void {
+    if (path === undefined) {
+      this.ctx.fill();
+    } else if (fillRule !== undefined) {
+      this.ctx.fill(path, fillRule);
+    } else {
+      this.ctx.fill(path);
+    }
+  }
+
+  /**
    * Draws a filled rectangle.
    *
    * @param x      - Left edge in logical pixels.
