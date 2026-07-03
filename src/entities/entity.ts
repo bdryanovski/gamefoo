@@ -1,6 +1,6 @@
 import type { Behaviour } from '../core/behaviour';
 import type { RenderContext } from '../core/renderer/type';
-import type { Demension, Vector2 } from '../generic_types';
+import Node from './node';
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -51,7 +51,7 @@ import type { Demension, Vector2 } from '../generic_types';
  * @see {@link Player}        — concrete player entity
  * @see {@link Behaviour}     — composable logic units
  */
-export default abstract class Entity {
+export default abstract class Entity extends Node {
   /**
    * Unique identifier for this entity.
    *
@@ -59,16 +59,6 @@ export default abstract class Entity {
    * collision-callback identification.
    */
   public id: string = '';
-
-  /**
-   * World-space position of the entity's origin (top-left corner).
-   */
-  protected readonly position: Vector2 = { x: 0, y: 0 };
-
-  /**
-   * Bounding dimensions of the entity in pixels.
-   */
-  protected readonly size: Demension = { width: 0, height: 0 };
 
   /**
    * Internal map from behaviour key (lowercased type) to
@@ -81,32 +71,6 @@ export default abstract class Entity {
    * a behaviour is attached or detached.
    */
   private _sortedBehaviors: Behaviour[] | null = null;
-
-  /**
-   * Horizontal position of the entity (shorthand for
-   * `position.x`).
-   */
-  get x(): number {
-    return this.position.x;
-  }
-
-  /** Sets the horizontal position. */
-  set x(value: number) {
-    this.position.x = value;
-  }
-
-  /**
-   * Vertical position of the entity (shorthand for
-   * `position.y`).
-   */
-  get y(): number {
-    return this.position.y;
-  }
-
-  /** Sets the vertical position. */
-  set y(value: number) {
-    this.position.y = value;
-  }
 
   /**
    * Creates a new entity.
@@ -134,56 +98,8 @@ export default abstract class Entity {
     width?: number,
     height?: number,
   ) {
+    super({ x, y }, { width: width || 0, height: height || 0 });
     this.id = id;
-    this.position = { x, y };
-
-    if (width && height) {
-      this.size = { width, height };
-    }
-  }
-
-  /**
-   * Advances the entity's state by one frame.
-   *
-   * @param deltaTime - Seconds elapsed since the previous frame.
-   */
-  abstract update(deltaTime: number): void;
-
-  /**
-   * Draws the entity .
-   *
-   * @param ctx - The 2-D rendering context.
-   */
-  abstract render(ctx: RenderContext): void;
-
-  /**
-   * Returns a **copy** of the entity's current position.
-   *
-   * @returns A new {@link Vector2} with the entity's `x` and `y`.
-   */
-  getPosition(): Vector2 {
-    return this.position;
-  }
-
-  /**
-   * Returns a **copy** of the entity's bounding dimensions.
-   *
-   * @returns An object with `width` and `height`.
-   */
-  getSize(): Demension {
-    return this.size;
-  }
-
-  /**
-   * Set size of the entity
-   *
-   * @since 0.2.0
-   *
-   * @return void
-   */
-  protected setSize(width: number, height: number): void {
-    this.size.width = width;
-    this.size.height = height;
   }
 
   /**
