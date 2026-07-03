@@ -1,12 +1,12 @@
 import {
   Behaviour,
-  CONSOLE_RESOLUTION,
-  ConsoleName,
+  CONSOLES,
   Control,
+  CONTROL_SCHEMES,
   DynamicEntity,
   Engine,
   Input,
-  INPUT_KEY,
+  InputMapper,
   MonitorSystem,
   ObjectSystem,
   RenderContext,
@@ -14,7 +14,9 @@ import {
   WebRenderer,
 } from '../../src/index';
 
-const RESOLUTION = CONSOLE_RESOLUTION['PLAYDATE'];
+const RESOLUTION = CONSOLES['PLAYDATE'].resolution;
+const COLORS = CONSOLES['PLAYDATE'].palette.named;
+const KEYS = CONTROL_SCHEMES['PLAYDATE'];
 
 const CANVAS_W = RESOLUTION.width;
 const CANVAS_H = RESOLUTION.height;
@@ -27,7 +29,7 @@ const WORLD_PADDING = 10;
 const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H);
 
 const engine = new Engine(renderer, {
-  backgroundColor: '#000000',
+  backgroundColor: COLORS.BLACK,
 });
 
 class Player extends DynamicEntity {
@@ -42,7 +44,7 @@ class Player extends DynamicEntity {
 
   render(ctx: RenderContext) {
     super.renderBehaviours(ctx);
-    ctx.fillRect(this.x, this.y, this.size.width, this.size.height, 'yellow');
+    ctx.fillRect(this.x, this.y, this.size.width, this.size.height, COLORS.WHITE);
   }
 }
 
@@ -56,6 +58,7 @@ const PlayerB = new Player(
 class AimControl extends Behaviour<DynamicEntity> {
   readonly type = 'AimControl';
   private target: DynamicEntity;
+  private map: any;
   private input: Input;
   private aimX: number;
   private aimY: number;
@@ -63,13 +66,16 @@ class AimControl extends Behaviour<DynamicEntity> {
     super(target);
 
     this.input = input;
+
+    this.map = new InputMapper(input, KEYS);
   }
 
   override update(dt: number) {
+    this.input.update();
     super.update(dt);
     const { x, y } = this.input.getMousePosition();
 
-    if (this.input.isKeyDown(INPUT_KEY.SPACE)) {
+    if (this.map.isActionPressed('PRIMARY')) {
       console.log('Space bar', x, y);
     }
     this.aimX = x;
@@ -77,7 +83,7 @@ class AimControl extends Behaviour<DynamicEntity> {
   }
 
   override render(ctx: RenderContext) {
-    ctx.drawText('X', this.aimX, this.aimY, 'red');
+    ctx.drawText('X', this.aimX, this.aimY, COLORS.WHITE);
   }
 }
 
@@ -114,7 +120,7 @@ class Bullet extends DynamicEntity {
   }
 
   override render(ctx: RenderContext) {
-    ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height, 'yellow');
+    ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height, COLORS.WHITE);
   }
 
   public direction(target: Vector2) {
@@ -202,6 +208,7 @@ PlayerA.attachBehaviour(new AimControl(PlayerA, input));
 // EnemyAI(owner, target, speed, keepDistance, alignThreshold)
 PlayerB.attachBehaviour(new EnemyAI(PlayerB, PlayerA, 80, 60, 5));
 
+engine.use(input);
 engine.use(new ObjectSystem([PlayerA, PlayerB, new Bullet('1', 20, 30)]));
 engine.use(new MonitorSystem());
 

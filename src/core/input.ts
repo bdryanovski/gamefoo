@@ -1,3 +1,5 @@
+import type { SubSystem } from '../subsystems/types';
+
 /**
  * Unified keyboard, mouse, and gamepad input manager.
  *
@@ -8,6 +10,9 @@
  *
  * All keyboard keys are stored **lowercased** for case-insensitive
  * look-ups.
+ *
+ * Implements {@link SubSystem} so it can be registered with the Engine
+ * via `engine.use(input)` for automatic updates each frame.
  *
  * @category Core
  * @since 0.1.0
@@ -33,21 +38,53 @@
  * }
  * ```
  *
- * @example Using with InputMapper for action-based input
+ * @example Using as a subsystem (recommended)
+ * ```ts
+ * const input = new Input({ canvasId: "game" });
+ * const mapper = new InputMapper(input, NES_CONTROLS);
+ *
+ * engine.use(input); // Auto-updates each frame
+ *
+ * // In game logic:
+ * if (mapper.isActionPressed('A')) player.jump();
+ * ```
+ *
+ * @example Manual update (without Engine)
  * ```ts
  * const input = new Input({ canvasId: "game" });
  * const mapper = new InputMapper(input, NES_CONTROLS);
  *
  * function gameLoop() {
  *   input.update(); // Required for "just pressed" detection
- *   if (mapper.isAction('A')) player.jump();
+ *   if (mapper.isActionPressed('A')) player.jump();
  * }
  * ```
  *
  * @see {@link Control} — behaviour that consumes `Input` for player movement
  * @see {@link InputMapper} — action-based input mapping using control schemes
  */
-export default class Input {
+export default class Input implements SubSystem {
+  /**
+   * Subsystem identifier.
+   *
+   * @since 0.5.0
+   */
+  readonly id = 'input';
+
+  /**
+   * Subsystem execution order. Runs early (order 0) so input state
+   * is available to all other subsystems.
+   *
+   * @since 0.5.0
+   */
+  readonly order = 0;
+
+  /**
+   * Whether the subsystem is enabled.
+   *
+   * @since 0.5.0
+   */
+  enabled = true;
   /**
    * Set of currently-pressed keyboard keys (lowercased).
    *
@@ -197,16 +234,34 @@ export default class Input {
   }
 
   /**
+   * SubSystem hook: called at the start of each frame.
+   *
+   * When registered with the Engine via `engine.use(input)`, this method
+   * is called automatically, ensuring "just pressed" detection works.
+   *
+   * @param _deltaTime - Seconds since last frame (unused).
+   *
+   * @since 0.5.0
+   */
+  preUpdate(_deltaTime: number): void {
+    this.update();
+  }
+
+  /**
    * Updates the input state for the current frame.
    *
    * Call this once at the beginning of each frame to enable "just pressed"
    * detection via {@link Input.isKeyPressed}. Without calling this method,
    * `isKeyPressed` will always return `false`.
    *
+   * When using Input as a subsystem via `engine.use(input)`, this is
+   * called automatically and you don't need to call it manually.
+   *
    * @since 0.5.0
    *
    * @example
    * ```ts
+   * // Manual usage (without Engine)
    * function gameLoop() {
    *   input.update(); // Call first thing each frame
    *
