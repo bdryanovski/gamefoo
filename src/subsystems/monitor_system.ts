@@ -29,6 +29,10 @@ interface MemoryInfo {
 /** @internal */
 declare const performance: Performance & { memory?: MemoryInfo };
 
+type MonitorSystemOptions = {
+  graph: boolean;
+};
+
 const font = new FontBitmap('5x5');
 
 export class MonitorSystem implements SubSystem {
@@ -45,6 +49,12 @@ export class MonitorSystem implements SubSystem {
   public x: number = 8;
   /** Y position of the overlay in pixels. @defaultValue `8` */
   public y: number = 8;
+
+  private options: MonitorSystemOptions;
+
+  constructor(options: MonitorSystemOptions = { graph: true }) {
+    this.options = options;
+  }
 
   update(deltaTime: number): void {
     this.frameCount++;
@@ -82,17 +92,18 @@ export class MonitorSystem implements SubSystem {
         ctx,
       );
     }
-
-    const canvasCtx = ctx.getCanvas?.();
-    if (canvasCtx && this.frames.length >= 1) {
-      canvasCtx.strokeStyle = '#fff';
-      canvasCtx.beginPath();
-      for (let i = 0; i < this.frames.length; i++) {
-        const x = this.x + i;
-        const y = this.x + font.height * 2 + 80 - (this.frames[i] ?? 0);
-        canvasCtx.lineTo(x, y);
+    if (this.options.graph) {
+      const canvasCtx = ctx.getCanvas?.();
+      if (canvasCtx && this.frames.length >= 1) {
+        canvasCtx.strokeStyle = '#fff';
+        canvasCtx.beginPath();
+        for (let i = 0; i < this.frames.length; i++) {
+          const x = this.x + i;
+          const y = this.x + font.height * 2 + 80 - (this.frames[i] ?? 0);
+          canvasCtx.lineTo(x, y);
+        }
+        canvasCtx.stroke();
       }
-      canvasCtx.stroke();
     }
 
     ctx.restore();
