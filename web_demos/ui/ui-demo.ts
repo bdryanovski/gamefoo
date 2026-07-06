@@ -1,11 +1,11 @@
 /**
  * UI Framework Demo
  *
- * Demonstrates the MenuSystem with keyboard-only navigation.
+ * Demonstrates the MenuSystem with full engine integration.
  *
  * Controls:
  * - Escape: Toggle menu open/close
- * - LEFT/RIGHT: Switch tabs
+ * - LEFT/RIGHT: Switch tabs (or change value in focused selector)
  * - UP/DOWN: Navigate within page
  * - X/J/Space (PRIMARY): Activate focused widget
  *
@@ -13,6 +13,7 @@
  */
 
 import { Engine, WebRenderer } from '../../src/index';
+import { MonitorSystem } from '../../src/subsystems/monitor_system';
 import {
   PICO8,
   TIC80,
@@ -30,20 +31,14 @@ import {
   NEO_GEO,
   PLAYDATE,
   type ColorPalette,
+  type GeneratedPalette,
 } from '../../src/core/palettes';
 import {
   MenuSystem,
-  ControlsPage,
-  GraphicsPage,
-  AudioPage,
-  PalettePage,
-  DebugPage,
-  QuitPage,
+  MenuIntegration,
   DEFAULT_THEME,
-  PIXEL_THEME,
-  RETRO_GREEN_THEME,
-  RETRO_AMBER_THEME,
-  type UITheme,
+  type GraphicsState,
+  type AudioState,
 } from '../../src/ui';
 
 // ============================================================================
@@ -55,25 +50,64 @@ const CANVAS_H = 240;
 const SCALE = 2;
 
 const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H, SCALE);
-const engine = new Engine(renderer, { backgroundColor: '#1a1a2e' });
 
 // ============================================================================
-// Themes
+// Game State (affected by menu settings)
 // ============================================================================
 
-const themes: UITheme[] = [
-  DEFAULT_THEME,
-  PIXEL_THEME,
-  RETRO_GREEN_THEME,
-  RETRO_AMBER_THEME,
-];
-let currentThemeIndex = 0;
+// Union type for both palette types
+type AnyPalette = ColorPalette | GeneratedPalette;
+
+// Helper to check if palette has colors array
+function hasColors(palette: AnyPalette): palette is ColorPalette {
+  return 'colors' in palette && Array.isArray((palette as ColorPalette).colors);
+}
+
+// Helper to get displayable colors from any palette
+function getPaletteColors(palette: AnyPalette): readonly string[] {
+  if (hasColors(palette)) {
+    return palette.colors;
+  }
+  // For GeneratedPalette, use commonColors or generate a sample
+  const generated = palette as GeneratedPalette;
+  if (generated.commonColors) {
+    return generated.commonColors;
+  }
+  // Generate a basic color ramp
+  const colors: string[] = [];
+  const max = (1 << generated.bitsPerChannel) - 1;
+  for (let i = 0; i <= max; i += Math.ceil(max / 7)) {
+    colors.push(generated.generate(i, i, i)); // Grayscale ramp
+  }
+  return colors;
+}
+
+const gameState = {
+  // Current palette for rendering
+  activePalette: PICO8 as AnyPalette,
+  // Graphics settings (initialized from renderer)
+  graphics: {
+    scale: renderer.readGameScale(),
+    width: CANVAS_W,
+    height: CANVAS_H,
+  } as GraphicsState,
+  // Audio settings
+  audio: {
+    masterVolume: 100,
+    musicVolume: 80,
+    sfxVolume: 100,
+    muted: false,
+  } as AudioState,
+  // Control scheme name
+  controlScheme: 'DEFAULT' as string,
+};
 
 // ============================================================================
-// Palettes for PalettePage
+// Palettes
 // ============================================================================
 
-const palettes: ColorPalette[] = [
+// All palettes (both ColorPalette and GeneratedPalette)
+const palettes: AnyPalette[] = [
   // Fantasy Consoles
   PICO8,
   TIC80,
@@ -86,141 +120,173 @@ const palettes: ColorPalette[] = [
   // Sega
   GENESIS,
   GAMEGEAR,
-  // Other
+  // Atari
   ATARI_2600,
+  // SNK
   NEO_GEO,
+  // Home Computers
   C64,
   CGA,
   EGA,
+  // Modern
   PLAYDATE,
 ];
 
 // ============================================================================
-// Menu System
+// Demo Rendering (shows palette info)
 // ============================================================================
 
-const menuSystem = new MenuSystem({
-  width: 220,
-  height: 200,
-  theme: themes[currentThemeIndex]!,
-  overlayColor: '#000000',
-});
+class DemoGame extends Engine {
+  override render(ctx: typeof renderer): void {
+    const padding = 16;
+    const lineHeight = 20;
 
-// ============================================================================
-// Register All Pages
-// ============================================================================
+    // Draw palette preview
+    this.drawPalettePreview(ctx, padding);
 
-// 1. Controls Page - Control scheme selection
-menuSystem.registerPage(
-  new ControlsPage({
-    initialScheme: 'DEFAULT',
-    onSchemeChange: (scheme, name) => {
-      console.log('Control scheme changed to:', name, scheme.name);
-    },
-  }),
-);
+    // Draw current settings info
+    this.drawSettingsInfo(ctx, padding, lineHeight);
+  }
 
-// 2. Graphics Page - Video settings
-menuSystem.registerPage(
-  new GraphicsPage({
-    fullscreen: false,
-    scale: SCALE,
-    scales: [1, 2, 3, 4],
-    vsync: true,
-    showFps: false,
-    onFullscreenChange: (value) => {
-      console.log('Fullscreen:', value);
-    },
-    onScaleChange: (scale) => {
-      console.log('Scale changed to:', scale);
-    },
-    onVsyncChange: (value) => {
-      console.log('VSync:', value);
-    },
-    onShowFpsChange: (value) => {
-      console.log('Show FPS:', value);
-    },
-  }),
-);
+  private drawPalettePreview(ctx: typeof renderer, padding: number): void {
+    const palette = gameState.activePalette;
+    const colors = getPaletteColors(palette);
+    const swatchSize = 10;
+    const cols = 8;
 
-// 3. Audio Page - Sound settings
-menuSystem.registerPage(
-  new AudioPage({
-    masterVolume: 80,
-    musicVolume: 70,
-    sfxVolume: 100,
-    muted: false,
-    onMasterVolumeChange: (vol) => {
-      console.log('Master volume:', vol);
-    },
-    onMusicVolumeChange: (vol) => {
-      console.log('Music volume:', vol);
-    },
-    onSfxVolumeChange: (vol) => {
-      console.log('SFX volume:', vol);
-    },
-    onMutedChange: (muted) => {
-      console.log('Muted:', muted);
-    },
-  }),
-);
+    // Draw palette name
+    ctx.drawText(`Palette: ${palette.name}`, padding, padding, '#ffffff');
 
-// 4. Palette Page - Color palette viewer
-menuSystem.registerPage(
-  new PalettePage({
-    palettes: palettes,
-    selectedIndex: 0,
-    onPaletteChange: (palette, index) => {
-      console.log('Palette changed to:', palette.name, 'at index', index);
-    },
-  }),
-);
+    // Draw color swatches
+    for (let i = 0; i < colors.length && i < 32; i++) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = padding + col * (swatchSize + 2);
+      const y = padding + 14 + row * (swatchSize + 2);
 
-// 5. Debug Page - Debug options
-menuSystem.registerPage(
-  new DebugPage({
-    showFps: false,
-    showCollisions: false,
-    showGrid: false,
-    showBounds: false,
-    onShowFpsChange: (value) => {
-      console.log('Debug FPS:', value);
-    },
-    onShowCollisionsChange: (value) => {
-      console.log('Debug Collisions:', value);
-    },
-    onShowGridChange: (value) => {
-      console.log('Debug Grid:', value);
-    },
-    onShowBoundsChange: (value) => {
-      console.log('Debug Bounds:', value);
-    },
-  }),
-);
+      ctx.fillRect(x, y, swatchSize, swatchSize, colors[i]!);
+      ctx.strokeRect(x, y, swatchSize, swatchSize, '#333333');
+    }
+  }
 
-// 6. Quit Page - Exit confirmation
-menuSystem.registerPage(
-  new QuitPage({
-    message: 'Exit the demo?',
-    onQuit: () => {
-      console.log('User confirmed quit');
-      menuSystem.hide();
-      // In a real game, you might redirect or close the window
-    },
-    onCancel: () => {
-      console.log('User cancelled quit');
-      menuSystem.hide();
-    },
-  }),
-);
+  private drawSettingsInfo(ctx: typeof renderer, padding: number, lineHeight: number): void {
+    let y = 75;
+
+    ctx.drawText(`Controls: ${gameState.controlScheme}`, padding, y, '#aaaaaa');
+    y += lineHeight;
+
+    ctx.drawText(
+      `Audio: ${gameState.audio.muted ? 'MUTED' : `${gameState.audio.masterVolume}%`}`,
+      padding,
+      y,
+      '#aaaaaa',
+    );
+    y += lineHeight;
+
+    ctx.drawText(`Scale: ${gameState.graphics.scale}x`, padding, y, '#aaaaaa');
+    y += lineHeight;
+
+    ctx.drawText(
+      `Resolution: ${gameState.graphics.width}x${gameState.graphics.height}`,
+      padding,
+      y,
+      '#aaaaaa',
+    );
+    y += lineHeight + 8;
+
+    ctx.drawText('Press ESC to open menu', padding, y, '#666666');
+  }
+}
 
 // ============================================================================
 // Engine Setup
 // ============================================================================
 
-engine.use(menuSystem);
+// Create our custom game engine
+const game = new DemoGame(renderer, { backgroundColor: '#1a1a2e' });
 
-engine.setup(() => {
-  // Show menu immediately for demo
-  menuSystem.show();
+// Create MonitorSystem for debug overlays (FPS, grid, etc.)
+const monitorSystem = new MonitorSystem({
+  showFps: false,
+  showGraph: false,
+  showMemory: false,
+  showGrid: false,
+  gridSize: 'none',
+});
+
+// Add MonitorSystem to engine
+game.use(monitorSystem);
+
+// ============================================================================
+// Menu System with Integration
+// ============================================================================
+
+const menuSystem = new MenuSystem({
+  width: 220,
+  height: 200,
+  theme: DEFAULT_THEME,
+  overlayColor: '#000000',
+});
+
+// Create integration that connects menu to game state
+// Pass MonitorSystem so DebugPage can control it directly
+const integration = new MenuIntegration(game, menuSystem, {
+  palettes,
+  initialPaletteIndex: 0,
+  initialControlScheme: 'DEFAULT',
+  initialGraphics: gameState.graphics,
+  initialAudio: gameState.audio,
+  monitorSystem,
+});
+
+// Set up callbacks to update game state when menu changes
+integration.setCallbacks({
+  onControlSchemeChange: (_scheme, name) => {
+    gameState.controlScheme = name;
+    console.log(`Control scheme changed to: ${name}`);
+  },
+
+  onPaletteChange: (palette, _index) => {
+    gameState.activePalette = palette;
+    console.log(`Palette changed to: ${palette.name}`);
+  },
+
+  onGraphicsChange: (state) => {
+    gameState.graphics = state;
+    console.log('Graphics changed:', state);
+
+    // Apply resolution/scale changes to the renderer and engine
+    renderer.resize(state.width, state.height, state.scale);
+    game.resize(state.width, state.height);
+
+    // Resize menu to fit new screen dimensions
+    menuSystem.resize(state.width, state.height);
+  },
+
+  onAudioChange: (state) => {
+    gameState.audio = state;
+    console.log('Audio changed:', state);
+  },
+
+  onDebugChange: (state) => {
+    // Debug state is managed by MonitorSystem directly
+    console.log('Debug changed:', state);
+  },
+
+  onQuit: () => {
+    console.log('Quit confirmed - closing menu');
+    menuSystem.hide();
+  },
+});
+
+// Register all pages (connected via integration)
+integration.registerAllPages();
+
+// Add menu system to engine
+game.use(menuSystem);
+
+// Start the game
+game.setup(() => {
+  console.log('UI Demo started');
+  console.log('Press ESC to toggle menu');
 });

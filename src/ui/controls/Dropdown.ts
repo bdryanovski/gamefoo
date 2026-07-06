@@ -199,6 +199,50 @@ export default class Dropdown extends UIWidget {
     return this._expanded;
   }
 
+  /**
+   * Truncates text to fit within available width, adding "..." if truncated.
+   *
+   * @param text - Text to truncate
+   * @param maxWidth - Maximum width in pixels
+   * @param font - Font to measure with
+   * @returns Truncated text
+   *
+   * @internal
+   * @since 0.5.0
+   */
+  private truncateText(
+    text: string,
+    maxWidth: number,
+    font: { getTextWidth: (s: string) => number },
+  ): string {
+    if (font.getTextWidth(text) <= maxWidth) {
+      return text;
+    }
+
+    const ellipsis = '..';
+    const ellipsisWidth = font.getTextWidth(ellipsis);
+
+    // Binary search for max length that fits
+    let low = 0;
+    let high = text.length;
+
+    while (low < high) {
+      const mid = Math.ceil((low + high) / 2);
+      const truncated = text.substring(0, mid);
+      if (font.getTextWidth(truncated) + ellipsisWidth <= maxWidth) {
+        low = mid;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    if (low === 0) {
+      return ellipsis;
+    }
+
+    return text.substring(0, low) + ellipsis;
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Methods
   // ═══════════════════════════════════════════════════════════════════════════
@@ -515,8 +559,12 @@ export default class Dropdown extends UIWidget {
         ctx.strokeRect(1, 1, this._width - 2, this._height - 2, borderColor);
       }
 
-      // Draw selected text or placeholder
-      const displayText = this.selectedItem?.label ?? this._placeholder;
+      // Draw selected text or placeholder (truncated to fit)
+      const rawText = this.selectedItem?.label ?? this._placeholder;
+      const arrowSpace = 12; // Space for dropdown arrow
+      const maxTextWidth =
+        this._width - this._padding.left - this._padding.right - arrowSpace;
+      const displayText = this.truncateText(rawText, maxTextWidth, font);
       const textX = this._padding.left;
       const textY = this._padding.top;
 
@@ -623,23 +671,26 @@ export default class Dropdown extends UIWidget {
           );
         }
 
-        // Text
+        // Text (truncated to fit popup width)
         const textColor = item.disabled
           ? theme.colors['label.textMuted']
           : theme.colors['label.text'];
+        const maxItemTextWidth =
+          this._width - this._padding.left - this._padding.right - 2;
+        const itemText = this.truncateText(item.label, maxItemTextWidth, font);
 
         const canvas = ctx.getCanvas?.();
         if (canvas) {
           canvas.fillStyle = textColor;
           font.renderText(
-            item.label,
+            itemText,
             popupX + this._padding.left,
             itemY + 2,
             ctx,
           );
         } else {
           ctx.drawText(
-            item.label,
+            itemText,
             popupX + this._padding.left,
             itemY + 2,
             textColor,

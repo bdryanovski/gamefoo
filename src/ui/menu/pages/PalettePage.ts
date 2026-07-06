@@ -6,7 +6,7 @@
  * @since 0.5.0
  */
 
-import type { ColorPalette } from '@/core/palettes/types';
+import type { ColorPalette, GeneratedPalette } from '@/core/palettes/types';
 import type { RenderContext } from '@/core/renderer/type';
 import Dropdown, { type DropdownItem } from '../../controls/Dropdown';
 import Container from '../../core/Container';
@@ -14,6 +14,58 @@ import Label from '../../display/Label';
 import GridLayout from '../../layouts/GridLayout';
 import VerticalLayout from '../../layouts/VerticalLayout';
 import MenuPage from '../MenuPage';
+
+/**
+ * Union type for both palette types.
+ *
+ * @since 0.5.0
+ */
+export type AnyPalette = ColorPalette | GeneratedPalette;
+
+/**
+ * Checks if a palette has a colors array.
+ *
+ * @param palette - Palette to check
+ * @returns True if palette has colors array
+ *
+ * @internal
+ */
+function hasColors(palette: AnyPalette): palette is ColorPalette {
+  return 'colors' in palette && Array.isArray((palette as ColorPalette).colors);
+}
+
+/**
+ * Gets displayable colors from any palette type.
+ *
+ * For ColorPalette, returns the colors array directly.
+ * For GeneratedPalette, returns commonColors if available,
+ * or generates a grayscale ramp sample.
+ *
+ * @param palette - Palette to get colors from
+ * @returns Array of hex color strings
+ *
+ * @internal
+ * @since 0.5.0
+ */
+function getPaletteColors(palette: AnyPalette): readonly string[] {
+  if (hasColors(palette)) {
+    return palette.colors;
+  }
+  // For GeneratedPalette, use commonColors or generate a sample
+  const generated = palette as GeneratedPalette;
+  if (generated.commonColors && generated.commonColors.length > 0) {
+    return generated.commonColors;
+  }
+  // Generate a color ramp sample
+  const colors: string[] = [];
+  const max = (1 << generated.bitsPerChannel) - 1;
+  const steps = Math.min(16, max + 1);
+  for (let i = 0; i < steps; i++) {
+    const v = Math.round((i * max) / (steps - 1));
+    colors.push(generated.generate(v, v, v));
+  }
+  return colors;
+}
 
 /**
  * Color swatch widget for palette display.
@@ -44,12 +96,12 @@ class ColorSwatch extends Container {
  * @since 0.5.0
  */
 export interface PalettePageConfig {
-  /** Available palettes */
-  palettes?: ColorPalette[];
+  /** Available palettes (supports both ColorPalette and GeneratedPalette) */
+  palettes?: AnyPalette[];
   /** Currently selected palette index */
   selectedIndex?: number;
   /** Palette change callback */
-  onPaletteChange?: (palette: ColorPalette, index: number) => void;
+  onPaletteChange?: (palette: AnyPalette, index: number) => void;
 }
 
 /**
@@ -147,16 +199,25 @@ export default class PalettePage extends MenuPage {
    *
    * @internal
    */
-  private updatePaletteDisplay(palette: ColorPalette): void {
+  private updatePaletteDisplay(palette: AnyPalette): void {
     this._nameLabel.text = palette.name;
-    this._countLabel.text = `${palette.colors.length} colors`;
+
+    const colors = getPaletteColors(palette);
+
+    // Show color count (or total for generated palettes)
+    if (hasColors(palette)) {
+      this._countLabel.text = `${colors.length} colors`;
+    } else {
+      const gen = palette as GeneratedPalette;
+      this._countLabel.text = `${gen.totalColors} colors (${colors.length} shown)`;
+    }
 
     // Clear existing swatches
     this._colorGrid.clearChildren();
     this._swatches = [];
 
     // Create new swatches
-    for (const color of palette.colors) {
+    for (const color of colors) {
       const swatch = new ColorSwatch(color);
       this._swatches.push(swatch);
       this._colorGrid.addChild(swatch);
@@ -172,7 +233,7 @@ export default class PalettePage extends MenuPage {
    *
    * @since 0.5.0
    */
-  setPalettes(palettes: ColorPalette[]): void {
+  setPalettes(palettes: AnyPalette[]): void {
     this._config.palettes = palettes;
 
     const items: DropdownItem[] = palettes.map((p, i) => ({

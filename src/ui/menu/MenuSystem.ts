@@ -6,11 +6,11 @@
  * @since 0.5.0
  */
 
-import { InputMapper } from '@/core/controls/input_mapper';
+import type { InputMapper } from '@/core/controls/input_mapper';
 import { DEFAULT_CONTROLS } from '@/core/controls/schemes/default';
 import type { ControlScheme } from '@/core/controls/types';
 import type Engine from '@/core/engine';
-import Input from '@/core/input';
+import type Input from '@/core/input';
 import { Bitmap } from '@/core/renderer/objects/bitmap';
 import type { RenderContext } from '@/core/renderer/type';
 import type { SubSystem } from '@/subsystems/types';
@@ -499,6 +499,74 @@ export default class MenuSystem implements SubSystem {
     this._panel.markLayoutDirty();
   }
 
+  /**
+   * Resizes the menu to fit the new screen dimensions.
+   *
+   * The menu will be sized to fit within the screen with margins,
+   * and will be re-centered automatically.
+   *
+   * @param screenWidth - New screen width
+   * @param screenHeight - New screen height
+   * @param margin - Margin from screen edges (default: 8)
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * // After changing resolution
+   * renderer.resize(160, 144);
+   * engine.resize(160, 144);
+   * menuSystem.resize(160, 144);
+   * ```
+   */
+  resize(screenWidth: number, screenHeight: number, margin: number = 8): void {
+    // Store new screen dimensions
+    this._screenWidth = screenWidth;
+    this._screenHeight = screenHeight;
+
+    // Calculate available space
+    const availableWidth = screenWidth - margin * 2;
+    const availableHeight = screenHeight - margin * 2;
+
+    // Calculate new menu size (fit within available space, but don't exceed original configured size)
+    // For very small screens, use most of the available space
+    // For larger screens, use the configured size or a reasonable maximum
+    const maxMenuWidth = Math.min(this._width, availableWidth);
+    const maxMenuHeight = Math.min(this._height, availableHeight);
+
+    // Ensure minimum usable size (at least 80x60 for basic UI)
+    const newWidth = Math.max(80, maxMenuWidth);
+    const newHeight = Math.max(60, maxMenuHeight);
+
+    // Update dimensions
+    this._width = newWidth;
+    this._height = newHeight;
+
+    // Update panel and tabs sizes
+    this._panel.width = newWidth;
+    this._panel.height = newHeight;
+    this._tabs.width = newWidth;
+    this._tabs.height = newHeight;
+
+    // Mark layout dirty to recalculate
+    this._panel.markLayoutDirty();
+    this._tabs.markLayoutDirty();
+
+    // Re-center on screen
+    this.centerOnScreen(screenWidth, screenHeight);
+  }
+
+  /**
+   * Gets the current screen dimensions.
+   *
+   * @returns Screen width and height
+   *
+   * @since 0.5.0
+   */
+  get screenDimensions(): { width: number; height: number } {
+    return { width: this._screenWidth, height: this._screenHeight };
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Theme
   // ═══════════════════════════════════════════════════════════════════════════
@@ -531,21 +599,12 @@ export default class MenuSystem implements SubSystem {
   init(engine: Engine): void {
     this._engine = engine;
 
-    // Initialize internal UI system (it will get canvas config from engine)
+    // Initialize internal UI system (it will create Input and InputMapper)
     this._uiSystem.init(engine);
 
-    // Get canvas element from the engine's render context
-    const canvas = engine.renderer.getCanvas?.()?.canvas;
-    const canvasId = canvas?.id;
-
-    // Create Input with engine's canvas and scale settings
-    this._input = new Input({
-      canvasId: canvasId,
-      gameScale: engine.gameScale,
-    });
-
-    // Create InputMapper with control scheme
-    this._inputMapper = new InputMapper(this._input, this._controlScheme);
+    // Use the UI system's input and mapper (don't create duplicates)
+    this._input = (this._uiSystem as any)._input;
+    this._inputMapper = this._uiSystem.inputMapper;
 
     // Store screen dimensions for overlay
     this._screenWidth = engine.dementions.width;
@@ -556,22 +615,22 @@ export default class MenuSystem implements SubSystem {
   }
 
   /**
-   * Pre-update - handles toggle key.
+   * Pre-update - handles toggle key and menu navigation.
    *
    * @param deltaTime - Time since last frame
    *
    * @since 0.5.0
    */
   preUpdate(deltaTime: number): void {
-    // Update input state for "just pressed" detection
-    this._input?.update();
+    // Let UISystem update input first
+    this._uiSystem.preUpdate(deltaTime);
 
     // Check toggle action using InputMapper (semantic action)
     if (this._inputMapper?.isActionPressed(this._toggleAction)) {
       this.toggle();
     }
 
-    // Handle menu-specific navigation when visible
+    // Handle menu-specific LEFT/RIGHT for tab switching when visible
     if (this._visible && this._inputMapper) {
       // Check if focused widget wants to capture horizontal navigation
       const focused = this._uiSystem.stateManager.getFocused();
@@ -602,9 +661,6 @@ export default class MenuSystem implements SubSystem {
           this.nextTab();
         }
       }
-
-      // Forward UP/DOWN/PRIMARY/SECONDARY to UI system for content navigation
-      this._uiSystem.preUpdate(deltaTime);
     }
   }
 

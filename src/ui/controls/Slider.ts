@@ -192,6 +192,36 @@ export default class Slider extends UIWidget {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // Horizontal Navigation Capture
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Slider wants to capture LEFT/RIGHT for value adjustment.
+   *
+   * @returns Always true when focused
+   *
+   * @since 0.5.0
+   */
+  override wantsCaptureHorizontalNav(): boolean {
+    return this.isFocused();
+  }
+
+  /**
+   * Handles horizontal navigation (LEFT/RIGHT).
+   *
+   * @param direction - 'left' or 'right'
+   *
+   * @since 0.5.0
+   */
+  handleHorizontalNav(direction: 'left' | 'right'): void {
+    if (direction === 'left') {
+      this.value -= this._step;
+    } else {
+      this.value += this._step;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // Internal
   // ═══════════════════════════════════════════════════════════════════════════
 

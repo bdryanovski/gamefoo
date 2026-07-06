@@ -53,13 +53,16 @@ export class WebRenderer implements RenderContext {
   /** The underlying canvas 2-D rendering context. */
   private ctx: CanvasRenderingContext2D;
 
+  /** The underlying canvas element. */
+  private canvas: HTMLCanvasElement;
+
   /**
    * The logical width — coordinates supplied to draw calls should stay
    * within `0..width`.
    *
    * @since 0.4.0
    */
-  readonly width: number;
+  width: number;
 
   /**
    * The logical height — coordinates supplied to draw calls should stay
@@ -67,14 +70,14 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  readonly height: number;
+  height: number;
 
   /**
    * The pixel scale factor applied to the canvas backing buffer.
    * Stored so that `clear()` can reset the full buffer regardless of
    * accumulated transforms.
    */
-  readonly gameScale: number;
+  gameScale: number;
 
   /**
    * Return the actual game scale
@@ -123,6 +126,12 @@ export class WebRenderer implements RenderContext {
     this.gameScale = gameScale;
 
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    if (!canvas) {
+      throw new Error(
+        `WebRenderer: no canvas element found with id "${canvasId}"`,
+      );
+    }
+    this.canvas = canvas;
 
     // Size the backing buffer to hold `gameScale` physical pixels per logical pixel.
     canvas.width = width * gameScale;
@@ -153,6 +162,59 @@ export class WebRenderer implements RenderContext {
     // Apply the permanent game-world → buffer-pixel transform.
     if (gameScale !== 1) {
       this.ctx.scale(gameScale, gameScale);
+    }
+  }
+
+  /**
+   * Resizes the canvas to new dimensions while preserving the scale factor.
+   *
+   * This method updates both the backing buffer size and the CSS display size.
+   * After calling resize, you should also call `engine.resize(width, height)`
+   * to keep the engine's dimensions in sync.
+   *
+   * @param width  - New logical width in game-world pixels.
+   * @param height - New logical height in game-world pixels.
+   * @param scale  - Optional new scale factor. If not provided, keeps current scale.
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * // Change to Game Boy resolution
+   * renderer.resize(160, 144);
+   * engine.resize(160, 144);
+   *
+   * // Change resolution and scale
+   * renderer.resize(256, 240, 3);
+   * engine.resize(256, 240);
+   * ```
+   */
+  resize(width: number, height: number, scale?: number): void {
+    this.width = width;
+    this.height = height;
+    if (scale !== undefined) {
+      this.gameScale = scale;
+    }
+
+    const s = this.gameScale;
+
+    // Reset transform before resizing
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    // Update backing buffer size
+    this.canvas.width = width * s;
+    this.canvas.height = height * s;
+
+    // Update CSS display size
+    this.canvas.style.width = `${width * s}px`;
+    this.canvas.style.height = `${height * s}px`;
+
+    // Re-apply settings that get reset when canvas size changes
+    this.ctx.imageSmoothingEnabled = false;
+
+    // Re-apply scale transform
+    if (s !== 1) {
+      this.ctx.scale(s, s);
     }
   }
 

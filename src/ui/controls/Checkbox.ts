@@ -226,6 +226,16 @@ export default class Checkbox extends UIWidget {
     this.checked = !this._checked;
   }
 
+  /**
+   * Activates the checkbox (toggles it).
+   * Called by UISystem when PRIMARY action is pressed.
+   *
+   * @since 0.5.0
+   */
+  activate(): void {
+    this.toggle();
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Rendering
   // ═══════════════════════════════════════════════════════════════════════════

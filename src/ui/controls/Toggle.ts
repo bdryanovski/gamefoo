@@ -241,6 +241,16 @@ export default class Toggle extends UIWidget {
     this.value = !this._value;
   }
 
+  /**
+   * Activates the toggle (toggles it).
+   * Called by UISystem when PRIMARY action is pressed.
+   *
+   * @since 0.5.0
+   */
+  activate(): void {
+    this.toggle();
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Rendering
   // ═══════════════════════════════════════════════════════════════════════════

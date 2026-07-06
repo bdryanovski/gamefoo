@@ -82,6 +82,14 @@ export default class Tabs extends Container {
   private _tabWidths: number[] = [];
 
   /**
+   * Whether to use abbreviated (first letter) titles.
+   * Automatically enabled when full titles don't fit.
+   *
+   * @since 0.5.0
+   */
+  private _useAbbreviatedTitles: boolean = false;
+
+  /**
    * Creates a new Tabs container.
    *
    * @param config - Tabs configuration
@@ -138,6 +146,23 @@ export default class Tabs extends Container {
   /** Number of pages */
   get pageCount(): number {
     return this._pages.length;
+  }
+
+  /**
+   * Sets the width and recalculates tab widths.
+   *
+   * @since 0.5.0
+   */
+  override set width(value: number) {
+    if (this._width !== value) {
+      this._width = value;
+      this.updateTabWidths();
+      this.markLayoutDirty();
+    }
+  }
+
+  override get width(): number {
+    return this._width;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -244,24 +269,91 @@ export default class Tabs extends Container {
   }
 
   /**
-   * Updates cached tab widths.
+   * Updates tab widths based on text size and available space.
+   * Will use abbreviated titles (first letter) if full titles don't fit.
    *
    * @internal
+   * @since 0.5.0
    */
   private updateTabWidths(): void {
     this._tabWidths = [];
+    this._useAbbreviatedTitles = false;
+
+    if (this._pages.length === 0) return;
+
     try {
       const theme = this.getTheme();
       const font = theme.fonts.default;
 
+      // Calculate full title widths
+      const fullWidths: number[] = [];
+      let totalFullWidth = 0;
       for (const page of this._pages) {
-        this._tabWidths.push(font.getTextWidth(page.title) + 8);
+        const w = font.getTextWidth(page.title) + 8;
+        fullWidths.push(w);
+        totalFullWidth += w;
+      }
+
+      // Calculate abbreviated title widths (first letter only)
+      const abbrevWidths: number[] = [];
+      let totalAbbrevWidth = 0;
+      for (const page of this._pages) {
+        const firstLetter = page.title.charAt(0).toUpperCase();
+        const w = font.getTextWidth(firstLetter) + 8;
+        abbrevWidths.push(w);
+        totalAbbrevWidth += w;
+      }
+
+      // Available width for tabs
+      const availableWidth =
+        this._width - this._padding.left - this._padding.right;
+
+      // Use abbreviated titles if full titles don't fit
+      if (
+        totalFullWidth > availableWidth
+        && totalAbbrevWidth <= availableWidth
+      ) {
+        this._useAbbreviatedTitles = true;
+        this._tabWidths = abbrevWidths;
+      } else if (totalFullWidth > availableWidth) {
+        // Even abbreviated don't fit - use equal widths
+        this._useAbbreviatedTitles = true;
+        const equalWidth = Math.floor(availableWidth / this._pages.length);
+        this._tabWidths = this._pages.map(() => Math.max(equalWidth, 10));
+      } else {
+        this._tabWidths = fullWidths;
       }
     } catch {
-      for (const page of this._pages) {
-        this._tabWidths.push(page.title.length * 6 + 8);
+      // Fallback: simple calculation
+      const availableWidth =
+        this._width - this._padding.left - this._padding.right;
+      const fullWidths = this._pages.map((p) => p.title.length * 6 + 8);
+      const totalFullWidth = fullWidths.reduce((a, b) => a + b, 0);
+
+      if (totalFullWidth > availableWidth) {
+        this._useAbbreviatedTitles = true;
+        const equalWidth = Math.floor(availableWidth / this._pages.length);
+        this._tabWidths = this._pages.map(() => Math.max(equalWidth, 10));
+      } else {
+        this._tabWidths = fullWidths;
       }
     }
+  }
+
+  /**
+   * Gets the display title for a tab (full or abbreviated).
+   *
+   * @param page - Tab page
+   * @returns Display title
+   *
+   * @internal
+   * @since 0.5.0
+   */
+  private getDisplayTitle(page: TabPage): string {
+    if (this._useAbbreviatedTitles) {
+      return page.title.charAt(0).toUpperCase();
+    }
+    return page.title;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -424,6 +516,7 @@ export default class Tabs extends Container {
         const page = this._pages[i]!;
         const tabWidth = this._tabWidths[i] ?? 40;
         const isActive = i === this._activeIndex;
+        const displayTitle = this.getDisplayTitle(page);
 
         // Tab background
         const tabBg = isActive
@@ -431,19 +524,22 @@ export default class Tabs extends Container {
           : theme.colors['tabs.background'];
         ctx.fillRect(tabX, 0, tabWidth, this._tabHeight, tabBg);
 
-        // Tab text
+        // Tab text (centered if abbreviated)
         const textColor = isActive
           ? theme.colors['tabs.activeText']
           : theme.colors['tabs.text'];
-        const textX = tabX + 4;
+        const textWidth = font.getTextWidth(displayTitle);
+        const textX = this._useAbbreviatedTitles
+          ? tabX + (tabWidth - textWidth) / 2
+          : tabX + 4;
         const textY = (this._tabHeight - font.height) / 2;
 
         const canvas = ctx.getCanvas?.();
         if (canvas) {
           canvas.fillStyle = textColor;
-          font.renderText(page.title, textX, textY, ctx);
+          font.renderText(displayTitle, textX, textY, ctx);
         } else {
-          ctx.drawText(page.title, textX, textY, textColor);
+          ctx.drawText(displayTitle, textX, textY, textColor);
         }
 
         // Tab border (right side)
@@ -475,6 +571,7 @@ export default class Tabs extends Container {
         const page = this._pages[i]!;
         const tabWidth = this._tabWidths[i] ?? 40;
         const isActive = i === this._activeIndex;
+        const displayTitle = this.getDisplayTitle(page);
 
         ctx.fillRect(
           tabX,
@@ -483,7 +580,12 @@ export default class Tabs extends Container {
           this._tabHeight,
           isActive ? '#333333' : '#222222',
         );
-        ctx.drawText(page.title, tabX + 4, 4, isActive ? '#FFFFFF' : '#888888');
+        ctx.drawText(
+          displayTitle,
+          tabX + 4,
+          4,
+          isActive ? '#FFFFFF' : '#888888',
+        );
         tabX += tabWidth;
       }
     }
