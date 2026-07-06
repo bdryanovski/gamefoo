@@ -17,8 +17,18 @@ import {
   PICO8,
   TIC80,
   GAMEBOY,
+  GBC,
+  GBA,
   NES,
+  SNES,
   C64,
+  CGA,
+  EGA,
+  GENESIS,
+  GAMEGEAR,
+  ATARI_2600,
+  NEO_GEO,
+  PLAYDATE,
   type ColorPalette,
 } from '../../src/core/palettes';
 import {
@@ -64,11 +74,25 @@ let currentThemeIndex = 0;
 // ============================================================================
 
 const palettes: ColorPalette[] = [
+  // Fantasy Consoles
   PICO8,
   TIC80,
+  // Nintendo
   GAMEBOY,
+  GBC,
+  GBA,
   NES,
+  SNES,
+  // Sega
+  GENESIS,
+  GAMEGEAR,
+  // Other
+  ATARI_2600,
+  NEO_GEO,
   C64,
+  CGA,
+  EGA,
+  PLAYDATE,
 ];
 
 // ============================================================================
@@ -156,19 +180,11 @@ menuSystem.registerPage(
 menuSystem.registerPage(
   new DebugPage({
     showFps: false,
-    showMemory: false,
-    showDrawCalls: false,
     showCollisions: false,
     showGrid: false,
     showBounds: false,
     onShowFpsChange: (value) => {
       console.log('Debug FPS:', value);
-    },
-    onShowMemoryChange: (value) => {
-      console.log('Debug Memory:', value);
-    },
-    onShowDrawCallsChange: (value) => {
-      console.log('Debug Draw Calls:', value);
     },
     onShowCollisionsChange: (value) => {
       console.log('Debug Collisions:', value);
@@ -178,9 +194,6 @@ menuSystem.registerPage(
     },
     onShowBoundsChange: (value) => {
       console.log('Debug Bounds:', value);
-    },
-    onResetStats: () => {
-      console.log('Stats reset');
     },
   }),
 );

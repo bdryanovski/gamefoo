@@ -8,7 +8,7 @@
 
 import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
-import type { HorizontalAlign, UISize } from '../core/types';
+import type { HorizontalAlign, JustifyContent, UISize } from '../core/types';
 
 /**
  * Configuration for VerticalLayout.
@@ -20,6 +20,8 @@ export interface VerticalLayoutConfig extends ContainerConfig {
   spacing?: number;
   /** Horizontal alignment of children */
   align?: HorizontalAlign;
+  /** Vertical distribution of children */
+  justify?: JustifyContent;
   /** If true, children fill the available width */
   fillWidth?: boolean;
 }
@@ -49,6 +51,9 @@ export default class VerticalLayout extends Container {
   /** Horizontal alignment */
   protected _align: HorizontalAlign = 'left';
 
+  /** Vertical justify */
+  protected _justify: JustifyContent = 'start';
+
   /** Fill width mode */
   protected _fillWidth: boolean = false;
 
@@ -63,6 +68,7 @@ export default class VerticalLayout extends Container {
     super(config);
     if (config.spacing !== undefined) this._spacing = config.spacing;
     if (config.align !== undefined) this._align = config.align;
+    if (config.justify !== undefined) this._justify = config.justify;
     if (config.fillWidth !== undefined) this._fillWidth = config.fillWidth;
   }
 
@@ -159,17 +165,62 @@ export default class VerticalLayout extends Container {
       this._absoluteY = this._y;
     }
 
-    // Available width for children (minus padding)
+    // Available dimensions for children (minus padding)
     const availableWidth =
       this._width - this._padding.left - this._padding.right;
+    const availableHeight =
+      this._height - this._padding.top - this._padding.bottom;
+
+    const visibleChildren = this._children.filter((c) => c.visible);
+
+    // Calculate total children height
+    let totalChildrenHeight = 0;
+    const childSizes: { width: number; height: number }[] = [];
+
+    for (let i = 0; i < visibleChildren.length; i++) {
+      const child = visibleChildren[i]!;
+      const childSize = child.getPreferredSize();
+      childSizes.push(childSize);
+      totalChildrenHeight +=
+        child.margin.top + childSize.height + child.margin.bottom;
+      if (i < visibleChildren.length - 1 && this._justify !== 'space-between') {
+        totalChildrenHeight += this._spacing;
+      }
+    }
+
+    // Calculate starting Y and spacing based on justify
+    let y = this._padding.top;
+    let effectiveSpacing = this._spacing;
+
+    switch (this._justify) {
+      case 'start':
+        y = this._padding.top;
+        break;
+      case 'center':
+        y = this._padding.top + (availableHeight - totalChildrenHeight) / 2;
+        break;
+      case 'end':
+        y = this._padding.top + availableHeight - totalChildrenHeight;
+        break;
+      case 'space-between':
+        y = this._padding.top;
+        if (visibleChildren.length > 1) {
+          let contentHeight = 0;
+          for (let i = 0; i < visibleChildren.length; i++) {
+            const child = visibleChildren[i]!;
+            contentHeight +=
+              child.margin.top + childSizes[i]!.height + child.margin.bottom;
+          }
+          effectiveSpacing =
+            (availableHeight - contentHeight) / (visibleChildren.length - 1);
+        }
+        break;
+    }
 
     // Layout children
-    let y = this._padding.top;
-
-    for (const child of this._children) {
-      if (!child.visible) continue;
-
-      const childSize = child.getPreferredSize();
+    for (let i = 0; i < visibleChildren.length; i++) {
+      const child = visibleChildren[i]!;
+      const childSize = childSizes[i]!;
 
       // Apply margin
       y += child.margin.top;
@@ -210,7 +261,7 @@ export default class VerticalLayout extends Container {
       child.layout();
 
       // Move to next position
-      y += childSize.height + child.margin.bottom + this._spacing;
+      y += childSize.height + child.margin.bottom + effectiveSpacing;
     }
 
     this._layoutDirty = false;

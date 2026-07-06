@@ -573,11 +573,34 @@ export default class MenuSystem implements SubSystem {
 
     // Handle menu-specific navigation when visible
     if (this._visible && this._inputMapper) {
-      // LEFT/RIGHT always switches tabs in menu
-      if (this._inputMapper.isActionPressed('LEFT')) {
-        this.previousTab();
-      } else if (this._inputMapper.isActionPressed('RIGHT')) {
-        this.nextTab();
+      // Check if focused widget wants to capture horizontal navigation
+      const focused = this._uiSystem.stateManager.getFocused();
+      const captureHorizNav = focused?.wantsCaptureHorizontalNav() ?? false;
+
+      if (captureHorizNav) {
+        // Forward LEFT/RIGHT to the focused widget
+        if (this._inputMapper.isActionPressed('LEFT')) {
+          if (
+            'handleHorizontalNav' in focused!
+            && typeof (focused as any).handleHorizontalNav === 'function'
+          ) {
+            (focused as any).handleHorizontalNav('left');
+          }
+        } else if (this._inputMapper.isActionPressed('RIGHT')) {
+          if (
+            'handleHorizontalNav' in focused!
+            && typeof (focused as any).handleHorizontalNav === 'function'
+          ) {
+            (focused as any).handleHorizontalNav('right');
+          }
+        }
+      } else {
+        // LEFT/RIGHT switches tabs when no widget captures them
+        if (this._inputMapper.isActionPressed('LEFT')) {
+          this.previousTab();
+        } else if (this._inputMapper.isActionPressed('RIGHT')) {
+          this.nextTab();
+        }
       }
 
       // Forward UP/DOWN/PRIMARY/SECONDARY to UI system for content navigation

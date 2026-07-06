@@ -91,6 +91,12 @@ export default class Dropdown extends UIWidget {
   /** Highlighted index in popup */
   protected _highlightedIndex: number = -1;
 
+  /** Scroll offset for visible items */
+  protected _scrollOffset: number = 0;
+
+  /** Track if we were focused last frame */
+  private _wasFocused: boolean = false;
+
   /**
    * Creates a new Dropdown.
    *
@@ -114,6 +120,24 @@ export default class Dropdown extends UIWidget {
       this._maxVisibleItems = config.maxVisibleItems;
 
     this._highlightedIndex = this._selectedIndex;
+  }
+
+  /**
+   * Update method - checks for focus loss.
+   *
+   * @param deltaTime - Time since last frame
+   *
+   * @since 0.5.0
+   */
+  override update(deltaTime: number): void {
+    super.update(deltaTime);
+
+    // Close dropdown if we lost focus
+    const isFocused = this.isFocused();
+    if (this._wasFocused && !isFocused && this._expanded) {
+      this.close();
+    }
+    this._wasFocused = isFocused;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -187,6 +211,9 @@ export default class Dropdown extends UIWidget {
   open(): void {
     this._expanded = true;
     this._highlightedIndex = this._selectedIndex >= 0 ? this._selectedIndex : 0;
+    // Reset scroll to show highlighted item
+    this._scrollOffset = 0;
+    this.ensureHighlightedVisible();
   }
 
   /**
@@ -196,6 +223,7 @@ export default class Dropdown extends UIWidget {
    */
   close(): void {
     this._expanded = false;
+    this._scrollOffset = 0;
   }
 
   /**
@@ -244,6 +272,27 @@ export default class Dropdown extends UIWidget {
         this._items.length - 1,
         this._highlightedIndex + 1,
       );
+    }
+
+    // Ensure highlighted item is visible by adjusting scroll offset
+    this.ensureHighlightedVisible();
+  }
+
+  /**
+   * Ensures the highlighted item is visible in the scroll view.
+   *
+   * @internal
+   */
+  private ensureHighlightedVisible(): void {
+    if (this._highlightedIndex < this._scrollOffset) {
+      // Highlighted item is above visible area
+      this._scrollOffset = this._highlightedIndex;
+    } else if (
+      this._highlightedIndex
+      >= this._scrollOffset + this._maxVisibleItems
+    ) {
+      // Highlighted item is below visible area
+      this._scrollOffset = this._highlightedIndex - this._maxVisibleItems + 1;
     }
   }
 
@@ -528,13 +577,43 @@ export default class Dropdown extends UIWidget {
       ctx.fillRect(popupX, popupY, this._width, popupHeight, bgColor);
       ctx.strokeRect(popupX, popupY, this._width, popupHeight, borderColor);
 
-      // Draw items
+      // Draw scroll indicator if there are more items above
+      if (this._scrollOffset > 0) {
+        // Draw up arrow indicator
+        const arrowY = popupY + 2;
+        ctx.fillRect(
+          popupX + this._width / 2 - 3,
+          arrowY,
+          6,
+          1,
+          theme.colors['label.textMuted'],
+        );
+        ctx.fillRect(
+          popupX + this._width / 2 - 2,
+          arrowY + 1,
+          4,
+          1,
+          theme.colors['label.textMuted'],
+        );
+        ctx.fillRect(
+          popupX + this._width / 2 - 1,
+          arrowY + 2,
+          2,
+          1,
+          theme.colors['label.textMuted'],
+        );
+      }
+
+      // Draw visible items (with scroll offset)
       for (let i = 0; i < visibleCount; i++) {
-        const item = this._items[i]!;
+        const itemIndex = i + this._scrollOffset;
+        if (itemIndex >= this._items.length) break;
+
+        const item = this._items[itemIndex]!;
         const itemY = popupY + i * itemHeight;
 
         // Highlight
-        if (i === this._highlightedIndex) {
+        if (itemIndex === this._highlightedIndex) {
           ctx.fillRect(
             popupX + 1,
             itemY,
@@ -566,6 +645,33 @@ export default class Dropdown extends UIWidget {
             textColor,
           );
         }
+      }
+
+      // Draw scroll indicator if there are more items below
+      if (this._scrollOffset + visibleCount < this._items.length) {
+        // Draw down arrow indicator
+        const arrowY = popupY + popupHeight - 5;
+        ctx.fillRect(
+          popupX + this._width / 2 - 1,
+          arrowY,
+          2,
+          1,
+          theme.colors['label.textMuted'],
+        );
+        ctx.fillRect(
+          popupX + this._width / 2 - 2,
+          arrowY + 1,
+          4,
+          1,
+          theme.colors['label.textMuted'],
+        );
+        ctx.fillRect(
+          popupX + this._width / 2 - 3,
+          arrowY + 2,
+          6,
+          1,
+          theme.colors['label.textMuted'],
+        );
       }
     } catch {
       // No fallback needed for popup

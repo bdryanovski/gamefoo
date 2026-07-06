@@ -295,13 +295,16 @@ export default class Toggle extends UIWidget {
         }
       }
 
-      // Draw track on right
-      const trackX = this._width - this._padding.right - this._trackWidth;
+      // Calculate text width if showing
+      let textWidth = 0;
       if (this._showText) {
-        // Account for ON/OFF text width
-        const font = theme.fonts.small;
-        const textWidth = font.getTextWidth('OFF') + 4;
+        const smallFont = theme.fonts.small;
+        textWidth = smallFont.getTextWidth('OFF') + 4;
       }
+
+      // Draw track on right (account for text width)
+      const trackX =
+        this._width - this._padding.right - this._trackWidth - textWidth;
 
       const trackColor = this._value
         ? theme.colors['checkbox.backgroundChecked']
@@ -329,10 +332,10 @@ export default class Toggle extends UIWidget {
 
       // Draw ON/OFF text after track
       if (this._showText) {
-        const font = theme.fonts.small;
+        const smallFont = theme.fonts.small;
         const text = this._value ? 'ON' : 'OFF';
         const textX = trackX + this._trackWidth + 2;
-        const textY = trackY + (this._trackHeight - font.height) / 2;
+        const textY = trackY + (this._trackHeight - smallFont.height) / 2;
         const textColor = isFocused
           ? theme.colors['focus.ring']
           : theme.colors['label.text'];
@@ -340,7 +343,7 @@ export default class Toggle extends UIWidget {
         const canvas = ctx.getCanvas?.();
         if (canvas) {
           canvas.fillStyle = textColor;
-          font.renderText(text, textX, textY, ctx);
+          smallFont.renderText(text, textX, textY, ctx);
         } else {
           ctx.drawText(text, textX, textY, textColor);
         }

@@ -47,9 +47,10 @@ export default class QuitPage extends MenuPage {
     this._config = config;
 
     const layout = new VerticalLayout({
-      spacing: 16,
+      spacing: 12,
       padding: 0,
       align: 'center',
+      justify: 'center',
     });
 
     // Message

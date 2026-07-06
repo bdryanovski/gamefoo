@@ -495,6 +495,21 @@ export default abstract class UIWidget {
     return false;
   }
 
+  /**
+   * Returns whether this widget wants to capture horizontal navigation
+   * (LEFT/RIGHT keys) instead of letting the system handle them.
+   *
+   * Override in widgets like scheme selectors that need LEFT/RIGHT
+   * for value changes when focused.
+   *
+   * @returns True if widget wants to handle LEFT/RIGHT itself
+   *
+   * @since 0.5.0
+   */
+  wantsCaptureHorizontalNav(): boolean {
+    return false;
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // Layout
   // ═══════════════════════════════════════════════════════════════════════════
