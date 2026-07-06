@@ -1,0 +1,5 @@
+{
+  "title": "Floppy Bird",
+  "description": "Flappy Bird clone demonstrating physics, obstacles, and scoring.",
+  "tags": ["game", "physics", "obstacles", "score"]
+}

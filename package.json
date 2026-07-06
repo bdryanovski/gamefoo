@@ -31,7 +31,7 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "bun --watch web_demos/server.ts",
+    "dev": "bun web_demos/start.ts && bun --hot web_demos/server.ts",
     "build": "rm -rf dist && bunx tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
