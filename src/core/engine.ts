@@ -252,6 +252,23 @@ export default class Engine {
   }
 
   /**
+   * The render context used by this engine.
+   *
+   * Provides access to the underlying renderer for subsystems that need
+   * to query canvas properties or perform custom rendering.
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * const canvas = engine.renderer.getCanvas?.()?.canvas;
+   * ```
+   */
+  get renderer(): RenderContext {
+    return this.ctx;
+  }
+
+  /**
    * Attaches a subsystem to the engine and calls its `init` hook.
    *
    * Subsystems are sorted by their `order` property (lower = earlier).
