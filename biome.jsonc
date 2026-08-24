@@ -1,111 +1,212 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.4/schema.json",
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // GameFoo Linter Configuration — CodeStyle Philosophy
+  // ═══════════════════════════════════════════════════════════════════════════
+  //
+  // Design goals: SAFETY, PERFORMANCE, DEVELOPER EXPERIENCE (in that order)
+  //
+  // Core principles:
+  // - Explicit over implicit
+  // - Simple control flow
+  // - Assert all invariants
+  // - No hidden complexity
+  // - Names matter
+  //
+  // "Style is not something to pursue directly. Style is necessary only where
+  //  understanding is missing." — Let Over Lambda
+  //
+  // ═══════════════════════════════════════════════════════════════════════════
+
   "files": {
-    // Only process src/ — dist and node_modules are excluded by default
     "includes": ["src/**/*.ts", "src/**/*.tsx"]
   },
 
   "vcs": {
-    // Respect .gitignore patterns automatically
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
 
-  // ─── Global formatter (applies to all languages) ────────────────────────────
+  // ─── FORMATTER ───────────────────────────────────────────────────────────────
   "formatter": {
     "enabled": true,
 
-    // Indentation: 2 spaces (not tabs)
+    // 2 spaces for indentation (departure from TigerStyle's 4 for readability)
     "indentStyle": "space",
     "indentWidth": 2,
 
-    // Print width: 80 chars — the classic terminal width
-    "lineWidth": 80,
+    // Hard limit: 100 columns (TigerStyle: never exceed, no exceptions)
+    // "There's a sharp discontinuity between code fitting on screen and scrolling"
+    "lineWidth": 100,
 
-    // Line endings: LF (Unix-style) — consistent across macOS/Linux/git
     "lineEnding": "lf",
-
-    // Spaces inside object brackets: { foo: bar }
     "bracketSpacing": true,
-
-    // Always add a trailing newline at end of file
     "trailingNewline": true,
-
-    // Array/object expansion: let the formatter decide based on content
     "expand": "auto",
-
-    // Do NOT read .editorconfig — biome.jsonc is the single source of truth
     "useEditorconfig": false
   },
 
-  // ─── JavaScript / TypeScript formatter ──────────────────────────────────────
+  // ─── JAVASCRIPT / TYPESCRIPT ─────────────────────────────────────────────────
   "javascript": {
     "parser": {
-      // Required for decorator syntax used in this codebase
       "unsafeParameterDecoratorsEnabled": true
     },
     "formatter": {
-      // Quotes: single quotes for strings
       "quoteStyle": "single",
-
-      // JSX attributes also use double quotes (HTML convention in JSX)
       "jsxQuoteStyle": "double",
-
-      // Only quote object properties when necessary
       "quoteProperties": "asNeeded",
 
-      // Trailing commas everywhere valid (function params, arrays, objects)
+      // Always trailing commas (safety: easier to add/remove lines, cleaner diffs)
       "trailingCommas": "all",
 
-      // Always print semicolons
+      // Always semicolons (explicit over implicit)
       "semicolons": "always",
 
-      // Arrow function params always parenthesised: (x) => x
+      // Always parentheses on arrow params (explicit over implicit)
       "arrowParentheses": "always",
 
-      // JSX closing > goes on its own line, not after the last attribute
       "bracketSameLine": false,
-
-      // Binary operator goes at the START of the continuation line
-      // e.g.:   expr
-      //         && expr2
       "operatorLinebreak": "before"
     }
   },
 
-  // ─── Linter ─────────────────────────────────────────────────────────────────
+  // ─── LINTER ──────────────────────────────────────────────────────────────────
   "linter": {
     "enabled": true,
     "rules": {
-      // Enable all recommended rules as a baseline
       "recommended": true,
 
+      // ─── CORRECTNESS: Catch bugs before they ship ──────────────────────────
       "correctness": {
-        // Warn on unused variables and imports (not errors — keeps noise low)
-        "noUnusedVariables": "warn",
-        "noUnusedImports": "warn"
+        // Unused code is dead code — remove it or fix it
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+
+        // Prevent accidental re-assignment of function parameters
+        // (reduces cache invalidation bugs)
+        "noParameterAssign": "error",
+
+        // Constructor super() must be called before accessing `this`
+        "noUnreachableSuper": "error",
+
+        // Switch cases must not fall through accidentally
+        "noSwitchDeclarations": "error",
+
+        // Prevent infinite loops without break/return
+        "noConstantCondition": "warn",
+
+        // Catch potential null/undefined bugs
+        "noUndeclaredVariables": "error",
+
+        // Ensure all code paths return a value when required
+        "noUnreachable": "error"
       },
 
+      // ─── STYLE: Explicit, consistent, readable ─────────────────────────────
       "style": {
-        // Allow non-null assertions (!) — common in game engine code
-        "noNonNullAssertion": "off"
+        // ALLOW non-null assertions — engine code often knows more than TypeScript
+        // BUT: use sparingly. Prefer explicit checks where possible.
+        "noNonNullAssertion": "off",
+
+        // Require const for variables that are never reassigned
+        // (immutability by default reduces cache invalidation)
+        "useConst": "error",
+
+        // Use template literals instead of string concatenation
+        // (clearer intent, less error-prone)
+        "useTemplate": "warn",
+
+        // Require === and !== (explicit, no type coercion)
+        "noImplicitBoolean": "error",
+
+        // Single variable declaration per statement
+        // (easier to read, debug, and modify)
+        "useSingleVarDeclarator": "error",
+
+        // Consistent naming
+        "useNamingConvention": "off", // Handled by custom rules below
+
+        // Block statements even for single-line ifs
+        // (defense in depth against goto-fail bugs)
+        "useBlockStatements": "warn"
       },
 
+      // ─── COMPLEXITY: Simple control flow wins ──────────────────────────────
       "complexity": {
-        // Allow static-only classes — used for namespacing patterns here
-        "noStaticOnlyClass": "off"
+        // ALLOW static-only classes — used for namespacing in game engines
+        "noStaticOnlyClass": "off",
+
+        // Forbid excessive boolean complexity
+        // "Split compound conditions into simple conditions using nested if/else"
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": { "maxComplexity": 15 }
+        },
+
+        // Disallow nested ternaries (use if/else for clarity)
+        "noNestedTernary": "error",
+
+        // Limit function parameters (too many = function doing too much)
+        "noExcessiveComplexity": "warn",
+
+        // Prefer for-of over array methods where appropriate
+        "useSimplifiedLogicExpression": "warn"
       },
 
+      // ─── SUSPICIOUS: Catch likely mistakes ─────────────────────────────────
       "suspicious": {
-        // Allow explicit `any` — necessary for generic engine internals
-        "noExplicitAny": "off"
+        // ALLOW explicit any — necessary for generic engine internals
+        // BUT: use sparingly. Prefer unknown and type guards.
+        "noExplicitAny": "off",
+
+        // Catch double equality bugs
+        "noDoubleEquals": "error",
+
+        // Empty interfaces are probably mistakes
+        "noEmptyInterface": "error",
+
+        // Catch array mutations that might be bugs
+        "noConfusingVoidType": "error",
+
+        // Detect redundant use of Boolean/Number/String constructors
+        "noRedundantUseStrict": "error",
+
+        // Catch assignments in conditionals (likely typo)
+        "noAssignInExpressions": "error",
+
+        // Sparse arrays are confusing
+        "noSparseArray": "error",
+
+        // Async without await is suspicious
+        "noAsyncPromiseExecutor": "error",
+
+        // Catch shadowed variables (cache invalidation risk)
+        "noShadowRestrictedNames": "error"
+      },
+
+      // ─── PERFORMANCE: Work with the grain ──────────────────────────────────
+      "performance": {
+        // Accumulate strings with array.join, not repeated concatenation
+        "noAccumulatingSpread": "warn",
+
+        // Delete is slow — use Map instead of objects for dynamic keys
+        "noDelete": "warn"
+      },
+
+      // ─── NURSERY: Experimental rules we want to enforce ────────────────────
+      "nursery": {
+        // Enforce consistent array methods
+        "noForEach": "off", // Allow forEach — common pattern in game loops
+
+        // Use Number.isNaN instead of isNaN
+        "useNumberNamespace": "warn"
       }
     }
   },
 
-  // ─── Assist (safe code actions on save) ─────────────────────────────────────
+  // ─── ASSIST: Safe code actions on save ──────────────────────────────────────
   "assist": {
     "enabled": true,
     "actions": {
@@ -113,5 +214,38 @@
         "recommended": true
       }
     }
-  }
+  },
+
+  // ─── OVERRIDES: Special rules for specific patterns ─────────────────────────
+  "overrides": [
+    {
+      // Test files can be more lenient
+      "include": ["tests/**/*.ts", "**/*.test.ts", "**/*.spec.ts"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off"
+          },
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    {
+      // Type definition files
+      "include": ["**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          },
+          "suspicious": {
+            "noExplicitAny": "off",
+            "noEmptyInterface": "off"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -27,29 +27,36 @@
     },
     "./package.json": "./package.json"
   },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.0.0",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "dev": "bun web_demos/start.ts && bun --hot web_demos/server.ts",
-    "build": "rm -rf dist && bunx tsc -p tsconfig.build.json",
+    "dev": "pnpm vite web_demos --config web_demos/vite.config.ts",
+    "build": "rm -rf dist && pnpm tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "lint": "bunx biome check src/",
-    "lint:fix": "bunx biome check --write --unsafe src/",
-    "format": "bunx biome format --write src/",
-    "check": "bun run typecheck && bun run lint",
-    "check:staged": "bunx lint-staged",
-    "prepublishOnly": "bun run check && bun run build",
+    "lint": "pnpm biome check src/",
+    "lint:fix": "pnpm biome check --write --unsafe src/",
+    "lint:codestyle": "pnpm tsx scripts/check-codestyle.ts",
+    "format": "pnpm biome format --write src/",
+    "check": "pnpm run typecheck && pnpm run lint && pnpm run lint:codestyle",
+    "check:staged": "pnpm lint-staged",
+    "prepublishOnly": "pnpm run check && pnpm run build",
     "prepare": "husky",
-    "docs:generate": "typedoc && bun scripts/fix-api-frontmatter.ts && bun scripts/collect-docs.ts",
-    "docs:build": "bun run docs:generate && bunx astro build --root ./docs",
-    "docs:collect": "bun scripts/collect-docs.ts",
-    "docs:dev": "bun run docs:generate && bunx astro dev --root ./docs",
-    "docs:preview": "bunx astro preview --root ./docs",
-    "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial",
-    "test": "bun test tests/",
-    "test:publish": "bun run --cwd publish-test sanity"
+    "docs:generate": "typedoc && pnpm tsx scripts/fix-api-frontmatter.ts && pnpm tsx scripts/collect-docs.ts",
+    "docs:build": "pnpm run docs:generate && pnpm astro build --root ./docs",
+    "docs:collect": "pnpm tsx scripts/collect-docs.ts",
+    "docs:dev": "pnpm run docs:generate && pnpm astro dev --root ./docs",
+    "docs:preview": "pnpm astro preview --root ./docs",
+    "docs:watch": "chokidar 'src/**/*.ts' -c 'pnpm run docs:generate' --initial",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:publish": "pnpm run --filter publish-test sanity"
   },
   "dependencies": {
     "@microsoft/tsdoc": "^0.16.0",
@@ -61,9 +68,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.4",
-    "@types/bun": "latest",
+    "@types/node": "^22.0.0",
+    "@vitest/ui": "^3.0.0",
+    "express": "^4.21.0",
+    "@types/express": "^5.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.4.0"
+    "lint-staged": "^16.4.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [

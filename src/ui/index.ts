@@ -135,6 +135,7 @@ export {
 } from './layouts';
 // Menu system
 export {
+  type AnyPalette,
   AudioPage,
   type AudioPageConfig,
   type AudioState,
@@ -151,6 +152,9 @@ export {
   type MenuIntegrationCallbacks,
   type MenuIntegrationConfig,
   MenuPage,
+  MenuSubSystem,
+  type MenuSubSystemCallbacks,
+  type MenuSubSystemConfig,
   MenuSystem,
   type MenuSystemConfig,
   PalettePage,

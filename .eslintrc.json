@@ -1,0 +1,214 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "rules": {
+    // ─── CODESTYLE: SAFETY ────────────────────────────────────────────────────
+
+    // Enforce explicit function return types (explicit over implicit)
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true
+      }
+    ],
+
+    // Require explicit accessibility modifiers (explicit over implicit)
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        "accessibility": "explicit",
+        "overrides": {
+          "constructors": "no-public"
+        }
+      }
+    ],
+
+    // Disallow `any` without explicit comment (force conscious decision)
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "types": {
+          "{}": false
+        },
+        "extendDefaults": true
+      }
+    ],
+
+    // Prevent unused variables (dead code = confusion)
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+
+    // Prevent floating promises (safety: all async must be handled)
+    "@typescript-eslint/no-floating-promises": "error",
+
+    // Prefer nullish coalescing over || (explicit intent)
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
+
+    // Use optional chaining (safety)
+    "@typescript-eslint/prefer-optional-chain": "warn",
+
+    // Enforce consistent array types
+    "@typescript-eslint/array-type": [
+      "error",
+      {
+        "default": "array-simple"
+      }
+    ],
+
+    // ─── CODESTYLE: COMPLEXITY ────────────────────────────────────────────────
+
+    // Limit cyclomatic complexity per function
+    "complexity": ["error", { "max": 15 }],
+
+    // Max depth of nested blocks (simple control flow)
+    "max-depth": ["error", { "max": 4 }],
+
+    // Max number of lines per function (CodeStyle: 70 lines)
+    "max-lines-per-function": [
+      "error",
+      {
+        "max": 70,
+        "skipBlankLines": true,
+        "skipComments": true,
+        "IIFEs": true
+      }
+    ],
+
+    // Max number of statements per function
+    "max-statements": [
+      "warn",
+      { "max": 20 },
+      { "ignoreTopLevelFunctions": false }
+    ],
+
+    // Max number of parameters (too many = function doing too much)
+    "max-params": ["error", { "max": 5 }],
+
+    // Disallow nested ternaries (explicit control flow)
+    "no-nested-ternary": "error",
+
+    // Disallow else after return (simpler control flow)
+    "no-else-return": "error",
+
+    // ─── CODESTYLE: CACHE INVALIDATION ────────────────────────────────────────
+
+    // Disallow parameter reassignment (prevents cache invalidation)
+    "no-param-reassign": "error",
+
+    // Disallow variable shadowing (cache invalidation risk)
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+
+    // Prefer const over let (immutability by default)
+    "prefer-const": "error",
+
+    // Disallow var (use const/let)
+    "no-var": "error",
+
+    // ─── CODESTYLE: NAMING ────────────────────────────────────────────────────
+
+    // Enforce naming conventions
+    "@typescript-eslint/naming-convention": [
+      "error",
+      // Interfaces, Types, Classes, Enums: PascalCase
+      {
+        "selector": ["typeLike"],
+        "format": ["PascalCase"]
+      },
+      // Variables, Functions, Parameters: snake_case (CodeStyle)
+      {
+        "selector": ["variable", "function", "parameter"],
+        "format": ["snake_case"],
+        "leadingUnderscore": "allow",
+        "trailingUnderscore": "forbid"
+      },
+      // Allow UPPER_CASE for constants
+      {
+        "selector": "variable",
+        "modifiers": ["const"],
+        "format": ["snake_case", "UPPER_CASE"]
+      },
+      // Class members: snake_case (private with leading _)
+      {
+        "selector": "classProperty",
+        "format": ["snake_case"],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "classMethod",
+        "format": ["snake_case"]
+      },
+      // Enum members: UPPER_CASE
+      {
+        "selector": "enumMember",
+        "format": ["UPPER_CASE"]
+      }
+    ],
+
+    // ─── CODESTYLE: EXPLICIT OVER IMPLICIT ────────────────────────────────────
+
+    // Require === and !==
+    "eqeqeq": ["error", "always"],
+
+    // Require curly braces (defense against goto-fail)
+    "curly": ["error", "multi-line", "consistent"],
+
+    // Require default case in switch (handle all cases)
+    "default-case": "error",
+
+    // Disallow assignment in conditionals (likely typo)
+    "no-cond-assign": "error",
+
+    // Require await in async functions
+    "@typescript-eslint/require-await": "error",
+
+    // ─── CODESTYLE: PERFORMANCE ───────────────────────────────────────────────
+
+    // Prefer array literal over new Array()
+    "no-array-constructor": "error",
+
+    // Disallow extending native objects
+    "no-extend-native": "error",
+
+    // ─── CODESTYLE: COMMENTS ──────────────────────────────────────────────────
+
+    // Enforce capitalized comments
+    "capitalized-comments": [
+      "warn",
+      "always",
+      {
+        "ignorePattern": "pragma|ignored|prettier-ignore|webpack|eslint|ts-",
+        "ignoreConsecutiveComments": true
+      }
+    ],
+
+    // Require space after comment marker
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "markers": ["/"]
+      }
+    ]
+  }
+}

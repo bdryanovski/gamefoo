@@ -19,6 +19,11 @@ export {
 } from './MenuIntegration';
 export { default as MenuPage, type IMenuPage } from './MenuPage';
 export { default as MenuSystem, type MenuSystemConfig } from './MenuSystem';
+export {
+  default as MenuSubSystem,
+  type MenuSubSystemCallbacks,
+  type MenuSubSystemConfig,
+} from './MenuSubSystem';
 
 // Re-export pages
 export {

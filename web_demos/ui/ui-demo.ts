@@ -1,7 +1,7 @@
 /**
  * UI Framework Demo
  *
- * Demonstrates the MenuSystem with full engine integration.
+ * Demonstrates the MenuSubSystem with full engine integration.
  *
  * Controls:
  * - Escape: Toggle menu open/close
@@ -34,11 +34,9 @@ import {
   type GeneratedPalette,
 } from '../../src/core/palettes';
 import {
-  MenuSystem,
-  MenuIntegration,
+  MenuSubSystem,
   DEFAULT_THEME,
-  type GraphicsState,
-  type AudioState,
+  type AnyPalette,
 } from '../../src/ui';
 
 // ============================================================================
@@ -52,11 +50,8 @@ const SCALE = 2;
 const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H, SCALE);
 
 // ============================================================================
-// Game State (affected by menu settings)
+// Helper Functions
 // ============================================================================
-
-// Union type for both palette types
-type AnyPalette = ColorPalette | GeneratedPalette;
 
 // Helper to check if palette has colors array
 function hasColors(palette: AnyPalette): palette is ColorPalette {
@@ -81,26 +76,6 @@ function getPaletteColors(palette: AnyPalette): readonly string[] {
   }
   return colors;
 }
-
-const gameState = {
-  // Current palette for rendering
-  activePalette: PICO8 as AnyPalette,
-  // Graphics settings (initialized from renderer)
-  graphics: {
-    scale: renderer.readGameScale(),
-    width: CANVAS_W,
-    height: CANVAS_H,
-  } as GraphicsState,
-  // Audio settings
-  audio: {
-    masterVolume: 100,
-    musicVolume: 80,
-    sfxVolume: 100,
-    muted: false,
-  } as AudioState,
-  // Control scheme name
-  controlScheme: 'DEFAULT' as string,
-};
 
 // ============================================================================
 // Palettes
@@ -133,10 +108,24 @@ const palettes: AnyPalette[] = [
 ];
 
 // ============================================================================
+// Game State (affected by menu settings)
+// ============================================================================
+
+const gameState = {
+  activePalette: PICO8 as AnyPalette,
+};
+
+// ============================================================================
 // Demo Rendering (shows palette info)
 // ============================================================================
 
 class DemoGame extends Engine {
+  private _menuSubSystem: MenuSubSystem | null = null;
+
+  setMenuSubSystem(menu: MenuSubSystem): void {
+    this._menuSubSystem = menu;
+  }
+
   override render(ctx: typeof renderer): void {
     const padding = 16;
     const lineHeight = 20;
@@ -144,7 +133,7 @@ class DemoGame extends Engine {
     // Draw palette preview
     this.drawPalettePreview(ctx, padding);
 
-    // Draw current settings info
+    // Draw current settings info (from MenuSubSystem state)
     this.drawSettingsInfo(ctx, padding, lineHeight);
   }
 
@@ -170,24 +159,30 @@ class DemoGame extends Engine {
   }
 
   private drawSettingsInfo(ctx: typeof renderer, padding: number, lineHeight: number): void {
+    const menu = this._menuSubSystem;
+    if (!menu) return;
+
     let y = 75;
 
-    ctx.drawText(`Controls: ${gameState.controlScheme}`, padding, y, '#aaaaaa');
+    // Read state directly from MenuSubSystem
+    ctx.drawText(`Controls: ${menu.controlScheme}`, padding, y, '#aaaaaa');
     y += lineHeight;
 
+    const audio = menu.audio;
     ctx.drawText(
-      `Audio: ${gameState.audio.muted ? 'MUTED' : `${gameState.audio.masterVolume}%`}`,
+      `Audio: ${audio.muted ? 'MUTED' : `${audio.masterVolume}%`}`,
       padding,
       y,
       '#aaaaaa',
     );
     y += lineHeight;
 
-    ctx.drawText(`Scale: ${gameState.graphics.scale}x`, padding, y, '#aaaaaa');
+    const graphics = menu.graphics;
+    ctx.drawText(`Scale: ${graphics.scale}x`, padding, y, '#aaaaaa');
     y += lineHeight;
 
     ctx.drawText(
-      `Resolution: ${gameState.graphics.width}x${gameState.graphics.height}`,
+      `Resolution: ${graphics.width}x${graphics.height}`,
       padding,
       y,
       '#aaaaaa',
@@ -218,75 +213,74 @@ const monitorSystem = new MonitorSystem({
 game.use(monitorSystem);
 
 // ============================================================================
-// Menu System with Integration
+// Menu SubSystem - Simple Engine Integration
 // ============================================================================
 
-const menuSystem = new MenuSystem({
+// Create MenuSubSystem - one line to get full menu integration!
+const menuSubSystem = new MenuSubSystem({
   width: 220,
   height: 200,
   theme: DEFAULT_THEME,
-  overlayColor: '#000000',
-});
-
-// Create integration that connects menu to game state
-// Pass MonitorSystem so DebugPage can control it directly
-const integration = new MenuIntegration(game, menuSystem, {
   palettes,
   initialPaletteIndex: 0,
   initialControlScheme: 'DEFAULT',
-  initialGraphics: gameState.graphics,
-  initialAudio: gameState.audio,
-  monitorSystem,
+  monitorSystem, // Connect debug controls to MonitorSystem
 });
 
-// Set up callbacks to update game state when menu changes
-integration.setCallbacks({
-  onControlSchemeChange: (_scheme, name) => {
-    gameState.controlScheme = name;
-    console.log(`Control scheme changed to: ${name}`);
-  },
+// Set up callbacks for custom handling
+menuSubSystem.onPaletteChange = (palette, _index) => {
+  gameState.activePalette = palette;
+  console.log(`Palette changed to: ${palette.name}`);
+};
 
-  onPaletteChange: (palette, _index) => {
-    gameState.activePalette = palette;
-    console.log(`Palette changed to: ${palette.name}`);
-  },
+menuSubSystem.onControlSchemeChange = (_scheme, name) => {
+  console.log(`Control scheme changed to: ${name}`);
+};
 
-  onGraphicsChange: (state) => {
-    gameState.graphics = state;
-    console.log('Graphics changed:', state);
+menuSubSystem.onAudioChange = (state) => {
+  console.log('Audio changed:', state);
+  // Here you would connect to your audio system:
+  // audioManager.setMasterVolume(state.masterVolume / 100);
+  // audioManager.setMuted(state.muted);
+};
 
-    // Apply resolution/scale changes to the renderer and engine
-    renderer.resize(state.width, state.height, state.scale);
-    game.resize(state.width, state.height);
+menuSubSystem.onGraphicsChange = (state) => {
+  console.log('Graphics changed:', state);
+  // Graphics changes are automatically applied by MenuSubSystem!
+};
 
-    // Resize menu to fit new screen dimensions
-    menuSystem.resize(state.width, state.height);
-  },
+menuSubSystem.onDebugChange = (state) => {
+  console.log('Debug changed:', state);
+  // Debug changes are automatically applied to MonitorSystem!
+};
 
-  onAudioChange: (state) => {
-    gameState.audio = state;
-    console.log('Audio changed:', state);
-  },
+menuSubSystem.onQuit = () => {
+  console.log('Quit confirmed - closing menu');
+  menuSubSystem.hide();
+};
 
-  onDebugChange: (state) => {
-    // Debug state is managed by MonitorSystem directly
-    console.log('Debug changed:', state);
-  },
+menuSubSystem.onShow = () => {
+  console.log('Menu opened');
+};
 
-  onQuit: () => {
-    console.log('Quit confirmed - closing menu');
-    menuSystem.hide();
-  },
-});
+menuSubSystem.onHide = () => {
+  console.log('Menu closed');
+};
 
-// Register all pages (connected via integration)
-integration.registerAllPages();
+// Add menu system to engine - that's it!
+game.use(menuSubSystem);
 
-// Add menu system to engine
-game.use(menuSystem);
+// Give game access to menu for reading state
+game.setMenuSubSystem(menuSubSystem);
 
 // Start the game
 game.setup(() => {
   console.log('UI Demo started');
   console.log('Press ESC to toggle menu');
+  console.log('');
+  console.log('MenuSubSystem provides:');
+  console.log('  - Auto graphics resize on resolution/scale change');
+  console.log('  - Auto debug overlay control via MonitorSystem');
+  console.log('  - State accessors (graphics, audio, controls, debug)');
+  console.log('  - Callbacks for custom integration');
 });

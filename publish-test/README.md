@@ -10,5 +10,5 @@ It verifies both consumer paths from a packed tarball:
 Run from project root:
 
 ```bash
-bun run test:publish
+pnpm run test:publish
 ```

@@ -74,6 +74,8 @@ export { WebRenderer } from './core/renderer/web_renderer';
 export type { SpriteFrame } from './core/sprite';
 export { default as Sprite } from './core/sprite';
 export { default as StateMachine } from './core/state_machine';
+export * from './core/renderer/objects/bitmap';
+export * from './core/renderer/objects/bitmap_animator';
 // ── Tilemap ─────────────────────────────────────────────────────────
 export { TileLayer } from './core/tilemap/tile_layer';
 export { TileMap } from './core/tilemap/tilemap';

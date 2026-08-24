@@ -4,7 +4,7 @@
  * Verifies that every public member exists with the correct type/shape.
  * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { Behaviour } from '../src/core/behaviour';
 import type { RenderContext } from '../src/core/renderer/type';
 import Entity from '../src/entities/entity';

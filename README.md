@@ -17,8 +17,8 @@ A lightweight, behavior-based 2D game engine written in TypeScript. Works in bot
 ## Installation
 
 ```bash
-# Using Bun (recommended)
-bun add @dryanovski/gamefoo
+# Using pnpm (recommended)
+pnpm add @dryanovski/gamefoo
 
 # Using npm
 npm install @dryanovski/gamefoo
@@ -81,26 +81,26 @@ engine.setup();
 
 ```bash
 # Install dependencies
-bun install
+pnpm install
 
 # Run web demos (dev server with HMR)
-bun run dev
+pnpm run dev
 
 # Run terminal demo
-bun terminal_demos/basic/index.ts
+pnpm tsx terminal_demos/basic/index.ts
 
 # Build the library
-bun run build
+pnpm run build
 
 # Run tests
-bun test
+pnpm test
 
 # Type checking
-bun run typecheck
+pnpm run typecheck
 
 # Lint and format
-bun run lint
-bun run format
+pnpm run lint
+pnpm run format
 ```
 
 ## Project Structure
@@ -128,7 +128,7 @@ gamefoo/
 
 ## Web Demos
 
-Run `bun run dev` and visit:
+Run `pnpm run dev` and visit:
 
 - `/demo` - Basic collision and entity demo
 - `/dungen` - Dungeon crawler with fog of war and procedural generation
