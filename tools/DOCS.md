@@ -30,8 +30,13 @@ engine can consume directly.
 
 ```bash
 cd tools
-bun install
-bun run dev
+pnpm install
+pnpm dev
+# → Dev UI at http://localhost:5173 (API proxied to :3001)
+
+# Production build & serve:
+pnpm build
+pnpm start
 # → http://localhost:3001
 ```
 
@@ -527,7 +532,8 @@ tools/public/
 tools/
 ├── package.json          # Separate deps (React, types)
 ├── tsconfig.json         # TypeScript config
-├── server.ts             # Bun.serve() + API routes (upload, CRUD, export)
+├── vite.config.ts        # Vite config (React plugin, @ alias, API proxy)
+├── server.ts             # Express + API routes (upload, CRUD, export)
 ├── index.html            # HTML shell
 ├── DOCS.md               # This file
 ├── public/
