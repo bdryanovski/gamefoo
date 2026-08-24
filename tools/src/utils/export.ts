@@ -84,6 +84,27 @@ export interface FullExport {
   }>;
 }
 
+/**
+ * Simple sprites export — sprite name → coordinates + size. Nothing else.
+ *
+ * Minimal by design: write your own wrapper around this.
+ */
+export interface SpritesExport {
+  [name: string]: { x: number; y: number; width: number; height: number };
+}
+
+/**
+ * Animations export — animations in their own file, separate from
+ * sprite coordinates. Frames are ordered sprite names.
+ */
+export interface AnimationsExport {
+  [name: string]: {
+    frames: string[];
+    duration: number;
+    loop: boolean;
+  };
+}
+
 function buildMeta(state: AppState) {
   return {
     version: "1.0",
@@ -129,6 +150,20 @@ function buildAnimations(
     };
   }
   return result;
+}
+
+/** Minimal export: sprite name → { x, y, width, height }. */
+export function exportSprites(state: AppState): SpritesExport {
+  const result: SpritesExport = {};
+  for (const s of state.sprites) {
+    result[s.name] = { x: s.x, y: s.y, width: s.width, height: s.height };
+  }
+  return result;
+}
+
+/** Animations only: ordered frame names (by sprite name) + timing + loop. */
+export function exportAnimations(state: AppState): AnimationsExport {
+  return buildAnimations(state.animations, state.sprites);
 }
 
 export function exportAtlas(state: AppState): AtlasExport {

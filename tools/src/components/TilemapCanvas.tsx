@@ -19,6 +19,40 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
   const [drawEnd, setDrawEnd] = useState<{ x: number; y: number } | null>(null);
   const [canvasSize, setCanvasSize] = useState({ w: 800, h: 600 });
   const rafRef = useRef<number>(0);
+  const [spaceHeld, setSpaceHeld] = useState(false);
+
+  // ── Space key = temporary pan mode ─────────────────────
+  useEffect(() => {
+    const isTypingTarget = (target: EventTarget | null) => {
+      const el = target as HTMLElement | null;
+      if (!el) return false;
+      return (
+        el.tagName === "INPUT" ||
+        el.tagName === "TEXTAREA" ||
+        el.tagName === "SELECT" ||
+        el.isContentEditable
+      );
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== "Space" || e.repeat) return;
+      if (isTypingTarget(e.target)) return;
+      e.preventDefault();
+      setSpaceHeld(true);
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code !== "Space") return;
+      setSpaceHeld(false);
+    };
+    const handleBlur = () => setSpaceHeld(false);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -138,12 +172,6 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         ctx.lineWidth = (selected ? 2 : 1) / state.zoom;
         ctx.strokeRect(s.x, s.y, s.width, s.height);
 
-        // Label
-        const fontSize = Math.max(8, 10 / state.zoom);
-        ctx.fillStyle = selected ? "#ffff00" : "#00ff00";
-        ctx.font = `bold ${fontSize}px monospace`;
-        ctx.fillText(s.name, s.x + 2 / state.zoom, s.y - 3 / state.zoom);
-
         // Anchor marker
         if (s.anchor.x !== 0 || s.anchor.y !== 0) {
           const ax = s.x + s.anchor.x;
@@ -205,8 +233,8 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
       const sy = e.clientY - rect.top;
       const imgPos = screenToImage(sx, sy);
 
-      // Middle click or pan tool = pan
-      if (e.button === 1 || state.activeTool === "pan") {
+      // Middle click, pan tool, or space+drag = pan
+      if (e.button === 1 || state.activeTool === "pan" || (spaceHeld && e.button === 0)) {
         setIsPanning(true);
         setPanStart({ x: e.clientX - state.pan.x, y: e.clientY - state.pan.y });
         return;
@@ -272,7 +300,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         setDrawEnd(pos);
       }
     },
-    [state, dispatch, screenToImage, snapToGrid, findSpriteAt, image],
+    [state, dispatch, screenToImage, snapToGrid, findSpriteAt, image, spaceHeld],
   );
 
   const handleMouseMove = useCallback(
@@ -362,7 +390,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
     [state.zoom, state.pan, dispatch],
   );
 
-  const toolClass = state.activeTool === "pan"
+  const toolClass = state.activeTool === "pan" || spaceHeld
     ? `tool-pan ${isPanning ? "panning" : ""}`
     : state.activeTool === "select"
       ? "tool-select"

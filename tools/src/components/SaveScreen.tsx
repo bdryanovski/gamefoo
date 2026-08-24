@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { AppState } from "../types";
-import { exportAtlas, exportGrid, exportFull } from "../utils/export";
+import { exportAtlas, exportGrid, exportFull, exportSprites, exportAnimations } from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
 
 interface Props {
@@ -31,6 +31,16 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
     const full = exportFull(state);
 
     const list: ExportFile[] = [
+      {
+        filename: `${baseName}.sprites.json`,
+        label: "Sprites Export (name + coordinates + size)",
+        data: exportSprites(state),
+      },
+      {
+        filename: `${baseName}.animations.json`,
+        label: "Animations Export (frame order, duration, loop)",
+        data: exportAnimations(state),
+      },
       {
         filename: `${baseName}.atlas.json`,
         label: "Atlas Export (Sprite.fromAtlas)",

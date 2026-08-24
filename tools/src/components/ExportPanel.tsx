@@ -1,15 +1,23 @@
 import React, { useState, useMemo, useCallback } from "react";
 import type { AppState, AppAction } from "../types";
-import { exportAtlas, exportGrid, exportFull, exportProject, downloadJSON } from "../utils/export";
+import { exportAtlas, exportGrid, exportFull, exportProject, exportSprites, exportAnimations, downloadJSON } from "../utils/export";
 
 interface Props {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
 }
 
-type ExportFormat = "atlas" | "grid" | "full" | "project";
+type ExportFormat = "sprites" | "animations" | "atlas" | "grid" | "full" | "project";
 
 const FORMAT_INFO: Record<ExportFormat, { label: string; desc: string }> = {
+  sprites: {
+    label: "Sprites (simple)",
+    desc: "Name → { x, y, width, height }. Minimal — write your own wrapper.",
+  },
+  animations: {
+    label: "Animations",
+    desc: "Animations only: ordered frame names, duration, loop.",
+  },
   atlas: {
     label: "Atlas (fromAtlas)",
     desc: "Named sprite regions + animations. Use with Sprite.fromAtlas().",
@@ -33,6 +41,10 @@ export function ExportPanel({ state, dispatch }: Props) {
 
   const preview = useMemo(() => {
     switch (format) {
+      case "sprites":
+        return JSON.stringify(exportSprites(state), null, 2);
+      case "animations":
+        return JSON.stringify(exportAnimations(state), null, 2);
       case "atlas":
         return JSON.stringify(exportAtlas(state), null, 2);
       case "grid":
@@ -47,6 +59,12 @@ export function ExportPanel({ state, dispatch }: Props) {
   const handleDownload = useCallback(() => {
     const baseName = state.projectName.replace(/\s+/g, "_").toLowerCase();
     switch (format) {
+      case "sprites":
+        downloadJSON(exportSprites(state), `${baseName}.sprites.json`);
+        break;
+      case "animations":
+        downloadJSON(exportAnimations(state), `${baseName}.animations.json`);
+        break;
       case "atlas":
         downloadJSON(exportAtlas(state), `${baseName}.atlas.json`);
         break;

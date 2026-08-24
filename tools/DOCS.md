@@ -268,6 +268,8 @@ are written:
 
 ```
 tools/public/exports/{projectId}/
+├── {name}.sprites.json    # Minimal: sprite name → { x, y, width, height }
+├── {name}.animations.json # Animations only: frame order, duration, loop
 ├── {name}.atlas.json      # Sprite.fromAtlas() format
 ├── {name}.grid.json       # Sprite.fromGrid() format (if grid enabled)
 ├── {name}.full.json       # Full export with objects + metadata
@@ -278,7 +280,31 @@ tools/public/exports/{projectId}/
 
 ## Export Formats
 
-### 1. Atlas Format (`*.atlas.json`)
+### 1. Sprites Format (`*.sprites.json`)
+
+Minimal export — just sprite names with coordinates and size.
+Designed for writing your own wrapper: no meta block, no extras.
+
+```json
+{
+  "hero_idle_0": { "x": 0, "y": 0, "width": 32, "height": 32 },
+  "hero_walk_0": { "x": 64, "y": 0, "width": 32, "height": 32 }
+}
+```
+
+### 2. Animations Format (`*.animations.json`)
+
+Animations in their own file, separate from sprite coordinates.
+Frames are ordered sprite names; `duration` is seconds per frame.
+
+```json
+{
+  "idle": { "frames": ["hero_idle_0", "hero_idle_1"], "duration": 0.25, "loop": true },
+  "walk": { "frames": ["hero_walk_0", "hero_walk_1"], "duration": 0.15, "loop": true }
+}
+```
+
+### 3. Atlas Format (`*.atlas.json`)
 
 For use with `Sprite.fromAtlas()`. Best for non-uniform spritesheets
 or when you want named frame access.
@@ -306,7 +332,7 @@ or when you want named frame access.
 }
 ```
 
-### 2. Grid Format (`*.grid.json`)
+### 4. Grid Format (`*.grid.json`)
 
 For use with `Sprite.fromGrid()`. Best for uniform spritesheets where
 all frames share the same dimensions.
@@ -334,7 +360,7 @@ all frames share the same dimensions.
 }
 ```
 
-### 3. Full Format (`*.full.json`)
+### 5. Full Format (`*.full.json`)
 
 Comprehensive export with everything — frames, animations, game objects,
 sprite metadata, and optional grid config.
@@ -364,7 +390,7 @@ sprite metadata, and optional grid config.
 }
 ```
 
-### 4. Project File (`*.project.json`)
+### 6. Project File (`*.project.json`)
 
 Internal format for saving/loading editor state. Contains the full
 `AppState` including the base64-encoded image. **Not intended for
@@ -470,6 +496,7 @@ console.log(meta.level);  // 1
 | H      | Pan (hand) tool                 |
 | Scroll | Zoom in/out (at cursor)         |
 | Shift  | Multi-select (with click)       |
+| Space  | Hold + drag to pan (any tool)   |
 | Middle | Pan (any tool)                  |
 
 ---
