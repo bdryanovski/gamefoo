@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { AppState, AppAction } from "../types";
+import { objectMachines } from "../types";
 import type { MapAction, MapToolType } from "./types";
 import { MapCanvas } from "./MapCanvas";
 import { MapPalettePanel } from "./MapPalettePanel";
@@ -114,7 +115,7 @@ export function MapEditor({
       ? (state.sprites.find((s) => s.id === map.selected!.id)?.name ?? "?")
       : map.selected.kind === "animation"
         ? (state.animations.find((a) => a.id === map.selected!.id)?.name ?? "?")
-        : (state.stateMachines.machines.find((m) => m.id === map.selected!.id)?.name ?? "?")
+        : (objectMachines(state.objects).find((m) => m.id === map.selected!.id)?.name ?? "?")
     : "—";
 
   const screenCount = Object.keys(map.screens).length;

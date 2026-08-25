@@ -1,4 +1,5 @@
 import type { AppState } from "../types";
+import { objectMachines } from "../types";
 import { screenKey, resolvePlacementDisplay } from "./types";
 import { downloadJSON } from "../utils/export";
 
@@ -93,7 +94,7 @@ export function exportMapScreens(state: AppState) {
           p,
           state.sprites,
           state.animations,
-          state.stateMachines.machines,
+          objectMachines(state.objects),
         );
         const spriteName = display.spriteId ? (names.get(display.spriteId) ?? null) : null;
         const animName = display.animationId
@@ -154,7 +155,7 @@ export function exportMapObjects(state: AppState): MapObjectExport[] {
         p,
         state.sprites,
         state.animations,
-        state.stateMachines.machines,
+        objectMachines(state.objects),
       );
       const sprite = display.spriteId ? sprites.get(display.spriteId) : undefined;
       if (!sprite) return;

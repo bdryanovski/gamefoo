@@ -54,6 +54,9 @@ export interface FullExport {
     sprites: string[];
     animations: string[];
     properties: Record<string, string>;
+    category: string;
+    description: string;
+    tags: string[];
   }>;
   spriteMetadata: Record<string, {
     image: string;
@@ -222,6 +225,9 @@ export function exportFull(state: AppState): FullExport {
         .map((aid) => animMap.get(aid)?.name)
         .filter((n): n is string => n != null),
       properties: { ...o.properties },
+      category: o.meta.category,
+      description: o.meta.description,
+      tags: [...o.meta.tags],
     };
   }
 

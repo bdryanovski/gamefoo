@@ -1,8 +1,10 @@
 import React, { useMemo, useCallback } from "react";
 import type { AppState, AppAction, SpriteRegion, AnimationDef } from "../types";
+import { objectMachines } from "../types";
 import type { StateMachineDef } from "../statemachine/types";
 import type { MapAction, MapPlacement } from "./types";
 import { resolvePlacementDisplay, resolveMachineState } from "./types";
+import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
 
 interface Props {
   state: AppState;
@@ -14,38 +16,19 @@ interface Props {
 
 const THUMB = 40;
 
-/** Draw a sprite region centred and fitted into the THUMB box. */
-function drawSpriteFitted(
-  ctx: CanvasRenderingContext2D,
-  sprite: SpriteRegion,
-  img: HTMLImageElement | undefined,
-) {
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, THUMB, THUMB);
-  if (!img || !img.complete || sprite.width <= 0 || sprite.height <= 0) return;
-  const scale = Math.min(THUMB / sprite.width, THUMB / sprite.height);
-  const dw = sprite.width * scale;
-  const dh = sprite.height * scale;
-  ctx.drawImage(
-    img,
-    sprite.x, sprite.y, sprite.width, sprite.height,
-    (THUMB - dw) / 2, (THUMB - dh) / 2, dw, dh,
-  );
-}
-
-/** Clickable palette thumbnail box with an optional corner badge. */
+/** Clickable palette thumbnail box wrapping a preview, with a badge. */
 function ThumbShell({
   selected,
   title,
   badge,
-  canvasRef,
   onClick,
+  children,
 }: {
   selected: boolean;
   title: string;
   badge?: string;
-  canvasRef: React.RefObject<HTMLCanvasElement | null>;
   onClick: () => void;
+  children: React.ReactNode;
 }) {
   return (
     <div
@@ -54,7 +37,7 @@ function ThumbShell({
       onClick={onClick}
       style={{ position: "relative" }}
     >
-      <canvas ref={canvasRef} />
+      {children}
       {badge && (
         <span
           style={{
@@ -88,31 +71,24 @@ function SpriteThumb({
   title: string;
   onClick: () => void;
 }) {
-  const ref = React.useRef<HTMLCanvasElement>(null);
-
-  React.useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    canvas.width = THUMB;
-    canvas.height = THUMB;
-    drawSpriteFitted(ctx, sprite, imageMap.get(sprite.imageId));
-  }, [sprite, imageMap]);
-
+  const spriteById = React.useMemo(
+    () => new Map([[sprite.id, sprite]]),
+    [sprite],
+  );
   return (
-    <ThumbShell
-      selected={selected}
-      title={title}
-      canvasRef={ref}
-      onClick={onClick}
-    />
+    <ThumbShell selected={selected} title={title} onClick={onClick}>
+      <AnimatedSpritePreview
+        frames={[sprite.id]}
+        duration={0}
+        spriteById={spriteById}
+        imageMap={imageMap}
+      />
+    </ThumbShell>
   );
 }
 
 /**
- * Live preview of a sprite-id sequence. A single-frame list renders a
- * static sprite; multi-frame lists play back at `duration` s/frame.
+ * Live preview of a sprite-id sequence in a selectable palette thumb.
  */
 function FramePreview({
   frames,
@@ -133,45 +109,15 @@ function FramePreview({
   badge?: string;
   onClick: () => void;
 }) {
-  const ref = React.useRef<HTMLCanvasElement>(null);
-  const [frame, setFrame] = React.useState(0);
-  const animated = frames.length > 1;
-
-  React.useEffect(() => {
-    setFrame(0);
-    if (!animated) return;
-    const ms = Math.max(60, (duration || 0.12) * 1000);
-    const id = setInterval(
-      () => setFrame((f) => (f + 1) % frames.length),
-      ms,
-    );
-    return () => clearInterval(id);
-  }, [animated, frames.length, duration]);
-
-  React.useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    canvas.width = THUMB;
-    canvas.height = THUMB;
-    const spriteId = frames[frame] ?? frames[0];
-    const sprite = spriteId ? spriteById.get(spriteId) : undefined;
-    if (!sprite) {
-      ctx.clearRect(0, 0, THUMB, THUMB);
-      return;
-    }
-    drawSpriteFitted(ctx, sprite, imageMap.get(sprite.imageId));
-  }, [frame, frames, spriteById, imageMap]);
-
   return (
-    <ThumbShell
-      selected={selected}
-      title={title}
-      badge={badge}
-      canvasRef={ref}
-      onClick={onClick}
-    />
+    <ThumbShell selected={selected} title={title} badge={badge} onClick={onClick}>
+      <AnimatedSpritePreview
+        frames={frames}
+        duration={duration}
+        spriteById={spriteById}
+        imageMap={imageMap}
+      />
+    </ThumbShell>
   );
 }
 
@@ -276,7 +222,7 @@ export function MapPalettePanel({
       selectedPlacement.placement,
       state.sprites,
       state.animations,
-      state.stateMachines.machines,
+      objectMachines(state.objects),
     )
     : null;
   const selSprite = selDisplay?.spriteId ? spriteById.get(selDisplay.spriteId) : undefined;
@@ -684,9 +630,9 @@ export function MapPalettePanel({
       {/* Objects palette — animations & state machines */}
       <div className="section">
         <div className="section-title">
-          Objects ({state.animations.length + state.stateMachines.machines.length})
+          Objects ({state.animations.length + objectMachines(state.objects).length})
         </div>
-        {state.animations.length === 0 && state.stateMachines.machines.length === 0 && (
+        {state.animations.length === 0 && objectMachines(state.objects).length === 0 && (
           <div className="text-xs text-dim" style={{ padding: 4 }}>
             No animations or state machines yet.
           </div>
@@ -738,13 +684,13 @@ export function MapPalettePanel({
             </div>
           </div>
         )}
-        {state.stateMachines.machines.length > 0 && (
+        {objectMachines(state.objects).length > 0 && (
           <div style={{ padding: "4px 0" }}>
             <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
-              State Machines ({state.stateMachines.machines.length})
+              State Machines ({objectMachines(state.objects).length})
             </div>
             <div className="asset-grid">
-              {state.stateMachines.machines.map((mch) => {
+              {objectMachines(state.objects).map((mch) => {
                 const sel =
                   map.selected?.kind === "machine" && map.selected.id === mch.id;
                 const initial = resolveMachineState(mch);

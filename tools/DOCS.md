@@ -378,7 +378,10 @@ sprite metadata, and optional grid config.
     "hero": {
       "sprites": ["hero_idle_0", "hero_walk_0"],
       "animations": ["idle", "walk"],
-      "properties": { "speed": "120", "health": "100" }
+      "properties": { "speed": "120", "health": "100" },
+      "category": "enemy",
+      "description": "Roaming grunt",
+      "tags": ["hostile", "grounded"]
     }
   },
   "spriteMetadata": {
@@ -580,11 +583,13 @@ tools/
     │   ├── TilemapCanvas.tsx   # Main canvas (render + interaction)
     │   ├── SpritePanel.tsx     # Sprite list + grid settings + properties
     │   ├── AnimationPanel.tsx  # Animation builder + live preview
-    │   ├── ObjectPanel.tsx     # Game object grouping
+    │   ├── AnimatedSpritePreview.tsx # Shared live sprite/animation thumb
     │   ├── ExportPanel.tsx     # Export format selection + JSON preview
     │   ├── StatusBar.tsx       # Bottom status bar
     │   ├── ProjectManager.tsx  # Project list/create/open/delete modal
     │   └── SaveScreen.tsx      # Save confirmation + export files screen
+    ├── objects/
+    │   └── ObjectExplorer.tsx  # Object Explorer mode (list + configure objects)
     └── utils/
         ├── export.ts      # JSON export generators
         ├── storage.ts     # localStorage + server API client

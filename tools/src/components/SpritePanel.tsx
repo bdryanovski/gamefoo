@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useMemo } from "react";
 import type { AppState, AppAction, SpriteRegion } from "../types";
+import { AnimatedSpritePreview } from "./AnimatedSpritePreview";
 
 interface Props {
   state: AppState;
@@ -7,29 +8,6 @@ interface Props {
   image: HTMLImageElement | null;
 }
 
-function SpriteThumb({ sprite, image }: { sprite: SpriteRegion; image: HTMLImageElement | null }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas || !image) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    canvas.width = 20;
-    canvas.height = 20;
-    ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, 20, 20);
-
-    const scale = Math.min(20 / sprite.width, 20 / sprite.height);
-    const dw = sprite.width * scale;
-    const dh = sprite.height * scale;
-    const dx = (20 - dw) / 2;
-    const dy = (20 - dh) / 2;
-    ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height, dx, dy, dw, dh);
-  }, [sprite, image]);
-
-  return <canvas ref={ref} className="sprite-item__preview" width={20} height={20} />;
-}
 
 export function SpritePanel({ state, dispatch, image }: Props) {
   const activeSprites = state.sprites.filter(
@@ -45,6 +23,20 @@ export function SpritePanel({ state, dispatch, image }: Props) {
       dispatch({ type: "UPDATE_SPRITE", id: selected.id, updates });
     },
     [selected, dispatch],
+  );
+
+  // Preview maps for the shared AnimatedSpritePreview. All active
+  // sprites share the active image, so a single-entry image map suffices.
+  const spriteById = useMemo(
+    () => new Map(activeSprites.map((s) => [s.id, s])),
+    [activeSprites],
+  );
+  const previewImageMap = useMemo(
+    () =>
+      state.activeImageId && image
+        ? new Map([[state.activeImageId, image]])
+        : new Map<string, HTMLImageElement>(),
+    [state.activeImageId, image],
   );
 
   return (
@@ -145,7 +137,7 @@ export function SpritePanel({ state, dispatch, image }: Props) {
             </button>
           )}
         </div>
-        <div className="sprite-list">
+        <div className="sprite-list" style={{ maxHeight: 260 }}>
           {state.sprites.length === 0 && (
             <div className="p-4 text-dim text-xs">
               No sprites defined. Use Grid Pick or Region tool to create sprites from the tilemap.
@@ -157,19 +149,44 @@ export function SpritePanel({ state, dispatch, image }: Props) {
               sprites with Grid Pick (G) or Region (R).
             </div>
           )}
-          {activeSprites.map((s) => (
-            <div
-              key={s.id}
-              className={`sprite-item ${state.selectedSpriteIds.includes(s.id) ? "selected" : ""}`}
-              onClick={(e) => dispatch({ type: "SELECT_SPRITE", id: s.id, multi: e.shiftKey })}
-            >
-              <SpriteThumb sprite={s} image={image} />
-              <span className="sprite-item__name">{s.name}</span>
-              <span className="sprite-item__size">
-                {s.width}×{s.height}
-              </span>
-            </div>
-          ))}
+          <div className="asset-grid">
+            {activeSprites.map((s) => {
+              const sel = state.selectedSpriteIds.includes(s.id);
+              return (
+                <div
+                  key={s.id}
+                  className="col"
+                  style={{ alignItems: "center", gap: 2, width: 48 }}
+                >
+                  <div
+                    className={`asset-thumb ${sel ? "selected" : ""}`}
+                    title={`${s.name} — ${s.width}×${s.height}${s.group ? ` · ${s.group}` : ""}`}
+                    onClick={(e) =>
+                      dispatch({ type: "SELECT_SPRITE", id: s.id, multi: e.shiftKey })
+                    }
+                  >
+                    <AnimatedSpritePreview
+                      frames={[s.id]}
+                      duration={0}
+                      spriteById={spriteById}
+                      imageMap={previewImageMap}
+                    />
+                  </div>
+                  <span
+                    className={`text-xs ${sel ? "" : "text-dim"}`}
+                    style={{
+                      maxWidth: 48,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {s.name}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 

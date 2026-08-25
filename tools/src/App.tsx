@@ -2,20 +2,18 @@ import React, { useReducer, useCallback, useState, useEffect, useRef, useMemo } 
 import type { AppState, AppAction, ProjectSnapshot } from "./types";
 import { INITIAL_STATE, migrateSpriteState } from "./types";
 import { mapReducer } from "./map/types";
-import { smReducer, sanitizeStateMachines } from "./statemachine/types";
-import type { SMAction } from "./statemachine/types";
+import { sanitizeMachine } from "./statemachine/types";
 import { Toolbar } from "./components/Toolbar";
 import { TilemapCanvas } from "./components/TilemapCanvas";
 import { SpritePanel } from "./components/SpritePanel";
 import { AnimationPanel } from "./components/AnimationPanel";
 import { ImageLibraryPanel } from "./components/ImageLibraryPanel";
 import { ExportPanel } from "./components/ExportPanel";
-import { ObjectPanel } from "./components/ObjectPanel";
+import { ObjectExplorer } from "./objects/ObjectExplorer";
 import { StatusBar } from "./components/StatusBar";
 import { ProjectManager } from "./components/ProjectManager";
 import { SaveScreen } from "./components/SaveScreen";
 import { MapEditor } from "./map/MapEditor";
-import { StateMachineEditor } from "./statemachine/StateMachineEditor";
 import {
   saveStateToLocal,
   loadStateFromLocal,
@@ -54,11 +52,11 @@ function reducer(state: AppState, action: AppAction): AppState {
           state.activeImageId === action.imageId
             ? (images[0]?.id ?? null)
             : state.activeImageId,
-        stateMachines: sanitizeStateMachines(
-          state.stateMachines,
-          sprites,
-          state.animations,
-        ),
+        objects: state.objects.map((o) => ({
+          ...o,
+          sprites: o.sprites.filter((id) => sprites.some((s) => s.id === id)),
+          machine: sanitizeMachine(o.machine, sprites, state.animations),
+        })),
       };
     }
 
@@ -84,6 +82,7 @@ function reducer(state: AppState, action: AppAction): AppState {
       };
 
     case "DELETE_SPRITE": {
+      const sprites = state.sprites.filter((s) => s.id !== action.id);
       const animations = state.animations.map((a) => ({
         ...a,
         frames: a.frames.filter((f) => f !== action.id),
@@ -91,8 +90,8 @@ function reducer(state: AppState, action: AppAction): AppState {
       const objects = state.objects.map((o) => ({
         ...o,
         sprites: o.sprites.filter((s) => s !== action.id),
+        machine: sanitizeMachine(o.machine, sprites, animations),
       }));
-      const sprites = state.sprites.filter((s) => s.id !== action.id);
       return {
         ...state,
         sprites,
@@ -101,11 +100,6 @@ function reducer(state: AppState, action: AppAction): AppState {
         ),
         animations,
         objects,
-        stateMachines: sanitizeStateMachines(
-          state.stateMachines,
-          sprites,
-          animations,
-        ),
       };
     }
 
@@ -139,13 +133,12 @@ function reducer(state: AppState, action: AppAction): AppState {
       };
 
     case "DELETE_ANIMATION": {
+      const animations = state.animations.filter((a) => a.id !== action.id);
       const objects = state.objects.map((o) => ({
         ...o,
         animations: o.animations.filter((a) => a !== action.id),
+        machine: sanitizeMachine(o.machine, state.sprites, animations),
       }));
-      const animations = state.animations.filter(
-        (a) => a.id !== action.id,
-      );
       return {
         ...state,
         animations,
@@ -154,11 +147,6 @@ function reducer(state: AppState, action: AppAction): AppState {
             ? null
             : state.selectedAnimationId,
         objects,
-        stateMachines: sanitizeStateMachines(
-          state.stateMachines,
-          state.sprites,
-          animations,
-        ),
       };
     }
 
@@ -208,12 +196,6 @@ function reducer(state: AppState, action: AppAction): AppState {
     case "MAP":
       return { ...state, map: mapReducer(state.map, action.action) };
 
-    case "SM":
-      return {
-        ...state,
-        stateMachines: smReducer(state.stateMachines, action.action),
-      };
-
     default:
       return state;
   }
@@ -234,14 +216,11 @@ const MAP_VIEW: Record<string, true> = {
   SELECT_PALETTE: true, SELECT_PLACEMENT: true, SET_TOOL: true, SET_ZOOM: true,
   SET_PAN: true, SET_ACTIVE_LEVEL: true, SET_SHOW_ALL_LEVELS: true, LOAD_MAP: true,
 };
-/** State-machine sub-actions that change only selection. */
-const SM_VIEW: Record<string, true> = { SELECT_MACHINE: true, SELECT_STATE: true };
 
 /** Does this action mutate the document (and so belong in undo history)? */
 function isRecordable(action: AppAction): boolean {
   if (VIEW_ACTIONS[action.type]) return false;
   if (action.type === "MAP") return !MAP_VIEW[action.action.type];
-  if (action.type === "SM") return !SM_VIEW[action.action.type];
   return true;
 }
 
@@ -270,9 +249,11 @@ function historyReducer(state: AppState, action: AppAction): AppState {
 
 export function App() {
   const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
-  const [mode, setMode] = useState<"sprite" | "map" | "states">(() => {
+  const [mode, setMode] = useState<"sprite" | "map" | "objects">(() => {
     const saved = localStorage.getItem("gamefoo-tools-mode");
-    return saved === "map" || saved === "states" ? saved : "sprite";
+    return saved === "map" || saved === "objects"
+      ? saved
+      : "sprite";
   });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(() =>
@@ -327,11 +308,6 @@ export function App() {
 
   const mapDispatch = useCallback(
     (a: Parameters<typeof mapReducer>[1]) => dispatch({ type: "MAP", action: a }),
-    [],
-  );
-
-  const smDispatch = useCallback(
-    (a: SMAction) => dispatch({ type: "SM", action: a }),
     [],
   );
 
@@ -582,10 +558,10 @@ export function App() {
           ▦ Map Editor
         </button>
         <button
-          className={`mode-btn ${mode === "states" ? "active" : ""}`}
-          onClick={() => setMode("states")}
+          className={`mode-btn ${mode === "objects" ? "active" : ""}`}
+          onClick={() => setMode("objects")}
         >
-          ⚙ States
+          ⬡ Objects
         </button>
         <span className="mode-bar__project">
           {state.projectName}
@@ -664,7 +640,6 @@ export function App() {
                       { key: "images", label: "Images" },
                       { key: "sprites", label: "Sprites" },
                       { key: "animations", label: "Anims" },
-                      { key: "objects", label: "Objects" },
                       { key: "export", label: "Export" },
                     ] as const
                   ).map((t) => (
@@ -699,9 +674,6 @@ export function App() {
                       imageMap={imageMap}
                     />
                   )}
-                  {state.activeTab === "objects" && (
-                    <ObjectPanel state={state} dispatch={dispatch} />
-                  )}
                   {state.activeTab === "export" && (
                     <ExportPanel state={state} dispatch={dispatch} />
                   )}
@@ -723,10 +695,9 @@ export function App() {
             onOpenProjects={() => setShowProjects(true)}
           />
         ) : (
-          <StateMachineEditor
+          <ObjectExplorer
             state={state}
             dispatch={dispatch}
-            smDispatch={smDispatch}
             imageMap={imageMap}
             projectId={currentProjectId}
             saving={saving}

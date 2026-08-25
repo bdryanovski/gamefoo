@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { AppState } from "../types";
+import { objectMachines } from "../types";
 import {
   exportAtlasForImage,
   exportGridForImage,
@@ -49,7 +50,7 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
       },
     ];
 
-    if (state.stateMachines.machines.length > 0) {
+    if (objectMachines(state.objects).length > 0) {
       list.push({
         filename: `${baseName}.machines.json`,
         label: "State Machines Export (states, transitions, conditions)",

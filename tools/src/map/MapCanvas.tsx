@@ -7,6 +7,7 @@ import type {
 } from "./types";
 import { screenKey, resolvePlacementDisplay } from "./types";
 import type { AppState, SpriteRegion } from "../types";
+import { objectMachines } from "../types";
 
 /** World-space gap between screens (px in image space). */
 const GAP = 16;
@@ -52,7 +53,7 @@ export function MapCanvas({
   const spriteById = new Map(state.sprites.map((s) => [s.id, s]));
   const animById = new Map(state.animations.map((a) => [a.id, a]));
   const machineById = new Map(
-    state.stateMachines.machines.map((m) => [m.id, m]),
+    objectMachines(state.objects).map((m) => [m.id, m]),
   );
 
   const displayOf = useCallback(
@@ -61,10 +62,10 @@ export function MapCanvas({
         p,
         state.sprites,
         state.animations,
-        state.stateMachines.machines,
+        objectMachines(state.objects),
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.sprites, state.animations, state.stateMachines.machines],
+    [state.sprites, state.animations, state.objects],
   );
 
   /** Static size reference for hit-testing / outlines. */
@@ -220,7 +221,7 @@ export function MapCanvas({
     }
     return false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map.screens, map.showAllLevels, map.activeLevel, state.animations, state.stateMachines.machines, displayOf]);
+  }, [map.screens, map.showAllLevels, map.activeLevel, state.animations, state.objects, displayOf]);
 
   useEffect(() => {
     if (!hasAnimatedPlacements) return;
@@ -513,7 +514,7 @@ export function MapCanvas({
     imageMap,
     state.sprites,
     state.animations,
-    state.stateMachines,
+    state.objects,
     movePreview,
     tick,
   ]);
@@ -542,7 +543,7 @@ export function MapCanvas({
       return { spriteId: anim?.frames[0] ?? null, animationId: anim?.id ?? null };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.animations, state.stateMachines.machines],
+    [state.animations, state.objects],
   );
 
   // ── Mouse handlers ─────────────────────────────────────
@@ -607,7 +608,7 @@ export function MapCanvas({
       return null;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [screenRects, state.sprites, state.animations, state.stateMachines.machines, map.showAllLevels, map.activeLevel],
+    [screenRects, state.sprites, state.animations, state.objects, map.showAllLevels, map.activeLevel],
   );
 
   /** Build a new placement for the current palette selection. */

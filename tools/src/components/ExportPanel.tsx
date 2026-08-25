@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import type { AppState, AppAction } from "../types";
+import { objectMachines } from "../types";
 import { exportAtlasForImage, exportGridForImage, exportFull, exportProject, exportSprites, exportAnimations, downloadJSON, spritesOfImage } from "../utils/export";
 import { exportStateMachines } from "../statemachine/smExport";
 
@@ -168,7 +169,7 @@ export function ExportPanel({ state, dispatch }: Props) {
           <div>Animations: {state.animations.length}</div>
           <div>Objects: {state.objects.length}</div>
           <div>
-            State Machines: {state.stateMachines.machines.length}
+            State Machines: {objectMachines(state.objects).length}
           </div>
           <div>Images: {state.images.length}</div>
           {activeImage && (

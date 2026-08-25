@@ -1,4 +1,5 @@
 import type { AppState } from "../types";
+import { objectMachines } from "../types";
 import { downloadJSON } from "../utils/export";
 
 /**
@@ -21,7 +22,7 @@ export function exportStateMachines(state: AppState) {
       exportedAt: new Date().toISOString(),
     },
     machines: Object.fromEntries(
-      state.stateMachines.machines.map((m) => {
+      objectMachines(state.objects).map((m) => {
         const stateName = (id: string | null) =>
           (id && m.states.find((s) => s.id === id)?.name) || null;
         return [
