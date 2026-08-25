@@ -613,6 +613,7 @@ export function App() {
           <div className="app-layout">
             {/* Title bar */}
             <div className="title-bar">
+              <span className="title-bar__icon">▣</span>
               <span className="title-bar__name">
                 GameFoo Sprite Editor — {state.projectName}
               </span>

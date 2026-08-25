@@ -90,6 +90,7 @@ export function CharacterEditor({
   return (
     <div className="app-layout">
       <div className="title-bar">
+        <span className="title-bar__icon">☺</span>
         <span className="title-bar__name">
           GameFoo Character — {state.projectName}
           {projectId ? "" : " (unsaved)"}

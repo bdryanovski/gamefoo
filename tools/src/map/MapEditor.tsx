@@ -124,6 +124,7 @@ export function MapEditor({
     <div className="app-layout">
       {/* Title bar — shared project lifecycle */}
       <div className="title-bar">
+        <span className="title-bar__icon">▦</span>
         <span className="title-bar__name">
           GameFoo Map Editor — {state.projectName}
           {projectId ? "" : " (unsaved)"}
