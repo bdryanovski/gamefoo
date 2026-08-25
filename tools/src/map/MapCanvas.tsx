@@ -59,6 +59,9 @@ export function MapCanvas({
     spriteId: string;
     x: number;
     y: number;
+    rotation?: number;
+    flipX?: boolean;
+    flipY?: boolean;
     valid: boolean;
   } | null>(null);
   const [hover, setHover] = useState<{
@@ -150,17 +153,43 @@ export function MapCanvas({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const drawSprite = (spriteId: string, dx: number, dy: number, alpha = 1) => {
+    const drawSprite = (
+      spriteId: string,
+      dx: number,
+      dy: number,
+      alpha = 1,
+      transform?: { rotation?: number; flipX?: boolean; flipY?: boolean },
+    ) => {
       const sprite = spriteById.get(spriteId);
       if (!sprite) return;
       const img = imageMap.get(sprite.imageId);
       if (!img || !img.complete) return;
       ctx.globalAlpha = alpha;
-      ctx.drawImage(
-        img,
-        sprite.x, sprite.y, sprite.width, sprite.height,
-        dx, dy, sprite.width, sprite.height,
-      );
+      if (
+        transform &&
+        (transform.rotation || transform.flipX || transform.flipY)
+      ) {
+        ctx.save();
+        ctx.translate(dx + sprite.width / 2, dy + sprite.height / 2);
+        if (transform.rotation) {
+          ctx.rotate((transform.rotation * Math.PI) / 180);
+        }
+        if (transform.flipX || transform.flipY) {
+          ctx.scale(transform.flipX ? -1 : 1, transform.flipY ? -1 : 1);
+        }
+        ctx.drawImage(
+          img,
+          sprite.x, sprite.y, sprite.width, sprite.height,
+          -sprite.width / 2, -sprite.height / 2, sprite.width, sprite.height,
+        );
+        ctx.restore();
+      } else {
+        ctx.drawImage(
+          img,
+          sprite.x, sprite.y, sprite.width, sprite.height,
+          dx, dy, sprite.width, sprite.height,
+        );
+      }
       ctx.globalAlpha = 1;
     };
 
@@ -232,20 +261,56 @@ export function MapCanvas({
         ctx.clip();
         for (const p of r.screen.placements) {
           if (movePreview && p.id === movePreview.id) continue;
-          drawSprite(p.spriteId, p.x, p.y);
+          drawSprite(p.spriteId, p.x, p.y, 1, p);
         }
 
         // Move-tool preview: ghost of the dragged placement at the target cell
         if (movePreview && movePreview.screenKey === screenKey(r.screen.x, r.screen.y)) {
-          drawSprite(movePreview.spriteId, movePreview.x, movePreview.y, 0.6);
-          ctx.strokeStyle = movePreview.valid ? "#ffff00" : "#ff4444";
-          ctx.lineWidth = 2 / map.zoom;
-          ctx.strokeRect(
+          const mpSprite = spriteById.get(movePreview.spriteId);
+          const mw = mpSprite?.width ?? map.blockSize;
+          const mh = mpSprite?.height ?? map.blockSize;
+          drawSprite(
+            movePreview.spriteId,
             movePreview.x,
             movePreview.y,
-            spriteById.get(movePreview.spriteId)?.width ?? map.blockSize,
-            spriteById.get(movePreview.spriteId)?.height ?? map.blockSize,
+            0.6,
+            movePreview,
           );
+          // Outline (rotated with the placement)
+          ctx.save();
+          ctx.translate(movePreview.x + mw / 2, movePreview.y + mh / 2);
+          if (movePreview.rotation) {
+            ctx.rotate((movePreview.rotation * Math.PI) / 180);
+          }
+          ctx.strokeStyle = movePreview.valid ? "#ffff00" : "#ff4444";
+          ctx.lineWidth = 2 / map.zoom;
+          ctx.strokeRect(-mw / 2, -mh / 2, mw, mh);
+          ctx.restore();
+        }
+
+        // Selected-placement outline (edit indicator)
+        const selPlacement =
+          map.selectedPlacementId &&
+          r.screen.placements.some((p) => p.id === map.selectedPlacementId)
+            ? r.screen.placements.find(
+                (p) => p.id === map.selectedPlacementId,
+              )
+            : null;
+        if (selPlacement && !(movePreview && movePreview.id === selPlacement.id)) {
+          const sSprite = spriteById.get(selPlacement.spriteId);
+          const sw = sSprite?.width ?? map.blockSize;
+          const sh = sSprite?.height ?? map.blockSize;
+          ctx.save();
+          ctx.translate(selPlacement.x + sw / 2, selPlacement.y + sh / 2);
+          if (selPlacement.rotation) {
+            ctx.rotate((selPlacement.rotation * Math.PI) / 180);
+          }
+          ctx.strokeStyle = "#00ffff";
+          ctx.lineWidth = 1.5 / map.zoom;
+          ctx.setLineDash([4 / map.zoom, 3 / map.zoom]);
+          ctx.strokeRect(-sw / 2, -sh / 2, sw, sh);
+          ctx.setLineDash([]);
+          ctx.restore();
         }
 
         // Ghost preview of the selected sprite at hover cell
@@ -318,13 +383,30 @@ export function MapCanvas({
         const p = r.screen.placements[i]!;
         const sprite = spriteById.get(p.spriteId);
         if (!sprite) continue;
-        if (
-          localX >= p.x &&
-          localX < p.x + sprite.width &&
-          localY >= p.y &&
-          localY < p.y + sprite.height
-        ) {
-          return p;
+        const rot = ((p.rotation ?? 0) * Math.PI) / 180;
+        if (rot === 0) {
+          if (
+            localX >= p.x &&
+            localX < p.x + sprite.width &&
+            localY >= p.y &&
+            localY < p.y + sprite.height
+          ) {
+            return p;
+          }
+        } else {
+          // Rotate the point into the placement's local frame.
+          const cx = p.x + sprite.width / 2;
+          const cy = p.y + sprite.height / 2;
+          const dx = localX - cx;
+          const dy = localY - cy;
+          const lx = dx * Math.cos(rot) + dy * Math.sin(rot);
+          const ly = -dx * Math.sin(rot) + dy * Math.cos(rot);
+          if (
+            Math.abs(lx) <= sprite.width / 2 &&
+            Math.abs(ly) <= sprite.height / 2
+          ) {
+            return p;
+          }
         }
       }
       return null;
@@ -368,11 +450,15 @@ export function MapCanvas({
         const p = findTopmostPlacement(key, world.x, world.y);
         if (p) {
           mapDispatch({ type: "SELECT_SPRITE", spriteId: p.spriteId });
-        } else if (r.screen.defaultSpriteId) {
-          mapDispatch({
-            type: "SELECT_SPRITE",
-            spriteId: r.screen.defaultSpriteId,
-          });
+          mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
+        } else {
+          if (r.screen.defaultSpriteId) {
+            mapDispatch({
+              type: "SELECT_SPRITE",
+              spriteId: r.screen.defaultSpriteId,
+            });
+          }
+          mapDispatch({ type: "SELECT_PLACEMENT", id: null });
         }
         return;
       }
@@ -388,7 +474,11 @@ export function MapCanvas({
       // Move: click-drag a placement to reposition it (drop on mouseup).
       if (tool === "move") {
         const p = findTopmostPlacement(key, world.x, world.y);
-        if (!p) return;
+        if (!p) {
+          mapDispatch({ type: "SELECT_PLACEMENT", id: null });
+          return;
+        }
+        mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
         movingRef.current = {
           id: p.id,
           screenKey: key,
@@ -401,6 +491,9 @@ export function MapCanvas({
           spriteId: p.spriteId,
           x: p.x,
           y: p.y,
+          rotation: p.rotation,
+          flipX: p.flipX,
+          flipY: p.flipY,
           valid: true,
         });
         return;
@@ -477,6 +570,9 @@ export function MapCanvas({
           map.screens[moving.screenKey]?.placements.find(
             (p) => p.id === moving.id,
           )?.spriteId ?? "";
+        const original = map.screens[moving.screenKey]?.placements.find(
+          (p) => p.id === moving.id,
+        );
         const localX = world.x - r.wx;
         const localY = world.y - r.wy;
         const nx = Math.round(localX / map.blockSize) * map.blockSize;
@@ -487,6 +583,9 @@ export function MapCanvas({
           spriteId,
           x: nx,
           y: ny,
+          rotation: original?.rotation,
+          flipX: original?.flipX,
+          flipY: original?.flipY,
           valid: moving.screenKey === key,
         });
         onStatus({

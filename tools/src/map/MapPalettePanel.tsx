@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import type { AppState, AppAction, SpriteRegion } from "../types";
-import type { MapAction } from "./types";
+import type { MapAction, MapPlacement } from "./types";
 
 interface Props {
   state: AppState;
@@ -93,6 +93,42 @@ export function MapPalettePanel({
   }, [state.sprites, imageNames]);
 
   const activeScreen = activeScreenKey ? map.screens[activeScreenKey] : undefined;
+
+  // Selected placement lookup (screen key + placement)
+  const selectedPlacement = useMemo(() => {
+    if (!map.selectedPlacementId) return null;
+    for (const [key, screen] of Object.entries(map.screens)) {
+      const p = screen.placements.find(
+        (pl) => pl.id === map.selectedPlacementId,
+      );
+      if (p) return { screenKey: key, placement: p };
+    }
+    return null;
+  }, [map.selectedPlacementId, map.screens]);
+
+  const selSprite = selectedPlacement
+    ? spriteById.get(selectedPlacement.placement.spriteId)
+    : undefined;
+
+  const updatePlacement = useCallback(
+    (
+      updates: Partial<
+        Pick<
+          MapPlacement,
+          "x" | "y" | "rotation" | "flipX" | "flipY"
+        >
+      >,
+    ) => {
+      if (!selectedPlacement) return;
+      mapDispatch({
+        type: "UPDATE_PLACEMENT",
+        screenKey: selectedPlacement.screenKey,
+        id: selectedPlacement.placement.id,
+        updates,
+      });
+    },
+    [selectedPlacement, mapDispatch],
+  );
 
   return (
     <div className="col gap-md">
@@ -274,6 +310,131 @@ export function MapPalettePanel({
           </button>
         </div>
       </div>
+
+      {/* Selected placement editor */}
+      {selectedPlacement && (
+        <div className="section">
+          <div className="section-title">
+            <span>
+              Placement: {selSprite?.name ?? "?"}
+            </span>
+            <button
+              className="btn btn-sm"
+              onClick={() => mapDispatch({ type: "SELECT_PLACEMENT", id: null })}
+            >
+              Deselect
+            </button>
+          </div>
+
+          <div className="field-row">
+            <span className="field-label">X:</span>
+            <input
+              type="number"
+              className="input input-sm"
+              value={selectedPlacement.placement.x}
+              onChange={(e) =>
+                updatePlacement({ x: Math.max(0, Number(e.target.value) || 0) })
+              }
+            />
+            <span className="field-label">Y:</span>
+            <input
+              type="number"
+              className="input input-sm"
+              value={selectedPlacement.placement.y}
+              onChange={(e) =>
+                updatePlacement({ y: Math.max(0, Number(e.target.value) || 0) })
+              }
+            />
+          </div>
+
+          <div className="field-row">
+            <span className="field-label">Rot:</span>
+            <input
+              type="number"
+              className="input input-sm"
+              step={15}
+              value={selectedPlacement.placement.rotation ?? 0}
+              onChange={(e) =>
+                updatePlacement({ rotation: Number(e.target.value) || 0 })
+              }
+            />
+            <span className="text-xs text-dim">deg</span>
+            <button
+              className="btn btn-sm"
+              title="Rotate 90° clockwise (R)"
+              onClick={() =>
+                updatePlacement({
+                  rotation: ((selectedPlacement.placement.rotation ?? 0) + 90) % 360,
+                })
+              }
+            >
+              +90°
+            </button>
+            <button
+              className="btn btn-sm"
+              title="Reset rotation"
+              disabled={!selectedPlacement.placement.rotation}
+              onClick={() => updatePlacement({ rotation: 0 })}
+            >
+              ↺
+            </button>
+          </div>
+
+          <div className="field-row">
+            <button
+              className={`btn btn-sm ${selectedPlacement.placement.flipX ? "active" : ""}`}
+              title="Mirror horizontally (X)"
+              onClick={() =>
+                updatePlacement({ flipX: !selectedPlacement.placement.flipX })
+              }
+            >
+              ⇄ Flip X {selectedPlacement.placement.flipX ? "ON" : ""}
+            </button>
+            <button
+              className={`btn btn-sm ${selectedPlacement.placement.flipY ? "active" : ""}`}
+              title="Mirror vertically (Y)"
+              onClick={() =>
+                updatePlacement({ flipY: !selectedPlacement.placement.flipY })
+              }
+            >
+              ⇅ Flip Y {selectedPlacement.placement.flipY ? "ON" : ""}
+            </button>
+          </div>
+
+          <div className="field-row">
+            <button
+              className="btn btn-sm"
+              disabled={
+                !selectedPlacement.placement.rotation &&
+                !selectedPlacement.placement.flipX &&
+                !selectedPlacement.placement.flipY
+              }
+              onClick={() =>
+                updatePlacement({ rotation: 0, flipX: false, flipY: false })
+              }
+            >
+              Reset Transform
+            </button>
+            <button
+              className="btn btn-sm danger"
+              onClick={() =>
+                mapDispatch({
+                  type: "REMOVE_PLACEMENT",
+                  screenKey: selectedPlacement.screenKey,
+                  id: selectedPlacement.placement.id,
+                })
+              }
+            >
+              Delete
+            </button>
+          </div>
+
+          <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+            On screen {selectedPlacement.screenKey} · shortcuts: R rotate, X
+            flip X, Y flip Y · select with Pick or Move tool
+          </div>
+        </div>
+      )}
 
       {/* Sprite palette — from the shared library */}
       <div className="section">

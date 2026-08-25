@@ -671,7 +671,14 @@ South (down) and `y` grows East (right).
    it. The ghost snaps to blocks; a red outline means the drop target is
    off-screen (releases outside the origin screen cancel the move).
    Placements stay on their own screen.
-7. Navigate: **Space+drag / middle-drag / H** to pan, **scroll** to
+7. **Edit placements** — click a placement with the **Pick (I)** or
+   **Move (M)** tool to select it (cyan dashed outline). The palette's
+   *Placement* section then offers: X/Y position, rotation (any degrees,
+   +90° button), **Flip X / Flip Y** mirrors, reset transform, delete.
+   Keyboard: **R** rotate 90° cw, **X** flip horizontally, **Y** flip
+   vertically (e.g. mirror a sign left/right). Rotation/flips are
+   exported with the placement.
+8. Navigate: **Space+drag / middle-drag / H** to pan, **scroll** to
    zoom.
 
 ### One project, two editors
@@ -713,7 +720,8 @@ connected across re-imports. For custom wrappers.
 Every placement as a self-contained world-space object — ideal for
 entity spawners. `worldX` grows East, `worldY` grows South (same
 convention as screen coords). `sx,sy` is the source rect in `image`;
-`z` is stacking order within the screen.
+`z` is stacking order within the screen. `rotation` (degrees, cw),
+`flipX`, `flipY` carry the placement transform.
 
 ```json
 [
@@ -723,6 +731,9 @@ convention as screen coords). `sx,sy` is the source rect in `image`;
     "x": 64, "y": 32,
     "worldX": 64, "worldY": 32,
     "width": 32, "height": 32,
+    "rotation": 0,
+    "flipX": false,
+    "flipY": false,
     "image": "tileset.png",
     "sx": 64, "sy": 0,
     "z": 0

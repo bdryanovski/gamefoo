@@ -54,18 +54,52 @@ export function MapEditor({
   }>({ screenKey: null, block: null });
   const [activeScreenKey, setActiveScreenKey] = useState<string | null>(null);
 
-  // ── Tool keyboard shortcuts ────────────────────────────
+  // ── Tool shortcuts + placement transform shortcuts ────
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
-      const tool = KEY_MAP[e.key.toLowerCase()];
-      if (tool) mapDispatch({ type: "SET_TOOL", tool });
+      const k = e.key.toLowerCase();
+      const tool = KEY_MAP[k];
+      if (tool) {
+        mapDispatch({ type: "SET_TOOL", tool });
+        return;
+      }
+      // Placement transforms when one is selected.
+      const pid = state.map.selectedPlacementId;
+      if (!pid || (k !== "r" && k !== "x" && k !== "y")) return;
+      for (const [key, screen] of Object.entries(state.map.screens)) {
+        const p = screen.placements.find((pl) => pl.id === pid);
+        if (!p) continue;
+        if (k === "r") {
+          mapDispatch({
+            type: "UPDATE_PLACEMENT",
+            screenKey: key,
+            id: pid,
+            updates: { rotation: ((p.rotation ?? 0) + 90) % 360 },
+          });
+        } else if (k === "x") {
+          mapDispatch({
+            type: "UPDATE_PLACEMENT",
+            screenKey: key,
+            id: pid,
+            updates: { flipX: !p.flipX },
+          });
+        } else {
+          mapDispatch({
+            type: "UPDATE_PLACEMENT",
+            screenKey: key,
+            id: pid,
+            updates: { flipY: !p.flipY },
+          });
+        }
+        return;
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [mapDispatch]);
+  }, [mapDispatch, state.map]);
 
   const selectedSpriteName = map.selectedSpriteId
     ? (state.sprites.find((s) => s.id === map.selectedSpriteId)?.name ?? "?")

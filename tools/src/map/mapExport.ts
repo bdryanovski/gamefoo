@@ -55,6 +55,9 @@ export function exportMap(state: AppState) {
             spriteId: p.spriteId,
             x: p.x,
             y: p.y,
+            ...(p.rotation ? { rotation: p.rotation } : {}),
+            ...(p.flipX ? { flipX: true } : {}),
+            ...(p.flipY ? { flipY: true } : {}),
           })),
         },
       ]),
@@ -77,6 +80,9 @@ export function exportMapScreens(state: AppState) {
         sprite: names.get(p.spriteId) ?? p.spriteId,
         x: p.x,
         y: p.y,
+        ...(p.rotation ? { rotation: p.rotation } : {}),
+        ...(p.flipX ? { flipX: true } : {}),
+        ...(p.flipY ? { flipY: true } : {}),
       })),
     };
   }
@@ -99,6 +105,9 @@ export interface MapObjectExport {
   worldY: number;
   width: number;
   height: number;
+  rotation: number;
+  flipX: boolean;
+  flipY: boolean;
   image: string;
   sx: number;
   sy: number;
@@ -126,6 +135,9 @@ export function exportMapObjects(state: AppState): MapObjectExport[] {
         worldY: s.x * screenH + p.y,
         width: sprite.width,
         height: sprite.height,
+        rotation: p.rotation ?? 0,
+        flipX: p.flipX ?? false,
+        flipY: p.flipY ?? false,
         image: imageNames.get(sprite.imageId) ?? "",
         sx: sprite.x,
         sy: sprite.y,

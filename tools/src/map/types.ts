@@ -15,6 +15,12 @@ export interface MapPlacement {
   spriteId: string;
   x: number;
   y: number;
+  /** Rotation in degrees, clockwise around the sprite center. */
+  rotation?: number;
+  /** Mirror horizontally. */
+  flipX?: boolean;
+  /** Mirror vertically. */
+  flipY?: boolean;
 }
 
 export interface MapScreen {
@@ -39,6 +45,8 @@ export interface MapState {
   defaultSpriteId: string | null;
   screens: Record<string, MapScreen>;
   selectedSpriteId: string | null;
+  /** Placement selected for editing (move/rotate/flip). */
+  selectedPlacementId: string | null;
   activeTool: MapToolType;
   zoom: number;
   pan: { x: number; y: number };
@@ -53,6 +61,7 @@ export const INITIAL_MAP_STATE: MapState = {
   defaultSpriteId: null,
   screens: {},
   selectedSpriteId: null,
+  selectedPlacementId: null,
   activeTool: "paint",
   zoom: 0.5,
   pan: { x: 40, y: 40 },
@@ -66,6 +75,7 @@ export type MapAction =
       screenRows?: number;
     }
   | { type: "SELECT_SPRITE"; spriteId: string | null }
+  | { type: "SELECT_PLACEMENT"; id: string | null }
   | { type: "SET_MAP_DEFAULT"; spriteId: string | null }
   | { type: "ADD_SCREEN"; x: number; y: number }
   | { type: "REMOVE_SCREEN"; x: number; y: number }
@@ -73,6 +83,14 @@ export type MapAction =
   | { type: "ADD_PLACEMENT"; screenKey: string; placement: MapPlacement }
   | { type: "REMOVE_PLACEMENT"; screenKey: string; id: string }
   | { type: "MOVE_PLACEMENT"; screenKey: string; id: string; x: number; y: number }
+  | {
+      type: "UPDATE_PLACEMENT";
+      screenKey: string;
+      id: string;
+      updates: Partial<
+        Pick<MapPlacement, "x" | "y" | "rotation" | "flipX" | "flipY">
+      >;
+    }
   | { type: "CLEAR_SCREEN"; x: number; y: number }
   | { type: "SET_TOOL"; tool: MapToolType }
   | { type: "SET_ZOOM"; zoom: number }
@@ -91,6 +109,9 @@ export function mapReducer(state: MapState, action: MapAction): MapState {
 
     case "SELECT_SPRITE":
       return { ...state, selectedSpriteId: action.spriteId };
+
+    case "SELECT_PLACEMENT":
+      return { ...state, selectedPlacementId: action.id };
 
     case "SET_MAP_DEFAULT":
       return { ...state, defaultSpriteId: action.spriteId };
@@ -157,6 +178,10 @@ export function mapReducer(state: MapState, action: MapAction): MapState {
       if (!screen) return state;
       return {
         ...state,
+        selectedPlacementId:
+          state.selectedPlacementId === action.id
+            ? null
+            : state.selectedPlacementId,
         screens: {
           ...state.screens,
           [action.screenKey]: {
@@ -178,6 +203,23 @@ export function mapReducer(state: MapState, action: MapAction): MapState {
             ...screen,
             placements: screen.placements.map((p) =>
               p.id === action.id ? { ...p, x: action.x, y: action.y } : p,
+            ),
+          },
+        },
+      };
+    }
+
+    case "UPDATE_PLACEMENT": {
+      const screen = state.screens[action.screenKey];
+      if (!screen) return state;
+      return {
+        ...state,
+        screens: {
+          ...state.screens,
+          [action.screenKey]: {
+            ...screen,
+            placements: screen.placements.map((p) =>
+              p.id === action.id ? { ...p, ...action.updates } : p,
             ),
           },
         },
@@ -228,9 +270,17 @@ export function sanitizeMap(
       placements: (s.placements ?? []).filter((p) => ids.has(p.spriteId)),
     };
   }
+  let selectedPlacementId: string | null = null;
+  for (const s of Object.values(screens)) {
+    if (s.placements.some((p) => p.id === map.selectedPlacementId)) {
+      selectedPlacementId = map.selectedPlacementId;
+      break;
+    }
+  }
   return {
     ...map,
     screens,
+    selectedPlacementId,
     defaultSpriteId:
       map.defaultSpriteId && ids.has(map.defaultSpriteId)
         ? map.defaultSpriteId
@@ -276,6 +326,9 @@ export function migrateMapState(raw: unknown): MapState {
         spriteId: (p.spriteId as string) ?? (p.assetId as string) ?? "",
         x: Number(p.x) || 0,
         y: Number(p.y) || 0,
+        rotation: typeof p.rotation === "number" ? p.rotation : undefined,
+        flipX: p.flipX === true ? true : undefined,
+        flipY: p.flipY === true ? true : undefined,
       })),
     };
   }
@@ -288,6 +341,7 @@ export function migrateMapState(raw: unknown): MapState {
     defaultSpriteId: old.defaultSpriteId ?? old.mapDefaultAssetId ?? null,
     screens,
     selectedSpriteId: old.selectedSpriteId ?? old.selectedAssetId ?? null,
+    selectedPlacementId: null,
     activeTool: old.activeTool ?? INITIAL_MAP_STATE.activeTool,
     zoom: old.zoom ?? INITIAL_MAP_STATE.zoom,
     pan: old.pan ?? INITIAL_MAP_STATE.pan,
