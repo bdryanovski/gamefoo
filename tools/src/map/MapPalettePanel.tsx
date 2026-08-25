@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback } from "react";
-import type { AppState, AppAction, SpriteRegion } from "../types";
+import type { AppState, AppAction, SpriteRegion, AnimationDef } from "../types";
+import type { StateMachineDef } from "../statemachine/types";
 import type { MapAction, MapPlacement } from "./types";
-import { resolvePlacementDisplay } from "./types";
+import { resolvePlacementDisplay, resolveMachineState } from "./types";
 
 interface Props {
   state: AppState;
@@ -12,6 +13,67 @@ interface Props {
 }
 
 const THUMB = 40;
+
+/** Draw a sprite region centred and fitted into the THUMB box. */
+function drawSpriteFitted(
+  ctx: CanvasRenderingContext2D,
+  sprite: SpriteRegion,
+  img: HTMLImageElement | undefined,
+) {
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, THUMB, THUMB);
+  if (!img || !img.complete || sprite.width <= 0 || sprite.height <= 0) return;
+  const scale = Math.min(THUMB / sprite.width, THUMB / sprite.height);
+  const dw = sprite.width * scale;
+  const dh = sprite.height * scale;
+  ctx.drawImage(
+    img,
+    sprite.x, sprite.y, sprite.width, sprite.height,
+    (THUMB - dw) / 2, (THUMB - dh) / 2, dw, dh,
+  );
+}
+
+/** Clickable palette thumbnail box with an optional corner badge. */
+function ThumbShell({
+  selected,
+  title,
+  badge,
+  canvasRef,
+  onClick,
+}: {
+  selected: boolean;
+  title: string;
+  badge?: string;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      className={`asset-thumb ${selected ? "selected" : ""}`}
+      title={title}
+      onClick={onClick}
+      style={{ position: "relative" }}
+    >
+      <canvas ref={canvasRef} />
+      {badge && (
+        <span
+          style={{
+            position: "absolute",
+            top: 1,
+            right: 3,
+            fontSize: 9,
+            lineHeight: 1,
+            color: "#00ff66",
+            textShadow: "0 0 2px #000",
+            pointerEvents: "none",
+          }}
+        >
+          {badge}
+        </span>
+      )}
+    </div>
+  );
+}
 
 function SpriteThumb({
   sprite,
@@ -33,30 +95,133 @@ function SpriteThumb({
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const img = imageMap.get(sprite.imageId);
     canvas.width = THUMB;
     canvas.height = THUMB;
-    ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, THUMB, THUMB);
-    if (!img || !img.complete) return;
-    const scale = Math.min(THUMB / sprite.width, THUMB / sprite.height);
-    const dw = sprite.width * scale;
-    const dh = sprite.height * scale;
-    ctx.drawImage(
-      img,
-      sprite.x, sprite.y, sprite.width, sprite.height,
-      (THUMB - dw) / 2, (THUMB - dh) / 2, dw, dh,
-    );
+    drawSpriteFitted(ctx, sprite, imageMap.get(sprite.imageId));
   }, [sprite, imageMap]);
 
   return (
-    <div
-      className={`asset-thumb ${selected ? "selected" : ""}`}
+    <ThumbShell
+      selected={selected}
       title={title}
+      canvasRef={ref}
       onClick={onClick}
-    >
-      <canvas ref={ref} />
-    </div>
+    />
+  );
+}
+
+/**
+ * Live preview of a sprite-id sequence. A single-frame list renders a
+ * static sprite; multi-frame lists play back at `duration` s/frame.
+ */
+function FramePreview({
+  frames,
+  duration,
+  spriteById,
+  imageMap,
+  selected,
+  title,
+  badge,
+  onClick,
+}: {
+  frames: string[];
+  duration: number;
+  spriteById: Map<string, SpriteRegion>;
+  imageMap: Map<string, HTMLImageElement>;
+  selected: boolean;
+  title: string;
+  badge?: string;
+  onClick: () => void;
+}) {
+  const ref = React.useRef<HTMLCanvasElement>(null);
+  const [frame, setFrame] = React.useState(0);
+  const animated = frames.length > 1;
+
+  React.useEffect(() => {
+    setFrame(0);
+    if (!animated) return;
+    const ms = Math.max(60, (duration || 0.12) * 1000);
+    const id = setInterval(
+      () => setFrame((f) => (f + 1) % frames.length),
+      ms,
+    );
+    return () => clearInterval(id);
+  }, [animated, frames.length, duration]);
+
+  React.useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    canvas.width = THUMB;
+    canvas.height = THUMB;
+    const spriteId = frames[frame] ?? frames[0];
+    const sprite = spriteId ? spriteById.get(spriteId) : undefined;
+    if (!sprite) {
+      ctx.clearRect(0, 0, THUMB, THUMB);
+      return;
+    }
+    drawSpriteFitted(ctx, sprite, imageMap.get(sprite.imageId));
+  }, [frame, frames, spriteById, imageMap]);
+
+  return (
+    <ThumbShell
+      selected={selected}
+      title={title}
+      badge={badge}
+      canvasRef={ref}
+      onClick={onClick}
+    />
+  );
+}
+
+/** Live preview of a state machine's default (initial) state. */
+function MachineThumb({
+  machine,
+  animations,
+  spriteById,
+  imageMap,
+  selected,
+  title,
+  onClick,
+}: {
+  machine: StateMachineDef;
+  animations: AnimationDef[];
+  spriteById: Map<string, SpriteRegion>;
+  imageMap: Map<string, HTMLImageElement>;
+  selected: boolean;
+  title: string;
+  onClick: () => void;
+}) {
+  const st = resolveMachineState(machine);
+  let frames: string[] = [];
+  let duration = 0.15;
+  let badge = "⚙";
+  if (st) {
+    if (st.display.kind === "sprite" && st.display.spriteId) {
+      frames = [st.display.spriteId];
+    } else if (st.display.kind === "animation" && st.display.animationId) {
+      const animationId = st.display.animationId;
+      const anim = animations.find((a) => a.id === animationId);
+      if (anim && anim.frames.length > 0) {
+        frames = anim.frames;
+        duration = anim.duration;
+        badge = "⚙▶";
+      }
+    }
+  }
+
+  return (
+    <FramePreview
+      frames={frames}
+      duration={duration}
+      spriteById={spriteById}
+      imageMap={imageMap}
+      selected={selected}
+      title={title}
+      badge={badge}
+      onClick={onClick}
+    />
   );
 }
 
@@ -531,27 +696,45 @@ export function MapPalettePanel({
             <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
               Animations ({state.animations.length})
             </div>
-            <div className="row gap-sm" style={{ flexWrap: "wrap" }}>
-              {state.animations.map((a) => (
-                <button
-                  key={a.id}
-                  className={`btn btn-sm ${map.selected?.kind === "animation" && map.selected.id === a.id
-                      ? "active"
-                      : ""
-                    }`}
-                  onClick={() =>
-                    mapDispatch({
-                      type: "SELECT_PALETTE",
-                      selection:
-                        map.selected?.kind === "animation" && map.selected.id === a.id
-                          ? null
-                          : { kind: "animation", id: a.id },
-                    })
-                  }
-                >
-                  ▶ {a.name}
-                </button>
-              ))}
+            <div className="asset-grid">
+              {state.animations.map((a) => {
+                const sel =
+                  map.selected?.kind === "animation" && map.selected.id === a.id;
+                return (
+                  <div
+                    key={a.id}
+                    className="col"
+                    style={{ alignItems: "center", gap: 2, width: THUMB + 8 }}
+                  >
+                    <FramePreview
+                      frames={a.frames}
+                      duration={a.duration}
+                      spriteById={spriteById}
+                      imageMap={imageMap}
+                      selected={sel}
+                      badge="▶"
+                      title={`${a.name} (${a.frames.length} frames)`}
+                      onClick={() =>
+                        mapDispatch({
+                          type: "SELECT_PALETTE",
+                          selection: sel ? null : { kind: "animation", id: a.id },
+                        })
+                      }
+                    />
+                    <span
+                      className="text-xs text-dim"
+                      style={{
+                        maxWidth: THUMB + 8,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {a.name}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -560,27 +743,45 @@ export function MapPalettePanel({
             <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
               State Machines ({state.stateMachines.machines.length})
             </div>
-            <div className="row gap-sm" style={{ flexWrap: "wrap" }}>
-              {state.stateMachines.machines.map((mch) => (
-                <button
-                  key={mch.id}
-                  className={`btn btn-sm ${map.selected?.kind === "machine" && map.selected.id === mch.id
-                      ? "active"
-                      : ""
-                    }`}
-                  onClick={() =>
-                    mapDispatch({
-                      type: "SELECT_PALETTE",
-                      selection:
-                        map.selected?.kind === "machine" && map.selected.id === mch.id
-                          ? null
-                          : { kind: "machine", id: mch.id },
-                    })
-                  }
-                >
-                  ⚙ {mch.name}
-                </button>
-              ))}
+            <div className="asset-grid">
+              {state.stateMachines.machines.map((mch) => {
+                const sel =
+                  map.selected?.kind === "machine" && map.selected.id === mch.id;
+                const initial = resolveMachineState(mch);
+                return (
+                  <div
+                    key={mch.id}
+                    className="col"
+                    style={{ alignItems: "center", gap: 2, width: THUMB + 8 }}
+                  >
+                    <MachineThumb
+                      machine={mch}
+                      animations={state.animations}
+                      spriteById={spriteById}
+                      imageMap={imageMap}
+                      selected={sel}
+                      title={`${mch.name}${initial ? ` — ${initial.name}` : ""}`}
+                      onClick={() =>
+                        mapDispatch({
+                          type: "SELECT_PALETTE",
+                          selection: sel ? null : { kind: "machine", id: mch.id },
+                        })
+                      }
+                    />
+                    <span
+                      className="text-xs text-dim"
+                      style={{
+                        maxWidth: THUMB + 8,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {mch.name}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

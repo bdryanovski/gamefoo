@@ -113,7 +113,16 @@ export interface AppState {
   map: MapState;
   /** State machine slice — machines, states, transitions. */
   stateMachines: StateMachinesState;
+  /**
+   * Undo stack: past project documents, oldest → newest. Each entry is
+   * a full snapshot minus its own history. Persisted with the project
+   * so undo survives save/reload. Capped in the reducer.
+   */
+  history: ProjectSnapshot[];
 }
+
+/** A point-in-time project document — everything except the undo stack. */
+export type ProjectSnapshot = Omit<AppState, "history">;
 
 export type AppAction =
   | { type: "ADD_IMAGE"; image: LibraryImage; activate?: boolean }
@@ -139,6 +148,7 @@ export type AppAction =
   | { type: "SET_TAB"; tab: TabType }
   | { type: "SET_PROJECT_NAME"; name: string }
   | { type: "LOAD_PROJECT"; state: AppState }
+  | { type: "UNDO" }
   /** All map-editor actions, delegated to mapReducer. */
   | { type: "MAP"; action: MapAction }
   /** All state-machine actions, delegated to smReducer. */
@@ -171,6 +181,7 @@ export const INITIAL_STATE: AppState = {
   activeTab: "sprites",
   map: INITIAL_MAP_STATE,
   stateMachines: INITIAL_SM_STATE,
+  history: [],
 };
 
 interface LegacyState {
@@ -275,6 +286,9 @@ export function migrateSpriteState(raw: unknown): AppState {
         animations,
       )
       : { ...INITIAL_SM_STATE },
+    history: Array.isArray(old.history)
+      ? (old.history as ProjectSnapshot[])
+      : [],
   } satisfies AppState;
 
   delete (state as unknown as Record<string, unknown>).imageData;

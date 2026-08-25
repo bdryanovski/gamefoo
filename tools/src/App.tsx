@@ -1,5 +1,5 @@
 import React, { useReducer, useCallback, useState, useEffect, useRef, useMemo } from "react";
-import type { AppState, AppAction } from "./types";
+import type { AppState, AppAction, ProjectSnapshot } from "./types";
 import { INITIAL_STATE, migrateSpriteState } from "./types";
 import { mapReducer } from "./map/types";
 import { smReducer, sanitizeStateMachines } from "./statemachine/types";
@@ -219,8 +219,57 @@ function reducer(state: AppState, action: AppAction): AppState {
   }
 }
 
+/** Max undo snapshots kept (bounds persisted project size). */
+const HISTORY_CAP = 100;
+
+/** Top-level actions that change only view/selection — never recorded. */
+const VIEW_ACTIONS: Record<string, true> = {
+  SET_ACTIVE_IMAGE: true, SELECT_SPRITE: true, DESELECT_ALL_SPRITES: true,
+  SELECT_ANIMATION: true, SELECT_OBJECT: true, SET_TOOL: true, SET_ZOOM: true,
+  SET_PAN: true, SET_TAB: true, SET_PROJECT_NAME: true, LOAD_PROJECT: true,
+  UNDO: true,
+};
+/** Map sub-actions that change only view/selection. */
+const MAP_VIEW: Record<string, true> = {
+  SELECT_PALETTE: true, SELECT_PLACEMENT: true, SET_TOOL: true, SET_ZOOM: true,
+  SET_PAN: true, SET_ACTIVE_LEVEL: true, SET_SHOW_ALL_LEVELS: true, LOAD_MAP: true,
+};
+/** State-machine sub-actions that change only selection. */
+const SM_VIEW: Record<string, true> = { SELECT_MACHINE: true, SELECT_STATE: true };
+
+/** Does this action mutate the document (and so belong in undo history)? */
+function isRecordable(action: AppAction): boolean {
+  if (VIEW_ACTIONS[action.type]) return false;
+  if (action.type === "MAP") return !MAP_VIEW[action.action.type];
+  if (action.type === "SM") return !SM_VIEW[action.action.type];
+  return true;
+}
+
+/** Strip the undo stack — snapshots never nest their own history. */
+function snapshotOf(state: AppState): ProjectSnapshot {
+  const { history: _history, ...doc } = state;
+  return doc;
+}
+
+/**
+ * Wraps the base reducer with a persisted undo stack. Recordable
+ * (document-mutating) actions push the pre-action snapshot; UNDO pops
+ * the latest snapshot back into place until the stack is empty.
+ */
+function historyReducer(state: AppState, action: AppAction): AppState {
+  if (action.type === "UNDO") {
+    if (state.history.length === 0) return state;
+    const prev = state.history[state.history.length - 1]!;
+    return { ...prev, history: state.history.slice(0, -1) };
+  }
+  const next = reducer(state, action);
+  if (next === state || !isRecordable(action)) return next;
+  const history = [...state.history, snapshotOf(state)].slice(-HISTORY_CAP);
+  return { ...next, history };
+}
+
 export function App() {
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
   const [mode, setMode] = useState<"sprite" | "map" | "states">(() => {
     const saved = localStorage.getItem("gamefoo-tools-mode");
     return saved === "map" || saved === "states" ? saved : "sprite";
@@ -317,6 +366,29 @@ export function App() {
   useEffect(() => {
     localStorage.setItem("gamefoo-tools-mode", mode);
   }, [mode]);
+
+  // ── Global undo (Ctrl/Cmd+Z) ───────────────────────────
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== "z" || e.shiftKey || !(e.metaKey || e.ctrlKey)) {
+        return;
+      }
+      const el = e.target as HTMLElement | null;
+      if (
+        el &&
+        (el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.isContentEditable)
+      ) {
+        return;
+      }
+      e.preventDefault();
+      dispatch({ type: "UNDO" });
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // ── Upload images ──────────────────────────────────────
 

@@ -116,11 +116,11 @@ export const INITIAL_MAP_STATE: MapState = {
 
 export type MapAction =
   | {
-      type: "SET_MAP_SETTINGS";
-      blockSize?: number;
-      screenCols?: number;
-      screenRows?: number;
-    }
+    type: "SET_MAP_SETTINGS";
+    blockSize?: number;
+    screenCols?: number;
+    screenRows?: number;
+  }
   | { type: "SELECT_PALETTE"; selection: PaletteSelection }
   | { type: "SELECT_PLACEMENT"; id: string | null }
   | { type: "SET_MAP_DEFAULT"; spriteId: string | null }
@@ -133,16 +133,16 @@ export type MapAction =
   | { type: "REMOVE_PLACEMENT"; screenKey: string; id: string }
   | { type: "MOVE_PLACEMENT"; screenKey: string; id: string; x: number; y: number }
   | {
-      type: "UPDATE_PLACEMENT";
-      screenKey: string;
-      id: string;
-      updates: Partial<
-        Pick<
-          MapPlacement,
-          "x" | "y" | "level" | "rotation" | "flipX" | "flipY"
-        > & { stateName?: string }
-      >;
-    }
+    type: "UPDATE_PLACEMENT";
+    screenKey: string;
+    id: string;
+    updates: Partial<
+      Pick<
+        MapPlacement,
+        "x" | "y" | "level" | "rotation" | "flipX" | "flipY"
+      > & { stateName?: string }
+    >;
+  }
   | { type: "CLEAR_SCREEN"; x: number; y: number }
   | { type: "SET_TOOL"; tool: MapToolType }
   | { type: "SET_ZOOM"; zoom: number }
@@ -442,6 +442,8 @@ export function migrateMapState(raw: unknown): MapState {
     screenRows?: number;
     defaultSpriteId?: string | null;
     mapDefaultAssetId?: string | null;
+    selected?: unknown;
+    selectedPlacementId?: unknown;
     selectedSpriteId?: string | null;
     selectedAssetId?: string | null;
     activeLevel?: number;
@@ -482,8 +484,22 @@ export function migrateMapState(raw: unknown): MapState {
     };
   }
 
-  const legacySelected =
-    old.selectedSpriteId ?? old.selectedAssetId ?? null;
+  // New format carries a PaletteSelection; older data only a sprite id.
+  const rawSel = old.selected as
+    | { kind?: unknown; id?: unknown }
+    | null
+    | undefined;
+  const selected: PaletteSelection =
+    rawSel &&
+      typeof rawSel === "object" &&
+      (rawSel.kind === "sprite" ||
+        rawSel.kind === "animation" ||
+        rawSel.kind === "machine") &&
+      typeof rawSel.id === "string"
+      ? { kind: rawSel.kind, id: rawSel.id }
+      : (old.selectedSpriteId ?? old.selectedAssetId)
+        ? { kind: "sprite", id: (old.selectedSpriteId ?? old.selectedAssetId)! }
+        : INITIAL_MAP_STATE.selected;
 
   return {
     ...INITIAL_MAP_STATE,
@@ -492,9 +508,11 @@ export function migrateMapState(raw: unknown): MapState {
     screenRows: old.screenRows ?? INITIAL_MAP_STATE.screenRows,
     defaultSpriteId: old.defaultSpriteId ?? old.mapDefaultAssetId ?? null,
     screens,
-    selected: legacySelected
-      ? { kind: "sprite", id: legacySelected }
-      : INITIAL_MAP_STATE.selected,
+    selected,
+    selectedPlacementId:
+      typeof old.selectedPlacementId === "string"
+        ? old.selectedPlacementId
+        : INITIAL_MAP_STATE.selectedPlacementId,
     activeLevel: old.activeLevel ?? INITIAL_MAP_STATE.activeLevel,
     showAllLevels: old.showAllLevels ?? INITIAL_MAP_STATE.showAllLevels,
     activeTool: old.activeTool ?? INITIAL_MAP_STATE.activeTool,

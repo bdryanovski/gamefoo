@@ -132,6 +132,14 @@ export function MapEditor({
         </button>
         <button
           className="btn btn-sm title-btn"
+          onClick={() => dispatch({ type: "UNDO" })}
+          disabled={state.history.length === 0}
+          title="Undo — Ctrl/Cmd+Z"
+        >
+          ↶ Undo{state.history.length > 0 ? ` (${state.history.length})` : ""}
+        </button>
+        <button
+          className="btn btn-sm title-btn"
           onClick={() => onSave("quick")}
           disabled={saving}
           title="QuickSave — Ctrl/Cmd+S (no export screen)"
