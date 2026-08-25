@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import type { AppState, AppAction, SpriteRegion } from "../types";
 import type { MapAction, MapPlacement } from "./types";
+import { resolvePlacementDisplay } from "./types";
 
 interface Props {
   state: AppState;
@@ -76,9 +77,8 @@ export function MapPalettePanel({
     [state.images],
   );
 
-  const selectedSprite = map.selectedSpriteId
-    ? spriteById.get(map.selectedSpriteId)
-    : undefined;
+  const selectedSpriteId = map.selected?.kind === "sprite" ? map.selected.id : null;
+  const selectedSprite = selectedSpriteId ? spriteById.get(selectedSpriteId) : undefined;
 
   // Group sprites: explicit sprite.group, else the source image name.
   const groups = useMemo(() => {
@@ -106,9 +106,15 @@ export function MapPalettePanel({
     return null;
   }, [map.selectedPlacementId, map.screens]);
 
-  const selSprite = selectedPlacement
-    ? spriteById.get(selectedPlacement.placement.spriteId)
-    : undefined;
+  const selDisplay = selectedPlacement
+    ? resolvePlacementDisplay(
+      selectedPlacement.placement,
+      state.sprites,
+      state.animations,
+      state.stateMachines.machines,
+    )
+    : null;
+  const selSprite = selDisplay?.spriteId ? spriteById.get(selDisplay.spriteId) : undefined;
 
   const updatePlacement = useCallback(
     (
@@ -198,6 +204,35 @@ export function MapPalettePanel({
             }
           />
         </div>
+        <div className="field-row">
+          <span className="field-label">Level:</span>
+          <button
+            className="btn btn-sm"
+            onClick={() =>
+              mapDispatch({ type: "SET_ACTIVE_LEVEL", level: map.activeLevel - 1 })
+            }
+            disabled={map.activeLevel <= 0}
+          >
+            −
+          </button>
+          <span className="text-xs">{map.activeLevel}</span>
+          <button
+            className="btn btn-sm"
+            onClick={() =>
+              mapDispatch({ type: "SET_ACTIVE_LEVEL", level: map.activeLevel + 1 })
+            }
+          >
+            +
+          </button>
+          <button
+            className={`btn btn-sm ${map.showAllLevels ? "active" : ""}`}
+            onClick={() =>
+              mapDispatch({ type: "SET_SHOW_ALL_LEVELS", show: !map.showAllLevels })
+            }
+          >
+            {map.showAllLevels ? "All" : "Active"}
+          </button>
+        </div>
         <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
           Screen = {map.screenCols * map.blockSize}×
           {map.screenRows * map.blockSize}px ({map.screenCols}×
@@ -216,11 +251,11 @@ export function MapPalettePanel({
         <div className="row gap-sm" style={{ padding: 4 }}>
           <button
             className="btn btn-sm"
-            disabled={!map.selectedSpriteId}
+            disabled={!selectedSpriteId}
             onClick={() =>
               mapDispatch({
                 type: "SET_MAP_DEFAULT",
-                spriteId: map.selectedSpriteId,
+                spriteId: selectedSpriteId,
               })
             }
           >
@@ -241,24 +276,23 @@ export function MapPalettePanel({
         <div className="section-title">Screen {activeScreenKey ?? "—"}</div>
         <div className="text-xs" style={{ padding: "2px 4px" }}>
           {activeScreen
-            ? `Fill: ${
-                activeScreen.defaultSpriteId
-                  ? spriteById.get(activeScreen.defaultSpriteId)?.name ?? "?"
-                  : "none"
-              } · ${activeScreen.placements.length} placements`
+            ? `Fill: ${activeScreen.defaultSpriteId
+              ? spriteById.get(activeScreen.defaultSpriteId)?.name ?? "?"
+              : "none"
+            } · ${activeScreen.placements.length} placements`
             : "Click a screen on the map to select it (Fill tool sets its tile)"}
         </div>
         <div className="row gap-sm" style={{ padding: 4, flexWrap: "wrap" }}>
           <button
             className="btn btn-sm"
-            disabled={!activeScreen || !map.selectedSpriteId}
+            disabled={!activeScreen || !selectedSpriteId}
             onClick={() =>
               activeScreen &&
               mapDispatch({
                 type: "SET_SCREEN_DEFAULT",
                 x: activeScreen.x,
                 y: activeScreen.y,
-                spriteId: map.selectedSpriteId,
+                spriteId: selectedSpriteId,
               })
             }
           >
@@ -458,12 +492,15 @@ export function MapPalettePanel({
                   key={s.id}
                   sprite={s}
                   imageMap={imageMap}
-                  selected={map.selectedSpriteId === s.id}
+                  selected={map.selected?.kind === "sprite" && map.selected.id === s.id}
                   title={`${s.name} (${s.width}×${s.height})`}
                   onClick={() =>
                     mapDispatch({
-                      type: "SELECT_SPRITE",
-                      spriteId: map.selectedSpriteId === s.id ? null : s.id,
+                      type: "SELECT_PALETTE",
+                      selection:
+                        map.selected?.kind === "sprite" && map.selected.id === s.id
+                          ? null
+                          : { kind: "sprite", id: s.id },
                     })
                   }
                 />
@@ -475,6 +512,76 @@ export function MapPalettePanel({
           <div className="text-xs" style={{ padding: "4px 4px 0" }}>
             Selected: {selectedSprite.name} ({selectedSprite.width}×
             {selectedSprite.height}px)
+          </div>
+        )}
+      </div>
+
+      {/* Objects palette — animations & state machines */}
+      <div className="section">
+        <div className="section-title">
+          Objects ({state.animations.length + state.stateMachines.machines.length})
+        </div>
+        {state.animations.length === 0 && state.stateMachines.machines.length === 0 && (
+          <div className="text-xs text-dim" style={{ padding: 4 }}>
+            No animations or state machines yet.
+          </div>
+        )}
+        {state.animations.length > 0 && (
+          <div style={{ padding: "4px 0" }}>
+            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+              Animations ({state.animations.length})
+            </div>
+            <div className="row gap-sm" style={{ flexWrap: "wrap" }}>
+              {state.animations.map((a) => (
+                <button
+                  key={a.id}
+                  className={`btn btn-sm ${map.selected?.kind === "animation" && map.selected.id === a.id
+                      ? "active"
+                      : ""
+                    }`}
+                  onClick={() =>
+                    mapDispatch({
+                      type: "SELECT_PALETTE",
+                      selection:
+                        map.selected?.kind === "animation" && map.selected.id === a.id
+                          ? null
+                          : { kind: "animation", id: a.id },
+                    })
+                  }
+                >
+                  ▶ {a.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {state.stateMachines.machines.length > 0 && (
+          <div style={{ padding: "4px 0" }}>
+            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+              State Machines ({state.stateMachines.machines.length})
+            </div>
+            <div className="row gap-sm" style={{ flexWrap: "wrap" }}>
+              {state.stateMachines.machines.map((mch) => (
+                <button
+                  key={mch.id}
+                  className={`btn btn-sm ${map.selected?.kind === "machine" && map.selected.id === mch.id
+                      ? "active"
+                      : ""
+                    }`}
+                  onClick={() =>
+                    mapDispatch({
+                      type: "SELECT_PALETTE",
+                      selection:
+                        map.selected?.kind === "machine" && map.selected.id === mch.id
+                          ? null
+                          : { kind: "machine", id: mch.id },
+                    })
+                  }
+                >
+                  ⚙ {mch.name}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>

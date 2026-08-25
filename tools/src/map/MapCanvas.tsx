@@ -1,6 +1,11 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import type { MapState, MapAction } from "./types";
-import { screenKey } from "./types";
+import type {
+  MapState,
+  MapAction,
+  MapPlacement,
+  PaletteSelection,
+} from "./types";
+import { screenKey, resolvePlacementDisplay } from "./types";
 import type { AppState, SpriteRegion } from "../types";
 
 /** World-space gap between screens (px in image space). */
@@ -26,6 +31,11 @@ interface ScreenRect {
   h: number;
 }
 
+interface DisplayRef {
+  spriteId: string | null;
+  animationId: string | null;
+}
+
 export function MapCanvas({
   state,
   map,
@@ -40,23 +50,45 @@ export function MapCanvas({
   const rafRef = useRef<number>(0);
 
   const spriteById = new Map(state.sprites.map((s) => [s.id, s]));
+  const animById = new Map(state.animations.map((a) => [a.id, a]));
+  const machineById = new Map(
+    state.stateMachines.machines.map((m) => [m.id, m]),
+  );
+
+  const displayOf = useCallback(
+    (p: MapPlacement): DisplayRef =>
+      resolvePlacementDisplay(
+        p,
+        state.sprites,
+        state.animations,
+        state.stateMachines.machines,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.sprites, state.animations, state.stateMachines.machines],
+  );
+
+  /** Static size reference for hit-testing / outlines. */
+  const sizeSpriteOf = useCallback(
+    (p: MapPlacement): SpriteRegion | null => {
+      const d = displayOf(p);
+      return d.spriteId ? (spriteById.get(d.spriteId) ?? null) : null;
+    },
+    [displayOf, spriteById],
+  );
 
   // ── Pan / interaction state ────────────────────────────
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0 });
   const [spaceHeld, setSpaceHeld] = useState(false);
-  /** Move tool: the placement being dragged, its source screen, and the
-   *  cursor offset within it. */
+  /** Move tool: the placement being dragged. */
   const movingRef = useRef<{
     id: string;
     screenKey: string;
-    offsetX: number;
-    offsetY: number;
   } | null>(null);
   const [movePreview, setMovePreview] = useState<{
     id: string;
     screenKey: string;
-    spriteId: string;
+    spriteId: string | null;
     x: number;
     y: number;
     rotation?: number;
@@ -94,6 +126,37 @@ export function MapCanvas({
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [map.screens, screenW, screenH],
+  );
+
+  /**
+   * Visible in the current view mode. In "All" mode every level shows;
+   * otherwise the active level plus every level below it (as dimmed
+   * positioning reference). Levels above the active level are hidden.
+   */
+  const levelVisible = useCallback(
+    (level: number) =>
+      map.showAllLevels || level <= map.activeLevel,
+    [map.showAllLevels, map.activeLevel],
+  );
+
+  /** Interactive (hit-testable) — only the active level, unless "All". */
+  const levelInteractive = useCallback(
+    (level: number) => map.showAllLevels || level === map.activeLevel,
+    [map.showAllLevels, map.activeLevel],
+  );
+
+  /**
+   * Render opacity for a level. Full opacity in "All" mode and for the
+   * active level. Lower levels dim progressively with depth so stacked
+   * levels stay distinguishable while positioning.
+   */
+  const alphaForLevel = useCallback(
+    (level: number) => {
+      if (map.showAllLevels || level === map.activeLevel) return 1;
+      const depth = map.activeLevel - level; // >= 1 (only below reaches here)
+      return Math.max(0.15, 0.5 - (depth - 1) * 0.12);
+    },
+    [map.showAllLevels, map.activeLevel],
   );
 
   // ── ResizeObserver ─────────────────────────────────────
@@ -145,6 +208,31 @@ export function MapCanvas({
     };
   }, []);
 
+  // ── Live animation tick ────────────────────────────────
+
+  const [tick, setTick] = useState(0);
+  const hasAnimatedPlacements = React.useMemo(() => {
+    for (const s of Object.values(map.screens)) {
+      for (const p of s.placements) {
+        if (!levelVisible(p.level)) continue;
+        if (displayOf(p).animationId) return true;
+      }
+    }
+    return false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map.screens, map.showAllLevels, map.activeLevel, state.animations, state.stateMachines.machines, displayOf]);
+
+  useEffect(() => {
+    if (!hasAnimatedPlacements) return;
+    let raf = 0;
+    const loop = (t: number) => {
+      setTick(t);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [hasAnimatedPlacements]);
+
   // ── Rendering ──────────────────────────────────────────
 
   useEffect(() => {
@@ -153,13 +241,21 @@ export function MapCanvas({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const frameIndexOf = (animationId: string | null): number => {
+      if (!animationId) return -1;
+      const anim = animById.get(animationId);
+      if (!anim || anim.frames.length === 0 || anim.duration <= 0) return -1;
+      return Math.floor(tick / 1000 / anim.duration) % anim.frames.length;
+    };
+
     const drawSprite = (
-      spriteId: string,
+      spriteId: string | null,
       dx: number,
       dy: number,
       alpha = 1,
       transform?: { rotation?: number; flipX?: boolean; flipY?: boolean },
     ) => {
+      if (!spriteId) return;
       const sprite = spriteById.get(spriteId);
       if (!sprite) return;
       const img = imageMap.get(sprite.imageId);
@@ -191,6 +287,31 @@ export function MapCanvas({
         );
       }
       ctx.globalAlpha = 1;
+    };
+
+    /** Draw a placement: animated kinds play live, machines show
+     *  their current state; a ▶ badge marks animated objects. */
+    const drawPlacement = (p: MapPlacement, alpha = 1) => {
+      const d = displayOf(p);
+      let spriteId = d.spriteId;
+      if (d.animationId) {
+        const anim = animById.get(d.animationId);
+        const fi = frameIndexOf(d.animationId);
+        if (anim && fi >= 0) {
+          spriteId = anim.frames[fi] ?? d.spriteId;
+        }
+      }
+      drawSprite(spriteId, p.x, p.y, alpha, p);
+
+      if (d.animationId || p.kind === "machine") {
+        const sprite = spriteId ? spriteById.get(spriteId) : null;
+        const w = sprite?.width ?? map.blockSize;
+        ctx.fillStyle = "#00ff66";
+        ctx.font = `bold ${Math.max(7, 9 / map.zoom)}px monospace`;
+        ctx.textBaseline = "top";
+        ctx.fillText("▶", p.x + w - 8 / map.zoom, p.y + 1 / map.zoom);
+        ctx.textBaseline = "alphabetic";
+      }
     };
 
     cancelAnimationFrame(rafRef.current);
@@ -255,18 +376,41 @@ export function MapCanvas({
           ctx.stroke();
         }
 
-        // Placements (clipped to the screen) — skip the one being moved
+        // Placements sorted by level (stable: insertion order within a
+        // level). Levels above the active one are hidden; the active
+        // level renders solid while lower levels dim with depth.
         ctx.beginPath();
         ctx.rect(0, 0, r.w, r.h);
         ctx.clip();
-        for (const p of r.screen.placements) {
+        const sorted = [...r.screen.placements].sort(
+          (a, b) => a.level - b.level,
+        );
+        for (const p of sorted) {
           if (movePreview && p.id === movePreview.id) continue;
-          drawSprite(p.spriteId, p.x, p.y, 1, p);
+          if (!levelVisible(p.level)) continue;
+          const alpha = alphaForLevel(p.level);
+          drawPlacement(p, alpha);
         }
 
-        // Move-tool preview: ghost of the dragged placement at the target cell
-        if (movePreview && movePreview.screenKey === screenKey(r.screen.x, r.screen.y)) {
-          const mpSprite = spriteById.get(movePreview.spriteId);
+        // Level badge on each screen (top-right)
+        ctx.fillStyle = "#00ff66";
+        ctx.font = `bold ${Math.max(9, 10 / map.zoom)}px monospace`;
+        ctx.textBaseline = "top";
+        ctx.fillText(
+          map.showAllLevels ? "L:all" : `L:${map.activeLevel}`,
+          r.w - (map.showAllLevels ? 46 : 34) / map.zoom,
+          3 / map.zoom,
+        );
+        ctx.textBaseline = "alphabetic";
+
+        // Move-tool preview: ghost of the dragged placement
+        if (
+          movePreview &&
+          movePreview.screenKey === screenKey(r.screen.x, r.screen.y)
+        ) {
+          const mpSprite = movePreview.spriteId
+            ? spriteById.get(movePreview.spriteId)
+            : null;
           const mw = mpSprite?.width ?? map.blockSize;
           const mh = mpSprite?.height ?? map.blockSize;
           drawSprite(
@@ -276,7 +420,6 @@ export function MapCanvas({
             0.6,
             movePreview,
           );
-          // Outline (rotated with the placement)
           ctx.save();
           ctx.translate(movePreview.x + mw / 2, movePreview.y + mh / 2);
           if (movePreview.rotation) {
@@ -291,13 +434,17 @@ export function MapCanvas({
         // Selected-placement outline (edit indicator)
         const selPlacement =
           map.selectedPlacementId &&
-          r.screen.placements.some((p) => p.id === map.selectedPlacementId)
+            r.screen.placements.some((p) => p.id === map.selectedPlacementId)
             ? r.screen.placements.find(
-                (p) => p.id === map.selectedPlacementId,
-              )
+              (p) => p.id === map.selectedPlacementId,
+            )
             : null;
-        if (selPlacement && !(movePreview && movePreview.id === selPlacement.id)) {
-          const sSprite = spriteById.get(selPlacement.spriteId);
+        if (
+          selPlacement &&
+          levelVisible(selPlacement.level) &&
+          !(movePreview && movePreview.id === selPlacement.id)
+        ) {
+          const sSprite = sizeSpriteOf(selPlacement);
           const sw = sSprite?.width ?? map.blockSize;
           const sh = sSprite?.height ?? map.blockSize;
           ctx.save();
@@ -313,21 +460,27 @@ export function MapCanvas({
           ctx.restore();
         }
 
-        // Ghost preview of the selected sprite at hover cell
+        // Ghost preview of the selected palette item at hover cell
         if (
           hover &&
           hover.screenKey === screenKey(r.screen.x, r.screen.y) &&
           map.activeTool === "paint" &&
-          map.selectedSpriteId
+          map.selected
         ) {
           const col = Math.floor(hover.localX / map.blockSize);
           const row = Math.floor(hover.localY / map.blockSize);
-          drawSprite(
-            map.selectedSpriteId,
-            col * map.blockSize,
-            row * map.blockSize,
-            0.5,
-          );
+          const ghost = resolveSelectionDisplay(map.selected);
+          const gSprite = ghost?.spriteId
+            ? spriteById.get(ghost.spriteId)
+            : null;
+          if (gSprite) {
+            drawSprite(
+              ghost?.spriteId ?? null,
+              col * map.blockSize,
+              row * map.blockSize,
+              0.5,
+            );
+          }
         }
 
         ctx.restore();
@@ -353,7 +506,44 @@ export function MapCanvas({
 
     return () => cancelAnimationFrame(rafRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, canvasSize, hover, imageMap, state.sprites, movePreview]);
+  }, [
+    map,
+    canvasSize,
+    hover,
+    imageMap,
+    state.sprites,
+    state.animations,
+    state.stateMachines,
+    movePreview,
+    tick,
+  ]);
+
+  /** Resolve a palette selection to its display (for ghost preview). */
+  const resolveSelectionDisplay = useCallback(
+    (sel: PaletteSelection): DisplayRef | null => {
+      if (!sel) return null;
+      if (sel.kind === "sprite") return { spriteId: sel.id, animationId: null };
+      if (sel.kind === "animation") {
+        const anim = animById.get(sel.id);
+        return { spriteId: anim?.frames[0] ?? null, animationId: sel.id };
+      }
+      const machine = machineById.get(sel.id);
+      if (!machine) return null;
+      const st =
+        machine.states.find((s) => s.id === machine.initialStateId) ??
+        machine.states[0];
+      if (!st) return null;
+      if (st.display.kind === "sprite") {
+        return { spriteId: st.display.spriteId, animationId: null };
+      }
+      const anim = st.display.animationId
+        ? animById.get(st.display.animationId)
+        : undefined;
+      return { spriteId: anim?.frames[0] ?? null, animationId: anim?.id ?? null };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.animations, state.stateMachines.machines],
+  );
 
   // ── Mouse handlers ─────────────────────────────────────
 
@@ -379,9 +569,15 @@ export function MapCanvas({
       if (!r) return null;
       const localX = wx - r.wx;
       const localY = wy - r.wy;
-      for (let i = r.screen.placements.length - 1; i >= 0; i--) {
-        const p = r.screen.placements[i]!;
-        const sprite = spriteById.get(p.spriteId);
+      // Topmost = highest level, then latest insertion (reverse walk of
+      // the level-sorted list).
+      const sorted = [...r.screen.placements].sort(
+        (a, b) => a.level - b.level,
+      );
+      for (let i = sorted.length - 1; i >= 0; i--) {
+        const p = sorted[i]!;
+        if (!levelInteractive(p.level)) continue;
+        const sprite = sizeSpriteOf(p);
         if (!sprite) continue;
         const rot = ((p.rotation ?? 0) * Math.PI) / 180;
         if (rot === 0) {
@@ -394,7 +590,6 @@ export function MapCanvas({
             return p;
           }
         } else {
-          // Rotate the point into the placement's local frame.
           const cx = p.x + sprite.width / 2;
           const cy = p.y + sprite.height / 2;
           const dx = localX - cx;
@@ -412,7 +607,34 @@ export function MapCanvas({
       return null;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [screenRects, state.sprites],
+    [screenRects, state.sprites, state.animations, state.stateMachines.machines, map.showAllLevels, map.activeLevel],
+  );
+
+  /** Build a new placement for the current palette selection. */
+  const makePlacement = useCallback(
+    (col: number, row: number): MapPlacement | null => {
+      const sel = map.selected;
+      if (!sel) return null;
+      const id = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const x = col * map.blockSize;
+      const y = row * map.blockSize;
+      const level = map.activeLevel;
+      if (sel.kind === "sprite") {
+        return { id, kind: "sprite", spriteId: sel.id, x, y, level };
+      }
+      if (sel.kind === "animation") {
+        return { id, kind: "animation", animationId: sel.id, x, y, level };
+      }
+      return {
+        id,
+        kind: "machine",
+        machineId: sel.id,
+        x,
+        y,
+        level,
+      };
+    },
+    [map.selected, map.blockSize, map.activeLevel],
   );
 
   const applyTool = useCallback(
@@ -436,26 +658,39 @@ export function MapCanvas({
 
       const tool = map.activeTool;
 
-      if (tool === "fill" && map.selectedSpriteId) {
-        mapDispatch({
-          type: "SET_SCREEN_DEFAULT",
-          x: r.screen.x,
-          y: r.screen.y,
-          spriteId: map.selectedSpriteId,
-        });
+      if (tool === "fill") {
+        if (map.selected?.kind === "sprite") {
+          mapDispatch({
+            type: "SET_SCREEN_DEFAULT",
+            x: r.screen.x,
+            y: r.screen.y,
+            spriteId: map.selected.id,
+          });
+        }
         return;
       }
 
       if (tool === "pick") {
         const p = findTopmostPlacement(key, world.x, world.y);
         if (p) {
-          mapDispatch({ type: "SELECT_SPRITE", spriteId: p.spriteId });
+          mapDispatch({
+            type: "SELECT_PALETTE",
+            selection:
+              p.kind === "sprite"
+                ? { kind: "sprite", id: p.spriteId }
+                : p.kind === "animation"
+                  ? { kind: "animation", id: p.animationId }
+                  : { kind: "machine", id: p.machineId },
+          });
           mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
         } else {
           if (r.screen.defaultSpriteId) {
             mapDispatch({
-              type: "SELECT_SPRITE",
-              spriteId: r.screen.defaultSpriteId,
+              type: "SELECT_PALETTE",
+              selection: {
+                kind: "sprite",
+                id: r.screen.defaultSpriteId,
+              },
             });
           }
           mapDispatch({ type: "SELECT_PLACEMENT", id: null });
@@ -479,16 +714,11 @@ export function MapCanvas({
           return;
         }
         mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
-        movingRef.current = {
-          id: p.id,
-          screenKey: key,
-          offsetX: localX - p.x,
-          offsetY: localY - p.y,
-        };
+        movingRef.current = { id: p.id, screenKey: key };
         setMovePreview({
           id: p.id,
           screenKey: key,
-          spriteId: p.spriteId,
+          spriteId: displayOf(p).spriteId,
           x: p.x,
           y: p.y,
           rotation: p.rotation,
@@ -499,18 +729,12 @@ export function MapCanvas({
         return;
       }
 
-      // Paint: click places one sprite per click (no drag painting).
-      if (tool === "paint" && map.selectedSpriteId) {
-        mapDispatch({
-          type: "ADD_PLACEMENT",
-          screenKey: key,
-          placement: {
-            id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-            spriteId: map.selectedSpriteId,
-            x: col * map.blockSize,
-            y: row * map.blockSize,
-          },
-        });
+      // Paint: click places one item per click at the active level.
+      if (tool === "paint") {
+        const placement = makePlacement(col, row);
+        if (placement) {
+          mapDispatch({ type: "ADD_PLACEMENT", screenKey: key, placement });
+        }
       }
     },
     [
@@ -519,6 +743,8 @@ export function MapCanvas({
       getWorldPos,
       findScreenAt,
       findTopmostPlacement,
+      makePlacement,
+      displayOf,
       onStatus,
       onActiveScreen,
     ],
@@ -566,28 +792,21 @@ export function MapCanvas({
           return;
         }
         const key = screenKey(r.screen.x, r.screen.y);
-        const spriteId =
-          map.screens[moving.screenKey]?.placements.find(
-            (p) => p.id === moving.id,
-          )?.spriteId ?? "";
-        const original = map.screens[moving.screenKey]?.placements.find(
-          (p) => p.id === moving.id,
-        );
         const localX = world.x - r.wx;
         const localY = world.y - r.wy;
         const nx = Math.round(localX / map.blockSize) * map.blockSize;
         const ny = Math.round(localY / map.blockSize) * map.blockSize;
-        setMovePreview({
-          id: moving.id,
-          screenKey: key,
-          spriteId,
-          x: nx,
-          y: ny,
-          rotation: original?.rotation,
-          flipX: original?.flipX,
-          flipY: original?.flipY,
-          valid: moving.screenKey === key,
-        });
+        setMovePreview((prev) =>
+          prev
+            ? {
+              ...prev,
+              screenKey: key,
+              x: nx,
+              y: ny,
+              valid: moving.screenKey === key,
+            }
+            : prev,
+        );
         onStatus({
           screenKey: key,
           block: {
@@ -645,7 +864,7 @@ export function MapCanvas({
     }
   }, [mapDispatch, map.screens, movePreview]);
 
-  // Stop panning even when the button is released outside the canvas.
+  // Stop panning / commit moves even off-canvas.
   useEffect(() => {
     window.addEventListener("mouseup", handleMouseUp);
     return () => window.removeEventListener("mouseup", handleMouseUp);

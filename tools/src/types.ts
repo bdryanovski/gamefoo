@@ -261,14 +261,19 @@ export function migrateSpriteState(raw: unknown): AppState {
         ? (old.activeTab as AppState["activeTab"])
         : INITIAL_STATE.activeTab,
     map: old.map
-      ? sanitizeMap(migrateMapState(old.map), sprites)
+      ? sanitizeMap(
+        migrateMapState(old.map),
+        sprites,
+        animations,
+        (old.stateMachines as StateMachinesState | undefined)?.machines ?? [],
+      )
       : { ...INITIAL_MAP_STATE, screens: {} },
     stateMachines: old.stateMachines
       ? sanitizeStateMachines(
-          old.stateMachines as StateMachinesState,
-          sprites,
-          animations,
-        )
+        old.stateMachines as StateMachinesState,
+        sprites,
+        animations,
+      )
       : { ...INITIAL_SM_STATE },
   } satisfies AppState;
 

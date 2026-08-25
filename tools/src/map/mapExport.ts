@@ -1,5 +1,5 @@
 import type { AppState } from "../types";
-import { screenKey } from "./types";
+import { screenKey, resolvePlacementDisplay } from "./types";
 import { downloadJSON } from "../utils/export";
 
 function baseNameOf(state: AppState): string {
@@ -52,9 +52,15 @@ export function exportMap(state: AppState) {
         {
           defaultSpriteId: s.defaultSpriteId,
           placements: s.placements.map((p) => ({
-            spriteId: p.spriteId,
+            kind: p.kind,
+            ...(p.kind === "sprite" ? { spriteId: p.spriteId } : {}),
+            ...(p.kind === "animation" ? { animationId: p.animationId } : {}),
+            ...(p.kind === "machine"
+              ? { machineId: p.machineId, ...(p.stateName ? { stateName: p.stateName } : {}) }
+              : {}),
             x: p.x,
             y: p.y,
+            level: p.level,
             ...(p.rotation ? { rotation: p.rotation } : {}),
             ...(p.flipX ? { flipX: true } : {}),
             ...(p.flipY ? { flipY: true } : {}),
@@ -72,18 +78,38 @@ export function exportMap(state: AppState) {
 export function exportMapScreens(state: AppState) {
   const m = state.map;
   const names = new Map(state.sprites.map((s) => [s.id, s.name]));
-  const out: Record<string, { fill: string | null; tiles: Array<{ sprite: string; x: number; y: number }> }> = {};
+  const out: Record<
+    string,
+    {
+      fill: string | null;
+      tiles: Array<{ kind: string; name: string; x: number; y: number; level: number }>;
+    }
+  > = {};
   for (const s of Object.values(m.screens)) {
     out[screenKey(s.x, s.y)] = {
       fill: s.defaultSpriteId ? (names.get(s.defaultSpriteId) ?? null) : null,
-      tiles: s.placements.map((p) => ({
-        sprite: names.get(p.spriteId) ?? p.spriteId,
-        x: p.x,
-        y: p.y,
-        ...(p.rotation ? { rotation: p.rotation } : {}),
-        ...(p.flipX ? { flipX: true } : {}),
-        ...(p.flipY ? { flipY: true } : {}),
-      })),
+      tiles: s.placements.map((p) => {
+        const display = resolvePlacementDisplay(
+          p,
+          state.sprites,
+          state.animations,
+          state.stateMachines.machines,
+        );
+        const spriteName = display.spriteId ? (names.get(display.spriteId) ?? null) : null;
+        const animName = display.animationId
+          ? (state.animations.find((a) => a.id === display.animationId)?.name ?? null)
+          : null;
+        return {
+          kind: p.kind,
+          name: spriteName ?? animName ?? "?",
+          x: p.x,
+          y: p.y,
+          level: p.level,
+          ...(p.rotation ? { rotation: p.rotation } : {}),
+          ...(p.flipX ? { flipX: true } : {}),
+          ...(p.flipY ? { flipY: true } : {}),
+        };
+      }),
     };
   }
   return out;
@@ -124,7 +150,13 @@ export function exportMapObjects(state: AppState): MapObjectExport[] {
   const objects: MapObjectExport[] = [];
   for (const s of Object.values(m.screens)) {
     s.placements.forEach((p, z) => {
-      const sprite = sprites.get(p.spriteId);
+      const display = resolvePlacementDisplay(
+        p,
+        state.sprites,
+        state.animations,
+        state.stateMachines.machines,
+      );
+      const sprite = display.spriteId ? sprites.get(display.spriteId) : undefined;
       if (!sprite) return;
       objects.push({
         name: sprite.name,

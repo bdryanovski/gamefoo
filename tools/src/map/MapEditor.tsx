@@ -66,6 +66,14 @@ export function MapEditor({
         mapDispatch({ type: "SET_TOOL", tool });
         return;
       }
+      if (k === "[") {
+        mapDispatch({ type: "SET_ACTIVE_LEVEL", level: state.map.activeLevel - 1 });
+        return;
+      }
+      if (k === "]") {
+        mapDispatch({ type: "SET_ACTIVE_LEVEL", level: state.map.activeLevel + 1 });
+        return;
+      }
       // Placement transforms when one is selected.
       const pid = state.map.selectedPlacementId;
       if (!pid || (k !== "r" && k !== "x" && k !== "y")) return;
@@ -101,8 +109,12 @@ export function MapEditor({
     return () => window.removeEventListener("keydown", handleKey);
   }, [mapDispatch, state.map]);
 
-  const selectedSpriteName = map.selectedSpriteId
-    ? (state.sprites.find((s) => s.id === map.selectedSpriteId)?.name ?? "?")
+  const selectedSpriteName = map.selected
+    ? map.selected.kind === "sprite"
+      ? (state.sprites.find((s) => s.id === map.selected!.id)?.name ?? "?")
+      : map.selected.kind === "animation"
+        ? (state.animations.find((a) => a.id === map.selected!.id)?.name ?? "?")
+        : (state.stateMachines.machines.find((m) => m.id === map.selected!.id)?.name ?? "?")
     : "—";
 
   const screenCount = Object.keys(map.screens).length;
