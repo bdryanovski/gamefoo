@@ -1,6 +1,15 @@
 import { uid } from "./utils/uid";
 import { INITIAL_MAP_STATE, migrateMapState, sanitizeMap } from "./map/types";
 import type { MapAction, MapState } from "./map/types";
+import {
+  INITIAL_SM_STATE,
+  sanitizeStateMachines,
+  smReducer,
+} from "./statemachine/types";
+import type {
+  SMAction,
+  StateMachinesState,
+} from "./statemachine/types";
 
 /**
  * An image in the shared asset library. The sprite editor cuts sprites
@@ -102,6 +111,8 @@ export interface AppState {
   activeTab: TabType;
   /** Map editor slice — screens, placements, view state. */
   map: MapState;
+  /** State machine slice — machines, states, transitions. */
+  stateMachines: StateMachinesState;
 }
 
 export type AppAction =
@@ -129,7 +140,9 @@ export type AppAction =
   | { type: "SET_PROJECT_NAME"; name: string }
   | { type: "LOAD_PROJECT"; state: AppState }
   /** All map-editor actions, delegated to mapReducer. */
-  | { type: "MAP"; action: MapAction };
+  | { type: "MAP"; action: MapAction }
+  /** All state-machine actions, delegated to smReducer. */
+  | { type: "SM"; action: SMAction };
 
 export const DEFAULT_GRID: GridSettings = {
   enabled: true,
@@ -157,6 +170,7 @@ export const INITIAL_STATE: AppState = {
   pan: { x: 0, y: 0 },
   activeTab: "sprites",
   map: INITIAL_MAP_STATE,
+  stateMachines: INITIAL_SM_STATE,
 };
 
 interface LegacyState {
@@ -164,7 +178,9 @@ interface LegacyState {
   images?: LibraryImage[];
   activeImageId?: string | null;
   map?: unknown;
+  stateMachines?: unknown;
   sprites?: Array<SpriteRegion & { imageId?: string }>;
+  animations?: AnimationDef[];
   grid?: Partial<GridSettings>;
   [key: string]: unknown;
 }
@@ -210,6 +226,10 @@ export function migrateSpriteState(raw: unknown): AppState {
       ? old.activeImageId
       : (images[0]?.id ?? null);
 
+  const animations: AnimationDef[] = Array.isArray(old.animations)
+    ? old.animations
+    : [];
+
   const state = {
     ...INITIAL_STATE,
     projectName:
@@ -218,7 +238,7 @@ export function migrateSpriteState(raw: unknown): AppState {
     activeImageId,
     grid: { ...DEFAULT_GRID, ...(old.grid ?? {}) },
     sprites,
-    animations: Array.isArray(old.animations) ? old.animations : [],
+    animations,
     objects: Array.isArray(old.objects) ? old.objects : [],
     selectedSpriteIds: Array.isArray(old.selectedSpriteIds)
       ? old.selectedSpriteIds.filter((id) => sprites.some((s) => s.id === id))
@@ -243,6 +263,13 @@ export function migrateSpriteState(raw: unknown): AppState {
     map: old.map
       ? sanitizeMap(migrateMapState(old.map), sprites)
       : { ...INITIAL_MAP_STATE, screens: {} },
+    stateMachines: old.stateMachines
+      ? sanitizeStateMachines(
+          old.stateMachines as StateMachinesState,
+          sprites,
+          animations,
+        )
+      : { ...INITIAL_SM_STATE },
   } satisfies AppState;
 
   delete (state as unknown as Record<string, unknown>).imageData;

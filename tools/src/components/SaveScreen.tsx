@@ -9,6 +9,7 @@ import {
   spritesOfImage,
 } from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
+import { exportStateMachines } from "../statemachine/smExport";
 
 interface Props {
   state: AppState;
@@ -47,6 +48,14 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
         data: exportAnimations(state),
       },
     ];
+
+    if (state.stateMachines.machines.length > 0) {
+      list.push({
+        filename: `${baseName}.machines.json`,
+        label: "State Machines Export (states, transitions, conditions)",
+        data: exportStateMachines(state),
+      });
+    }
 
     // One atlas (+ grid) per image that has sprites
     for (const img of state.images) {

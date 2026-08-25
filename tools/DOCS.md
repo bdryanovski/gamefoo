@@ -774,3 +774,71 @@ Full editor state for re-import into the map editor. Not for engine use.
 (always block-aligned when placed with the editor). Images reference
 server upload paths — copy the files into your game's assets or serve
 the exports directory.
+
+---
+
+## State Machine Editor
+
+Switch via the **States** mode button. Defines per-sprite/tile state
+machines (Godot AnimationNodeStateMachine / Unity Animator style): each
+state shows a **single static sprite** or an **animation**, and named
+**transitions** move between states. Conditions are *engine-controlled* —
+the editor only names them; game code decides when to trigger
+(`machine.set("ignite")` or similar, however your wrapper drives it).
+
+Example: a **torch** — state `off` (static unlit sprite), state `lit`
+(flame animation), transitions `off → lit` on condition `ignite` and
+`lit → off` on condition `extinguish`.
+
+### Building a machine
+
+1. **+ New** in the panel creates a machine with one initial state.
+2. **Add states** — double-click empty canvas space (or "+ State").
+   The initial state carries a green **▶** badge.
+3. **Select a state** (click it) and configure in the panel:
+   - **Name**.
+   - **Show: Sprite (static)** — pick any sprite from the grouped
+     palette (all sprites from the Sprite Editor library are there).
+   - **Show: Animation** — pick one of the project's animations.
+   - Node thumbnails render the sprite / animation's first frame.
+4. **Transitions** — with a state selected: choose a target state,
+   type a condition name, press **+**. Arrows are drawn on the graph
+   with the condition label; edit conditions inline; ✕ removes.
+   Outgoing and incoming transitions are both listed.
+5. **Machine properties** — rename, set the **initial state**.
+6. Node dragging snaps to an 8px grid. **Del** deletes the selected
+   state (its transitions are cleaned up automatically).
+
+Canvas: **drag** node to move · **space/middle-drag** pan · **wheel**
+zoom · **double-click** add state.
+
+### Lifecycle & export
+
+State machines are part of the **unified project** — New/Open/Import
+replaces them together with everything else, QuickSave/Ctrl+S saves
+them, and deleting a sprite/animation cleans up dangling references.
+
+Export as `{name}.machines.json` (Export tab → "State Machines", the
+save screen, or "Export JSON" in the machine list):
+
+```json
+{
+  "meta": { "version": "1.0", "tool": "gamefoo-statemachine-editor", "...": "..." },
+  "machines": {
+    "torch": {
+      "initial": "off",
+      "states": {
+        "off": { "display": { "kind": "sprite", "sprite": "torch_off" } },
+        "lit": { "display": { "kind": "animation", "animation": "flame" } }
+      },
+      "transitions": [
+        { "from": "off", "to": "lit", "condition": "ignite" },
+        { "from": "lit", "to": "off", "condition": "extinguish" }
+      ]
+    }
+  }
+}
+```
+
+Everything is **name-based** (sprites, animations, states) so exports
+stay connected across re-imports and are easy to wrap in engine code.

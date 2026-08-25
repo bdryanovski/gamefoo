@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-statemachine-editor",
+    "projectName": "Map",
+    "exportedAt": "2026-08-25T07:53:52.572Z"
+  },
+  "machines": {
+    "Jar": {
+      "initial": "ok",
+      "states": {
+        "ok": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "jar"
+          }
+        },
+        "broken": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "jar_broken"
+          }
+        }
+      },
+      "transitions": [
+        {
+          "from": "ok",
+          "to": "broken",
+          "condition": "kick"
+        }
+      ]
+    }
+  }
+}

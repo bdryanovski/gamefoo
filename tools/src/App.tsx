@@ -2,6 +2,8 @@ import React, { useReducer, useCallback, useState, useEffect, useRef, useMemo } 
 import type { AppState, AppAction } from "./types";
 import { INITIAL_STATE, migrateSpriteState } from "./types";
 import { mapReducer } from "./map/types";
+import { smReducer, sanitizeStateMachines } from "./statemachine/types";
+import type { SMAction } from "./statemachine/types";
 import { Toolbar } from "./components/Toolbar";
 import { TilemapCanvas } from "./components/TilemapCanvas";
 import { SpritePanel } from "./components/SpritePanel";
@@ -13,6 +15,7 @@ import { StatusBar } from "./components/StatusBar";
 import { ProjectManager } from "./components/ProjectManager";
 import { SaveScreen } from "./components/SaveScreen";
 import { MapEditor } from "./map/MapEditor";
+import { StateMachineEditor } from "./statemachine/StateMachineEditor";
 import {
   saveStateToLocal,
   loadStateFromLocal,
@@ -40,14 +43,22 @@ function reducer(state: AppState, action: AppAction): AppState {
 
     case "REMOVE_IMAGE": {
       const images = state.images.filter((i) => i.id !== action.imageId);
+      const sprites = state.sprites.filter(
+        (s) => s.imageId !== action.imageId,
+      );
       return {
         ...state,
         images,
-        sprites: state.sprites.filter((s) => s.imageId !== action.imageId),
+        sprites,
         activeImageId:
           state.activeImageId === action.imageId
             ? (images[0]?.id ?? null)
             : state.activeImageId,
+        stateMachines: sanitizeStateMachines(
+          state.stateMachines,
+          sprites,
+          state.animations,
+        ),
       };
     }
 
@@ -81,14 +92,20 @@ function reducer(state: AppState, action: AppAction): AppState {
         ...o,
         sprites: o.sprites.filter((s) => s !== action.id),
       }));
+      const sprites = state.sprites.filter((s) => s.id !== action.id);
       return {
         ...state,
-        sprites: state.sprites.filter((s) => s.id !== action.id),
+        sprites,
         selectedSpriteIds: state.selectedSpriteIds.filter(
           (id) => id !== action.id,
         ),
         animations,
         objects,
+        stateMachines: sanitizeStateMachines(
+          state.stateMachines,
+          sprites,
+          animations,
+        ),
       };
     }
 
@@ -126,14 +143,22 @@ function reducer(state: AppState, action: AppAction): AppState {
         ...o,
         animations: o.animations.filter((a) => a !== action.id),
       }));
+      const animations = state.animations.filter(
+        (a) => a.id !== action.id,
+      );
       return {
         ...state,
-        animations: state.animations.filter((a) => a.id !== action.id),
+        animations,
         selectedAnimationId:
           state.selectedAnimationId === action.id
             ? null
             : state.selectedAnimationId,
         objects,
+        stateMachines: sanitizeStateMachines(
+          state.stateMachines,
+          state.sprites,
+          animations,
+        ),
       };
     }
 
@@ -183,6 +208,12 @@ function reducer(state: AppState, action: AppAction): AppState {
     case "MAP":
       return { ...state, map: mapReducer(state.map, action.action) };
 
+    case "SM":
+      return {
+        ...state,
+        stateMachines: smReducer(state.stateMachines, action.action),
+      };
+
     default:
       return state;
   }
@@ -190,9 +221,9 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 export function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const [mode, setMode] = useState<"sprite" | "map">(() => {
+  const [mode, setMode] = useState<"sprite" | "map" | "states">(() => {
     const saved = localStorage.getItem("gamefoo-tools-mode");
-    return saved === "map" ? "map" : "sprite";
+    return saved === "map" || saved === "states" ? saved : "sprite";
   });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(() =>
@@ -247,6 +278,11 @@ export function App() {
 
   const mapDispatch = useCallback(
     (a: Parameters<typeof mapReducer>[1]) => dispatch({ type: "MAP", action: a }),
+    [],
+  );
+
+  const smDispatch = useCallback(
+    (a: SMAction) => dispatch({ type: "SM", action: a }),
     [],
   );
 
@@ -473,6 +509,12 @@ export function App() {
         >
           ▦ Map Editor
         </button>
+        <button
+          className={`mode-btn ${mode === "states" ? "active" : ""}`}
+          onClick={() => setMode("states")}
+        >
+          ⚙ States
+        </button>
         <span className="mode-bar__project">
           {state.projectName}
           {currentProjectId ? "" : " (unsaved)"}
@@ -597,11 +639,22 @@ export function App() {
 
             <StatusBar state={state} mousePos={mousePos} />
           </div>
-        ) : (
+        ) : mode === "map" ? (
           <MapEditor
             state={state}
             dispatch={dispatch}
             mapDispatch={mapDispatch}
+            imageMap={imageMap}
+            projectId={currentProjectId}
+            saving={saving}
+            onSave={handleSave}
+            onOpenProjects={() => setShowProjects(true)}
+          />
+        ) : (
+          <StateMachineEditor
+            state={state}
+            dispatch={dispatch}
+            smDispatch={smDispatch}
             imageMap={imageMap}
             projectId={currentProjectId}
             saving={saving}

@@ -3,7 +3,7 @@
     "version": "1.0",
     "tool": "gamefoo-tilemap-editor",
     "projectName": "Map",
-    "exportedAt": "2026-08-24T20:44:11.057Z"
+    "exportedAt": "2026-08-25T07:53:52.572Z"
   },
   "images": [
     {
@@ -12,6 +12,13 @@
       "url": "/uploads/1787602234111_walls.png",
       "width": 224,
       "height": 256
+    },
+    {
+      "id": "img_mt8b11kl_0",
+      "name": "props.png",
+      "url": "/uploads/1787640551726_props.png",
+      "width": 304,
+      "height": 128
     }
   ],
   "frames": {
@@ -154,6 +161,55 @@
       "width": 16,
       "height": 16,
       "image": "walls.png"
+    },
+    "jar": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "jar_broken": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "rocks": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "rocks_crystal": {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "sign": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "skeleton": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "shelf": {
+      "x": 240,
+      "y": 2,
+      "width": 16,
+      "height": 30,
+      "image": "props.png"
     }
   },
   "animations": {},
@@ -324,6 +380,62 @@
       "tags": [],
       "group": "",
       "order": 19,
+      "level": 0,
+      "properties": {}
+    },
+    "jar": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 20,
+      "level": 0,
+      "properties": {}
+    },
+    "jar_broken": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 21,
+      "level": 0,
+      "properties": {}
+    },
+    "rocks": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 22,
+      "level": 0,
+      "properties": {}
+    },
+    "rocks_crystal": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 23,
+      "level": 0,
+      "properties": {}
+    },
+    "sign": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 24,
+      "level": 0,
+      "properties": {}
+    },
+    "skeleton": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 25,
+      "level": 0,
+      "properties": {}
+    },
+    "shelf": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 26,
       "level": 0,
       "properties": {}
     }

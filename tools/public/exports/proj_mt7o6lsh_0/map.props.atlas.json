@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "props.png",
+    "imageWidth": 304,
+    "imageHeight": 128,
+    "exportedAt": "2026-08-25T07:53:52.572Z"
+  },
+  "frames": {
+    "jar": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "jar_broken": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "rocks": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "rocks_crystal": {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "sign": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "skeleton": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "shelf": {
+      "x": 240,
+      "y": 2,
+      "width": 16,
+      "height": 30
+    }
+  },
+  "animations": {}
+}

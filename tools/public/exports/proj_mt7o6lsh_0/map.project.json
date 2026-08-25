@@ -7,9 +7,16 @@
       "name": "walls.png",
       "width": 224,
       "height": 256
+    },
+    {
+      "id": "img_mt8b11kl_0",
+      "url": "/uploads/1787640551726_props.png",
+      "name": "props.png",
+      "width": 304,
+      "height": 128
     }
   ],
-  "activeImageId": "img_mt7oeg3l_0",
+  "activeImageId": "img_mt8b11kl_0",
   "grid": {
     "enabled": true,
     "cellWidth": 16,
@@ -379,6 +386,132 @@
       "order": 19,
       "level": 0,
       "properties": {}
+    },
+    {
+      "id": "spr_mt8b31bg_1",
+      "imageId": "img_mt8b11kl_0",
+      "name": "jar",
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 20,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mt8b38ix_2",
+      "imageId": "img_mt8b11kl_0",
+      "name": "jar_broken",
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 21,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mt8b41la_3",
+      "imageId": "img_mt8b11kl_0",
+      "name": "rocks",
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 22,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mt8b45nq_4",
+      "imageId": "img_mt8b11kl_0",
+      "name": "rocks_crystal",
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 23,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mt8b4tb2_5",
+      "imageId": "img_mt8b11kl_0",
+      "name": "sign",
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 24,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mt8b57sg_6",
+      "imageId": "img_mt8b11kl_0",
+      "name": "skeleton",
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 25,
+      "level": 0,
+      "properties": {}
+    },
+    {
+      "id": "spr_mt8b5qf3_7",
+      "imageId": "img_mt8b11kl_0",
+      "name": "shelf",
+      "x": 240,
+      "y": 2,
+      "width": 16,
+      "height": 30,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 26,
+      "level": 0,
+      "properties": {}
     }
   ],
   "animations": [],
@@ -394,15 +527,15 @@
     }
   ],
   "selectedSpriteIds": [
-    "spr_mt7p85o2_7"
+    "spr_mt8b5qf3_7"
   ],
   "selectedAnimationId": null,
   "selectedObjectId": "obj_mt7o8gta_2",
   "activeTool": "grid-pick",
-  "zoom": 2.690316001141792,
+  "zoom": 3.5579429115100205,
   "pan": {
-    "x": 674.4186751245396,
-    "y": 310.9370616767568
+    "x": 0,
+    "y": 0
   },
   "activeTab": "sprites",
   "map": {
@@ -795,12 +928,6 @@
             "y": 48
           },
           {
-            "id": "1787603710001_gd69hq",
-            "spriteId": "spr_mt7p1nuc_0",
-            "x": 192,
-            "y": 64
-          },
-          {
             "id": "1787603719724_ieb2ms",
             "spriteId": "spr_mt7odjd1_8",
             "x": 160,
@@ -961,6 +1088,32 @@
             "spriteId": "spr_mt7p7ybr_6",
             "x": 128,
             "y": 176
+          },
+          {
+            "id": "1787640672342_wd21lc",
+            "spriteId": "spr_mt8b31bg_1",
+            "x": 16,
+            "y": 16
+          },
+          {
+            "id": "1787640796047_t69isd",
+            "spriteId": "spr_mt8b4tb2_5",
+            "x": 160,
+            "y": 96,
+            "rotation": 0,
+            "flipX": true
+          },
+          {
+            "id": "1787640804696_l7845q",
+            "spriteId": "spr_mt8b41la_3",
+            "x": 160,
+            "y": 48
+          },
+          {
+            "id": "1787641078879_tz98r6",
+            "spriteId": "spr_mt8b5qf3_7",
+            "x": 192,
+            "y": 64
           }
         ]
       },
@@ -1544,16 +1697,89 @@
             "spriteId": "spr_mt7p7sw0_5",
             "x": 240,
             "y": 48
+          },
+          {
+            "id": "1787640675911_nyaelx",
+            "spriteId": "spr_mt8b31bg_1",
+            "x": 128,
+            "y": 80
+          },
+          {
+            "id": "1787640679049_uk9duw",
+            "spriteId": "spr_mt8b38ix_2",
+            "x": 16,
+            "y": 32
+          },
+          {
+            "id": "1787640807995_ov2hou",
+            "spriteId": "spr_mt8b45nq_4",
+            "x": 224,
+            "y": 160
+          },
+          {
+            "id": "1787640813083_gjw2kj",
+            "spriteId": "spr_mt8b57sg_6",
+            "x": 80,
+            "y": 160
+          },
+          {
+            "id": "1787642167584_hp6hh5",
+            "spriteId": "spr_mt8b57sg_6",
+            "x": 176,
+            "y": 128,
+            "flipX": true
           }
         ]
       }
     },
-    "selectedSpriteId": "spr_mt7p7sw0_5",
-    "activeTool": "paint",
+    "selectedSpriteId": "spr_mt8b57sg_6",
+    "selectedPlacementId": null,
+    "activeTool": "move",
     "zoom": 1.977477648974928,
     "pan": {
       "x": 83.91228642460152,
       "y": 237.96387831480746
     }
+  },
+  "stateMachines": {
+    "machines": [
+      {
+        "id": "sm_mt8d9x18_1",
+        "name": "Jar",
+        "states": [
+          {
+            "id": "st_mt8d9x18_0",
+            "name": "ok",
+            "display": {
+              "kind": "sprite",
+              "spriteId": "spr_mt8b31bg_1"
+            },
+            "x": 352,
+            "y": 192
+          },
+          {
+            "id": "st_mt8dap1o_2",
+            "name": "broken",
+            "display": {
+              "kind": "sprite",
+              "spriteId": "spr_mt8b38ix_2"
+            },
+            "x": 648,
+            "y": 264
+          }
+        ],
+        "transitions": [
+          {
+            "id": "tr_mt8dbpxv_3",
+            "fromStateId": "st_mt8d9x18_0",
+            "toStateId": "st_mt8dap1o_2",
+            "condition": "kick"
+          }
+        ],
+        "initialStateId": "st_mt8d9x18_0"
+      }
+    ],
+    "selectedMachineId": "sm_mt8d9x18_1",
+    "selectedStateId": "st_mt8d9x18_0"
   }
 }

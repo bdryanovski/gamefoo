@@ -1,13 +1,14 @@
 import React, { useState, useMemo, useCallback } from "react";
 import type { AppState, AppAction } from "../types";
 import { exportAtlasForImage, exportGridForImage, exportFull, exportProject, exportSprites, exportAnimations, downloadJSON, spritesOfImage } from "../utils/export";
+import { exportStateMachines } from "../statemachine/smExport";
 
 interface Props {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
 }
 
-type ExportFormat = "sprites" | "animations" | "atlas" | "grid" | "full" | "project";
+type ExportFormat = "sprites" | "animations" | "machines" | "atlas" | "grid" | "full" | "project";
 
 const FORMAT_INFO: Record<ExportFormat, { label: string; desc: string }> = {
   sprites: {
@@ -17,6 +18,10 @@ const FORMAT_INFO: Record<ExportFormat, { label: string; desc: string }> = {
   animations: {
     label: "Animations",
     desc: "Animations only: ordered frame names, duration, loop.",
+  },
+  machines: {
+    label: "State Machines",
+    desc: "Machines with states (sprite/animation) + transitions with engine-side conditions.",
   },
   atlas: {
     label: "Atlas (fromAtlas)",
@@ -55,6 +60,8 @@ export function ExportPanel({ state, dispatch }: Props) {
         return JSON.stringify(exportSprites(state), null, 2);
       case "animations":
         return JSON.stringify(exportAnimations(state), null, 2);
+      case "machines":
+        return JSON.stringify(exportStateMachines(state), null, 2);
       case "atlas":
         return JSON.stringify(
           activeImage ? exportAtlasForImage(state, activeImage) : {},
@@ -82,6 +89,9 @@ export function ExportPanel({ state, dispatch }: Props) {
         break;
       case "animations":
         downloadJSON(exportAnimations(state), `${baseName}.animations.json`);
+        break;
+      case "machines":
+        downloadJSON(exportStateMachines(state), `${baseName}.machines.json`);
         break;
       case "atlas":
         if (activeImage) {
@@ -157,6 +167,9 @@ export function ExportPanel({ state, dispatch }: Props) {
           <div>Sprites: {state.sprites.length}</div>
           <div>Animations: {state.animations.length}</div>
           <div>Objects: {state.objects.length}</div>
+          <div>
+            State Machines: {state.stateMachines.machines.length}
+          </div>
           <div>Images: {state.images.length}</div>
           {activeImage && (
             <div>
