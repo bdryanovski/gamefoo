@@ -1,0 +1,339 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "exportedAt": "2026-08-24T20:44:11.057Z"
+  },
+  "images": [
+    {
+      "id": "img_mt7oeg3l_0",
+      "name": "walls.png",
+      "url": "/uploads/1787602234111_walls.png",
+      "width": 224,
+      "height": 256
+    }
+  ],
+  "frames": {
+    "floor": {
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_north": {
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_west": {
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_east": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_south": {
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_south_east": {
+      "x": 48,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_north_west": {
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_south_west": {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_north_east": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "middle_one": {
+      "x": 32,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "middle_two": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "empty": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_bottom": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "top_right": {
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "top_left": {
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "bottom_left": {
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_north": {
+      "x": 176,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_east": {
+      "x": 208,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_south": {
+      "x": 192,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_west": {
+      "x": 160,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    }
+  },
+  "animations": {},
+  "objects": {
+    "empty": {
+      "sprites": [
+        "empty"
+      ],
+      "animations": [],
+      "properties": {}
+    }
+  },
+  "spriteMetadata": {
+    "floor": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 0,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_north": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 1,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 2,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 3,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_south": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 4,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_south_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 5,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_north_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 6,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_south_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 7,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_north_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 8,
+      "level": 0,
+      "properties": {}
+    },
+    "middle_one": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 9,
+      "level": 0,
+      "properties": {}
+    },
+    "middle_two": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 10,
+      "level": 0,
+      "properties": {}
+    },
+    "empty": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 11,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_bottom": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 12,
+      "level": 0,
+      "properties": {}
+    },
+    "top_right": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 13,
+      "level": 0,
+      "properties": {}
+    },
+    "top_left": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 14,
+      "level": 0,
+      "properties": {}
+    },
+    "bottom_left": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 15,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_north": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 16,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 17,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_south": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 18,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 19,
+      "level": 0,
+      "properties": {}
+    }
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  }
+}

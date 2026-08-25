@@ -30,6 +30,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 interface ProjectSummary {
   id: string;
   name: string;
+  kind: string;
   lastModified: string;
   spriteCount: number;
   animCount: number;
@@ -38,10 +39,13 @@ interface ProjectSummary {
 
 interface ProjectFile {
   projectName?: string;
+  kind?: string;
   lastModified?: string;
   sprites?: unknown[];
   animations?: unknown[];
   imageData?: { name?: string };
+  images?: Array<{ name?: string }>;
+  map?: { screens?: Record<string, unknown> };
 }
 
 // ── Upload image ────────────────────────────────────────
@@ -74,10 +78,12 @@ app.get("/api/projects", async (_req, res) => {
         projects.push({
           id: file.replace(/\.json$/, ""),
           name: data.projectName || "Untitled",
+          kind: data.kind || "sprite",
           lastModified: data.lastModified || "",
           spriteCount: data.sprites?.length ?? 0,
           animCount: data.animations?.length ?? 0,
-          imageName: data.imageData?.name || "",
+          imageName:
+            data.images?.[0]?.name || data.imageData?.name || "",
         });
       } catch {
         /* skip corrupt files */

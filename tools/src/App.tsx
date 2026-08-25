@@ -1,15 +1,18 @@
-import React, { useReducer, useCallback, useState, useEffect, useRef } from "react";
-import type { AppState, AppAction, TabType } from "./types";
-import { INITIAL_STATE } from "./types";
+import React, { useReducer, useCallback, useState, useEffect, useRef, useMemo } from "react";
+import type { AppState, AppAction } from "./types";
+import { INITIAL_STATE, migrateSpriteState } from "./types";
+import { mapReducer } from "./map/types";
 import { Toolbar } from "./components/Toolbar";
 import { TilemapCanvas } from "./components/TilemapCanvas";
 import { SpritePanel } from "./components/SpritePanel";
 import { AnimationPanel } from "./components/AnimationPanel";
+import { ImageLibraryPanel } from "./components/ImageLibraryPanel";
 import { ExportPanel } from "./components/ExportPanel";
 import { ObjectPanel } from "./components/ObjectPanel";
 import { StatusBar } from "./components/StatusBar";
 import { ProjectManager } from "./components/ProjectManager";
 import { SaveScreen } from "./components/SaveScreen";
+import { MapEditor } from "./map/MapEditor";
 import {
   saveStateToLocal,
   loadStateFromLocal,
@@ -24,15 +27,34 @@ import { uid } from "./utils/uid";
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
-    case "SET_IMAGE":
+    case "ADD_IMAGE":
       return {
         ...state,
-        imageData: {
-          url: action.url,
-          name: action.name,
-          width: action.width,
-          height: action.height,
-        },
+        images: [...state.images, action.image],
+        activeImageId:
+          action.activate || state.activeImageId === null
+            ? action.image.id
+            : state.activeImageId,
+        pan: { x: 0, y: 0 },
+      };
+
+    case "REMOVE_IMAGE": {
+      const images = state.images.filter((i) => i.id !== action.imageId);
+      return {
+        ...state,
+        images,
+        sprites: state.sprites.filter((s) => s.imageId !== action.imageId),
+        activeImageId:
+          state.activeImageId === action.imageId
+            ? (images[0]?.id ?? null)
+            : state.activeImageId,
+      };
+    }
+
+    case "SET_ACTIVE_IMAGE":
+      return {
+        ...state,
+        activeImageId: action.imageId,
         pan: { x: 0, y: 0 },
       };
 
@@ -134,9 +156,7 @@ function reducer(state: AppState, action: AppAction): AppState {
         ...state,
         objects: state.objects.filter((o) => o.id !== action.id),
         selectedObjectId:
-          state.selectedObjectId === action.id
-            ? null
-            : state.selectedObjectId,
+          state.selectedObjectId === action.id ? null : state.selectedObjectId,
       };
 
     case "SELECT_OBJECT":
@@ -158,26 +178,25 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, projectName: action.name };
 
     case "LOAD_PROJECT":
-      return { ...action.state };
+      return action.state;
+
+    case "MAP":
+      return { ...state, map: mapReducer(state.map, action.action) };
 
     default:
       return state;
   }
 }
 
-const TABS: { key: TabType; label: string }[] = [
-  { key: "sprites", label: "Sprites" },
-  { key: "animations", label: "Anims" },
-  { key: "objects", label: "Objects" },
-  { key: "export", label: "Export" },
-];
-
 export function App() {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [mode, setMode] = useState<"sprite" | "map">(() => {
+    const saved = localStorage.getItem("gamefoo-tools-mode");
+    return saved === "map" ? "map" : "sprite";
+  });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
-  const [currentProjectId, setCurrentProjectId] = useState<string | null>(
-    () => getProjectId(),
+  const [currentProjectId, setCurrentProjectId] = useState<string | null>(() =>
+    getProjectId(),
   );
   const [showProjects, setShowProjects] = useState(false);
   const [showSaveScreen, setShowSaveScreen] = useState(false);
@@ -187,28 +206,59 @@ export function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const importInputRef = useRef<HTMLInputElement>(null);
 
+  // ── Image element cache (all library images) ───────────
+
+  const [imageMap, setImageMap] = useState<Map<string, HTMLImageElement>>(
+    () => new Map(),
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    const next = new Map(imageMap);
+    let changed = false;
+    for (const img of state.images) {
+      if (next.has(img.id)) continue;
+      const el = new Image();
+      el.onload = () => {
+        if (!cancelled) setImageMap((m) => new Map(m).set(img.id, el));
+      };
+      el.src = img.url;
+      next.set(img.id, el);
+      changed = true;
+    }
+    for (const key of Array.from(next.keys())) {
+      if (!state.images.some((i) => i.id === key)) {
+        next.delete(key);
+        changed = true;
+      }
+    }
+    if (changed && !cancelled) setImageMap(next);
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.images]);
+
+  const activeImageEl = useMemo(
+    () =>
+      state.activeImageId ? (imageMap.get(state.activeImageId) ?? null) : null,
+    [state.activeImageId, imageMap],
+  );
+
+  const mapDispatch = useCallback(
+    (a: Parameters<typeof mapReducer>[1]) => dispatch({ type: "MAP", action: a }),
+    [],
+  );
+
   // ── Load saved state on mount ──────────────────────────
 
   useEffect(() => {
     const saved = loadStateFromLocal();
     if (saved) {
-      dispatch({ type: "LOAD_PROJECT", state: saved });
+      dispatch({ type: "LOAD_PROJECT", state: migrateSpriteState(saved) });
     }
     setInitialized(true);
   }, []);
-
-  // ── Auto-load image when imageData.url changes ─────────
-
-  useEffect(() => {
-    if (!state.imageData?.url) {
-      setImage(null);
-      return;
-    }
-    const img = new Image();
-    img.onload = () => setImage(img);
-    img.onerror = () => setImage(null);
-    img.src = state.imageData.url;
-  }, [state.imageData?.url]);
 
   // ── Auto-save to localStorage (debounced) ──────────────
 
@@ -226,57 +276,52 @@ export function App() {
     saveProjectId(currentProjectId);
   }, [currentProjectId]);
 
-  // ── Upload image to server ─────────────────────────────
+  // ── Persist mode ───────────────────────────────────────
 
-  const handleUploadImage = useCallback(async (file: File) => {
-    try {
-      const { path, name } = await uploadImage(file);
-      const img = new Image();
-      img.onload = () => {
-        setImage(img);
-        dispatch({
-          type: "SET_IMAGE",
-          url: path,
-          name,
-          width: img.width,
-          height: img.height,
-        });
-      };
-      img.src = path;
-    } catch (e) {
-      console.error("Upload failed:", e);
-      // Fallback: load directly as data URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        const url = reader.result as string;
-        const img = new Image();
-        img.onload = () => {
-          setImage(img);
-          dispatch({
-            type: "SET_IMAGE",
-            url,
-            name: file.name,
-            width: img.width,
-            height: img.height,
+  useEffect(() => {
+    localStorage.setItem("gamefoo-tools-mode", mode);
+  }, [mode]);
+
+  // ── Upload images ──────────────────────────────────────
+
+  const handleUploadImages = useCallback(
+    async (files: FileList | File[] | null) => {
+      if (!files) return;
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith("image/")) continue;
+        try {
+          const { path, name } = await uploadImage(file);
+          const img = new Image();
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = () => reject(new Error("load failed"));
+            img.src = path;
           });
-        };
-        img.src = url;
-      };
-      reader.readAsDataURL(file);
-    }
-  }, []);
-
-  const handleFileClick = useCallback(() => {
-    fileInputRef.current?.click();
-  }, []);
+          dispatch({
+            type: "ADD_IMAGE",
+            activate: true,
+            image: {
+              id: uid("img"),
+              url: path,
+              name,
+              width: img.width,
+              height: img.height,
+            },
+          });
+        } catch (e) {
+          console.error("Upload failed:", file.name, e);
+        }
+      }
+    },
+    [],
+  );
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) handleUploadImage(file);
+      handleUploadImages(e.target.files);
       e.target.value = "";
     },
-    [handleUploadImage],
+    [handleUploadImages],
   );
 
   // ── Drag & drop ────────────────────────────────────────
@@ -284,8 +329,8 @@ export function App() {
   useEffect(() => {
     const handleDrop = (e: DragEvent) => {
       e.preventDefault();
-      const file = e.dataTransfer?.files[0];
-      if (file && file.type.startsWith("image/")) handleUploadImage(file);
+      const files = e.dataTransfer?.files;
+      if (files && files.length > 0) handleUploadImages(files);
     };
     const handleDragOver = (e: DragEvent) => e.preventDefault();
     window.addEventListener("drop", handleDrop);
@@ -294,55 +339,74 @@ export function App() {
       window.removeEventListener("drop", handleDrop);
       window.removeEventListener("dragover", handleDragOver);
     };
-  }, [handleUploadImage]);
+  }, [handleUploadImages]);
 
-  // ── Save project ───────────────────────────────────────
+  // ── Save project (sprite library + map together) ───────
 
-  const handleSave = useCallback(async () => {
-    setSaving(true);
-    try {
-      let projId = currentProjectId;
-      if (!projId) {
-        projId = uid("proj");
-        setCurrentProjectId(projId);
-      }
-      await saveProject(projId, state);
-      setShowSaveScreen(true);
-    } catch (e) {
-      console.error("Save failed:", e);
-      alert("Failed to save project to server");
-    } finally {
-      setSaving(false);
-    }
-  }, [currentProjectId, state]);
-
-  // ── Open project from manager ──────────────────────────
-
-  const handleOpenProject = useCallback(
-    async (id: string) => {
-      const data = await loadProject(id);
-      if (data) {
-        dispatch({ type: "LOAD_PROJECT", state: data });
-        setCurrentProjectId(id);
-        setShowProjects(false);
+  const handleSave = useCallback(
+    async (mode: "save" | "quick" = "save") => {
+      setSaving(true);
+      try {
+        let projId = currentProjectId;
+        if (!projId) {
+          projId = uid("proj");
+          setCurrentProjectId(projId);
+        }
+        await saveProject(projId, state);
+        if (mode === "save") {
+          setShowSaveScreen(true);
+        } else {
+          // QuickSave — silent confirmation
+          setQuickSavedAt(Date.now());
+        }
+      } catch (e) {
+        console.error("Save failed:", e);
+        alert("Failed to save project to server");
+      } finally {
+        setSaving(false);
       }
     },
-    [],
+    [currentProjectId, state],
   );
 
-  // ── New project ────────────────────────────────────────
+  // ── QuickSave keyboard shortcut (Ctrl/Cmd+S) ───────────
+
+  const [quickSavedAt, setQuickSavedAt] = useState<number | null>(null);
+  const [flashQuickSaved, setFlashQuickSaved] = useState(false);
+
+  useEffect(() => {
+    if (quickSavedAt === null) return;
+    setFlashQuickSaved(true);
+    const t = setTimeout(() => setFlashQuickSaved(false), 1500);
+    return () => clearTimeout(t);
+  }, [quickSavedAt]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        handleSave("quick");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleSave]);
+
+  // ── Open / new / import — reset BOTH editors ───────────
+
+  const handleOpenProject = useCallback(async (id: string) => {
+    const data = await loadProject(id);
+    if (data) {
+      dispatch({ type: "LOAD_PROJECT", state: migrateSpriteState(data) });
+      setCurrentProjectId(id);
+      setShowProjects(false);
+    }
+  }, []);
 
   const handleNewProject = useCallback(() => {
     dispatch({ type: "LOAD_PROJECT", state: { ...INITIAL_STATE } });
     setCurrentProjectId(null);
-    setImage(null);
     setShowProjects(false);
-  }, []);
-
-  // ── Import project from JSON file ──────────────────────
-
-  const handleImportClick = useCallback(() => {
-    importInputRef.current?.click();
   }, []);
 
   const handleImportFile = useCallback(
@@ -354,16 +418,29 @@ export function App() {
       const reader = new FileReader();
       reader.onload = async () => {
         try {
-          const data = JSON.parse(reader.result as string) as AppState;
+          const raw = JSON.parse(reader.result as string);
+          // Legacy map project files (kind: "map") — load just the map slice.
+          if (raw && raw.kind === "map") {
+            const data = migrateSpriteState({
+              projectName: raw.projectName ?? "Imported Map",
+              map: raw,
+            });
+            const projId = uid("proj");
+            dispatch({ type: "LOAD_PROJECT", state: data });
+            setCurrentProjectId(projId);
+            await saveProject(projId, data);
+            setShowProjects(false);
+            setMode("map");
+            return;
+          }
 
-          // If the image URL is a data URL, re-upload it to the server
-          if (data.imageData?.url?.startsWith("data:")) {
-            const serverPath = await reuploadDataUrl(
-              data.imageData.url,
-              data.imageData.name || "imported.png",
-            );
-            if (serverPath) {
-              data.imageData.url = serverPath;
+          // Re-upload any data-URL images to the server
+          const data = migrateSpriteState(raw);
+          for (let i = 0; i < data.images.length; i++) {
+            const img = data.images[i]!;
+            if (img.url.startsWith("data:")) {
+              const serverPath = await reuploadDataUrl(img.url, img.name || "imported.png");
+              if (serverPath) img.url = serverPath;
             }
           }
 
@@ -382,101 +459,165 @@ export function App() {
   );
 
   return (
-    <div className="app-layout">
-      {/* Title bar */}
-      <div className="title-bar">
-        <span className="title-bar__name">
-          GameFoo Dev Tools — {state.projectName}
+    <div className="app-root">
+      <div className="mode-bar">
+        <button
+          className={`mode-btn ${mode === "sprite" ? "active" : ""}`}
+          onClick={() => setMode("sprite")}
+        >
+          ▣ Sprite Editor
+        </button>
+        <button
+          className={`mode-btn ${mode === "map" ? "active" : ""}`}
+          onClick={() => setMode("map")}
+        >
+          ▦ Map Editor
+        </button>
+        <span className="mode-bar__project">
+          {state.projectName}
           {currentProjectId ? "" : " (unsaved)"}
         </span>
-        <button className="btn btn-sm title-btn" onClick={handleFileClick}>
-          Open Image
-        </button>
-        <button
-          className="btn btn-sm title-btn"
-          onClick={() => setShowProjects(true)}
-        >
-          Projects
-        </button>
-        <button
-          className="btn btn-sm title-btn"
-          onClick={handleSave}
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save"}
-        </button>
       </div>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleFileChange}
-      />
-      <input
-        ref={importInputRef}
-        type="file"
-        accept=".json"
-        className="hidden"
-        onChange={handleImportFile}
-      />
-
-      {/* Main area */}
-      <div className="main-area">
-        <Toolbar state={state} dispatch={dispatch} />
-
-        <TilemapCanvas
-          state={state}
-          dispatch={dispatch}
-          image={image}
-          onMouseMove={setMousePos}
-          onUploadClick={handleFileClick}
-        />
-
-        <div className="right-panel">
-          <div className="panel-tabs">
-            {TABS.map((t) => (
-              <div
-                key={t.key}
-                className={`panel-tab ${state.activeTab === t.key ? "active" : ""}`}
-                onClick={() => dispatch({ type: "SET_TAB", tab: t.key })}
+      <div className="mode-content">
+        {mode === "sprite" ? (
+          <div className="app-layout">
+            {/* Title bar */}
+            <div className="title-bar">
+              <span className="title-bar__name">
+                GameFoo Sprite Editor — {state.projectName}
+              </span>
+              <button
+                className="btn btn-sm title-btn"
+                onClick={() => fileInputRef.current?.click()}
               >
-                {t.label}
-              </div>
-            ))}
-          </div>
+                + Add Image
+              </button>
+              <button
+                className="btn btn-sm title-btn"
+                onClick={() => setShowProjects(true)}
+              >
+                Projects
+              </button>
+              <button
+                className="btn btn-sm title-btn"
+                onClick={() => handleSave("quick")}
+                disabled={saving}
+                title="QuickSave — Ctrl/Cmd+S (no export screen)"
+              >
+                QuickSave
+              </button>
+              <button
+                className="btn btn-sm title-btn"
+                onClick={() => handleSave("save")}
+                disabled={saving}
+              >
+                {saving ? "Saving..." : "Save"}
+              </button>
+            </div>
 
-          <div className="panel-content">
-            {state.activeTab === "sprites" && (
-              <SpritePanel state={state} dispatch={dispatch} image={image} />
-            )}
-            {state.activeTab === "animations" && (
-              <AnimationPanel
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <input
+              ref={importInputRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={handleImportFile}
+            />
+
+            {/* Main area */}
+            <div className="main-area">
+              <Toolbar state={state} dispatch={dispatch} />
+
+              <TilemapCanvas
                 state={state}
                 dispatch={dispatch}
-                image={image}
+                image={activeImageEl}
+                onMouseMove={setMousePos}
+                onUploadClick={() => fileInputRef.current?.click()}
               />
-            )}
-            {state.activeTab === "objects" && (
-              <ObjectPanel state={state} dispatch={dispatch} />
-            )}
-            {state.activeTab === "export" && (
-              <ExportPanel state={state} dispatch={dispatch} />
-            )}
+
+              <div className="right-panel">
+                <div className="panel-tabs">
+                  {(
+                    [
+                      { key: "images", label: "Images" },
+                      { key: "sprites", label: "Sprites" },
+                      { key: "animations", label: "Anims" },
+                      { key: "objects", label: "Objects" },
+                      { key: "export", label: "Export" },
+                    ] as const
+                  ).map((t) => (
+                    <div
+                      key={t.key}
+                      className={`panel-tab ${state.activeTab === t.key ? "active" : ""}`}
+                      onClick={() =>
+                        dispatch({ type: "SET_TAB", tab: t.key as never })
+                      }
+                    >
+                      {t.label}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="panel-content">
+                  {state.activeTab === "images" && (
+                    <ImageLibraryPanel state={state} dispatch={dispatch} />
+                  )}
+                  {state.activeTab === "sprites" && (
+                    <SpritePanel
+                      state={state}
+                      dispatch={dispatch}
+                      image={activeImageEl}
+                    />
+                  )}
+                  {state.activeTab === "animations" && (
+                    <AnimationPanel
+                      state={state}
+                      dispatch={dispatch}
+                      image={activeImageEl}
+                      imageMap={imageMap}
+                    />
+                  )}
+                  {state.activeTab === "objects" && (
+                    <ObjectPanel state={state} dispatch={dispatch} />
+                  )}
+                  {state.activeTab === "export" && (
+                    <ExportPanel state={state} dispatch={dispatch} />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <StatusBar state={state} mousePos={mousePos} />
           </div>
-        </div>
+        ) : (
+          <MapEditor
+            state={state}
+            dispatch={dispatch}
+            mapDispatch={mapDispatch}
+            imageMap={imageMap}
+            projectId={currentProjectId}
+            saving={saving}
+            onSave={handleSave}
+            onOpenProjects={() => setShowProjects(true)}
+          />
+        )}
       </div>
 
-      <StatusBar state={state} mousePos={mousePos} />
-
-      {/* Overlays */}
+      {/* Overlays — shared */}
       {showProjects && (
         <ProjectManager
           currentId={currentProjectId}
           onOpen={handleOpenProject}
           onNew={handleNewProject}
-          onImport={handleImportClick}
+          onImport={() => importInputRef.current?.click()}
           onClose={() => setShowProjects(false)}
         />
       )}
@@ -486,6 +627,11 @@ export function App() {
           projectId={currentProjectId!}
           onClose={() => setShowSaveScreen(false)}
         />
+      )}
+
+      {/* QuickSave toast */}
+      {flashQuickSaved && (
+        <div className="quicksave-toast">✓ Saved</div>
       )}
     </div>
   );

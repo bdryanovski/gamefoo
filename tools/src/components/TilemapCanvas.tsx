@@ -91,15 +91,16 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
 
   const findSpriteAt = useCallback(
     (ix: number, iy: number): SpriteRegion | null => {
-      for (let i = state.sprites.length - 1; i >= 0; i--) {
-        const s = state.sprites[i]!;
+      const mine = state.sprites.filter((s) => s.imageId === state.activeImageId);
+      for (let i = mine.length - 1; i >= 0; i--) {
+        const s = mine[i]!;
         if (ix >= s.x && ix < s.x + s.width && iy >= s.y && iy < s.y + s.height) {
           return s;
         }
       }
       return null;
     },
-    [state.sprites],
+    [state.sprites, state.activeImageId],
   );
 
   // ── Drawing ────────────────────────────────────────────
@@ -163,8 +164,9 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         }
       }
 
-      // Sprite regions
+      // Sprite regions (active image only)
       for (const s of state.sprites) {
+        if (s.imageId !== state.activeImageId) continue;
         const selected = state.selectedSpriteIds.includes(s.id);
         ctx.fillStyle = selected ? "rgba(255,255,0,0.12)" : "rgba(0,255,0,0.08)";
         ctx.fillRect(s.x, s.y, s.width, s.height);
@@ -260,7 +262,8 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
 
         // Check if there's already a sprite at this grid cell
         const existing = state.sprites.find(
-          (s) => s.x === snapped.x && s.y === snapped.y &&
+          (s) => s.imageId === state.activeImageId &&
+            s.x === snapped.x && s.y === snapped.y &&
             s.width === state.grid.cellWidth && s.height === state.grid.cellHeight,
         );
 
@@ -276,6 +279,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
           const row = Math.floor((snapped.y - g.offsetY) / (g.cellHeight + g.spacingY));
           const sprite: SpriteRegion = {
             id: uid("spr"),
+            imageId: state.activeImageId!,
             name: `sprite_${col}_${row}`,
             x: snapped.x,
             y: snapped.y,
@@ -348,6 +352,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         if (rw > 1 && rh > 1) {
           const sprite: SpriteRegion = {
             id: uid("spr"),
+            imageId: state.activeImageId!,
             name: `region_${state.sprites.length}`,
             x: Math.round(rx),
             y: Math.round(ry),

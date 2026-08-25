@@ -71,6 +71,7 @@ export async function reuploadDataUrl(
 export interface ProjectMeta {
   id: string;
   name: string;
+  kind?: string;
   lastModified: string;
   spriteCount: number;
   animCount: number;

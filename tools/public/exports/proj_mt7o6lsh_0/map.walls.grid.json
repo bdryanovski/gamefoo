@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "walls.png",
+    "imageWidth": 224,
+    "imageHeight": 256,
+    "exportedAt": "2026-08-24T20:44:11.057Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "floor": 16,
+    "wall_north": 3,
+    "wall_west": 1,
+    "wall_east": 31,
+    "wall_south": 29,
+    "wall_south_east": 45,
+    "wall_north_west": 43,
+    "wall_south_west": 28,
+    "wall_north_east": 0,
+    "middle_one": 44,
+    "middle_two": 14,
+    "empty": 42,
+    "wall_bottom": 15,
+    "top_right": 30,
+    "top_left": 17,
+    "bottom_left": 2,
+    "portal_north": 11,
+    "portal_east": 27,
+    "portal_south": 54,
+    "portal_west": 38
+  },
+  "animations": {}
+}

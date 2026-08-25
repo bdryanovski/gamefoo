@@ -32,7 +32,12 @@ function SpriteThumb({ sprite, image }: { sprite: SpriteRegion; image: HTMLImage
 }
 
 export function SpritePanel({ state, dispatch, image }: Props) {
-  const selected = state.sprites.find((s) => state.selectedSpriteIds.includes(s.id)) ?? null;
+  const activeSprites = state.sprites.filter(
+    (s) => s.imageId === state.activeImageId,
+  );
+  const selected = activeSprites.find((s) =>
+    state.selectedSpriteIds.includes(s.id),
+  );
 
   const updateSelected = useCallback(
     (updates: Partial<SpriteRegion>) => {
@@ -120,7 +125,13 @@ export function SpritePanel({ state, dispatch, image }: Props) {
       {/* Sprite list */}
       <div className="section">
         <div className="section-title">
-          <span>Sprites ({state.sprites.length})</span>
+          <span>
+            Sprites ({activeSprites.length}
+            {state.sprites.length !== activeSprites.length
+              ? ` of ${state.sprites.length}`
+              : ""}
+            )
+          </span>
           {state.selectedSpriteIds.length > 0 && (
             <button
               className="btn btn-sm danger"
@@ -140,7 +151,13 @@ export function SpritePanel({ state, dispatch, image }: Props) {
               No sprites defined. Use Grid Pick or Region tool to create sprites from the tilemap.
             </div>
           )}
-          {state.sprites.map((s) => (
+          {state.sprites.length > 0 && activeSprites.length === 0 && (
+            <div className="p-4 text-dim text-xs">
+              No sprites on this image. Select it in the Images tab and cut
+              sprites with Grid Pick (G) or Region (R).
+            </div>
+          )}
+          {activeSprites.map((s) => (
             <div
               key={s.id}
               className={`sprite-item ${state.selectedSpriteIds.includes(s.id) ? "selected" : ""}`}

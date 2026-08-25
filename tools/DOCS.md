@@ -2,7 +2,9 @@
 
 A retro-styled visual editor for cutting spritesheets into named sprite
 regions, building animations, and exporting JSON configs that the GameFoo
-engine can consume directly.
+engine can consume directly. Also includes a **Map Editor** for building
+multi-screen tile maps from your spritesheets (see
+[Map Editor](#map-editor)).
 
 ---
 
@@ -23,6 +25,7 @@ engine can consume directly.
 13. [Keyboard Shortcuts](#keyboard-shortcuts)
 14. [Server API Reference](#server-api-reference)
 15. [Architecture Notes](#architecture-notes)
+16. [Map Editor](#map-editor)
 
 ---
 
@@ -621,3 +624,138 @@ state and dispatch as props — no external state library needed.
 `requestAnimationFrame`. All transforms (zoom, pan) are applied via
 canvas context transforms. Mouse coordinates are converted between
 screen space and image space for accurate interaction.
+
+---
+
+## Map Editor
+
+Switch to the **Map Editor** via the mode bar at the top of the app.
+It builds multi-screen tile maps from your spritesheets.
+
+### Concepts
+
+| Term       | Meaning                                                      |
+|------------|--------------------------------------------------------------|
+| **Block**  | Base grid cell, `blockSize` px (16, 32, 64…).                |
+| **Screen** | Fixed grid of `Cols × Rows` blocks. All screens are the same size. |
+| **Map**    | Sparse grid of screens, keyed by coordinate `x,y`.           |
+| **Asset**  | A sliced tile/object from an uploaded image.                  |
+
+**Screen coordinates:** the first screen is always `(0,0)`. The screen to
+the **right** is `(0,1)` — the one **below** is `(1,0)`. So `x` grows
+South (down) and `y` grows East (right).
+
+### Building a map
+
+1. **Add screens** — every screen shows green **+** buttons on its
+   North / South / East / West borders (only where no neighbor exists).
+   Click one to add a screen there. New screens inherit the map's
+   **Default Tile** as their background.
+2. **Load sprites** — sprites come from the Sprite Editor library. Switch
+   to the Sprite Editor, add images (Images tab), cut sprites with Grid
+   Pick (G) / Region (R), then return here — every sprite shows in the
+   palette, grouped by its group (or source image). Click a thumbnail to
+   select it for painting.
+3. **Set a background** — pick a tool:
+   - **Fill (F)**: click a screen to tile the selected sprite across it.
+   - *Default Tile* section: "Use Selected" makes all *new* screens
+     start with that background.
+4. **Place things on top** — **Paint (P)**: click/drag to place the
+   selected sprite (snapped to blocks, ghost preview follows the
+   cursor). Same-size placements on the same cell overwrite each other;
+   different sizes stack (later = on top).
+5. **Erase (E)** removes the topmost placement under the cursor.
+   **Pick (I)** selects the sprite under the cursor (placement, or the
+   screen background).
+6. Navigate: **Space+drag / middle-drag / H** to pan, **scroll** to
+   zoom.
+
+### One project, two editors
+
+The map is part of the **same project** as the sprite library. The Sprite
+Editor's **Images tab** manages every source image; sprites cut there
+appear in the Map Editor's palette automatically. **New Project**,
+**Open**, and **Import** reset both editors together — the map is always
+attached to its project. Auto-save to localStorage, "Save" to the server,
+Import/Export JSON — one lifecycle for everything.
+
+Legacy map project files (`kind: "map"`) can still be imported — the map
+slice is migrated into a fresh unified project.
+
+### Map Export tab
+
+The map editor's right panel has an **Export** tab with four formats
+(preview, download, clipboard copy), plus **Save Export Files to Server**
+which writes all four to `public/exports/{projectId}/` (requires saving
+the project first).
+
+#### 1. Screens export (`*.map.screens.json`)
+
+Minimal, name-based — placements reference assets by NAME so they stay
+connected across re-imports. For custom wrappers.
+
+```json
+{
+  "0,0": {
+    "fill": "tileset_r0c0",
+    "tiles": [{ "asset": "wall_top", "x": 64, "y": 32 }]
+  },
+  "0,1": { "fill": null, "tiles": [] }
+}
+```
+
+#### 2. Objects export (`*.map.objects.json`)
+
+Every placement as a self-contained world-space object — ideal for
+entity spawners. `worldX` grows East, `worldY` grows South (same
+convention as screen coords). `sx,sy` is the source rect in `image`;
+`z` is stacking order within the screen.
+
+```json
+[
+  {
+    "name": "wall_top",
+    "screen": "0,0",
+    "x": 64, "y": 32,
+    "worldX": 64, "worldY": 32,
+    "width": 32, "height": 32,
+    "image": "tileset.png",
+    "sx": 64, "sy": 0,
+    "z": 0
+  }
+]
+```
+
+#### 3. Full map export (`*.map.json`)
+
+Everything: images, assets (id → name + source rect), per-screen
+default tiles and id-based placements. Names are included next to ids
+so any consumer can resolve the connections.
+
+```json
+{
+  "meta": { "version": "1.0", "tool": "gamefoo-map-editor", "projectName": "My World", "blockSize": 32, "screenCols": 16, "screenRows": 12, "exportedAt": "..." },
+  "images": [{ "id": "img_1", "name": "tileset.png", "url": "/uploads/123_tileset.png", "width": 256, "height": 128 }],
+  "assets": {
+    "ast_1": { "name": "tileset_r0c0", "imageId": "img_1", "x": 0, "y": 0, "width": 32, "height": 32 }
+  },
+  "mapDefaultAssetId": null,
+  "screens": {
+    "0,0": {
+      "defaultAssetId": "ast_1",
+      "placements": [{ "assetId": "ast_5", "x": 64, "y": 32 }]
+    }
+  }
+}
+```
+
+#### 4. Project file (`*.map.project.json`)
+
+Full editor state for re-import into the map editor. Not for engine use.
+
+---
+
+`placements` x/y are pixel offsets from the screen's top-left corner
+(always block-aligned when placed with the editor). Images reference
+server upload paths — copy the files into your game's assets or serve
+the exports directory.

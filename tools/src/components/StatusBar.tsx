@@ -7,8 +7,9 @@ interface Props {
 }
 
 export function StatusBar({ state, mousePos }: Props) {
-  const imgInfo = state.imageData
-    ? `${state.imageData.name} (${state.imageData.width}×${state.imageData.height})`
+  const activeImage = state.images.find((i) => i.id === state.activeImageId);
+  const imgInfo = activeImage
+    ? `${activeImage.name} (${activeImage.width}×${activeImage.height})`
     : "No image";
 
   return (

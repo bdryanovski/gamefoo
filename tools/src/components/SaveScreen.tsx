@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { AppState } from "../types";
-import { exportAtlas, exportGrid, exportFull, exportSprites, exportAnimations } from "../utils/export";
+import {
+  exportAtlasForImage,
+  exportGridForImage,
+  exportFull,
+  exportSprites,
+  exportAnimations,
+  spritesOfImage,
+} from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
 
 interface Props {
@@ -26,8 +33,6 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
   const baseName = state.projectName.replace(/\s+/g, "_").toLowerCase();
 
   useEffect(() => {
-    const atlas = exportAtlas(state);
-    const grid = exportGrid(state);
     const full = exportFull(state);
 
     const list: ExportFile[] = [
@@ -41,19 +46,27 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
         label: "Animations Export (frame order, duration, loop)",
         data: exportAnimations(state),
       },
-      {
-        filename: `${baseName}.atlas.json`,
-        label: "Atlas Export (Sprite.fromAtlas)",
-        data: atlas,
-      },
     ];
 
-    if (state.grid.enabled) {
+    // One atlas (+ grid) per image that has sprites
+    for (const img of state.images) {
+      if (spritesOfImage(state, img.id).length === 0) continue;
+      const imgBase = img.name
+        .replace(/\.[^.]+$/, "")
+        .replace(/\s+/g, "_")
+        .toLowerCase();
       list.push({
-        filename: `${baseName}.grid.json`,
-        label: "Grid Export (Sprite.fromGrid)",
-        data: grid,
+        filename: `${baseName}.${imgBase}.atlas.json`,
+        label: `Atlas Export — ${img.name} (Sprite.fromAtlas)`,
+        data: exportAtlasForImage(state, img),
       });
+      if (state.grid.enabled) {
+        list.push({
+          filename: `${baseName}.${imgBase}.grid.json`,
+          label: `Grid Export — ${img.name} (Sprite.fromGrid)`,
+          data: exportGridForImage(state, img),
+        });
+      }
     }
 
     list.push({
@@ -141,13 +154,12 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
           {/* Status */}
           <div className="save-status raised p-4 mb-8">
             <div>Project saved to server.</div>
-            {state.imageData && (
-              <div className="text-xs text-dim mt-4">
-                Image: {state.imageData.name} ({state.imageData.width}x
-                {state.imageData.height}) — stored at{" "}
-                <code>{state.imageData.url}</code>
+            {state.images.map((img) => (
+              <div key={img.id} className="text-xs text-dim mt-4">
+                Image: {img.name} ({img.width}x{img.height}) — stored at{" "}
+                <code>{img.url}</code>
               </div>
-            )}
+            ))}
           </div>
 
           {/* Save to server button */}
