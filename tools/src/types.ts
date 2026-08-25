@@ -80,6 +80,28 @@ export interface ObjectMeta {
  * Useful for organizing complex entities (e.g. a character with
  * idle, walk, attack sprites and animations).
  */
+/** One directional/action slot on a character → a sprite or animation. */
+export interface CharacterSlot {
+  kind: "sprite" | "animation";
+  id: string;
+}
+
+/** A user-defined character action slot (e.g. attack, jump). */
+export interface CharacterAction {
+  id: string;
+  name: string;
+}
+
+/**
+ * Character authoring config layered onto a game object. `slots` is keyed
+ * by standard slot keys (idle/up/down/left/right/sideways/death) and by
+ * custom action ids. Presence of this field marks the object as a character.
+ */
+export interface CharacterConfig {
+  slots: Record<string, CharacterSlot>;
+  actions: CharacterAction[];
+}
+
 export interface GameObjectDef {
   id: string;
   name: string;
@@ -94,6 +116,8 @@ export interface GameObjectDef {
    * animations. Every object owns exactly one.
    */
   machine: StateMachineDef;
+  /** Present when this object is a character built in the Character tab. */
+  character?: CharacterConfig;
 }
 
 /** A fresh, empty game object with its own (single-state) machine. */
@@ -131,7 +155,26 @@ export function normalizeObject(raw: unknown): GameObjectDef {
       tags: Array.isArray(meta.tags) ? meta.tags : [],
     },
     machine: normalizeMachine(o.machine, o.name),
+    ...(o.character ? { character: normalizeCharacter(o.character) } : {}),
   };
+}
+
+/** Coerce persisted character config to a valid shape. */
+function normalizeCharacter(raw: CharacterConfig): CharacterConfig {
+  const slots: Record<string, CharacterSlot> = {};
+  const rawSlots = raw.slots ?? {};
+  for (const key of Object.keys(rawSlots)) {
+    const s = rawSlots[key];
+    if (s && (s.kind === "sprite" || s.kind === "animation") && typeof s.id === "string") {
+      slots[key] = { kind: s.kind, id: s.id };
+    }
+  }
+  const actions = Array.isArray(raw.actions)
+    ? raw.actions
+      .filter((a) => a && typeof a.id === "string" && typeof a.name === "string")
+      .map((a) => ({ id: a.id, name: a.name }))
+    : [];
+  return { slots, actions };
 }
 
 /** Coerce a persisted/legacy machine to a structurally valid shape. */

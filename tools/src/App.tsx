@@ -10,6 +10,7 @@ import { AnimationPanel } from "./components/AnimationPanel";
 import { ImageLibraryPanel } from "./components/ImageLibraryPanel";
 import { ExportPanel } from "./components/ExportPanel";
 import { ObjectExplorer } from "./objects/ObjectExplorer";
+import { CharacterEditor } from "./objects/CharacterEditor";
 import { StatusBar } from "./components/StatusBar";
 import { ProjectManager } from "./components/ProjectManager";
 import { SaveScreen } from "./components/SaveScreen";
@@ -249,9 +250,9 @@ function historyReducer(state: AppState, action: AppAction): AppState {
 
 export function App() {
   const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
-  const [mode, setMode] = useState<"sprite" | "map" | "objects">(() => {
+  const [mode, setMode] = useState<"sprite" | "map" | "objects" | "character">(() => {
     const saved = localStorage.getItem("gamefoo-tools-mode");
-    return saved === "map" || saved === "objects"
+    return saved === "map" || saved === "objects" || saved === "character"
       ? saved
       : "sprite";
   });
@@ -310,6 +311,16 @@ export function App() {
     (a: Parameters<typeof mapReducer>[1]) => dispatch({ type: "MAP", action: a }),
     [],
   );
+
+  // Latest values captured for the periodic auto-save interval, plus the
+  // last state actually persisted to the server (skip redundant saves).
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const projectIdRef = useRef(currentProjectId);
+  projectIdRef.current = currentProjectId;
+  const savingRef = useRef(saving);
+  savingRef.current = saving;
+  const lastSavedStateRef = useRef<AppState | null>(null);
 
   // ── Load saved state on mount ──────────────────────────
 
@@ -437,6 +448,7 @@ export function App() {
           setCurrentProjectId(projId);
         }
         await saveProject(projId, state);
+        lastSavedStateRef.current = state;
         if (mode === "save") {
           setShowSaveScreen(true);
         } else {
@@ -445,7 +457,9 @@ export function App() {
         }
       } catch (e) {
         console.error("Save failed:", e);
-        alert("Failed to save project to server");
+        alert(
+          `Failed to save project to server.\n\n${e instanceof Error ? e.message : String(e)}`,
+        );
       } finally {
         setSaving(false);
       }
@@ -464,6 +478,26 @@ export function App() {
     const t = setTimeout(() => setFlashQuickSaved(false), 1500);
     return () => clearTimeout(t);
   }, [quickSavedAt]);
+
+  // ── Server auto-save (every 60s while a project is open) ──
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      const s = stateRef.current;
+      const pid = projectIdRef.current;
+      // Only persist an existing project, when idle and actually changed.
+      if (!pid || savingRef.current || lastSavedStateRef.current === s) return;
+      setSaving(true);
+      saveProject(pid, s)
+        .then(() => {
+          lastSavedStateRef.current = s;
+          setQuickSavedAt(Date.now());
+        })
+        .catch((e) => console.error("Auto-save failed:", e))
+        .finally(() => setSaving(false));
+    }, 60000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -562,6 +596,12 @@ export function App() {
           onClick={() => setMode("objects")}
         >
           ⬡ Objects
+        </button>
+        <button
+          className={`mode-btn ${mode === "character" ? "active" : ""}`}
+          onClick={() => setMode("character")}
+        >
+          ☺ Character
         </button>
         <span className="mode-bar__project">
           {state.projectName}
@@ -694,8 +734,18 @@ export function App() {
             onSave={handleSave}
             onOpenProjects={() => setShowProjects(true)}
           />
-        ) : (
+        ) : mode === "objects" ? (
           <ObjectExplorer
+            state={state}
+            dispatch={dispatch}
+            imageMap={imageMap}
+            projectId={currentProjectId}
+            saving={saving}
+            onSave={handleSave}
+            onOpenProjects={() => setShowProjects(true)}
+          />
+        ) : (
+          <CharacterEditor
             state={state}
             dispatch={dispatch}
             imageMap={imageMap}

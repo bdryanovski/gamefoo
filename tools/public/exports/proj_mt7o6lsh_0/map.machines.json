@@ -3,9 +3,31 @@
     "version": "1.0",
     "tool": "gamefoo-statemachine-editor",
     "projectName": "Map",
-    "exportedAt": "2026-08-25T07:53:52.572Z"
+    "exportedAt": "2026-08-25T15:12:10.361Z"
   },
   "machines": {
+    "torch": {
+      "initial": "Normal",
+      "states": {
+        "Normal": {
+          "display": {
+            "kind": "animation",
+            "animation": "anim_0"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "Fire": {
+      "initial": null,
+      "states": {},
+      "transitions": []
+    },
+    "Ork": {
+      "initial": null,
+      "states": {},
+      "transitions": []
+    },
     "Jar": {
       "initial": "ok",
       "states": {
@@ -29,6 +51,30 @@
           "condition": "kick"
         }
       ]
+    },
+    "object_5": {
+      "initial": "state_0",
+      "states": {
+        "state_0": {
+          "display": {
+            "kind": "animation",
+            "animation": null
+          }
+        }
+      },
+      "transitions": []
+    },
+    "Slime": {
+      "initial": "Idle",
+      "states": {
+        "Idle": {
+          "display": {
+            "kind": "animation",
+            "animation": "Slime_idle"
+          }
+        }
+      },
+      "transitions": []
     }
   }
 }

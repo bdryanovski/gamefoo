@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "animated_props.png",
+    "imageWidth": 176,
+    "imageHeight": 128,
+    "exportedAt": "2026-08-25T15:12:10.361Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "torch": 0,
+    "torch_1": 1,
+    "torch_2": 2,
+    "torch_3": 3,
+    "fire": 44,
+    "fire_1": 45,
+    "fire_2": 46,
+    "fire_3": 47,
+    "ork": 18,
+    "ork_1": 19,
+    "lanter": 20,
+    "sprite_10_1": 21,
+    "sprite_4_0": 4,
+    "sprite_5_0": 5,
+    "sprite_6_0": 6,
+    "sprite_4_3": 37,
+    "sprite_5_3": 38,
+    "sprite_6_3": 39,
+    "sprite_4_1": 15,
+    "sprite_5_1": 16,
+    "sprite_6_1": 17,
+    "sprite_7_0": 7,
+    "sprite_8_0": 8,
+    "sprite_9_0": 9,
+    "sprite_10_0": 10
+  },
+  "animations": {
+    "anim_0": {
+      "frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "fire": {
+      "frames": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Ork": {
+      "frames": [
+        18,
+        19
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Lanter": {
+      "frames": [
+        20,
+        21
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Chest": {
+      "frames": [
+        4,
+        5,
+        6
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Spike": {
+      "frames": [
+        37,
+        38,
+        39
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "switch": {
+      "frames": [
+        15,
+        16,
+        17
+      ],
+      "duration": 0.3,
+      "loop": true
+    },
+    "Money": {
+      "frames": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "duration": 0.1,
+      "loop": true
+    }
+  }
+}

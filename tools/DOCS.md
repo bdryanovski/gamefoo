@@ -589,7 +589,9 @@ tools/
     │   ├── ProjectManager.tsx  # Project list/create/open/delete modal
     │   └── SaveScreen.tsx      # Save confirmation + export files screen
     ├── objects/
-    │   └── ObjectExplorer.tsx  # Object Explorer mode (list + configure objects)
+    │   ├── ObjectExplorer.tsx  # Object Explorer mode (list + configure objects)
+    │   ├── CharacterEditor.tsx # Character mode (slots → auto state machine)
+    │   └── character.ts        # Character slot model + machine generation
     └── utils/
         ├── export.ts      # JSON export generators
         ├── storage.ts     # localStorage + server API client

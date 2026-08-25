@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "grounds.png",
+    "imageWidth": 208,
+    "imageHeight": 256,
+    "exportedAt": "2026-08-25T15:12:10.361Z"
+  },
+  "frames": {
+    "ground": {
+      "x": 192,
+      "y": 192,
+      "width": 16,
+      "height": 16
+    },
+    "ground_0": {
+      "x": 144,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "ground_1": {
+      "x": 128,
+      "y": 192,
+      "width": 16,
+      "height": 16
+    },
+    "ground_2": {
+      "x": 144,
+      "y": 192,
+      "width": 16,
+      "height": 16
+    },
+    "ground_3": {
+      "x": 176,
+      "y": 192,
+      "width": 16,
+      "height": 16
+    },
+    "ground_4": {
+      "x": 160,
+      "y": 192,
+      "width": 16,
+      "height": 16
+    },
+    "ground_5": {
+      "x": 176,
+      "y": 240,
+      "width": 16,
+      "height": 16
+    },
+    "ground_6": {
+      "x": 128,
+      "y": 240,
+      "width": 16,
+      "height": 16
+    },
+    "groung_7": {
+      "x": 144,
+      "y": 240,
+      "width": 16,
+      "height": 16
+    },
+    "ground_8": {
+      "x": 160,
+      "y": 240,
+      "width": 16,
+      "height": 16
+    },
+    "ground_9": {
+      "x": 176,
+      "y": 224,
+      "width": 16,
+      "height": 16
+    },
+    "ground_10": {
+      "x": 128,
+      "y": 224,
+      "width": 16,
+      "height": 16
+    },
+    "ground_11": {
+      "x": 128,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "ground_12": {
+      "x": 176,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_1": {
+      "x": 160,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_5_14": {
+      "x": 80,
+      "y": 224,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_13": {
+      "x": 96,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_14": {
+      "x": 32,
+      "y": 224,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_13": {
+      "x": 48,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_13": {
+      "x": 160,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_14": {
+      "x": 96,
+      "y": 224,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_5_13": {
+      "x": 80,
+      "y": 208,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_15": {
+      "x": 0,
+      "y": 240,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {}
+}

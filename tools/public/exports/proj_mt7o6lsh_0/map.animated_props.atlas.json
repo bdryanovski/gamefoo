@@ -1,0 +1,238 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "animated_props.png",
+    "imageWidth": 176,
+    "imageHeight": 128,
+    "exportedAt": "2026-08-25T15:12:10.361Z"
+  },
+  "frames": {
+    "torch": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "torch_1": {
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "torch_2": {
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "torch_3": {
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "fire": {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "fire_1": {
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "fire_2": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "fire_3": {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "ork": {
+      "x": 112,
+      "y": 16,
+      "width": 16,
+      "height": 32
+    },
+    "ork_1": {
+      "x": 128,
+      "y": 16,
+      "width": 16,
+      "height": 32
+    },
+    "lanter": {
+      "x": 144,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_1": {
+      "x": 160,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_4_0": {
+      "x": 64,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_5_0": {
+      "x": 80,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_0": {
+      "x": 96,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_4_3": {
+      "x": 64,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_5_3": {
+      "x": 80,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_3": {
+      "x": 96,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_4_1": {
+      "x": 64,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_5_1": {
+      "x": 80,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_1": {
+      "x": 96,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_7_0": {
+      "x": 112,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_8_0": {
+      "x": 128,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_9_0": {
+      "x": 144,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_0": {
+      "x": 160,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "anim_0": {
+      "frames": [
+        "torch",
+        "torch_1",
+        "torch_2",
+        "torch_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "fire": {
+      "frames": [
+        "fire",
+        "fire_1",
+        "fire_2",
+        "fire_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Ork": {
+      "frames": [
+        "ork",
+        "ork_1"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Lanter": {
+      "frames": [
+        "lanter",
+        "sprite_10_1"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Chest": {
+      "frames": [
+        "sprite_4_0",
+        "sprite_5_0",
+        "sprite_6_0"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Spike": {
+      "frames": [
+        "sprite_4_3",
+        "sprite_5_3",
+        "sprite_6_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "switch": {
+      "frames": [
+        "sprite_4_1",
+        "sprite_5_1",
+        "sprite_6_1"
+      ],
+      "duration": 0.3,
+      "loop": true
+    },
+    "Money": {
+      "frames": [
+        "sprite_7_0",
+        "sprite_8_0",
+        "sprite_9_0",
+        "sprite_10_0"
+      ],
+      "duration": 0.1,
+      "loop": true
+    }
+  }
+}
