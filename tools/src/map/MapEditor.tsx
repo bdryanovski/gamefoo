@@ -21,6 +21,7 @@ const MAP_TOOLS: { key: MapToolType; icon: string; title: string }[] = [
   { key: "erase", icon: "✕", title: "Erase (E) — remove placements" },
   { key: "fill", icon: "▒", title: "Fill (F) — set screen default tile" },
   { key: "pick", icon: "◌", title: "Pick (I) — select sprite under cursor" },
+  { key: "move", icon: "✜", title: "Move (M) — drag a placement to reposition it" },
   { key: "pan", icon: "✥", title: "Pan (H) — drag to move view (or Space)" },
 ];
 
@@ -29,6 +30,7 @@ const KEY_MAP: Record<string, MapToolType> = {
   e: "erase",
   f: "fill",
   i: "pick",
+  m: "move",
   h: "pan",
 };
 

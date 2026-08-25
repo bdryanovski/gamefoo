@@ -45,6 +45,22 @@ export function MapCanvas({
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0 });
   const [spaceHeld, setSpaceHeld] = useState(false);
+  /** Move tool: the placement being dragged, its source screen, and the
+   *  cursor offset within it. */
+  const movingRef = useRef<{
+    id: string;
+    screenKey: string;
+    offsetX: number;
+    offsetY: number;
+  } | null>(null);
+  const [movePreview, setMovePreview] = useState<{
+    id: string;
+    screenKey: string;
+    spriteId: string;
+    x: number;
+    y: number;
+    valid: boolean;
+  } | null>(null);
   const [hover, setHover] = useState<{
     screenKey: string;
     localX: number;
@@ -210,12 +226,26 @@ export function MapCanvas({
           ctx.stroke();
         }
 
-        // Placements (clipped to the screen)
+        // Placements (clipped to the screen) — skip the one being moved
         ctx.beginPath();
         ctx.rect(0, 0, r.w, r.h);
         ctx.clip();
         for (const p of r.screen.placements) {
+          if (movePreview && p.id === movePreview.id) continue;
           drawSprite(p.spriteId, p.x, p.y);
+        }
+
+        // Move-tool preview: ghost of the dragged placement at the target cell
+        if (movePreview && movePreview.screenKey === screenKey(r.screen.x, r.screen.y)) {
+          drawSprite(movePreview.spriteId, movePreview.x, movePreview.y, 0.6);
+          ctx.strokeStyle = movePreview.valid ? "#ffff00" : "#ff4444";
+          ctx.lineWidth = 2 / map.zoom;
+          ctx.strokeRect(
+            movePreview.x,
+            movePreview.y,
+            spriteById.get(movePreview.spriteId)?.width ?? map.blockSize,
+            spriteById.get(movePreview.spriteId)?.height ?? map.blockSize,
+          );
         }
 
         // Ghost preview of the selected sprite at hover cell
@@ -258,7 +288,7 @@ export function MapCanvas({
 
     return () => cancelAnimationFrame(rafRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, canvasSize, hover, imageMap, state.sprites]);
+  }, [map, canvasSize, hover, imageMap, state.sprites, movePreview]);
 
   // ── Mouse handlers ─────────────────────────────────────
 
@@ -355,6 +385,27 @@ export function MapCanvas({
         return;
       }
 
+      // Move: click-drag a placement to reposition it (drop on mouseup).
+      if (tool === "move") {
+        const p = findTopmostPlacement(key, world.x, world.y);
+        if (!p) return;
+        movingRef.current = {
+          id: p.id,
+          screenKey: key,
+          offsetX: localX - p.x,
+          offsetY: localY - p.y,
+        };
+        setMovePreview({
+          id: p.id,
+          screenKey: key,
+          spriteId: p.spriteId,
+          x: p.x,
+          y: p.y,
+          valid: true,
+        });
+        return;
+      }
+
       // Paint: click places one sprite per click (no drag painting).
       if (tool === "paint" && map.selectedSpriteId) {
         mapDispatch({
@@ -410,9 +461,45 @@ export function MapCanvas({
         });
         return;
       }
-      // Hover only — placement/erase happen on click (mousedown).
+
       const world = getWorldPos(e);
       const r = findScreenAt(world.x, world.y);
+
+      // Move tool: update the drag preview (block-snapped).
+      const moving = movingRef.current;
+      if (moving && map.activeTool === "move") {
+        if (!r) {
+          setMovePreview(null);
+          return;
+        }
+        const key = screenKey(r.screen.x, r.screen.y);
+        const spriteId =
+          map.screens[moving.screenKey]?.placements.find(
+            (p) => p.id === moving.id,
+          )?.spriteId ?? "";
+        const localX = world.x - r.wx;
+        const localY = world.y - r.wy;
+        const nx = Math.round(localX / map.blockSize) * map.blockSize;
+        const ny = Math.round(localY / map.blockSize) * map.blockSize;
+        setMovePreview({
+          id: moving.id,
+          screenKey: key,
+          spriteId,
+          x: nx,
+          y: ny,
+          valid: moving.screenKey === key,
+        });
+        onStatus({
+          screenKey: key,
+          block: {
+            col: Math.max(0, Math.floor(localX / map.blockSize)),
+            row: Math.max(0, Math.floor(localY / map.blockSize)),
+          },
+        });
+        return;
+      }
+
+      // Hover only — placement/erase happen on click (mousedown).
       if (!r) {
         onStatus({ screenKey: null, block: null });
         setHover(null);
@@ -426,12 +513,38 @@ export function MapCanvas({
       onStatus({ screenKey: key, block: { col, row } });
       setHover({ screenKey: key, localX, localY });
     },
-    [isPanning, mapDispatch, getWorldPos, findScreenAt, map.blockSize, onStatus],
+    [isPanning, mapDispatch, getWorldPos, findScreenAt, map, onStatus],
   );
 
   const handleMouseUp = useCallback(() => {
     setIsPanning(false);
-  }, []);
+
+    // Commit a move-tool drag.
+    const moving = movingRef.current;
+    if (moving) {
+      movingRef.current = null;
+      const preview = movePreview;
+      setMovePreview(null);
+      if (preview && preview.valid) {
+        const original = map.screens[moving.screenKey]?.placements.find(
+          (p) => p.id === moving.id,
+        );
+        if (
+          original &&
+          (original.x !== preview.x || original.y !== preview.y) &&
+          preview.screenKey === moving.screenKey
+        ) {
+          mapDispatch({
+            type: "MOVE_PLACEMENT",
+            screenKey: moving.screenKey,
+            id: moving.id,
+            x: preview.x,
+            y: preview.y,
+          });
+        }
+      }
+    }
+  }, [mapDispatch, map.screens, movePreview]);
 
   // Stop panning even when the button is released outside the canvas.
   useEffect(() => {

@@ -667,7 +667,11 @@ South (down) and `y` grows East (right).
 5. **Erase (E)** removes the topmost placement under the cursor.
    **Pick (I)** selects the sprite under the cursor (placement, or the
    screen background).
-6. Navigate: **Space+drag / middle-drag / H** to pan, **scroll** to
+6. **Move (M)** — click and drag any placed tile/object to reposition
+   it. The ghost snaps to blocks; a red outline means the drop target is
+   off-screen (releases outside the origin screen cancel the move).
+   Placements stay on their own screen.
+7. Navigate: **Space+drag / middle-drag / H** to pan, **scroll** to
    zoom.
 
 ### One project, two editors

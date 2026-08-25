@@ -26,7 +26,7 @@ export interface MapScreen {
   placements: MapPlacement[];
 }
 
-export type MapToolType = "paint" | "erase" | "fill" | "pick" | "pan";
+export type MapToolType = "paint" | "erase" | "fill" | "pick" | "move" | "pan";
 
 export interface MapState {
   /** Px per block. */
@@ -72,6 +72,7 @@ export type MapAction =
   | { type: "SET_SCREEN_DEFAULT"; x: number; y: number; spriteId: string | null }
   | { type: "ADD_PLACEMENT"; screenKey: string; placement: MapPlacement }
   | { type: "REMOVE_PLACEMENT"; screenKey: string; id: string }
+  | { type: "MOVE_PLACEMENT"; screenKey: string; id: string; x: number; y: number }
   | { type: "CLEAR_SCREEN"; x: number; y: number }
   | { type: "SET_TOOL"; tool: MapToolType }
   | { type: "SET_ZOOM"; zoom: number }
@@ -161,6 +162,23 @@ export function mapReducer(state: MapState, action: MapAction): MapState {
           [action.screenKey]: {
             ...screen,
             placements: screen.placements.filter((p) => p.id !== action.id),
+          },
+        },
+      };
+    }
+
+    case "MOVE_PLACEMENT": {
+      const screen = state.screens[action.screenKey];
+      if (!screen) return state;
+      return {
+        ...state,
+        screens: {
+          ...state.screens,
+          [action.screenKey]: {
+            ...screen,
+            placements: screen.placements.map((p) =>
+              p.id === action.id ? { ...p, x: action.x, y: action.y } : p,
+            ),
           },
         },
       };
