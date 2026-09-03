@@ -271,7 +271,7 @@ export function createScheme(
  */
 export function mergeSchemes(
   name: string,
-  ...schemes: Partial<Record<InputAction, ActionBinding>>[]
+  ...schemes: Array<Partial<Record<InputAction, ActionBinding>>>
 ): ControlScheme {
   const merged: Partial<Record<InputAction, ActionBinding>> = {};
 

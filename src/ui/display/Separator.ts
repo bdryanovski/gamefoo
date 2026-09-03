@@ -193,12 +193,11 @@ export default class Separator extends UIWidget {
         width: width || 100,
         height: this._thickness + this._padding.top + this._padding.bottom,
       };
-    } else {
-      return {
-        width: this._thickness + this._padding.left + this._padding.right,
-        height: this._length || this._height,
-      };
     }
+    return {
+      width: this._thickness + this._padding.left + this._padding.right,
+      height: this._length || this._height,
+    };
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

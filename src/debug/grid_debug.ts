@@ -81,7 +81,7 @@ export class GridDebugSystem implements SubSystem {
   private collisionColor: string;
   private fontSize: number;
 
-  private debugPath: { col: number; row: number }[] = [];
+  private debugPath: Array<{ col: number; row: number }> = [];
   private mouseX = 0;
   private mouseY = 0;
   private mouseActive = false;
@@ -195,7 +195,7 @@ export class GridDebugSystem implements SubSystem {
    * if (path) debugSystem.setDebugPath(path);
    * ```
    */
-  setDebugPath(path: { col: number; row: number }[]): void {
+  setDebugPath(path: Array<{ col: number; row: number }>): void {
     this.debugPath = path;
   }
 

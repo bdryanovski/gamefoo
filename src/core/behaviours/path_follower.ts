@@ -120,7 +120,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   /**
    * The current computed path (array of grid waypoints).
    */
-  private path: { col: number; row: number }[] = [];
+  private path: Array<{ col: number; row: number }> = [];
 
   /**
    * Index of the current waypoint being approached.

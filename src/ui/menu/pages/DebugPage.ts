@@ -59,7 +59,7 @@ export interface DebugPageConfig {
 /**
  * Grid size options
  */
-const GRID_SIZES: { label: string; value: GridSize }[] = [
+const GRID_SIZES: Array<{ label: string; value: GridSize }> = [
   { label: 'None', value: 'none' },
   { label: '8x8', value: 8 },
   { label: '16x16', value: 16 },

@@ -169,7 +169,7 @@ export class Pathfinder {
     startRow: number,
     goalCol: number,
     goalRow: number,
-  ): { col: number; row: number }[] | null {
+  ): Array<{ col: number; row: number }> | null {
     if (!this.grid.isInBounds(startCol, startRow) || !this.grid.isInBounds(goalCol, goalRow)) {
       return null;
     }
@@ -300,8 +300,8 @@ export class Pathfinder {
    *
    * @internal
    */
-  private reconstructPath(node: PathNode): { col: number; row: number }[] {
-    const path: { col: number; row: number }[] = [];
+  private reconstructPath(node: PathNode): Array<{ col: number; row: number }> {
+    const path: Array<{ col: number; row: number }> = [];
     let current: PathNode | null = node;
     while (current) {
       path.push({ col: current.col, row: current.row });

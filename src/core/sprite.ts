@@ -19,7 +19,7 @@ interface AnimationDefinition {
   /**
    * Ordered frame indices into the spritesheet grid.
    */
-  frames: (string | number)[];
+  frames: Array<string | number>;
   /**
    * Time in seconds each frame is displayed before advancing.
    */

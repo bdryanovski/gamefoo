@@ -11,7 +11,45 @@
     "correctness": "error"
   },
   "rules": {
-    "curly": ["error", "all"]
+    "no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+    ],
+    "no-param-reassign": "error",
+    "no-case-declarations": "error",
+    "no-unreachable": "error",
+    "no-cond-assign": "error",
+    "no-sparse-arrays": "error",
+    "no-async-promise-executor": "error",
+    "no-shadow-restricted-names": "error",
+    "eqeqeq": ["error", "always"],
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-nested-ternary": "error",
+    "no-array-constructor": "error",
+    "no-extend-native": "error",
+    "curly": ["error", "all"],
+    "typescript/no-non-null-assertion": "off",
+    "typescript/no-explicit-any": "off",
+    "no-else-return": "warn",
+    "default-case": "warn",
+    "no-constant-condition": "warn",
+    "prefer-template": "warn",
+    "max-params": ["warn", { "max": 5 }],
+    "max-depth": ["warn", { "max": 4 }],
+    "max-statements": ["warn", { "max": 20 }],
+    "typescript/array-type": ["warn", { "default": "array-simple" }],
+    "typescript/prefer-nullish-coalescing": "warn",
+    "typescript/prefer-optional-chain": "warn",
+    "typescript/no-empty-object-type": "warn"
   },
-  "ignorePatterns": ["dist", "docs", "node_modules", "**/*.d.ts"]
+  "overrides": [
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "typescript/no-empty-object-type": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["dist", "docs", "node_modules"]
 }

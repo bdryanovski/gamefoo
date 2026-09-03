@@ -72,7 +72,7 @@ export class Grid<T = number> {
   /**
    * Internal 2-D array storing all cells, indexed `[row][col]`.
    */
-  private cells: GridCell<T>[][];
+  private cells: Array<Array<GridCell<T>>>;
 
   /**
    * Creates a new grid, pre-filling every cell with `defaultValue`.
@@ -315,9 +315,9 @@ export class Grid<T = number> {
    * // Up to 8 cells
    * ```
    */
-  getNeighbours(col: number, row: number, includeDiagonals = false): GridCell<T>[] {
+  getNeighbours(col: number, row: number, includeDiagonals = false): Array<GridCell<T>> {
     const offsets = includeDiagonals ? DIR_8 : DIR_4;
-    const result: GridCell<T>[] = [];
+    const result: Array<GridCell<T>> = [];
 
     for (let index = 0; index < offsets.length; index += 1) {
       const [dc, dr] = offsets[index]!;

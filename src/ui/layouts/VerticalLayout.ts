@@ -198,7 +198,7 @@ export default class VerticalLayout extends Container {
 
     // Calculate total children height
     let totalChildrenHeight = 0;
-    const childSizes: { width: number; height: number }[] = [];
+    const childSizes: Array<{ width: number; height: number }> = [];
 
     for (let index = 0; index < visibleChildren.length; index += 1) {
       const child = visibleChildren[index]!;
