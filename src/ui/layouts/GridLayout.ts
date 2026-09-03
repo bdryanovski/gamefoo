@@ -8,6 +8,7 @@
 
 import Container, { type ContainerConfig } from '../core/Container';
 import type { UISize } from '../core/types';
+import type UIWidget from '../core/UIWidget';
 
 /**
  * Configuration for GridLayout.
@@ -356,7 +357,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  getChildAtCell(column: number, row: number): import('../core/UIWidget').default | undefined {
+  getChildAtCell(column: number, row: number): UIWidget | undefined {
     const index = row * this._columns + column;
     return this._children[index];
   }
@@ -369,9 +370,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  getCellOfChild(
-    child: import('../core/UIWidget').default,
-  ): { column: number; row: number } | null {
+  getCellOfChild(child: UIWidget): { column: number; row: number } | null {
     const index = this._children.indexOf(child);
     if (index < 0) {
       return null;

@@ -31,7 +31,7 @@ import type World from '../world';
  * };
  * ```
  */
-export type CollidableOptions = {
+export interface CollidableOptions {
   /**
    * The geometric shape used for intersection tests.
    *
@@ -88,7 +88,7 @@ export type CollidableOptions = {
    * @see {@link CollisionInfo}
    */
   onCollision?: (info: CollisionInfo) => void;
-};
+}
 
 /**
  * Collision behaviour that can be attached to any {@link Entity}.

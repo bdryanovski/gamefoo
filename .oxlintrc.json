@@ -10,6 +10,9 @@
   "categories": {
     "correctness": "error"
   },
+  "options": {
+    "typeAware": true
+  },
   "rules": {
     "no-unused-vars": [
       "error",
@@ -38,10 +41,26 @@
     "max-params": ["warn", { "max": 5 }],
     "max-depth": ["warn", { "max": 4 }],
     "max-statements": ["warn", { "max": 20 }],
+    "jsdoc/no-blank-blocks": "error",
     "typescript/array-type": ["warn", { "default": "array-simple" }],
+    "typescript/no-explicit-any": "warn",
+    "typescript/prefer-includes": "error",
+    "typescript/prefer-reduce-type-parameter": "error",
+    "typescript/prefer-ts-expect-error": "error",
     "typescript/prefer-nullish-coalescing": "warn",
+    "typescript/class-literal-property-style": "error",
+    "typescript/explicit-function-return-type": "warn",
     "typescript/prefer-optional-chain": "warn",
-    "typescript/no-empty-object-type": "warn"
+    "typescript/no-empty-object-type": "warn",
+    "typescript/consistent-type-definitions": "error",
+    "typescript/explicit-member-accessibility": [
+      "warn",
+      { "overrides": { "constructors": "no-public" } }
+    ],
+    "typescript/consistent-type-imports": "error",
+    "typescript/consistent-return": "error",
+    "typescript/consistent-indexed-object-style": ["error", "record"],
+    "typescript/no-redundant-type-constituents": "off"
   },
   "overrides": [
     {

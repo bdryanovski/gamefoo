@@ -9,6 +9,7 @@
 import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
 import type { UIInputEvent, UIKeyEvent, UIMouseWheelEvent } from '../core/types';
+import type UIWidget from '../core/UIWidget';
 
 /**
  * Configuration for ScrollView.
@@ -19,7 +20,7 @@ export interface ScrollViewConfig extends ContainerConfig {
   /**
    * Content widget
    */
-  content?: import('../core/UIWidget').default;
+  content?: UIWidget;
   /**
    * Enable horizontal scrolling
    */
@@ -67,7 +68,7 @@ export default class ScrollView extends Container {
   /**
    * Content widget
    */
-  protected _content: import('../core/UIWidget').default | null = null;
+  protected _content: UIWidget | null = null;
 
   /**
    * Enable horizontal scrolling
@@ -217,7 +218,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  setContent(content: import('../core/UIWidget').default | null): void {
+  setContent(content: UIWidget | null): void {
     if (this._content) {
       this.removeChild(this._content);
     }
@@ -235,7 +236,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  getContent(): import('../core/UIWidget').default | null {
+  getContent(): UIWidget | null {
     return this._content;
   }
 
@@ -280,7 +281,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  scrollToWidget(widget: import('../core/UIWidget').default): void {
+  scrollToWidget(widget: UIWidget): void {
     const viewWidth = this._width - this._padding.left - this._padding.right;
     const viewHeight = this._height - this._padding.top - this._padding.bottom;
 

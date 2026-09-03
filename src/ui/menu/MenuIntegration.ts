@@ -28,6 +28,7 @@ import type ControlsPage from './pages/ControlsPage';
 import type DebugPage from './pages/DebugPage';
 import type GraphicsPage from './pages/GraphicsPage';
 import type PalettePage from './pages/PalettePage';
+import type QuitPage from './pages/QuitPage';
 
 /**
  * Debug overlay state.
@@ -387,7 +388,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createQuitPage(message?: string): import('./pages/QuitPage').default {
+  createQuitPage(message?: string): QuitPage {
     const { default: QuitPage } = require('./pages/QuitPage');
 
     return new QuitPage({

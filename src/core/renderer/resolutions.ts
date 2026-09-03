@@ -3,7 +3,10 @@
  *
  * @since 0.4.0
  */
-export type ScreenResolution = { width: number; height: number };
+export interface ScreenResolution {
+  width: number;
+  height: number;
+}
 
 /**
  * Standard console resolutions.
