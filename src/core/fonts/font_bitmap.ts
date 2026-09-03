@@ -84,8 +84,8 @@ export default class FontBitmap extends BitmapDataRenderer {
    *
    * @returns Font metadata object or `null`.
    */
-  get metadata() {
-    return Catalog.get(this.name) || null;
+  public get metadata() {
+    return Catalog.get(this.name) ?? null;
   }
 
   /**
@@ -140,8 +140,8 @@ export default class FontBitmap extends BitmapDataRenderer {
    * const rows = font.getChar("A");
    * ```
    */
-  getChar(char: string): number[] | null {
-    return this.data[char] || null;
+  public getChar(char: string): number[] | null {
+    return this.data[char] ?? null;
   }
 
   /**
@@ -155,7 +155,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * const w = font.getTextWidth("HI"); // 12 for the 5x5 font
    * ```
    */
-  getTextWidth(text: string): number {
+  public getTextWidth(text: string): number {
     return text.length * this.width;
   }
 
@@ -212,7 +212,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderText("GAME OVER", 100, 50, ctx);
    * ```
    */
-  renderText(text: string, x: number, y: number, ctx: RenderContext) {
+  public renderText(text: string, x: number, y: number, ctx: RenderContext) {
     // For terminal / non-canvas contexts, use drawText directly
     if (!ctx.getCanvas?.()) {
       ctx.drawText(text, x, y);

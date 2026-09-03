@@ -54,14 +54,14 @@
     "typescript/prefer-includes": "error",
     "typescript/prefer-reduce-type-parameter": "error",
     "typescript/prefer-ts-expect-error": "error",
-    "typescript/prefer-nullish-coalescing": "warn",
+    "typescript/prefer-nullish-coalescing": "error",
     "typescript/class-literal-property-style": "error",
     "typescript/explicit-function-return-type": "warn",
     "typescript/prefer-optional-chain": "warn",
     "typescript/no-empty-object-type": "warn",
     "typescript/consistent-type-definitions": "error",
     "typescript/explicit-member-accessibility": [
-      "warn",
+      "error",
       { "overrides": { "constructors": "no-public" } }
     ],
     "typescript/consistent-type-imports": "error",

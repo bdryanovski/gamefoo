@@ -102,7 +102,7 @@ export default abstract class Entity extends Node {
    * ```
    */
   constructor(id: string, x: number, y: number, width?: number, height?: number) {
-    super({ x, y }, { width: width || 0, height: height || 0 });
+    super({ x, y }, { width: width ?? 0, height: height ?? 0 });
     this.id = id;
   }
 
@@ -211,11 +211,9 @@ export default abstract class Entity extends Node {
    * @internal
    */
   private get behaviors(): Behaviour[] {
-    if (!this._sortedBehaviors) {
-      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort(
-        (a, b) => a.priority - b.priority,
-      );
-    }
+    this._sortedBehaviors ??= Array.from(this.behaviorMap.values()).sort(
+      (a, b) => a.priority - b.priority,
+    );
     return this._sortedBehaviors;
   }
 

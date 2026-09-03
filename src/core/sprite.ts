@@ -135,24 +135,24 @@ export default class Sprite {
   /**
    * Width of a single frame cell in pixels.
    */
-  readonly width: number;
+  public readonly width: number;
 
   /**
    * Height of a single frame cell in pixels.
    */
-  readonly height: number;
+  public readonly height: number;
 
   /**
    * Number of frame columns in the spritesheet, computed as
    * `Math.floor(image.width / width)`.
    */
-  readonly columns: number;
+  public readonly columns: number;
 
   /**
    * Number of frame rows in the spritesheet, computed as
    * `Math.floor(image.height / height)`.
    */
-  readonly rows: number;
+  public readonly rows: number;
 
   /**
    * Named animation definitions keyed by animation name.
@@ -201,7 +201,7 @@ export default class Sprite {
       frameHeight: height,
     });
 
-    this.animations = new Map(Object.entries(animations || {}));
+    this.animations = new Map(Object.entries(animations ?? {}));
   }
 
   /**
@@ -234,7 +234,7 @@ export default class Sprite {
    *  });
    *  ```
    */
-  static fromGrid(
+  public static fromGrid(
     image: HTMLImageElement,
     config: GridConfig,
     animations?: Record<string, AnimationDefinition>,
@@ -242,7 +242,7 @@ export default class Sprite {
     const sprite = Object.create(Sprite.prototype) as Sprite;
     sprite.image = image;
     sprite.frames = Sprite.generateGridFrames(image, config);
-    sprite.animations = new Map(Object.entries(animations || {}));
+    sprite.animations = new Map(Object.entries(animations ?? {}));
     return sprite;
   }
 
@@ -293,7 +293,7 @@ export default class Sprite {
     return frames;
   }
 
-  static fromAtlas(
+  public static fromAtlas(
     image: HTMLImageElement,
     regions: Record<string, SpriteFrame>,
     animations?: Record<string, AnimationDefinition>,
@@ -301,11 +301,11 @@ export default class Sprite {
     const sprite = Object.create(Sprite.prototype) as Sprite;
     sprite.image = image;
     sprite.frames = new Map(Object.entries(regions));
-    sprite.animations = new Map(Object.entries(animations || {}));
+    sprite.animations = new Map(Object.entries(animations ?? {}));
     return sprite;
   }
 
-  static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
+  public static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
     const [image, response] = await Promise.all([Asset.load(imagePath), fetch(jsonPath)]);
     const data = await response.json();
 
@@ -353,7 +353,7 @@ export default class Sprite {
    * const rect = sprite.getFrameRect(5);
    * ```
    */
-  getFrameRect(frame: number | string): SpriteFrame {
+  public getFrameRect(frame: number | string): SpriteFrame {
     const rect = this.frames.get(frame);
     if (!rect) {
       throw new Error(`Frame "${frame}" not found in sprite`);

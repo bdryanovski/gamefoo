@@ -53,7 +53,7 @@ export default class GameObjectRegister {
    * register.register(new Crate("crate_1", 200, 150, 32, 32));
    * ```
    */
-  register(object: GameObject) {
+  public register(object: GameObject) {
     this.objects.set(object.id, object);
     this._cache = null;
   }
@@ -70,7 +70,7 @@ export default class GameObjectRegister {
    * if (crate) crate.x += 10;
    * ```
    */
-  get(id: string): GameObject | undefined {
+  public get(id: string): GameObject | undefined {
     return this.objects.get(id);
   }
 
@@ -80,7 +80,7 @@ export default class GameObjectRegister {
    * @param id - The ID to look up.
    * @returns `true` if the registry contains the object.
    */
-  has(id: string): boolean {
+  public has(id: string): boolean {
     return this.objects.has(id);
   }
 
@@ -93,10 +93,8 @@ export default class GameObjectRegister {
    *
    * @returns An array of all {@link GameObject} instances in the registry.
    */
-  toArray(): GameObject[] {
-    if (!this._cache) {
-      this._cache = Array.from(this.objects.values());
-    }
+  public toArray(): GameObject[] {
+    this._cache ??= Array.from(this.objects.values());
 
     return this._cache;
   }
@@ -113,7 +111,7 @@ export default class GameObjectRegister {
    * const enemies = register.getAll(obj => obj.id.startsWith("enemy"));
    * ```
    */
-  getAll(filter?: (obj: GameObject) => boolean): GameObject[] {
+  public getAll(filter?: (obj: GameObject) => boolean): GameObject[] {
     if (typeof filter === 'function') {
       return this.toArray().filter(filter);
     }
@@ -127,7 +125,7 @@ export default class GameObjectRegister {
    *
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  updateAll(deltaTime: number): void {
+  public updateAll(deltaTime: number): void {
     for (const obj of this.getAll()) {
       obj.update(deltaTime);
     }
@@ -149,7 +147,7 @@ export default class GameObjectRegister {
    * register.renderAll(ctx);
    * ```
    */
-  sort(compareFn: (a: GameObject, b: GameObject) => number): void {
+  public sort(compareFn: (a: GameObject, b: GameObject) => number): void {
     this.toArray().sort(compareFn);
   }
 
@@ -159,7 +157,7 @@ export default class GameObjectRegister {
    *
    * @param ctx - The rendering context.
    */
-  renderAll(ctx: RenderContext): void {
+  public renderAll(ctx: RenderContext): void {
     for (const obj of this.getAll()) {
       obj.render(ctx);
     }

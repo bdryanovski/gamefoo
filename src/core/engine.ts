@@ -288,9 +288,9 @@ export default class Engine {
    *   .use(new CollisionSystem(world));
    * ```
    */
-  use(subsystem: SubSystem): this {
+  public use(subsystem: SubSystem): this {
     this.subsystems.push(subsystem);
-    this.subsystems.sort((a, b) => (a.order || 100) - (b.order || 100));
+    this.subsystems.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
     subsystem.init?.(this);
     return this;
   }
