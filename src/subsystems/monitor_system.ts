@@ -35,7 +35,9 @@ interface MemoryInfo {
   jsHeapSizeLimit: number;
 }
 
-/** @internal */
+/**
+ * @internal
+ */
 declare const performance: Performance & { memory?: MemoryInfo };
 
 /**
@@ -51,21 +53,37 @@ export type GridSize = 8 | 16 | 32 | 'none';
  * @since 0.5.0
  */
 export interface MonitorSystemOptions {
-  /** Show FPS graph (default: true) */
+  /**
+   * Show FPS graph (default: true)
+   */
   graph?: boolean;
-  /** Show FPS counter (default: true) */
+  /**
+   * Show FPS counter (default: true)
+   */
   showFps?: boolean;
-  /** Show memory usage (default: true when available) */
+  /**
+   * Show memory usage (default: true when available)
+   */
   showMemory?: boolean;
-  /** Show grid overlay (default: false) */
+  /**
+   * Show grid overlay (default: false)
+   */
   showGrid?: boolean;
-  /** Grid size in pixels (default: 16) */
+  /**
+   * Grid size in pixels (default: 16)
+   */
   gridSize?: GridSize;
-  /** Grid color (default: '#333333') */
+  /**
+   * Grid color (default: '#333333')
+   */
   gridColor?: string;
-  /** X position of the overlay (default: 8) */
+  /**
+   * X position of the overlay (default: 8)
+   */
   x?: number;
-  /** Y position of the overlay (default: 8) */
+  /**
+   * Y position of the overlay (default: 8)
+   */
   y?: number;
 }
 
@@ -78,7 +96,9 @@ const font = new FontBitmap('5x5');
  */
 export class MonitorSystem implements SubSystem {
   id = 'monitor';
-  /** Order 90 ensures grid renders BEFORE menu system (order 95) */
+  /**
+   * Order 90 ensures grid renders BEFORE menu system (order 95)
+   */
   order = 90;
   enabled = true;
 
@@ -88,25 +108,43 @@ export class MonitorSystem implements SubSystem {
   private memory: number = 0;
   private frames: number[] = [];
 
-  /** X position of the overlay in pixels. @defaultValue `8` */
+  /**
+   * X position of the overlay in pixels. @defaultValue `8`
+   */
   public x: number = 8;
-  /** Y position of the overlay in pixels. @defaultValue `8` */
+  /**
+   * Y position of the overlay in pixels. @defaultValue `8`
+   */
   public y: number = 8;
 
-  /** Show FPS graph */
+  /**
+   * Show FPS graph
+   */
   private _showGraph: boolean = true;
-  /** Show FPS counter */
+  /**
+   * Show FPS counter
+   */
   private _showFps: boolean = true;
-  /** Show memory usage */
+  /**
+   * Show memory usage
+   */
   private _showMemory: boolean = true;
-  /** Show grid overlay */
+  /**
+   * Show grid overlay
+   */
   private _showGrid: boolean = false;
-  /** Grid size */
+  /**
+   * Grid size
+   */
   private _gridSize: GridSize = 16;
-  /** Grid color */
+  /**
+   * Grid color
+   */
   private _gridColor: string = '#333333';
 
-  /** Engine reference for screen dimensions */
+  /**
+   * Engine reference for screen dimensions
+   */
   private _engine: Engine | null = null;
 
   constructor(options: MonitorSystemOptions = {}) {
@@ -285,7 +323,9 @@ export class MonitorSystem implements SubSystem {
    * @internal
    */
   private renderGrid(ctx: RenderContext): void {
-    if (this._gridSize === 'none') return;
+    if (this._gridSize === 'none') {
+      return;
+    }
 
     const width = this._engine?.dementions.width ?? 320;
     const height = this._engine?.dementions.height ?? 240;
@@ -293,16 +333,16 @@ export class MonitorSystem implements SubSystem {
     const color = this._gridColor;
 
     // Draw dotted vertical lines
-    for (let x = 0; x < width; x += size) {
-      for (let y = 0; y < height; y += 2) {
-        ctx.fillRect(x, y, 1, 1, color);
+    for (let pixelX = 0; pixelX < width; pixelX += size) {
+      for (let pixelY = 0; pixelY < height; pixelY += 2) {
+        ctx.fillRect(pixelX, pixelY, 1, 1, color);
       }
     }
 
     // Draw dotted horizontal lines
-    for (let y = 0; y < height; y += size) {
-      for (let x = 0; x < width; x += 2) {
-        ctx.fillRect(x, y, 1, 1, color);
+    for (let pixelY = 0; pixelY < height; pixelY += size) {
+      for (let pixelX = 0; pixelX < width; pixelX += 2) {
+        ctx.fillRect(pixelX, pixelY, 1, 1, color);
       }
     }
   }
@@ -318,7 +358,9 @@ export class MonitorSystem implements SubSystem {
     ctx.save();
 
     const raw = ctx.getCanvas?.();
-    if (raw) raw.fillStyle = '#ffffff';
+    if (raw) {
+      raw.fillStyle = '#ffffff';
+    }
 
     let yOffset = this.y;
 
@@ -328,12 +370,7 @@ export class MonitorSystem implements SubSystem {
     }
 
     if (this._showMemory && this.memory) {
-      font.renderText(
-        `MEM: ${this.memory.toFixed(1)} MB`,
-        this.x,
-        yOffset,
-        ctx,
-      );
+      font.renderText(`MEM: ${this.memory.toFixed(1)} MB`, this.x, yOffset, ctx);
       yOffset += font.height + 3;
     }
 
@@ -342,9 +379,9 @@ export class MonitorSystem implements SubSystem {
       if (canvasCtx && this.frames.length >= 1) {
         canvasCtx.strokeStyle = '#fff';
         canvasCtx.beginPath();
-        for (let i = 0; i < this.frames.length; i++) {
-          const x = this.x + i;
-          const y = yOffset + 60 - (this.frames[i] ?? 0);
+        for (let frameIndex = 0; frameIndex < this.frames.length; frameIndex += 1) {
+          const x = this.x + frameIndex;
+          const y = yOffset + 60 - (this.frames[frameIndex] ?? 0);
           canvasCtx.lineTo(x, y);
         }
         canvasCtx.stroke();

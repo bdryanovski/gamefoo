@@ -19,9 +19,13 @@ import UIWidget, { type UIWidgetConfig } from './UIWidget';
  * @since 0.5.0
  */
 export interface ContainerConfig extends UIWidgetConfig {
-  /** Whether to clip children to container bounds */
+  /**
+   * Whether to clip children to container bounds
+   */
   clip?: boolean;
-  /** Background color (uses theme if not specified) */
+  /**
+   * Background color (uses theme if not specified)
+   */
   background?: string | null;
 }
 
@@ -45,10 +49,14 @@ export interface ContainerConfig extends UIWidgetConfig {
  * ```
  */
 export default class Container extends UIWidget {
-  /** Whether to clip children to bounds */
+  /**
+   * Whether to clip children to bounds
+   */
   protected _clip: boolean = false;
 
-  /** Optional background color */
+  /**
+   * Optional background color
+   */
   protected _background: string | null = null;
 
   /**
@@ -60,15 +68,21 @@ export default class Container extends UIWidget {
    */
   constructor(config: ContainerConfig = {}) {
     super(config);
-    if (config.clip !== undefined) this._clip = config.clip;
-    if (config.background !== undefined) this._background = config.background;
+    if (config.clip !== undefined) {
+      this._clip = config.clip;
+    }
+    if (config.background !== undefined) {
+      this._background = config.background;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Whether clipping is enabled */
+  /**
+   * Whether clipping is enabled
+   */
   get clip(): boolean {
     return this._clip;
   }
@@ -77,7 +91,9 @@ export default class Container extends UIWidget {
     this._clip = value;
   }
 
-  /** Background color */
+  /**
+   * Background color
+   */
   get background(): string | null {
     return this._background;
   }
@@ -106,27 +122,21 @@ export default class Container extends UIWidget {
     let maxBottom = 0;
 
     for (const child of this._children) {
-      if (!child.visible) continue;
+      if (!child.visible) {
+        continue;
+      }
 
       const childSize = child.getPreferredSize();
-      const right =
-        child.x + child.margin.left + childSize.width + child.margin.right;
-      const bottom =
-        child.y + child.margin.top + childSize.height + child.margin.bottom;
+      const right = child.x + child.margin.left + childSize.width + child.margin.right;
+      const bottom = child.y + child.margin.top + childSize.height + child.margin.bottom;
 
       maxRight = Math.max(maxRight, right);
       maxBottom = Math.max(maxBottom, bottom);
     }
 
     return {
-      width: Math.max(
-        this._width,
-        maxRight + this._padding.left + this._padding.right,
-      ),
-      height: Math.max(
-        this._height,
-        maxBottom + this._padding.top + this._padding.bottom,
-      ),
+      width: Math.max(this._width, maxRight + this._padding.left + this._padding.right),
+      height: Math.max(this._height, maxBottom + this._padding.top + this._padding.bottom),
     };
   }
 
@@ -177,7 +187,9 @@ export default class Container extends UIWidget {
    * @since 0.5.0
    */
   override render(ctx: RenderContext): void {
-    if (!this._visible) return;
+    if (!this._visible) {
+      return;
+    }
 
     // Layout if dirty
     if (this._layoutDirty) {
@@ -208,9 +220,7 @@ export default class Container extends UIWidget {
     }
 
     // Render children sorted by z-index
-    const sortedChildren = [...this._children].sort(
-      (a, b) => a.zIndex - b.zIndex,
-    );
+    const sortedChildren = [...this._children].sort((a, b) => a.zIndex - b.zIndex);
     for (const child of sortedChildren) {
       child.render(ctx);
     }

@@ -34,19 +34,29 @@ type BitmapAnimatorData = Record<string, Bitmap[]>;
 export class BitmapAnimator extends Node {
   private animations: BitmapAnimatorData;
 
-  /** Whether the animation loops. */
+  /**
+   * Whether the animation loops.
+   */
   protected enableLoop = false;
 
-  /** Current animation name. */
+  /**
+   * Current animation name.
+   */
   protected current: string | null = null;
 
-  /** Current frame index. */
+  /**
+   * Current frame index.
+   */
   protected progress = 0;
 
-  /** Time elapsed since last frame change (seconds). */
+  /**
+   * Time elapsed since last frame change (seconds).
+   */
   protected elapsed = 0;
 
-  /** Duration of each frame (seconds). Default 0.1 = 100ms. */
+  /**
+   * Duration of each frame (seconds). Default 0.1 = 100ms.
+   */
   protected duration = 0.1;
 
   /**

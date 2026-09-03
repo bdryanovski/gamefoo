@@ -15,17 +15,29 @@ import type UIWidget from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface IMenuPage {
-  /** Page identifier */
+  /**
+   * Page identifier
+   */
   readonly id: string;
-  /** Page title (displayed in tab) */
+  /**
+   * Page title (displayed in tab)
+   */
   readonly title: string;
-  /** Root widget for this page */
+  /**
+   * Root widget for this page
+   */
   readonly root: UIWidget;
-  /** Called when page becomes active */
+  /**
+   * Called when page becomes active
+   */
   onShow?(): void;
-  /** Called when page becomes inactive */
+  /**
+   * Called when page becomes inactive
+   */
   onHide?(): void;
-  /** Called to refresh page data */
+  /**
+   * Called to refresh page data
+   */
   refresh?(): void;
 }
 
@@ -49,13 +61,19 @@ export interface IMenuPage {
  * ```
  */
 export default abstract class MenuPage implements IMenuPage {
-  /** Page identifier */
+  /**
+   * Page identifier
+   */
   readonly id: string;
 
-  /** Page title */
+  /**
+   * Page title
+   */
   readonly title: string;
 
-  /** Root container for page content */
+  /**
+   * Root container for page content
+   */
   readonly root: Container;
 
   /**

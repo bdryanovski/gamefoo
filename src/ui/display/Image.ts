@@ -16,15 +16,25 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface ImageConfig extends UIWidgetConfig {
-  /** Image source (HTMLImageElement or image URL) */
+  /**
+   * Image source (HTMLImageElement or image URL)
+   */
   source?: HTMLImageElement | string | null;
-  /** Image width (if not set, uses natural width) */
+  /**
+   * Image width (if not set, uses natural width)
+   */
   imageWidth?: number;
-  /** Image height (if not set, uses natural height) */
+  /**
+   * Image height (if not set, uses natural height)
+   */
   imageHeight?: number;
-  /** Whether to preserve aspect ratio */
+  /**
+   * Whether to preserve aspect ratio
+   */
   preserveAspect?: boolean;
-  /** Scale factor */
+  /**
+   * Scale factor
+   */
   scale?: number;
 }
 
@@ -42,25 +52,39 @@ export interface ImageConfig extends UIWidgetConfig {
  * ```
  */
 export default class Image extends UIWidget {
-  /** Image source */
+  /**
+   * Image source
+   */
   protected _source: HTMLImageElement | string | null = null;
 
-  /** Loaded image element */
+  /**
+   * Loaded image element
+   */
   protected _imageElement: HTMLImageElement | null = null;
 
-  /** Image width */
+  /**
+   * Image width
+   */
   protected _imageWidth: number = 0;
 
-  /** Image height */
+  /**
+   * Image height
+   */
   protected _imageHeight: number = 0;
 
-  /** Preserve aspect ratio */
+  /**
+   * Preserve aspect ratio
+   */
   protected _preserveAspect: boolean = true;
 
-  /** Scale factor */
+  /**
+   * Scale factor
+   */
   protected _scale: number = 1;
 
-  /** Whether image is loaded */
+  /**
+   * Whether image is loaded
+   */
   protected _loaded: boolean = false;
 
   /**
@@ -72,20 +96,30 @@ export default class Image extends UIWidget {
    */
   constructor(config: ImageConfig = {}) {
     super(config);
-    if (config.imageWidth !== undefined) this._imageWidth = config.imageWidth;
-    if (config.imageHeight !== undefined)
+    if (config.imageWidth !== undefined) {
+      this._imageWidth = config.imageWidth;
+    }
+    if (config.imageHeight !== undefined) {
       this._imageHeight = config.imageHeight;
-    if (config.preserveAspect !== undefined)
+    }
+    if (config.preserveAspect !== undefined) {
       this._preserveAspect = config.preserveAspect;
-    if (config.scale !== undefined) this._scale = config.scale;
-    if (config.source !== undefined) this.setSource(config.source);
+    }
+    if (config.scale !== undefined) {
+      this._scale = config.scale;
+    }
+    if (config.source !== undefined) {
+      this.setSource(config.source);
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Image source */
+  /**
+   * Image source
+   */
   get source(): HTMLImageElement | string | null {
     return this._source;
   }
@@ -112,22 +146,32 @@ export default class Image extends UIWidget {
       img.onload = () => {
         this._imageElement = img;
         this._loaded = true;
-        if (this._imageWidth === 0) this._imageWidth = img.naturalWidth;
-        if (this._imageHeight === 0) this._imageHeight = img.naturalHeight;
+        if (this._imageWidth === 0) {
+          this._imageWidth = img.naturalWidth;
+        }
+        if (this._imageHeight === 0) {
+          this._imageHeight = img.naturalHeight;
+        }
         this.markLayoutDirty();
       };
       img.src = value;
     } else {
       this._imageElement = value;
       this._loaded = value.complete;
-      if (this._imageWidth === 0) this._imageWidth = value.naturalWidth;
-      if (this._imageHeight === 0) this._imageHeight = value.naturalHeight;
+      if (this._imageWidth === 0) {
+        this._imageWidth = value.naturalWidth;
+      }
+      if (this._imageHeight === 0) {
+        this._imageHeight = value.naturalHeight;
+      }
     }
 
     this.markLayoutDirty();
   }
 
-  /** Image width */
+  /**
+   * Image width
+   */
   get imageWidth(): number {
     return this._imageWidth;
   }
@@ -139,7 +183,9 @@ export default class Image extends UIWidget {
     }
   }
 
-  /** Image height */
+  /**
+   * Image height
+   */
   get imageHeight(): number {
     return this._imageHeight;
   }
@@ -151,7 +197,9 @@ export default class Image extends UIWidget {
     }
   }
 
-  /** Preserve aspect ratio */
+  /**
+   * Preserve aspect ratio
+   */
   get preserveAspect(): boolean {
     return this._preserveAspect;
   }
@@ -160,7 +208,9 @@ export default class Image extends UIWidget {
     this._preserveAspect = value;
   }
 
-  /** Scale factor */
+  /**
+   * Scale factor
+   */
   get scale(): number {
     return this._scale;
   }
@@ -172,7 +222,9 @@ export default class Image extends UIWidget {
     }
   }
 
-  /** Whether the image is loaded */
+  /**
+   * Whether the image is loaded
+   */
   get loaded(): boolean {
     return this._loaded;
   }
@@ -190,15 +242,11 @@ export default class Image extends UIWidget {
     return {
       width: Math.max(
         this._width,
-        this._imageWidth * this._scale
-          + this._padding.left
-          + this._padding.right,
+        this._imageWidth * this._scale + this._padding.left + this._padding.right,
       ),
       height: Math.max(
         this._height,
-        this._imageHeight * this._scale
-          + this._padding.top
-          + this._padding.bottom,
+        this._imageHeight * this._scale + this._padding.top + this._padding.bottom,
       ),
     };
   }
@@ -215,10 +263,14 @@ export default class Image extends UIWidget {
    * @since 0.5.0
    */
   protected drawSelf(ctx: RenderContext): void {
-    if (!this._imageElement || !this._loaded) return;
+    if (!this._imageElement || !this._loaded) {
+      return;
+    }
 
     const canvas = ctx.getCanvas?.();
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const x = this._padding.left;
     const y = this._padding.top;
@@ -228,8 +280,7 @@ export default class Image extends UIWidget {
     // Preserve aspect ratio if needed
     if (this._preserveAspect && this._width > 0 && this._height > 0) {
       const availWidth = this._width - this._padding.left - this._padding.right;
-      const availHeight =
-        this._height - this._padding.top - this._padding.bottom;
+      const availHeight = this._height - this._padding.top - this._padding.bottom;
 
       const scaleX = availWidth / this._imageWidth;
       const scaleY = availHeight / this._imageHeight;

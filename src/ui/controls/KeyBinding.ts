@@ -7,12 +7,7 @@
  */
 
 import type { RenderContext } from '@/core/renderer/type';
-import type {
-  UIInputEvent,
-  UIKeyEvent,
-  UIMouseButtonEvent,
-  UISize,
-} from '../core/types';
+import type { UIInputEvent, UIKeyEvent, UIMouseButtonEvent, UISize } from '../core/types';
 import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
 
 /**
@@ -21,15 +16,25 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface KeyBindingConfig extends UIWidgetConfig {
-  /** Action label */
+  /**
+   * Action label
+   */
   label?: string;
-  /** Current binding display text */
+  /**
+   * Current binding display text
+   */
   binding?: string;
-  /** Change callback */
+  /**
+   * Change callback
+   */
   onChange?: (key: string) => void;
-  /** Gap between label and binding */
+  /**
+   * Gap between label and binding
+   */
   gap?: number;
-  /** Binding display width */
+  /**
+   * Binding display width
+   */
   bindingWidth?: number;
 }
 
@@ -52,31 +57,49 @@ export interface KeyBindingConfig extends UIWidgetConfig {
  * ```
  */
 export default class KeyBinding extends UIWidget {
-  /** Action label */
+  /**
+   * Action label
+   */
   protected _label: string = '';
 
-  /** Current binding display text */
+  /**
+   * Current binding display text
+   */
   protected _binding: string = '';
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   protected _onChange: ((key: string) => void) | null = null;
 
-  /** Gap between label and binding */
+  /**
+   * Gap between label and binding
+   */
   protected _gap: number = 10;
 
-  /** Binding display width */
+  /**
+   * Binding display width
+   */
   protected _bindingWidth: number = 60;
 
-  /** Whether in capture mode */
+  /**
+   * Whether in capture mode
+   */
   protected _capturing: boolean = false;
 
-  /** Blink timer for capture mode */
+  /**
+   * Blink timer for capture mode
+   */
   protected _blinkTimer: number = 0;
 
-  /** Blink state */
+  /**
+   * Blink state
+   */
   protected _blinkVisible: boolean = true;
 
-  /** Keys to ignore for capture (modifiers) */
+  /**
+   * Keys to ignore for capture (modifiers)
+   */
   private static readonly IGNORE_KEYS = new Set([
     'Shift',
     'Control',
@@ -100,19 +123,30 @@ export default class KeyBinding extends UIWidget {
       focusable: config.focusable ?? true,
       padding: config.padding ?? 4,
     });
-    if (config.label !== undefined) this._label = config.label;
-    if (config.binding !== undefined) this._binding = config.binding;
-    if (config.onChange !== undefined) this._onChange = config.onChange;
-    if (config.gap !== undefined) this._gap = config.gap;
-    if (config.bindingWidth !== undefined)
+    if (config.label !== undefined) {
+      this._label = config.label;
+    }
+    if (config.binding !== undefined) {
+      this._binding = config.binding;
+    }
+    if (config.onChange !== undefined) {
+      this._onChange = config.onChange;
+    }
+    if (config.gap !== undefined) {
+      this._gap = config.gap;
+    }
+    if (config.bindingWidth !== undefined) {
       this._bindingWidth = config.bindingWidth;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Action label */
+  /**
+   * Action label
+   */
   get label(): string {
     return this._label;
   }
@@ -124,7 +158,9 @@ export default class KeyBinding extends UIWidget {
     }
   }
 
-  /** Current binding */
+  /**
+   * Current binding
+   */
   get binding(): string {
     return this._binding;
   }
@@ -138,7 +174,9 @@ export default class KeyBinding extends UIWidget {
     }
   }
 
-  /** Whether in capture mode */
+  /**
+   * Whether in capture mode
+   */
   get capturing(): boolean {
     return this._capturing;
   }
@@ -175,7 +213,9 @@ export default class KeyBinding extends UIWidget {
    * @since 0.5.0
    */
   captureKey(key: string): void {
-    if (KeyBinding.IGNORE_KEYS.has(key)) return;
+    if (KeyBinding.IGNORE_KEYS.has(key)) {
+      return;
+    }
 
     this._binding = this.formatKeyName(key);
     this.stopCapture();
@@ -235,16 +275,9 @@ export default class KeyBinding extends UIWidget {
       return {
         width: Math.max(
           this._width,
-          this._padding.left
-            + labelWidth
-            + this._gap
-            + this._bindingWidth
-            + this._padding.right,
+          this._padding.left + labelWidth + this._gap + this._bindingWidth + this._padding.right,
         ),
-        height: Math.max(
-          this._height,
-          this._padding.top + font.height + this._padding.bottom,
-        ),
+        height: Math.max(this._height, this._padding.top + font.height + this._padding.bottom),
       };
     } catch {
       return { width: this._width || 120, height: this._height || 16 };
@@ -287,7 +320,9 @@ export default class KeyBinding extends UIWidget {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (this._capturing) {
       if (event.type === 'keydown') {
@@ -308,10 +343,7 @@ export default class KeyBinding extends UIWidget {
     } else {
       if (event.type === 'mouseup') {
         const mouseEvent = event as UIMouseButtonEvent;
-        if (
-          mouseEvent.button === 'left'
-          && this.containsPoint(mouseEvent.x, mouseEvent.y)
-        ) {
+        if (mouseEvent.button === 'left' && this.containsPoint(mouseEvent.x, mouseEvent.y)) {
           this.startCapture();
           event.consume();
           return true;
@@ -359,9 +391,7 @@ export default class KeyBinding extends UIWidget {
 
       // Draw label
       if (this._label) {
-        const labelColor = isFocused
-          ? theme.colors['focus.ring']
-          : theme.colors['label.text'];
+        const labelColor = isFocused ? theme.colors['focus.ring'] : theme.colors['label.text'];
         if (canvas) {
           canvas.fillStyle = labelColor;
           font.renderText(this._label, this._padding.left, textY, ctx);
@@ -378,24 +408,10 @@ export default class KeyBinding extends UIWidget {
       const boxBgColor = this._capturing
         ? theme.colors['input.borderFocus']
         : theme.colors['input.background'];
-      const boxBorderColor = isFocused
-        ? theme.colors['focus.ring']
-        : theme.colors['input.border'];
+      const boxBorderColor = isFocused ? theme.colors['focus.ring'] : theme.colors['input.border'];
 
-      ctx.fillRect(
-        bindingX,
-        bindingY,
-        this._bindingWidth,
-        bindingH,
-        boxBgColor,
-      );
-      ctx.strokeRect(
-        bindingX,
-        bindingY,
-        this._bindingWidth,
-        bindingH,
-        boxBorderColor,
-      );
+      ctx.fillRect(bindingX, bindingY, this._bindingWidth, bindingH, boxBgColor);
+      ctx.strokeRect(bindingX, bindingY, this._bindingWidth, bindingH, boxBorderColor);
 
       // Draw binding text
       let displayText: string;
@@ -424,12 +440,7 @@ export default class KeyBinding extends UIWidget {
       }
     } catch {
       // Fallback rendering
-      ctx.drawText(
-        this._label,
-        this._padding.left,
-        this._padding.top,
-        '#FFFFFF',
-      );
+      ctx.drawText(this._label, this._padding.left, this._padding.top, '#FFFFFF');
 
       const bindingX = this._width - this._padding.right - this._bindingWidth;
       ctx.fillRect(bindingX, 0, this._bindingWidth, this._height, '#333333');

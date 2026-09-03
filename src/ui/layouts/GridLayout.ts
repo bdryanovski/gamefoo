@@ -6,7 +6,6 @@
  * @since 0.5.0
  */
 
-import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
 import type { UISize } from '../core/types';
 
@@ -16,17 +15,29 @@ import type { UISize } from '../core/types';
  * @since 0.5.0
  */
 export interface GridLayoutConfig extends ContainerConfig {
-  /** Number of columns */
+  /**
+   * Number of columns
+   */
   columns?: number;
-  /** Number of rows (optional, calculated from children if not set) */
+  /**
+   * Number of rows (optional, calculated from children if not set)
+   */
   rows?: number;
-  /** Horizontal gap between cells */
+  /**
+   * Horizontal gap between cells
+   */
   columnGap?: number;
-  /** Vertical gap between cells */
+  /**
+   * Vertical gap between cells
+   */
   rowGap?: number;
-  /** Cell width (optional, calculated from container width if not set) */
+  /**
+   * Cell width (optional, calculated from container width if not set)
+   */
   cellWidth?: number;
-  /** Cell height (optional, calculated from container height if not set) */
+  /**
+   * Cell height (optional, calculated from container height if not set)
+   */
   cellHeight?: number;
 }
 
@@ -54,22 +65,34 @@ export interface GridLayoutConfig extends ContainerConfig {
  * ```
  */
 export default class GridLayout extends Container {
-  /** Number of columns */
+  /**
+   * Number of columns
+   */
   protected _columns: number = 4;
 
-  /** Number of rows (0 = auto) */
+  /**
+   * Number of rows (0 = auto)
+   */
   protected _rows: number = 0;
 
-  /** Horizontal gap between cells */
+  /**
+   * Horizontal gap between cells
+   */
   protected _columnGap: number = 0;
 
-  /** Vertical gap between cells */
+  /**
+   * Vertical gap between cells
+   */
   protected _rowGap: number = 0;
 
-  /** Cell width (0 = auto from container) */
+  /**
+   * Cell width (0 = auto from container)
+   */
   protected _cellWidth: number = 0;
 
-  /** Cell height (0 = auto from container) */
+  /**
+   * Cell height (0 = auto from container)
+   */
   protected _cellHeight: number = 0;
 
   /**
@@ -81,19 +104,33 @@ export default class GridLayout extends Container {
    */
   constructor(config: GridLayoutConfig = {}) {
     super(config);
-    if (config.columns !== undefined) this._columns = config.columns;
-    if (config.rows !== undefined) this._rows = config.rows;
-    if (config.columnGap !== undefined) this._columnGap = config.columnGap;
-    if (config.rowGap !== undefined) this._rowGap = config.rowGap;
-    if (config.cellWidth !== undefined) this._cellWidth = config.cellWidth;
-    if (config.cellHeight !== undefined) this._cellHeight = config.cellHeight;
+    if (config.columns !== undefined) {
+      this._columns = config.columns;
+    }
+    if (config.rows !== undefined) {
+      this._rows = config.rows;
+    }
+    if (config.columnGap !== undefined) {
+      this._columnGap = config.columnGap;
+    }
+    if (config.rowGap !== undefined) {
+      this._rowGap = config.rowGap;
+    }
+    if (config.cellWidth !== undefined) {
+      this._cellWidth = config.cellWidth;
+    }
+    if (config.cellHeight !== undefined) {
+      this._cellHeight = config.cellHeight;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Number of columns */
+  /**
+   * Number of columns
+   */
   get columns(): number {
     return this._columns;
   }
@@ -105,7 +142,9 @@ export default class GridLayout extends Container {
     }
   }
 
-  /** Number of rows */
+  /**
+   * Number of rows
+   */
   get rows(): number {
     return this._rows;
   }
@@ -117,7 +156,9 @@ export default class GridLayout extends Container {
     }
   }
 
-  /** Horizontal gap between cells */
+  /**
+   * Horizontal gap between cells
+   */
   get columnGap(): number {
     return this._columnGap;
   }
@@ -129,7 +170,9 @@ export default class GridLayout extends Container {
     }
   }
 
-  /** Vertical gap between cells */
+  /**
+   * Vertical gap between cells
+   */
   get rowGap(): number {
     return this._rowGap;
   }
@@ -141,7 +184,9 @@ export default class GridLayout extends Container {
     }
   }
 
-  /** Cell width */
+  /**
+   * Cell width
+   */
   get cellWidth(): number {
     return this._cellWidth;
   }
@@ -153,7 +198,9 @@ export default class GridLayout extends Container {
     }
   }
 
-  /** Cell height */
+  /**
+   * Cell height
+   */
   get cellHeight(): number {
     return this._cellHeight;
   }
@@ -175,7 +222,9 @@ export default class GridLayout extends Container {
    * @since 0.5.0
    */
   get actualRows(): number {
-    if (this._rows > 0) return this._rows;
+    if (this._rows > 0) {
+      return this._rows;
+    }
     const visibleCount = this._children.filter((c) => c.visible).length;
     return Math.ceil(visibleCount / this._columns);
   }
@@ -186,7 +235,9 @@ export default class GridLayout extends Container {
    * @since 0.5.0
    */
   get computedCellWidth(): number {
-    if (this._cellWidth > 0) return this._cellWidth;
+    if (this._cellWidth > 0) {
+      return this._cellWidth;
+    }
     const available = this._width - this._padding.left - this._padding.right;
     const totalGaps = (this._columns - 1) * this._columnGap;
     return Math.floor((available - totalGaps) / this._columns);
@@ -198,9 +249,13 @@ export default class GridLayout extends Container {
    * @since 0.5.0
    */
   get computedCellHeight(): number {
-    if (this._cellHeight > 0) return this._cellHeight;
+    if (this._cellHeight > 0) {
+      return this._cellHeight;
+    }
     const rows = this.actualRows;
-    if (rows === 0) return 0;
+    if (rows === 0) {
+      return 0;
+    }
     const available = this._height - this._padding.top - this._padding.bottom;
     const totalGaps = (rows - 1) * this._rowGap;
     return Math.floor((available - totalGaps) / rows);
@@ -221,16 +276,16 @@ export default class GridLayout extends Container {
     const cellH = this._cellHeight > 0 ? this._cellHeight : 16;
 
     const width =
-      this._padding.left
-      + this._columns * cellW
-      + (this._columns - 1) * this._columnGap
-      + this._padding.right;
+      this._padding.left +
+      this._columns * cellW +
+      (this._columns - 1) * this._columnGap +
+      this._padding.right;
 
     const height =
-      this._padding.top
-      + rows * cellH
-      + Math.max(0, rows - 1) * this._rowGap
-      + this._padding.bottom;
+      this._padding.top +
+      rows * cellH +
+      Math.max(0, rows - 1) * this._rowGap +
+      this._padding.bottom;
 
     return {
       width: Math.max(this._width, width),
@@ -260,7 +315,9 @@ export default class GridLayout extends Container {
     let row = 0;
 
     for (const child of this._children) {
-      if (!child.visible) continue;
+      if (!child.visible) {
+        continue;
+      }
 
       // Calculate position
       const x = this._padding.left + col * (cellW + this._columnGap);
@@ -299,10 +356,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  getChildAtCell(
-    column: number,
-    row: number,
-  ): import('../core/UIWidget').default | undefined {
+  getChildAtCell(column: number, row: number): import('../core/UIWidget').default | undefined {
     const index = row * this._columns + column;
     return this._children[index];
   }
@@ -319,7 +373,9 @@ export default class GridLayout extends Container {
     child: import('../core/UIWidget').default,
   ): { column: number; row: number } | null {
     const index = this._children.indexOf(child);
-    if (index < 0) return null;
+    if (index < 0) {
+      return null;
+    }
     return {
       column: index % this._columns,
       row: Math.floor(index / this._columns),

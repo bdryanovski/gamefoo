@@ -1,4 +1,6 @@
-/** 4-directional offsets (cardinal). @internal */
+/**
+ * 4-directional offsets (cardinal). @internal
+ */
 export const DIR_4: ReadonlyArray<[number, number]> = [
   [0, -1],
   [0, 1],
@@ -6,7 +8,9 @@ export const DIR_4: ReadonlyArray<[number, number]> = [
   [1, 0],
 ];
 
-/** 8-directional offsets (cardinal + diagonal). @internal */
+/**
+ * 8-directional offsets (cardinal + diagonal). @internal
+ */
 export const DIR_8: ReadonlyArray<[number, number]> = [
   [0, -1],
   [0, 1],

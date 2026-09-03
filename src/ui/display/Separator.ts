@@ -16,13 +16,21 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface SeparatorConfig extends UIWidgetConfig {
-  /** Orientation: horizontal or vertical */
+  /**
+   * Orientation: horizontal or vertical
+   */
   orientation?: 'horizontal' | 'vertical';
-  /** Line thickness in pixels */
+  /**
+   * Line thickness in pixels
+   */
   thickness?: number;
-  /** Custom color (uses theme if not set) */
+  /**
+   * Custom color (uses theme if not set)
+   */
   color?: string;
-  /** Length (for horizontal: width, for vertical: height) */
+  /**
+   * Length (for horizontal: width, for vertical: height)
+   */
   length?: number;
 }
 
@@ -40,16 +48,24 @@ export interface SeparatorConfig extends UIWidgetConfig {
  * ```
  */
 export default class Separator extends UIWidget {
-  /** Orientation */
+  /**
+   * Orientation
+   */
   protected _orientation: 'horizontal' | 'vertical' = 'horizontal';
 
-  /** Line thickness */
+  /**
+   * Line thickness
+   */
   protected _thickness: number = 1;
 
-  /** Custom color */
+  /**
+   * Custom color
+   */
   protected _color: string | null = null;
 
-  /** Length */
+  /**
+   * Length
+   */
   protected _length: number = 0;
 
   /**
@@ -61,11 +77,18 @@ export default class Separator extends UIWidget {
    */
   constructor(config: SeparatorConfig = {}) {
     super(config);
-    if (config.orientation !== undefined)
+    if (config.orientation !== undefined) {
       this._orientation = config.orientation;
-    if (config.thickness !== undefined) this._thickness = config.thickness;
-    if (config.color !== undefined) this._color = config.color;
-    if (config.length !== undefined) this._length = config.length;
+    }
+    if (config.thickness !== undefined) {
+      this._thickness = config.thickness;
+    }
+    if (config.color !== undefined) {
+      this._color = config.color;
+    }
+    if (config.length !== undefined) {
+      this._length = config.length;
+    }
 
     this.updateSize();
   }
@@ -74,7 +97,9 @@ export default class Separator extends UIWidget {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Orientation */
+  /**
+   * Orientation
+   */
   get orientation(): 'horizontal' | 'vertical' {
     return this._orientation;
   }
@@ -87,7 +112,9 @@ export default class Separator extends UIWidget {
     }
   }
 
-  /** Line thickness */
+  /**
+   * Line thickness
+   */
   get thickness(): number {
     return this._thickness;
   }
@@ -100,7 +127,9 @@ export default class Separator extends UIWidget {
     }
   }
 
-  /** Custom color */
+  /**
+   * Custom color
+   */
   get color(): string | null {
     return this._color;
   }
@@ -109,7 +138,9 @@ export default class Separator extends UIWidget {
     this._color = value;
   }
 
-  /** Length */
+  /**
+   * Length
+   */
   get length(): number {
     return this._length;
   }
@@ -156,10 +187,7 @@ export default class Separator extends UIWidget {
       // If length not set, try to use parent width
       let width = this._length;
       if (width === 0 && this._parent) {
-        width =
-          this._parent.width
-          - this._parent.padding.left
-          - this._parent.padding.right;
+        width = this._parent.width - this._parent.padding.left - this._parent.padding.right;
       }
       return {
         width: width || 100,
@@ -205,8 +233,7 @@ export default class Separator extends UIWidget {
     } else {
       const x = this._padding.left + Math.floor(this._thickness / 2);
       const y = this._padding.top;
-      const lineHeight =
-        this._height - this._padding.top - this._padding.bottom;
+      const lineHeight = this._height - this._padding.top - this._padding.bottom;
 
       ctx.fillRect(x, y, this._thickness, lineHeight, color);
     }

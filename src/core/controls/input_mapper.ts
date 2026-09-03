@@ -83,11 +83,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  constructor(
-    input: Input,
-    scheme: ControlScheme,
-    options?: InputMapperOptions,
-  ) {
+  constructor(input: Input, scheme: ControlScheme, options?: InputMapperOptions) {
     this.input = input;
     this.scheme = scheme;
     this.options = { ...DEFAULT_OPTIONS, ...options };
@@ -122,7 +118,9 @@ export class InputMapper {
    */
   private getBinding(action: InputAction | string): ActionBinding | null {
     const resolved = this.resolveAction(action);
-    if (!resolved) return null;
+    if (!resolved) {
+      return null;
+    }
     return this.scheme.actions[resolved];
   }
 
@@ -153,26 +151,35 @@ export class InputMapper {
    * @returns true if the gamepad button/axis is active
    */
   private isGamepadBindingDown(binding: ActionBinding): boolean {
-    if (!binding.gamepad) return false;
+    if (!binding.gamepad) {
+      return false;
+    }
 
     const gamepad = this.input.getGamepad(this.options.gamepadIndex);
-    if (!gamepad) return false;
+    if (!gamepad) {
+      return false;
+    }
 
     const { button, axis, axisDirection } = binding.gamepad;
 
     // Check button
     if (button !== undefined) {
       const btn = gamepad.buttons[button];
-      if (btn?.pressed) return true;
+      if (btn?.pressed) {
+        return true;
+      }
     }
 
     // Check axis
     if (axis !== undefined && axisDirection !== undefined) {
       const axisValue = gamepad.axes[axis];
       if (axisValue !== undefined) {
-        if (axisDirection > 0 && axisValue > this.options.deadzone) return true;
-        if (axisDirection < 0 && axisValue < -this.options.deadzone)
+        if (axisDirection > 0 && axisValue > this.options.deadzone) {
           return true;
+        }
+        if (axisDirection < 0 && axisValue < -this.options.deadzone) {
+          return true;
+        }
       }
     }
 
@@ -204,7 +211,9 @@ export class InputMapper {
    */
   isAction(action: InputAction | string): boolean {
     const binding = this.getBinding(action);
-    if (!binding) return false;
+    if (!binding) {
+      return false;
+    }
 
     return this.isKeyBindingDown(binding) || this.isGamepadBindingDown(binding);
   }
@@ -233,10 +242,14 @@ export class InputMapper {
    */
   isActionPressed(action: InputAction | string): boolean {
     const binding = this.getBinding(action);
-    if (!binding) return false;
+    if (!binding) {
+      return false;
+    }
 
     // For keyboard, use the "just pressed" detection
-    if (this.isKeyBindingPressed(binding)) return true;
+    if (this.isKeyBindingPressed(binding)) {
+      return true;
+    }
 
     // For gamepad, we check if it's down (approximate)
     // True "just pressed" would require tracking previous frame state
@@ -268,10 +281,18 @@ export class InputMapper {
     let y = 0;
 
     // Check digital directional inputs
-    if (this.isAction('LEFT')) x -= 1;
-    if (this.isAction('RIGHT')) x += 1;
-    if (this.isAction('UP')) y -= 1;
-    if (this.isAction('DOWN')) y += 1;
+    if (this.isAction('LEFT')) {
+      x -= 1;
+    }
+    if (this.isAction('RIGHT')) {
+      x += 1;
+    }
+    if (this.isAction('UP')) {
+      y -= 1;
+    }
+    if (this.isAction('DOWN')) {
+      y += 1;
+    }
 
     // Check analog stick directly (for smoother movement)
     const gamepad = this.input.getGamepad(this.options.gamepadIndex);
@@ -320,11 +341,17 @@ export class InputMapper {
     let x: -1 | 0 | 1 = 0;
     let y: -1 | 0 | 1 = 0;
 
-    if (this.isAction('LEFT')) x = -1;
-    else if (this.isAction('RIGHT')) x = 1;
+    if (this.isAction('LEFT')) {
+      x = -1;
+    } else if (this.isAction('RIGHT')) {
+      x = 1;
+    }
 
-    if (this.isAction('UP')) y = -1;
-    else if (this.isAction('DOWN')) y = 1;
+    if (this.isAction('UP')) {
+      y = -1;
+    } else if (this.isAction('DOWN')) {
+      y = 1;
+    }
 
     return { x, y };
   }
@@ -338,10 +365,10 @@ export class InputMapper {
    */
   hasDirectionInput(): boolean {
     return (
-      this.isAction('UP')
-      || this.isAction('DOWN')
-      || this.isAction('LEFT')
-      || this.isAction('RIGHT')
+      this.isAction('UP') ||
+      this.isAction('DOWN') ||
+      this.isAction('LEFT') ||
+      this.isAction('RIGHT')
     );
   }
 

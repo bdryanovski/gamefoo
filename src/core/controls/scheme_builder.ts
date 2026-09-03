@@ -76,10 +76,7 @@ const ALL_ACTIONS: readonly InputAction[] = [
  * // => { keys: [], gamepad: undefined }
  * ```
  */
-export function binding(
-  keys: string | readonly string[],
-  gamepad?: GamepadBinding,
-): ActionBinding {
+export function binding(keys: string | readonly string[], gamepad?: GamepadBinding): ActionBinding {
   const keyArray = typeof keys === 'string' ? [keys] : keys;
   return {
     keys: keyArray,
@@ -146,10 +143,7 @@ export function unassignedBinding(): ActionBinding {
  * });
  * ```
  */
-export function extendScheme(
-  base: ControlScheme,
-  overrides: SchemeOverrides,
-): ControlScheme {
+export function extendScheme(base: ControlScheme, overrides: SchemeOverrides): ControlScheme {
   // Deep clone base actions
   const newActions = { ...base.actions } as Record<InputAction, ActionBinding>;
 

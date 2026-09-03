@@ -18,6 +18,8 @@ function makeCtx(width = 800, height = 600): RenderContext {
   return {
     width,
     height,
+    gameScale: 1,
+    readGameScale: () => 1,
     clear: () => {},
     flush: () => {},
     save: () => {},

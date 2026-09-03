@@ -1,7 +1,7 @@
 # 1. Format and lint only staged files.
-#    biome check --write applies all safe auto-fixes and re-stages the result.
-#    If anything unfixable remains, the second biome check (read-only) exits
-#    non-zero and the commit is blocked.
+#    oxfmt rewrites staged files in place; oxlint --fix applies safe fixes.
+#    If anything unfixable remains, oxlint exits non-zero and the commit is
+#    blocked. lint-staged re-stages the fixed files.
 pnpm lint-staged
 
 # 2. Type-check the whole project.

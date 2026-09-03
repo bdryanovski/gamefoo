@@ -27,9 +27,13 @@ export type HexColor = `#${string}`;
  * ```
  */
 export interface ColorPalette {
-  /** Display name of the palette. */
+  /**
+   * Display name of the palette.
+   */
   readonly name: string;
-  /** Array of hex color values. */
+  /**
+   * Array of hex color values.
+   */
   readonly colors: readonly HexColor[];
 }
 
@@ -58,9 +62,10 @@ export interface ColorPalette {
  * palette.named.BLACK; // '#000000'
  * ```
  */
-export interface NamedColorPalette<T = Record<string, HexColor>>
-  extends ColorPalette {
-  /** Named color access. */
+export interface NamedColorPalette<T = Record<string, HexColor>> extends ColorPalette {
+  /**
+   * Named color access.
+   */
   readonly named: T;
 }
 
@@ -88,11 +93,17 @@ export interface NamedColorPalette<T = Record<string, HexColor>>
  * ```
  */
 export interface GeneratedPalette {
-  /** Display name of the palette. */
+  /**
+   * Display name of the palette.
+   */
   readonly name: string;
-  /** Total number of possible colors. */
+  /**
+   * Total number of possible colors.
+   */
   readonly totalColors: number;
-  /** Bits per color channel (e.g., 5 for SNES 15-bit RGB). */
+  /**
+   * Bits per color channel (e.g., 5 for SNES 15-bit RGB).
+   */
   readonly bitsPerChannel: number;
   /**
    * Generates a hex color from channel values.
@@ -103,6 +114,8 @@ export interface GeneratedPalette {
    * @returns Hex color string
    */
   generate(r: number, g: number, b: number): HexColor;
-  /** Optional subset of commonly used colors for quick access. */
+  /**
+   * Optional subset of commonly used colors for quick access.
+   */
   readonly commonColors?: readonly HexColor[];
 }

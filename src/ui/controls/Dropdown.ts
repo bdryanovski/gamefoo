@@ -22,11 +22,17 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface DropdownItem {
-  /** Display label */
+  /**
+   * Display label
+   */
   label: string;
-  /** Optional value (defaults to label) */
+  /**
+   * Optional value (defaults to label)
+   */
   value?: string | number;
-  /** Whether item is disabled */
+  /**
+   * Whether item is disabled
+   */
   disabled?: boolean;
 }
 
@@ -36,15 +42,25 @@ export interface DropdownItem {
  * @since 0.5.0
  */
 export interface DropdownConfig extends UIWidgetConfig {
-  /** Dropdown items */
+  /**
+   * Dropdown items
+   */
   items?: DropdownItem[];
-  /** Selected index */
+  /**
+   * Selected index
+   */
   selectedIndex?: number;
-  /** Change callback */
+  /**
+   * Change callback
+   */
   onChange?: (index: number, item: DropdownItem) => void;
-  /** Placeholder text when nothing selected */
+  /**
+   * Placeholder text when nothing selected
+   */
   placeholder?: string;
-  /** Maximum visible items in popup */
+  /**
+   * Maximum visible items in popup
+   */
   maxVisibleItems?: number;
 }
 
@@ -69,32 +85,49 @@ export interface DropdownConfig extends UIWidgetConfig {
  * ```
  */
 export default class Dropdown extends UIWidget {
-  /** Dropdown items */
+  /**
+   * Dropdown items
+   */
   protected _items: DropdownItem[] = [];
 
-  /** Selected index */
+  /**
+   * Selected index
+   */
   protected _selectedIndex: number = -1;
 
-  /** Change callback */
-  protected _onChange: ((index: number, item: DropdownItem) => void) | null =
-    null;
+  /**
+   * Change callback
+   */
+  protected _onChange: ((index: number, item: DropdownItem) => void) | null = null;
 
-  /** Placeholder text */
+  /**
+   * Placeholder text
+   */
   protected _placeholder: string = 'Select...';
 
-  /** Maximum visible items */
+  /**
+   * Maximum visible items
+   */
   protected _maxVisibleItems: number = 5;
 
-  /** Whether dropdown is expanded */
+  /**
+   * Whether dropdown is expanded
+   */
   protected _expanded: boolean = false;
 
-  /** Highlighted index in popup */
+  /**
+   * Highlighted index in popup
+   */
   protected _highlightedIndex: number = -1;
 
-  /** Scroll offset for visible items */
+  /**
+   * Scroll offset for visible items
+   */
   protected _scrollOffset: number = 0;
 
-  /** Track if we were focused last frame */
+  /**
+   * Track if we were focused last frame
+   */
   private _wasFocused: boolean = false;
 
   /**
@@ -110,14 +143,21 @@ export default class Dropdown extends UIWidget {
       focusable: config.focusable ?? true,
       padding: config.padding ?? 4,
     });
-    if (config.items !== undefined) this._items = config.items;
-    if (config.selectedIndex !== undefined)
+    if (config.items !== undefined) {
+      this._items = config.items;
+    }
+    if (config.selectedIndex !== undefined) {
       this._selectedIndex = config.selectedIndex;
-    if (config.onChange !== undefined) this._onChange = config.onChange;
-    if (config.placeholder !== undefined)
+    }
+    if (config.onChange !== undefined) {
+      this._onChange = config.onChange;
+    }
+    if (config.placeholder !== undefined) {
       this._placeholder = config.placeholder;
-    if (config.maxVisibleItems !== undefined)
+    }
+    if (config.maxVisibleItems !== undefined) {
       this._maxVisibleItems = config.maxVisibleItems;
+    }
 
     this._highlightedIndex = this._selectedIndex;
   }
@@ -144,7 +184,9 @@ export default class Dropdown extends UIWidget {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Dropdown items */
+  /**
+   * Dropdown items
+   */
   get items(): DropdownItem[] {
     return this._items;
   }
@@ -157,17 +199,15 @@ export default class Dropdown extends UIWidget {
     this.markLayoutDirty();
   }
 
-  /** Selected index */
+  /**
+   * Selected index
+   */
   get selectedIndex(): number {
     return this._selectedIndex;
   }
 
   set selectedIndex(value: number) {
-    if (
-      value >= -1
-      && value < this._items.length
-      && this._selectedIndex !== value
-    ) {
+    if (value >= -1 && value < this._items.length && this._selectedIndex !== value) {
       this._selectedIndex = value;
       this._highlightedIndex = value;
       if (this._onChange && value >= 0) {
@@ -176,14 +216,16 @@ export default class Dropdown extends UIWidget {
     }
   }
 
-  /** Selected item */
+  /**
+   * Selected item
+   */
   get selectedItem(): DropdownItem | null {
-    return this._selectedIndex >= 0
-      ? (this._items[this._selectedIndex] ?? null)
-      : null;
+    return this._selectedIndex >= 0 ? (this._items[this._selectedIndex] ?? null) : null;
   }
 
-  /** Whether expanded */
+  /**
+   * Whether expanded
+   */
   get expanded(): boolean {
     return this._expanded;
   }
@@ -307,15 +349,14 @@ export default class Dropdown extends UIWidget {
    * @since 0.5.0
    */
   handleNavigation(direction: 'up' | 'down'): void {
-    if (!this._expanded) return;
+    if (!this._expanded) {
+      return;
+    }
 
     if (direction === 'up') {
       this._highlightedIndex = Math.max(0, this._highlightedIndex - 1);
     } else if (direction === 'down') {
-      this._highlightedIndex = Math.min(
-        this._items.length - 1,
-        this._highlightedIndex + 1,
-      );
+      this._highlightedIndex = Math.min(this._items.length - 1, this._highlightedIndex + 1);
     }
 
     // Ensure highlighted item is visible by adjusting scroll offset
@@ -331,10 +372,7 @@ export default class Dropdown extends UIWidget {
     if (this._highlightedIndex < this._scrollOffset) {
       // Highlighted item is above visible area
       this._scrollOffset = this._highlightedIndex;
-    } else if (
-      this._highlightedIndex
-      >= this._scrollOffset + this._maxVisibleItems
-    ) {
+    } else if (this._highlightedIndex >= this._scrollOffset + this._maxVisibleItems) {
       // Highlighted item is below visible area
       this._scrollOffset = this._highlightedIndex - this._maxVisibleItems + 1;
     }
@@ -357,10 +395,7 @@ export default class Dropdown extends UIWidget {
    * @since 0.5.0
    */
   selectHighlighted(): void {
-    if (
-      this._highlightedIndex >= 0
-      && this._highlightedIndex < this._items.length
-    ) {
+    if (this._highlightedIndex >= 0 && this._highlightedIndex < this._items.length) {
       const item = this._items[this._highlightedIndex];
       if (item && !item.disabled) {
         this.selectedIndex = this._highlightedIndex;
@@ -398,10 +433,7 @@ export default class Dropdown extends UIWidget {
           this._width,
           this._padding.left + maxWidth + arrowWidth + this._padding.right,
         ),
-        height: Math.max(
-          this._height,
-          this._padding.top + font.height + this._padding.bottom,
-        ),
+        height: Math.max(this._height, this._padding.top + font.height + this._padding.bottom),
       };
     } catch {
       return { width: this._width || 80, height: this._height || 16 };
@@ -421,17 +453,16 @@ export default class Dropdown extends UIWidget {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mouseup') {
       const mouseEvent = event as UIMouseButtonEvent;
       if (mouseEvent.button === 'left') {
         if (this._expanded) {
           // Check if clicked on an item
-          const itemIndex = this.getItemIndexAtPoint(
-            mouseEvent.x,
-            mouseEvent.y,
-          );
+          const itemIndex = this.getItemIndexAtPoint(mouseEvent.x, mouseEvent.y);
           if (itemIndex >= 0) {
             this._highlightedIndex = itemIndex;
             this.selectHighlighted();
@@ -464,10 +495,7 @@ export default class Dropdown extends UIWidget {
             event.consume();
             return true;
           case 'ArrowDown':
-            this._highlightedIndex = Math.min(
-              this._items.length - 1,
-              this._highlightedIndex + 1,
-            );
+            this._highlightedIndex = Math.min(this._items.length - 1, this._highlightedIndex + 1);
             event.consume();
             return true;
           case 'Enter':
@@ -501,7 +529,9 @@ export default class Dropdown extends UIWidget {
    * @internal
    */
   private getItemIndexAtPoint(x: number, y: number): number {
-    if (!this._expanded) return -1;
+    if (!this._expanded) {
+      return -1;
+    }
 
     try {
       const theme = this.getTheme();
@@ -510,11 +540,14 @@ export default class Dropdown extends UIWidget {
 
       const popupX = this._absoluteX;
       const popupY = this._absoluteY + this._height;
-      const popupHeight =
-        Math.min(this._items.length, this._maxVisibleItems) * itemHeight;
+      const popupHeight = Math.min(this._items.length, this._maxVisibleItems) * itemHeight;
 
-      if (x < popupX || x >= popupX + this._width) return -1;
-      if (y < popupY || y >= popupY + popupHeight) return -1;
+      if (x < popupX || x >= popupX + this._width) {
+        return -1;
+      }
+      if (y < popupY || y >= popupY + popupHeight) {
+        return -1;
+      }
 
       const relY = y - popupY;
       const index = Math.floor(relY / itemHeight);
@@ -544,12 +577,8 @@ export default class Dropdown extends UIWidget {
 
       // Draw main button
       const bgColor = theme.colors['dropdown.background'];
-      const borderColor = isFocused
-        ? theme.colors['focus.ring']
-        : theme.colors['dropdown.border'];
-      const textColor = isFocused
-        ? theme.colors['focus.ring']
-        : theme.colors['label.text'];
+      const borderColor = isFocused ? theme.colors['focus.ring'] : theme.colors['dropdown.border'];
+      const textColor = isFocused ? theme.colors['focus.ring'] : theme.colors['label.text'];
 
       ctx.fillRect(0, 0, this._width, this._height, bgColor);
       ctx.strokeRect(0, 0, this._width, this._height, borderColor);
@@ -562,16 +591,14 @@ export default class Dropdown extends UIWidget {
       // Draw selected text or placeholder (truncated to fit)
       const rawText = this.selectedItem?.label ?? this._placeholder;
       const arrowSpace = 12; // Space for dropdown arrow
-      const maxTextWidth =
-        this._width - this._padding.left - this._padding.right - arrowSpace;
+      const maxTextWidth = this._width - this._padding.left - this._padding.right - arrowSpace;
       const displayText = this.truncateText(rawText, maxTextWidth, font);
       const textX = this._padding.left;
       const textY = this._padding.top;
 
       const canvas = ctx.getCanvas?.();
       if (canvas) {
-        canvas.fillStyle =
-          this._selectedIndex < 0 ? theme.colors['label.textMuted'] : textColor;
+        canvas.fillStyle = this._selectedIndex < 0 ? theme.colors['label.textMuted'] : textColor;
         font.renderText(displayText, textX, textY, ctx);
       } else {
         ctx.drawText(displayText, textX, textY, textColor);
@@ -604,7 +631,9 @@ export default class Dropdown extends UIWidget {
    * @since 0.5.0
    */
   override renderOverlay(ctx: RenderContext): void {
-    if (!this._visible || !this._expanded) return;
+    if (!this._visible || !this._expanded) {
+      return;
+    }
 
     try {
       const theme = this.getTheme();
@@ -629,13 +658,7 @@ export default class Dropdown extends UIWidget {
       if (this._scrollOffset > 0) {
         // Draw up arrow indicator
         const arrowY = popupY + 2;
-        ctx.fillRect(
-          popupX + this._width / 2 - 3,
-          arrowY,
-          6,
-          1,
-          theme.colors['label.textMuted'],
-        );
+        ctx.fillRect(popupX + this._width / 2 - 3, arrowY, 6, 1, theme.colors['label.textMuted']);
         ctx.fillRect(
           popupX + this._width / 2 - 2,
           arrowY + 1,
@@ -653,12 +676,14 @@ export default class Dropdown extends UIWidget {
       }
 
       // Draw visible items (with scroll offset)
-      for (let i = 0; i < visibleCount; i++) {
-        const itemIndex = i + this._scrollOffset;
-        if (itemIndex >= this._items.length) break;
+      for (let visibleIndex = 0; visibleIndex < visibleCount; visibleIndex += 1) {
+        const itemIndex = visibleIndex + this._scrollOffset;
+        if (itemIndex >= this._items.length) {
+          break;
+        }
 
         const item = this._items[itemIndex]!;
-        const itemY = popupY + i * itemHeight;
+        const itemY = popupY + visibleIndex * itemHeight;
 
         // Highlight
         if (itemIndex === this._highlightedIndex) {
@@ -675,26 +700,15 @@ export default class Dropdown extends UIWidget {
         const textColor = item.disabled
           ? theme.colors['label.textMuted']
           : theme.colors['label.text'];
-        const maxItemTextWidth =
-          this._width - this._padding.left - this._padding.right - 2;
+        const maxItemTextWidth = this._width - this._padding.left - this._padding.right - 2;
         const itemText = this.truncateText(item.label, maxItemTextWidth, font);
 
         const canvas = ctx.getCanvas?.();
         if (canvas) {
           canvas.fillStyle = textColor;
-          font.renderText(
-            itemText,
-            popupX + this._padding.left,
-            itemY + 2,
-            ctx,
-          );
+          font.renderText(itemText, popupX + this._padding.left, itemY + 2, ctx);
         } else {
-          ctx.drawText(
-            itemText,
-            popupX + this._padding.left,
-            itemY + 2,
-            textColor,
-          );
+          ctx.drawText(itemText, popupX + this._padding.left, itemY + 2, textColor);
         }
       }
 
@@ -702,13 +716,7 @@ export default class Dropdown extends UIWidget {
       if (this._scrollOffset + visibleCount < this._items.length) {
         // Draw down arrow indicator
         const arrowY = popupY + popupHeight - 5;
-        ctx.fillRect(
-          popupX + this._width / 2 - 1,
-          arrowY,
-          2,
-          1,
-          theme.colors['label.textMuted'],
-        );
+        ctx.fillRect(popupX + this._width / 2 - 1, arrowY, 2, 1, theme.colors['label.textMuted']);
         ctx.fillRect(
           popupX + this._width / 2 - 2,
           arrowY + 1,

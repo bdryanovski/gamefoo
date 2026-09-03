@@ -185,15 +185,9 @@ export default class Input implements SubSystem {
    * const input = new Input({ canvasId: "game", deadzone: 0.2 });
    * ```
    */
-  constructor(options?: {
-    canvasId?: string;
-    gameScale?: number;
-    deadzone?: number;
-  }) {
+  constructor(options?: { canvasId?: string; gameScale?: number; deadzone?: number }) {
     if (options?.canvasId) {
-      this.canvas = document.getElementById(
-        options.canvasId,
-      ) as HTMLCanvasElement | null;
+      this.canvas = document.getElementById(options.canvasId) as HTMLCanvasElement | null;
     }
     if (options?.gameScale) {
       this.gameScale = options.gameScale;

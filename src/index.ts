@@ -28,10 +28,14 @@ export type { TerminalGlyph } from './core/behaviours/terminal_render';
 export { TerminalRender } from './core/behaviours/terminal_render';
 export { default as Camera } from './core/camera';
 // ── Consoles (unified) ──────────────────────────────────────────────
-/** @since 0.5.0 */
+/**
+ * @since 0.5.0
+ */
 export * from './core/consoles';
 // ── Controls ────────────────────────────────────────────────────────
-/** @since 0.5.0 */
+/**
+ * @since 0.5.0
+ */
 export * from './core/controls';
 export { default as Engine } from './core/engine';
 export type { EnhancedCameraConfig } from './core/enhanced_camera';
@@ -43,11 +47,7 @@ export { default as GameObjectRegister } from './core/game_object_register';
 export { Grid } from './core/grid/grid';
 export type { GridCell, GridConfig } from './core/grid/grid_types';
 export { IsometricProjection } from './core/grid/isometric';
-export type {
-  IsoConfig,
-  IsoLayout,
-  VisibleRange,
-} from './core/grid/isometric_types';
+export type { IsoConfig, IsoLayout, VisibleRange } from './core/grid/isometric_types';
 // ── Icons ───────────────────────────────────────────────────────────
 export type { InternalBitmapIconName } from './core/icons/icon_bitmap';
 export { default as IconBitmap } from './core/icons/icon_bitmap';
@@ -56,7 +56,9 @@ export { default as Input } from './core/input';
 export type { InputDriver } from './core/input/terminal';
 export { TerminalInputDriver } from './core/input/terminal';
 // ── Palettes ────────────────────────────────────────────────────────
-/** @since 0.5.0 */
+/**
+ * @since 0.5.0
+ */
 export * from './core/palettes';
 // ── Renderer / Loop ─────────────────────────────────────────────────
 export type { LoopDriver } from './core/renderer/loops/loop';
@@ -65,26 +67,68 @@ export { createBunLoop } from './core/renderer/loops/terminal_loop';
 export * from './core/renderer/resolutions';
 export type { TerminalRenderConfig } from './core/renderer/terminal_renderer';
 export { TerminalRenderContext } from './core/renderer/terminal_renderer';
-export type {
-  RenderContext,
-  TerminalBuffer,
-  TerminalCell,
-} from './core/renderer/type';
+export type { RenderContext, TerminalBuffer, TerminalCell } from './core/renderer/type';
 export { WebRenderer } from './core/renderer/web_renderer';
 export type { SpriteFrame } from './core/sprite';
 export { default as Sprite } from './core/sprite';
 export { default as StateMachine } from './core/state_machine';
 export * from './core/renderer/objects/bitmap';
 export * from './core/renderer/objects/bitmap_animator';
+// ── Shaders ─────────────────────────────────────────────────────────
+/**
+ * @since 0.5.0
+ */
+export { Shader } from './core/shaders/shader';
+export { ShaderStack } from './core/shaders/shader_stack';
+export { GlowShader } from './core/shaders/glow_shader';
+export type { GlowConfig } from './core/shaders/glow_shader';
+export { ParticleShader } from './core/shaders/particle_shader';
+export type { ParticleConfig } from './core/shaders/particle_shader';
+export { VignetteShader } from './core/shaders/vignette_shader';
+export type { VignetteConfig } from './core/shaders/vignette_shader';
+export type { ShaderConfig, ShaderRegion } from './core/shaders/types';
+// ── Map ─────────────────────────────────────────────────────────────
+/**
+ * @since 0.5.0
+ */
+export { default as MapManager } from './core/map/map_manager';
+export { default as AssetManager } from './core/map/asset_manager';
+export { default as Screen } from './core/map/screen';
+export { default as AnimatedObject } from './core/map/animated_object';
+export { default as MapObject } from './core/map/map_object';
+export type { MapObjectConstructor } from './core/map/map_object';
+export { default as MapObjectRegistry } from './core/map/map_object_registry';
+export { drawFrame } from './core/map/draw';
+export { default as CollisionMap } from './core/map/collision_map';
+export type { WorldCollider } from './core/map/collision_map';
+export { shapeBounds, translateShape } from './core/map/collision_map';
+export type { MapLoadOptions } from './core/map/map_manager';
+export type {
+  AnimationDefinition,
+  Clip,
+  Frame,
+  GameObjectDefinition,
+  ImageDefinition,
+  ImageResolver,
+  MapData,
+  MapObjectContext,
+  MapProject,
+  CollisionDefinition,
+  CollisionShape,
+  Placement,
+  Rect,
+  ScreenCoordinate,
+  ScreenData,
+  ScreenName,
+  SpriteRegionDefinition,
+  StateMachineDefinition,
+  Transform,
+} from './core/map/types';
 // ── Tilemap ─────────────────────────────────────────────────────────
 export { TileLayer } from './core/tilemap/tile_layer';
 export { TileMap } from './core/tilemap/tilemap';
 export { TilemapSystem } from './core/tilemap/tilemap_system';
-export type {
-  TileLayerConfig,
-  TileMapConfig,
-  TileSetConfig,
-} from './core/tilemap/tilemap_types';
+export type { TileLayerConfig, TileMapConfig, TileSetConfig } from './core/tilemap/tilemap_types';
 export { TileSet } from './core/tilemap/tileset';
 // ── Utilities ───────────────────────────────────────────────────────
 export { MapGenerator } from './core/utils/map_generator';
@@ -94,11 +138,7 @@ export type {
   MapGeneratorConfig,
 } from './core/utils/map_generator_types';
 export { Pathfinder } from './core/utils/pathfinding';
-export type {
-  HeuristicName,
-  PathfinderConfig,
-  PathNode,
-} from './core/utils/pathfinding_types';
+export type { HeuristicName, PathfinderConfig, PathNode } from './core/utils/pathfinding_types';
 export { PerlinNoise } from './core/utils/perlin_noise';
 // ── World / Physics ─────────────────────────────────────────────────
 export { default as World } from './core/world';
@@ -122,7 +162,9 @@ export type {
    * @deprecated Use {@link Dimension} instead (correct spelling).
    */
   Demension,
-  /** @since 0.4.0 */
+  /**
+   * @since 0.4.0
+   */
   Dimension,
   Vector2,
   WorldBounds,
@@ -134,4 +176,5 @@ export { IsometricCameraSystem } from './subsystems/iso_camera_system';
 export { MonitorSystem } from './subsystems/monitor_system';
 export type { ObjectSystemConfig } from './subsystems/object_system';
 export { ObjectSystem } from './subsystems/object_system';
+export { ShaderSystem } from './subsystems/shader_system';
 export type { SubSystem } from './subsystems/types';

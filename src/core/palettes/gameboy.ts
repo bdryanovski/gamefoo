@@ -86,9 +86,7 @@ export const GAMEBOY: NamedColorPalette<GameBoyColors> = {
  * ctx.fillRect(0, 0, 10, 10, sepia.named.DARKEST);
  * ```
  */
-export function createGameBoyPalette(
-  tint: HexColor,
-): NamedColorPalette<GameBoyColors> {
+export function createGameBoyPalette(tint: HexColor): NamedColorPalette<GameBoyColors> {
   const [r, g, b] = hexToRgb(tint);
 
   // Luminance levels from darkest to lightest

@@ -55,10 +55,14 @@ import type { SubSystem } from '../subsystems/types';
 import type { GridDebugConfig } from './grid_debug_types';
 
 export class GridDebugSystem implements SubSystem {
-  /** Subsystem identifier. */
+  /**
+   * Subsystem identifier.
+   */
   id = 'grid-debug';
 
-  /** Execution order. `90` renders on top of most subsystems. */
+  /**
+   * Execution order. `90` renders on top of most subsystems.
+   */
   order = 90;
 
   private grid: Grid;
@@ -84,7 +88,9 @@ export class GridDebugSystem implements SubSystem {
   private canvasHeight = 0;
   private canvas: HTMLCanvasElement | null = null;
 
-  /** Cached viewport bounds for culling debug overlays. */
+  /**
+   * Cached viewport bounds for culling debug overlays.
+   */
   private viewX = 0;
   private viewY = 0;
   private viewW = 0;
@@ -106,7 +112,9 @@ export class GridDebugSystem implements SubSystem {
    * engine.use(debug);
    * ```
    */
-  /** Stored canvas reference from config for use in init(). */
+  /**
+   * Stored canvas reference from config for use in init().
+   */
   private configCanvas: HTMLCanvasElement | undefined;
 
   constructor(config: GridDebugConfig) {
@@ -144,10 +152,8 @@ export class GridDebugSystem implements SubSystem {
 
     // Prefer the canvas provided via config; fall back to DOM query (browser-only)
     const canvasEl =
-      this.configCanvas
-      ?? (typeof document !== 'undefined'
-        ? document.querySelector('canvas')
-        : null);
+      this.configCanvas ??
+      (typeof document !== 'undefined' ? document.querySelector('canvas') : null);
     if (canvasEl) {
       this.canvas = canvasEl;
       canvasEl.addEventListener('mousemove', this.handleMouseMove);
@@ -206,13 +212,27 @@ export class GridDebugSystem implements SubSystem {
   render(ctx: RenderContext): void {
     // GridDebugSystem only supports canvas rendering
     const canvasCtx = ctx.getCanvas?.();
-    if (!canvasCtx) return;
-    if (this.showGrid) this.renderGrid(canvasCtx);
-    if (this.showCoordinates) this.renderCoordinates(canvasCtx);
-    if (this.showCollisionBounds) this.renderCollisionBounds(canvasCtx);
-    if (this.showPathfinding) this.renderPathfinding(canvasCtx);
-    if (this.showTileInspector) this.renderTileInspector(canvasCtx);
-    if (this.showWorldCoordinates) this.renderWorldCoordinates(canvasCtx);
+    if (!canvasCtx) {
+      return;
+    }
+    if (this.showGrid) {
+      this.renderGrid(canvasCtx);
+    }
+    if (this.showCoordinates) {
+      this.renderCoordinates(canvasCtx);
+    }
+    if (this.showCollisionBounds) {
+      this.renderCollisionBounds(canvasCtx);
+    }
+    if (this.showPathfinding) {
+      this.renderPathfinding(canvasCtx);
+    }
+    if (this.showTileInspector) {
+      this.renderTileInspector(canvasCtx);
+    }
+    if (this.showWorldCoordinates) {
+      this.renderWorldCoordinates(canvasCtx);
+    }
   }
 
   /**
@@ -289,7 +309,9 @@ export class GridDebugSystem implements SubSystem {
    * @internal
    */
   private renderIsometricGrid(ctx: CanvasRenderingContext2D): void {
-    if (!this.projection) return;
+    if (!this.projection) {
+      return;
+    }
 
     const range = this.projection.getVisibleRange(
       this.viewX,
@@ -305,10 +327,7 @@ export class GridDebugSystem implements SubSystem {
 
     for (let row = range.minRow; row <= range.maxRow; row++) {
       for (let col = range.minCol; col <= range.maxCol; col++) {
-        const [top, right, bottom, left] = this.projection.getTileDiamond(
-          col,
-          row,
-        );
+        const [top, right, bottom, left] = this.projection.getTileDiamond(col, row);
         ctx.beginPath();
         ctx.moveTo(top.x, top.y);
         ctx.lineTo(right.x, right.y);
@@ -355,15 +374,9 @@ export class GridDebugSystem implements SubSystem {
       const cw = this.grid.cellWidth;
       const ch = this.grid.cellHeight;
       minCol = Math.max(0, Math.floor(this.viewX / cw) - 1);
-      maxCol = Math.min(
-        this.grid.cols - 1,
-        Math.ceil((this.viewX + this.viewW) / cw) + 1,
-      );
+      maxCol = Math.min(this.grid.cols - 1, Math.ceil((this.viewX + this.viewW) / cw) + 1);
       minRow = Math.max(0, Math.floor(this.viewY / ch) - 1);
-      maxRow = Math.min(
-        this.grid.rows - 1,
-        Math.ceil((this.viewY + this.viewH) / ch) + 1,
-      );
+      maxRow = Math.min(this.grid.rows - 1, Math.ceil((this.viewY + this.viewH) / ch) + 1);
     }
 
     for (let row = minRow; row <= maxRow; row++) {
@@ -376,14 +389,8 @@ export class GridDebugSystem implements SubSystem {
           cx = pos.x + this.projection.tileWidth / 2;
           cy = pos.y + this.projection.tileHeight / 2;
         } else {
-          cx =
-            this.grid.origin.x
-            + col * this.grid.cellWidth
-            + this.grid.cellWidth / 2;
-          cy =
-            this.grid.origin.y
-            + row * this.grid.cellHeight
-            + this.grid.cellHeight / 2;
+          cx = this.grid.origin.x + col * this.grid.cellWidth + this.grid.cellWidth / 2;
+          cy = this.grid.origin.y + row * this.grid.cellHeight + this.grid.cellHeight / 2;
         }
 
         ctx.fillText(`${col},${row}`, cx, cy);
@@ -402,13 +409,17 @@ export class GridDebugSystem implements SubSystem {
    * @internal
    */
   private renderCollisionBounds(ctx: CanvasRenderingContext2D): void {
-    if (!this.world) return;
+    if (!this.world) {
+      return;
+    }
 
     ctx.strokeStyle = this.collisionColor;
     ctx.lineWidth = 1;
 
     for (const collider of this.world.getColliders()) {
-      if (!collider.enabled) continue;
+      if (!collider.enabled) {
+        continue;
+      }
 
       const bounds = collider.getWorldBounds();
       const shape = collider.shape;
@@ -417,13 +428,7 @@ export class GridDebugSystem implements SubSystem {
         ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
       } else if (shape.type === 'circle') {
         ctx.beginPath();
-        ctx.arc(
-          bounds.x + shape.radius,
-          bounds.y + shape.radius,
-          shape.radius,
-          0,
-          Math.PI * 2,
-        );
+        ctx.arc(bounds.x + shape.radius, bounds.y + shape.radius, shape.radius, 0, Math.PI * 2);
         ctx.stroke();
       }
     }
@@ -438,7 +443,9 @@ export class GridDebugSystem implements SubSystem {
    * @internal
    */
   private renderPathfinding(ctx: CanvasRenderingContext2D): void {
-    if (this.debugPath.length < 2) return;
+    if (this.debugPath.length < 2) {
+      return;
+    }
 
     ctx.strokeStyle = this.pathColor;
     ctx.fillStyle = this.pathColor;
@@ -446,11 +453,11 @@ export class GridDebugSystem implements SubSystem {
 
     ctx.beginPath();
 
-    for (let i = 0; i < this.debugPath.length; i++) {
-      const wp = this.debugPath[i]!;
+    for (let pathIndex = 0; pathIndex < this.debugPath.length; pathIndex += 1) {
+      const wp = this.debugPath[pathIndex]!;
       const pos = this.getCellCenter(wp.col, wp.row);
 
-      if (i === 0) {
+      if (pathIndex === 0) {
         ctx.moveTo(pos.x, pos.y);
       } else {
         ctx.lineTo(pos.x, pos.y);
@@ -476,7 +483,9 @@ export class GridDebugSystem implements SubSystem {
    * @internal
    */
   private renderTileInspector(ctx: CanvasRenderingContext2D): void {
-    if (!this.mouseActive) return;
+    if (!this.mouseActive) {
+      return;
+    }
 
     let col: number;
     let row: number;
@@ -491,16 +500,17 @@ export class GridDebugSystem implements SubSystem {
       row = cell.row;
     }
 
-    if (!this.grid.isInBounds(col, row)) return;
+    if (!this.grid.isInBounds(col, row)) {
+      return;
+    }
 
     const gridCell = this.grid.getCell(col, row);
-    if (!gridCell) return;
+    if (!gridCell) {
+      return;
+    }
 
     if (this.projection) {
-      const [top, right, bottom, left] = this.projection.getTileDiamond(
-        col,
-        row,
-      );
+      const [top, right, bottom, left] = this.projection.getTileDiamond(col, row);
       ctx.fillStyle = 'rgba(255,255,255,0.15)';
       ctx.beginPath();
       ctx.moveTo(top.x, top.y);
@@ -542,7 +552,9 @@ export class GridDebugSystem implements SubSystem {
    * @internal
    */
   private renderWorldCoordinates(ctx: CanvasRenderingContext2D): void {
-    if (!this.mouseActive) return;
+    if (!this.mouseActive) {
+      return;
+    }
 
     let col: number;
     let row: number;
@@ -576,8 +588,8 @@ export class GridDebugSystem implements SubSystem {
     ctx.textAlign = 'start';
     ctx.textBaseline = 'top';
 
-    for (let i = 0; i < lines.length; i++) {
-      ctx.fillText(lines[i]!, x + padding, y + padding + i * lineHeight);
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+      ctx.fillText(lines[lineIndex]!, x + padding, y + padding + lineIndex * lineHeight);
     }
 
     ctx.textBaseline = 'alphabetic';
@@ -599,14 +611,8 @@ export class GridDebugSystem implements SubSystem {
       };
     }
     return {
-      x:
-        this.grid.origin.x
-        + col * this.grid.cellWidth
-        + this.grid.cellWidth / 2,
-      y:
-        this.grid.origin.y
-        + row * this.grid.cellHeight
-        + this.grid.cellHeight / 2,
+      x: this.grid.origin.x + col * this.grid.cellWidth + this.grid.cellWidth / 2,
+      y: this.grid.origin.y + row * this.grid.cellHeight + this.grid.cellHeight / 2,
     };
   }
 }

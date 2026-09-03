@@ -22,13 +22,21 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface ButtonConfig extends UIWidgetConfig {
-  /** Button label text */
+  /**
+   * Button label text
+   */
   text?: string;
-  /** Text alignment */
+  /**
+   * Text alignment
+   */
   align?: HorizontalAlign;
-  /** Click callback */
+  /**
+   * Click callback
+   */
   onClick?: () => void;
-  /** Hover callback */
+  /**
+   * Hover callback
+   */
   onHover?: (hovered: boolean) => void;
 }
 
@@ -49,19 +57,29 @@ export interface ButtonConfig extends UIWidgetConfig {
  * ```
  */
 export default class Button extends UIWidget {
-  /** Button text */
+  /**
+   * Button text
+   */
   protected _text: string = '';
 
-  /** Text alignment */
+  /**
+   * Text alignment
+   */
   protected _align: HorizontalAlign = 'center';
 
-  /** Click callback */
+  /**
+   * Click callback
+   */
   protected _onClick: (() => void) | null = null;
 
-  /** Hover callback */
+  /**
+   * Hover callback
+   */
   protected _onHover: ((hovered: boolean) => void) | null = null;
 
-  /** Last hover state for callback */
+  /**
+   * Last hover state for callback
+   */
   private _wasHovered: boolean = false;
 
   /**
@@ -77,17 +95,27 @@ export default class Button extends UIWidget {
       focusable: config.focusable ?? true,
       padding: config.padding ?? 4,
     });
-    if (config.text !== undefined) this._text = config.text;
-    if (config.align !== undefined) this._align = config.align;
-    if (config.onClick !== undefined) this._onClick = config.onClick;
-    if (config.onHover !== undefined) this._onHover = config.onHover;
+    if (config.text !== undefined) {
+      this._text = config.text;
+    }
+    if (config.align !== undefined) {
+      this._align = config.align;
+    }
+    if (config.onClick !== undefined) {
+      this._onClick = config.onClick;
+    }
+    if (config.onHover !== undefined) {
+      this._onHover = config.onHover;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Button text */
+  /**
+   * Button text
+   */
   get text(): string {
     return this._text;
   }
@@ -99,7 +127,9 @@ export default class Button extends UIWidget {
     }
   }
 
-  /** Text alignment */
+  /**
+   * Text alignment
+   */
   get align(): HorizontalAlign {
     return this._align;
   }
@@ -108,7 +138,9 @@ export default class Button extends UIWidget {
     this._align = value;
   }
 
-  /** Click callback */
+  /**
+   * Click callback
+   */
   get onClick(): (() => void) | null {
     return this._onClick;
   }
@@ -133,14 +165,8 @@ export default class Button extends UIWidget {
       const textWidth = font.getTextWidth(this._text);
 
       return {
-        width: Math.max(
-          this._width,
-          textWidth + this._padding.left + this._padding.right,
-        ),
-        height: Math.max(
-          this._height,
-          font.height + this._padding.top + this._padding.bottom,
-        ),
+        width: Math.max(this._width, textWidth + this._padding.left + this._padding.right),
+        height: Math.max(this._height, font.height + this._padding.top + this._padding.bottom),
       };
     } catch {
       return { width: this._width || 60, height: this._height || 16 };
@@ -160,14 +186,13 @@ export default class Button extends UIWidget {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mouseup') {
       const mouseEvent = event as UIMouseButtonEvent;
-      if (
-        mouseEvent.button === 'left'
-        && this.containsPoint(mouseEvent.x, mouseEvent.y)
-      ) {
+      if (mouseEvent.button === 'left' && this.containsPoint(mouseEvent.x, mouseEvent.y)) {
         this.activate();
         event.consume();
         return true;
@@ -247,9 +272,7 @@ export default class Button extends UIWidget {
         textColor = theme.colors['button.textDisabled'];
         borderColor = theme.colors['button.border'];
       } else if (isFocused) {
-        bgColor =
-          theme.colors['button.backgroundHover']
-          ?? theme.colors['button.background'];
+        bgColor = theme.colors['button.backgroundHover'] ?? theme.colors['button.background'];
         textColor = theme.colors['button.text'];
         borderColor = theme.colors['focus.ring'];
       } else {
@@ -300,12 +323,7 @@ export default class Button extends UIWidget {
       ctx.fillRect(0, 0, this._width, this._height, '#444444');
       ctx.strokeRect(0, 0, this._width, this._height, '#666666');
       if (this._text) {
-        ctx.drawText(
-          this._text,
-          this._padding.left,
-          this._padding.top,
-          '#FFFFFF',
-        );
+        ctx.drawText(this._text, this._padding.left, this._padding.top, '#FFFFFF');
       }
     }
   }

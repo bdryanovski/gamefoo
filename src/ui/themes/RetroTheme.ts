@@ -72,14 +72,8 @@ const AMBER_PHOSPHOR_PALETTE: ColorPalette = {
  *
  * @since 0.5.0
  */
-export function createRetroTheme(
-  variant: 'green' | 'amber' = 'green',
-): UITheme {
-  const palette =
-    variant === 'green' ? GREEN_PHOSPHOR_PALETTE : AMBER_PHOSPHOR_PALETTE;
-  const primaryColor = variant === 'green' ? '#33cc33' : '#ffaa00';
-  const dimColor = variant === 'green' ? '#1a4d1a' : '#665500';
-  const brightColor = variant === 'green' ? '#66ff66' : '#ffbb33';
+export function createRetroTheme(variant: 'green' | 'amber' = 'green'): UITheme {
+  const palette = variant === 'green' ? GREEN_PHOSPHOR_PALETTE : AMBER_PHOSPHOR_PALETTE;
 
   const colors: UIColorMap = {
     // Panel/Container

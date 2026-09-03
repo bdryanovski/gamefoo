@@ -21,22 +21,34 @@ export type EasingFunction = (t: number) => number;
  * @since 0.5.0
  */
 export const Easing = {
-  /** Linear interpolation */
+  /**
+   * Linear interpolation
+   */
   linear: (t: number) => t,
 
-  /** Ease in (quadratic) */
+  /**
+   * Ease in (quadratic)
+   */
   easeIn: (t: number) => t * t,
 
-  /** Ease out (quadratic) */
+  /**
+   * Ease out (quadratic)
+   */
   easeOut: (t: number) => t * (2 - t),
 
-  /** Ease in-out (quadratic) */
+  /**
+   * Ease in-out (quadratic)
+   */
   easeInOut: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
 
-  /** Ease out cubic */
+  /**
+   * Ease out cubic
+   */
   easeOutCubic: (t: number) => 1 - (1 - t) ** 3,
 
-  /** Ease in cubic */
+  /**
+   * Ease in cubic
+   */
   easeInCubic: (t: number) => t * t * t,
 } as const;
 
@@ -53,13 +65,21 @@ export type TransitionState = 'idle' | 'running' | 'completed';
  * @since 0.5.0
  */
 export interface TransitionConfig {
-  /** Duration in seconds */
+  /**
+   * Duration in seconds
+   */
   duration: number;
-  /** Easing function */
+  /**
+   * Easing function
+   */
   easing?: EasingFunction;
-  /** Delay before starting in seconds */
+  /**
+   * Delay before starting in seconds
+   */
   delay?: number;
-  /** Callback when complete */
+  /**
+   * Callback when complete
+   */
   onComplete?: () => void;
 }
 
@@ -80,25 +100,39 @@ export interface TransitionConfig {
  * ```
  */
 export default class Transition {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: Required<TransitionConfig>;
 
-  /** Current state */
+  /**
+   * Current state
+   */
   private _state: TransitionState = 'idle';
 
-  /** Elapsed time */
+  /**
+   * Elapsed time
+   */
   private _elapsed: number = 0;
 
-  /** Target widget */
+  /**
+   * Target widget
+   */
   private _target: UIWidget | null = null;
 
-  /** Property being animated */
+  /**
+   * Property being animated
+   */
   private _property: string = '';
 
-  /** Start value */
+  /**
+   * Start value
+   */
   private _startValue: number = 0;
 
-  /** End value */
+  /**
+   * End value
+   */
   private _endValue: number = 0;
 
   /**
@@ -121,21 +155,31 @@ export default class Transition {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Current state */
+  /**
+   * Current state
+   */
   get state(): TransitionState {
     return this._state;
   }
 
-  /** Progress (0 to 1) */
+  /**
+   * Progress (0 to 1)
+   */
   get progress(): number {
-    if (this._state === 'idle') return 0;
-    if (this._state === 'completed') return 1;
+    if (this._state === 'idle') {
+      return 0;
+    }
+    if (this._state === 'completed') {
+      return 1;
+    }
 
     const effectiveElapsed = Math.max(0, this._elapsed - this._config.delay);
     return Math.min(1, effectiveElapsed / this._config.duration);
   }
 
-  /** Whether transition is active */
+  /**
+   * Whether transition is active
+   */
   get isRunning(): boolean {
     return this._state === 'running';
   }
@@ -154,12 +198,7 @@ export default class Transition {
    *
    * @since 0.5.0
    */
-  animate(
-    target: UIWidget,
-    property: string,
-    startValue: number,
-    endValue: number,
-  ): this {
+  animate(target: UIWidget, property: string, startValue: number, endValue: number): this {
     this._target = target;
     this._property = property;
     this._startValue = startValue;
@@ -181,20 +220,23 @@ export default class Transition {
    * @since 0.5.0
    */
   update(deltaTime: number): void {
-    if (this._state !== 'running') return;
+    if (this._state !== 'running') {
+      return;
+    }
 
     this._elapsed += deltaTime;
 
     // Check delay
-    if (this._elapsed < this._config.delay) return;
+    if (this._elapsed < this._config.delay) {
+      return;
+    }
 
     const effectiveElapsed = this._elapsed - this._config.delay;
     const t = Math.min(1, effectiveElapsed / this._config.duration);
     const easedT = this._config.easing(t);
 
     // Interpolate value
-    const value =
-      this._startValue + (this._endValue - this._startValue) * easedT;
+    const value = this._startValue + (this._endValue - this._startValue) * easedT;
     this.applyValue(value);
 
     // Check completion
@@ -210,7 +252,9 @@ export default class Transition {
    * @internal
    */
   private applyValue(value: number): void {
-    if (!this._target) return;
+    if (!this._target) {
+      return;
+    }
 
     // Use type assertion to set property
     (this._target as any)[this._property] = value;
@@ -250,10 +294,7 @@ export default class Transition {
  *
  * @since 0.5.0
  */
-export function createFadeTransition(
-  duration: number = 0.2,
-  fadeIn: boolean = true,
-): Transition {
+export function createFadeTransition(duration: number = 0.2, fadeIn: boolean = true): Transition {
   return new Transition({
     duration,
     easing: fadeIn ? Easing.easeOut : Easing.easeIn,

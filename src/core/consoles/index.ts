@@ -48,11 +48,17 @@ import type { ScreenResolution } from '../renderer/resolutions';
  * @since 0.5.0
  */
 export interface ConsoleDefinition {
-  /** Display name of the console. */
+  /**
+   * Display name of the console.
+   */
   readonly name: string;
-  /** Screen resolution. */
+  /**
+   * Screen resolution.
+   */
   readonly resolution: ScreenResolution;
-  /** Color palette (fixed or generated). */
+  /**
+   * Color palette (fixed or generated).
+   */
   readonly palette: ColorPalette | GeneratedPalette;
 }
 
@@ -284,8 +290,4 @@ export function listConsoles(): ConsoleName[] {
 }
 
 // ── Controls Integration ────────────────────────────────────────────
-export {
-  CONSOLE_DEFAULT_CONTROLS,
-  getControlSchemeName,
-  getDefaultControls,
-} from './controls';
+export { CONSOLE_DEFAULT_CONTROLS, getControlSchemeName, getDefaultControls } from './controls';

@@ -11,15 +11,7 @@
 
 import type Input from '@/core/input';
 import type FocusManager from './FocusManager';
-import type {
-  MouseButton,
-  UICharInputEvent,
-  UIInputEvent,
-  UIKeyEvent,
-  UIMouseButtonEvent,
-  UIMouseMoveEvent,
-  UIMouseWheelEvent,
-} from './types';
+import type { MouseButton, UIKeyEvent, UIMouseButtonEvent, UIMouseMoveEvent } from './types';
 import { createUIEvent } from './types';
 import type UIStateManager from './UIStateManager';
 import type UIWidget from './UIWidget';
@@ -30,9 +22,13 @@ import type UIWidget from './UIWidget';
  * @since 0.5.0
  */
 export interface InputRouterConfig {
-  /** Whether to capture input when UI is active */
+  /**
+   * Whether to capture input when UI is active
+   */
   captureInput?: boolean;
-  /** Keys that trigger focus navigation */
+  /**
+   * Keys that trigger focus navigation
+   */
   focusKeys?: {
     next?: string[]; // Default: ['Tab']
     previous?: string[]; // Default: ['Tab'] with shift
@@ -41,7 +37,9 @@ export interface InputRouterConfig {
     left?: string[]; // Default: ['ArrowLeft', 'a', 'A']
     right?: string[]; // Default: ['ArrowRight', 'd', 'D']
   };
-  /** Keys that trigger action on focused widget */
+  /**
+   * Keys that trigger action on focused widget
+   */
   actionKeys?: string[]; // Default: ['Enter', ' ']
 }
 
@@ -76,32 +74,50 @@ const DEFAULT_ACTION_KEYS = ['Enter', ' '];
  * ```
  */
 export default class InputRouter {
-  /** Engine input system */
+  /**
+   * Engine input system
+   */
   private _input: Input;
 
-  /** UI state manager */
+  /**
+   * UI state manager
+   */
   private _stateManager: UIStateManager;
 
-  /** Focus manager */
+  /**
+   * Focus manager
+   */
   private _focusManager: FocusManager;
 
-  /** Root widget for input routing */
+  /**
+   * Root widget for input routing
+   */
   private _root: UIWidget | null = null;
 
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: Required<InputRouterConfig>;
 
-  /** Last mouse position */
+  /**
+   * Last mouse position
+   */
   private _lastMouseX: number = 0;
   private _lastMouseY: number = 0;
 
-  /** Currently captured widget (receives all input) */
+  /**
+   * Currently captured widget (receives all input)
+   */
   private _capturedWidget: UIWidget | null = null;
 
-  /** Keys that were down last frame (for press detection) */
+  /**
+   * Keys that were down last frame (for press detection)
+   */
   private _lastKeysDown: Set<string> = new Set();
 
-  /** Mouse buttons that were down last frame */
+  /**
+   * Mouse buttons that were down last frame
+   */
   private _lastMouseDown: Set<number> = new Set();
 
   /**
@@ -201,7 +217,9 @@ export default class InputRouter {
    * @since 0.5.0
    */
   processInput(): boolean {
-    if (!this._root) return false;
+    if (!this._root) {
+      return false;
+    }
 
     let consumed = false;
 
@@ -232,7 +250,9 @@ export default class InputRouter {
     const dy = pos.y - this._lastMouseY;
 
     // Skip if no movement
-    if (dx === 0 && dy === 0) return false;
+    if (dx === 0 && dy === 0) {
+      return false;
+    }
 
     this._lastMouseX = pos.x;
     this._lastMouseY = pos.y;
@@ -410,16 +430,24 @@ export default class InputRouter {
     }
 
     if (focusKeys.up?.includes(key)) {
-      if (this._focusManager.focusDirection('up')) return true;
+      if (this._focusManager.focusDirection('up')) {
+        return true;
+      }
     }
     if (focusKeys.down?.includes(key)) {
-      if (this._focusManager.focusDirection('down')) return true;
+      if (this._focusManager.focusDirection('down')) {
+        return true;
+      }
     }
     if (focusKeys.left?.includes(key)) {
-      if (this._focusManager.focusDirection('left')) return true;
+      if (this._focusManager.focusDirection('left')) {
+        return true;
+      }
     }
     if (focusKeys.right?.includes(key)) {
-      if (this._focusManager.focusDirection('right')) return true;
+      if (this._focusManager.focusDirection('right')) {
+        return true;
+      }
     }
 
     // Create and dispatch event to focused widget

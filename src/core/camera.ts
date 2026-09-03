@@ -30,16 +30,24 @@ import type { Vector2 } from '../generic_types';
  * @see {@link Engine} — owns and drives the camera each frame
  */
 export default class Camera {
-  /** Current X coordinate of the camera centre. */
+  /**
+   * Current X coordinate of the camera centre.
+   */
   private x: number = 0;
 
-  /** Current Y coordinate of the camera centre. */
+  /**
+   * Current Y coordinate of the camera centre.
+   */
   private y: number = 0;
 
-  /** Viewport width in pixels. */
+  /**
+   * Viewport width in pixels.
+   */
   private width: number;
 
-  /** Viewport height in pixels. */
+  /**
+   * Viewport height in pixels.
+   */
   private height: number;
 
   /**

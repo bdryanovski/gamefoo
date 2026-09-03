@@ -116,9 +116,7 @@ export function paletteSize(palette: ColorPalette | GeneratedPalette): number {
  * ctx.fillStyle = color;
  * ```
  */
-export function randomColor(
-  palette: ColorPalette | GeneratedPalette,
-): HexColor {
+export function randomColor(palette: ColorPalette | GeneratedPalette): HexColor {
   if (isGeneratedPalette(palette)) {
     const max = 2 ** palette.bitsPerChannel - 1;
     const r = Math.floor(Math.random() * (max + 1));
@@ -192,19 +190,16 @@ function colorDistanceSquared(hex1: string, hex2: string): number {
  * // Returns '#FF004D' (PICO-8 red)
  * ```
  */
-export function nearestColor(
-  palette: ColorPalette,
-  targetHex: string,
-): HexColor {
+export function nearestColor(palette: ColorPalette, targetHex: string): HexColor {
   let nearestIdx = 0;
   let nearestDist = Number.POSITIVE_INFINITY;
 
-  for (let i = 0; i < palette.colors.length; i++) {
-    const color = palette.colors[i]!;
+  for (let index = 0; index < palette.colors.length; index += 1) {
+    const color = palette.colors[index]!;
     const dist = colorDistanceSquared(targetHex, color);
     if (dist < nearestDist) {
       nearestDist = dist;
-      nearestIdx = i;
+      nearestIdx = index;
     }
   }
 
@@ -262,8 +257,8 @@ export function paletteGradient(
 
   const result: HexColor[] = [];
 
-  for (let i = 0; i < steps; i++) {
-    const t = i / (steps - 1);
+  for (let index = 0; index < steps; index += 1) {
+    const t = index / (steps - 1);
     const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * t);
     const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * t);
     const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * t);

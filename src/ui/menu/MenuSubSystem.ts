@@ -12,8 +12,7 @@
 import type Engine from '@/core/engine';
 import type { RenderContext } from '@/core/renderer/type';
 import type { SubSystem } from '@/subsystems/types';
-import type { MonitorSystem, GridSize } from '@/subsystems/monitor_system';
-import type { ColorPalette, GeneratedPalette } from '@/core/palettes/types';
+import type { MonitorSystem } from '@/subsystems/monitor_system';
 import type { ControlScheme } from '@/core/controls/types';
 import type { ControlSchemeName } from '@/core/controls';
 import { getControlScheme } from '@/core/controls';
@@ -24,7 +23,6 @@ import MenuIntegration, {
   type AudioState,
   type DebugState,
   type GraphicsState,
-  type MenuIntegrationCallbacks,
   type MenuIntegrationConfig,
 } from './MenuIntegration';
 
@@ -34,32 +32,54 @@ import MenuIntegration, {
  * @since 0.5.0
  */
 export interface MenuSubSystemConfig {
-  /** Menu width (default: 280) */
+  /**
+   * Menu width (default: 280)
+   */
   width?: number;
-  /** Menu height (default: 200) */
+  /**
+   * Menu height (default: 200)
+   */
   height?: number;
-  /** Theme to use */
+  /**
+   * Theme to use
+   */
   theme?: UITheme;
-  /** Overlay color for dithered background (default: '#000000') */
+  /**
+   * Overlay color for dithered background (default: '#000000')
+   */
   overlayColor?: string;
 
-  /** Available palettes for palette page */
+  /**
+   * Available palettes for palette page
+   */
   palettes?: AnyPalette[];
-  /** Initial palette index */
+  /**
+   * Initial palette index
+   */
   initialPaletteIndex?: number;
-  /** Initial control scheme name */
+  /**
+   * Initial control scheme name
+   */
   initialControlScheme?: ControlSchemeName;
 
-  /** Initial audio state */
+  /**
+   * Initial audio state
+   */
   initialAudio?: Partial<AudioState>;
 
-  /** MonitorSystem reference for debug controls (auto-detected if not provided) */
+  /**
+   * MonitorSystem reference for debug controls (auto-detected if not provided)
+   */
   monitorSystem?: MonitorSystem;
 
-  /** Whether to auto-register default pages (default: true) */
+  /**
+   * Whether to auto-register default pages (default: true)
+   */
   autoRegisterPages?: boolean;
 
-  /** Whether to show palette page (default: true if palettes provided) */
+  /**
+   * Whether to show palette page (default: true if palettes provided)
+   */
   showPalettePage?: boolean;
 }
 
@@ -69,21 +89,37 @@ export interface MenuSubSystemConfig {
  * @since 0.5.0
  */
 export interface MenuSubSystemCallbacks {
-  /** Called when control scheme changes */
+  /**
+   * Called when control scheme changes
+   */
   onControlSchemeChange?: (scheme: ControlScheme, name: ControlSchemeName) => void;
-  /** Called when palette changes */
+  /**
+   * Called when palette changes
+   */
   onPaletteChange?: (palette: AnyPalette, index: number) => void;
-  /** Called when graphics settings change */
+  /**
+   * Called when graphics settings change
+   */
   onGraphicsChange?: (state: GraphicsState) => void;
-  /** Called when audio settings change */
+  /**
+   * Called when audio settings change
+   */
   onAudioChange?: (state: AudioState) => void;
-  /** Called when debug settings change */
+  /**
+   * Called when debug settings change
+   */
   onDebugChange?: (state: DebugState) => void;
-  /** Called when quit is confirmed */
+  /**
+   * Called when quit is confirmed
+   */
   onQuit?: () => void;
-  /** Called when menu is shown */
+  /**
+   * Called when menu is shown
+   */
   onShow?: () => void;
-  /** Called when menu is hidden */
+  /**
+   * Called when menu is hidden
+   */
   onHide?: () => void;
 }
 
@@ -141,34 +177,54 @@ export interface MenuSubSystemCallbacks {
  * ```
  */
 export default class MenuSubSystem implements SubSystem {
-  /** Subsystem ID */
+  /**
+   * Subsystem ID
+   */
   readonly id = 'menu-subsystem';
 
-  /** Execution order (after MonitorSystem at 90, but defines MenuSystem at 95) */
+  /**
+   * Execution order (after MonitorSystem at 90, but defines MenuSystem at 95)
+   */
   readonly order = 92;
 
-  /** Subsystem enabled state */
+  /**
+   * Subsystem enabled state
+   */
   enabled = true;
 
-  /** Engine reference */
+  /**
+   * Engine reference
+   */
   private _engine: Engine | null = null;
 
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: MenuSubSystemConfig;
 
-  /** Internal MenuSystem */
+  /**
+   * Internal MenuSystem
+   */
   private _menuSystem: MenuSystem | null = null;
 
-  /** Internal MenuIntegration */
+  /**
+   * Internal MenuIntegration
+   */
   private _integration: MenuIntegration | null = null;
 
-  /** MonitorSystem reference */
+  /**
+   * MonitorSystem reference
+   */
   private _monitorSystem: MonitorSystem | null = null;
 
-  /** Callbacks */
+  /**
+   * Callbacks
+   */
   private _callbacks: MenuSubSystemCallbacks = {};
 
-  /** Previous menu visibility (for onShow/onHide callbacks) */
+  /**
+   * Previous menu visibility (for onShow/onHide callbacks)
+   */
   private _wasVisible: boolean = false;
 
   /**
@@ -330,7 +386,9 @@ export default class MenuSubSystem implements SubSystem {
    * @internal
    */
   private applyGraphicsChange(state: GraphicsState): void {
-    if (!this._engine) return;
+    if (!this._engine) {
+      return;
+    }
 
     const renderer = this._engine.renderer;
 
@@ -554,11 +612,13 @@ export default class MenuSubSystem implements SubSystem {
    * @since 0.5.0
    */
   get graphics(): Readonly<GraphicsState> {
-    return this._integration?.graphics ?? {
-      scale: 1,
-      width: 320,
-      height: 240,
-    };
+    return (
+      this._integration?.graphics ?? {
+        scale: 1,
+        width: 320,
+        height: 240,
+      }
+    );
   }
 
   /**
@@ -567,12 +627,14 @@ export default class MenuSubSystem implements SubSystem {
    * @since 0.5.0
    */
   get audio(): Readonly<AudioState> {
-    return this._integration?.audio ?? {
-      masterVolume: 100,
-      musicVolume: 80,
-      sfxVolume: 100,
-      muted: false,
-    };
+    return (
+      this._integration?.audio ?? {
+        masterVolume: 100,
+        musicVolume: 80,
+        sfxVolume: 100,
+        muted: false,
+      }
+    );
   }
 
   /**
@@ -581,13 +643,15 @@ export default class MenuSubSystem implements SubSystem {
    * @since 0.5.0
    */
   get debug(): Readonly<DebugState> {
-    return this._integration?.debug ?? {
-      showFps: false,
-      showGraph: false,
-      showMemory: false,
-      showGrid: false,
-      gridSize: 'none',
-    };
+    return (
+      this._integration?.debug ?? {
+        showFps: false,
+        showGraph: false,
+        showMemory: false,
+        showGrid: false,
+        gridSize: 'none',
+      }
+    );
   }
 }
 

@@ -60,8 +60,8 @@ function getPaletteColors(palette: AnyPalette): readonly string[] {
   const colors: string[] = [];
   const max = (1 << generated.bitsPerChannel) - 1;
   const steps = Math.min(16, max + 1);
-  for (let i = 0; i < steps; i++) {
-    const v = Math.round((i * max) / (steps - 1));
+  for (let stepIndex = 0; stepIndex < steps; stepIndex += 1) {
+    const v = Math.round((stepIndex * max) / (steps - 1));
     colors.push(generated.generate(v, v, v));
   }
   return colors;
@@ -96,11 +96,17 @@ class ColorSwatch extends Container {
  * @since 0.5.0
  */
 export interface PalettePageConfig {
-  /** Available palettes (supports both ColorPalette and GeneratedPalette) */
+  /**
+   * Available palettes (supports both ColorPalette and GeneratedPalette)
+   */
   palettes?: AnyPalette[];
-  /** Currently selected palette index */
+  /**
+   * Currently selected palette index
+   */
   selectedIndex?: number;
-  /** Palette change callback */
+  /**
+   * Palette change callback
+   */
   onPaletteChange?: (palette: AnyPalette, index: number) => void;
 }
 
@@ -110,22 +116,34 @@ export interface PalettePageConfig {
  * @since 0.5.0
  */
 export default class PalettePage extends MenuPage {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: PalettePageConfig;
 
-  /** Palette dropdown */
+  /**
+   * Palette dropdown
+   */
   private _dropdown: Dropdown;
 
-  /** Color grid */
+  /**
+   * Color grid
+   */
   private _colorGrid: GridLayout;
 
-  /** Color swatches */
+  /**
+   * Color swatches
+   */
   private _swatches: ColorSwatch[] = [];
 
-  /** Current palette name label */
+  /**
+   * Current palette name label
+   */
   private _nameLabel: Label;
 
-  /** Color count label */
+  /**
+   * Color count label
+   */
   private _countLabel: Label;
 
   /**

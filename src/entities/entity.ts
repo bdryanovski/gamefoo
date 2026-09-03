@@ -1,6 +1,9 @@
 import type { Behaviour } from '../core/behaviour';
 import type { RenderContext } from '../core/renderer/type';
 import Node from './node';
+import type { Shader } from '../core/shaders/shader';
+import { ShaderStack } from '../core/shaders/shader_stack';
+import type { ShaderRegion } from '../core/shaders/types';
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -73,6 +76,13 @@ export default abstract class Entity extends Node {
   private _sortedBehaviors: Behaviour[] | null = null;
 
   /**
+   * Screen effects attached to this entity (glow, particles, …).
+   *
+   * @since 0.5.0
+   */
+  private readonly shaderStack = new ShaderStack();
+
+  /**
    * Creates a new entity.
    *
    * @param id     - Unique string identifier.
@@ -91,13 +101,7 @@ export default abstract class Entity extends Node {
    * }
    * ```
    */
-  constructor(
-    id: string,
-    x: number,
-    y: number,
-    width?: number,
-    height?: number,
-  ) {
+  constructor(id: string, x: number, y: number, width?: number, height?: number) {
     super({ x, y }, { width: width || 0, height: height || 0 });
     this.id = id;
   }
@@ -132,9 +136,7 @@ export default abstract class Entity extends Node {
    * const renderers = entity.getBehavioursByType(SpriteRender);
    * ```
    */
-  getBehavioursByType<T extends Behaviour>(
-    type: new (...args: any[]) => T,
-  ): T[] {
+  getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 
@@ -190,7 +192,9 @@ export default abstract class Entity extends Node {
    */
   detachBehaviour(key: string): void {
     const behavior = this.behaviorMap.get(key.toLowerCase());
-    if (!behavior) return;
+    if (!behavior) {
+      return;
+    }
 
     if (behavior.onDetach) {
       behavior.onDetach();
@@ -245,5 +249,73 @@ export default abstract class Entity extends Node {
         behavior.render(ctx);
       }
     }
+  }
+
+  /**
+   * Attaches a screen shader to this entity and returns it.
+   *
+   * Effects render when the subclass calls {@link Entity.renderShaders} and
+   * advance when it calls {@link Entity.updateShaders} — mirroring the
+   * behaviour update/render hooks.
+   *
+   * @since 0.5.0
+   *
+   * @param shader - The shader to attach.
+   */
+  attachShader<T extends Shader>(shader: T): T {
+    return this.shaderStack.attach(shader);
+  }
+
+  /**
+   * The attached shader with `type`, or `undefined`.
+   *
+   * @since 0.5.0
+   */
+  getShader<T extends Shader>(type: string): T | undefined {
+    return this.shaderStack.get<T>(type);
+  }
+
+  /**
+   * Whether a shader with `type` is attached.
+   *
+   * @since 0.5.0
+   */
+  hasShader(type: string): boolean {
+    return this.shaderStack.has(type);
+  }
+
+  /**
+   * Detaches the shader with `type`, if present.
+   *
+   * @since 0.5.0
+   */
+  detachShader(type: string): void {
+    this.shaderStack.detach(type);
+  }
+
+  /**
+   * Advances every enabled shader. Call from a subclass's `update`, next to
+   * {@link Entity.updateBehaviours}.
+   *
+   * @since 0.5.0
+   *
+   * @param deltaTime - Seconds elapsed since the previous frame.
+   */
+  protected updateShaders(deltaTime: number): void {
+    this.shaderStack.update(deltaTime);
+  }
+
+  /**
+   * Renders every enabled shader over this entity's bounding box. Call from
+   * a subclass's `render`, next to {@link Entity.renderBehaviours}.
+   *
+   * @since 0.5.0
+   *
+   * @param ctx - The rendering context.
+   */
+  protected renderShaders(ctx: RenderContext): void {
+    const size = this.getSize();
+    const region: ShaderRegion = { x: this.x, y: this.y, width: size.width, height: size.height };
+    this.shaderStack.render(ctx, region);
   }
 }

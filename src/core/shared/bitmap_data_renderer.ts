@@ -8,7 +8,9 @@
  * @since 0.4.0
  */
 
-/** Catalog entry shape shared by fonts and icon sets. @internal */
+/**
+ * Catalog entry shape shared by fonts and icon sets. @internal
+ */
 export interface BitmapCatalogEntry {
   name: string;
   width: number;
@@ -18,7 +20,9 @@ export interface BitmapCatalogEntry {
 }
 
 export abstract class BitmapDataRenderer {
-  /** The catalogue name of the loaded resource. */
+  /**
+   * The catalogue name of the loaded resource.
+   */
   public readonly name: string;
 
   /**
@@ -59,11 +63,7 @@ export abstract class BitmapDataRenderer {
    * @param catalog - The registry map to search.
    * @param kind    - Human-readable label used in the error message.
    */
-  constructor(
-    name: string,
-    catalog: Map<string, BitmapCatalogEntry>,
-    kind: string,
-  ) {
+  constructor(name: string, catalog: Map<string, BitmapCatalogEntry>, kind: string) {
     this.name = name;
     const entry = catalog.get(name);
     if (!entry) {

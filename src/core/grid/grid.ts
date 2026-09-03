@@ -44,22 +44,34 @@ import { DIR_4, DIR_8 } from './grid_constants';
 import type { GridCell, GridConfig } from './grid_types';
 
 export class Grid<T = number> {
-  /** Number of columns in the grid. */
+  /**
+   * Number of columns in the grid.
+   */
   readonly cols: number;
 
-  /** Number of rows in the grid. */
+  /**
+   * Number of rows in the grid.
+   */
   readonly rows: number;
 
-  /** Width of a single cell in world-space pixels. */
+  /**
+   * Width of a single cell in world-space pixels.
+   */
   readonly cellWidth: number;
 
-  /** Height of a single cell in world-space pixels. */
+  /**
+   * Height of a single cell in world-space pixels.
+   */
   readonly cellHeight: number;
 
-  /** World-space offset of cell (0, 0). */
+  /**
+   * World-space offset of cell (0, 0).
+   */
   readonly origin: Vector2;
 
-  /** Internal 2-D array storing all cells, indexed `[row][col]`. */
+  /**
+   * Internal 2-D array storing all cells, indexed `[row][col]`.
+   */
   private cells: GridCell<T>[][];
 
   /**
@@ -120,7 +132,9 @@ export class Grid<T = number> {
    * ```
    */
   getCell(col: number, row: number): GridCell<T> | undefined {
-    if (!this.isInBounds(col, row)) return undefined;
+    if (!this.isInBounds(col, row)) {
+      return undefined;
+    }
     return this.cells[row]![col];
   }
 
@@ -141,7 +155,9 @@ export class Grid<T = number> {
    * ```
    */
   setCell(col: number, row: number, value: T): void {
-    if (!this.isInBounds(col, row)) return;
+    if (!this.isInBounds(col, row)) {
+      return;
+    }
     this.cells[row]![col]!.value = value;
   }
 
@@ -163,7 +179,9 @@ export class Grid<T = number> {
    * ```
    */
   setWalkable(col: number, row: number, walkable: boolean): void {
-    if (!this.isInBounds(col, row)) return;
+    if (!this.isInBounds(col, row)) {
+      return;
+    }
     this.cells[row]![col]!.walkable = walkable;
   }
 
@@ -262,9 +280,7 @@ export class Grid<T = number> {
    * });
    * ```
    */
-  forEach(
-    callback: (cell: GridCell<T>, col: number, row: number) => void,
-  ): void {
+  forEach(callback: (cell: GridCell<T>, col: number, row: number) => void): void {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         callback(this.cells[row]![col]!, col, row);
@@ -299,18 +315,16 @@ export class Grid<T = number> {
    * // Up to 8 cells
    * ```
    */
-  getNeighbours(
-    col: number,
-    row: number,
-    includeDiagonals = false,
-  ): GridCell<T>[] {
+  getNeighbours(col: number, row: number, includeDiagonals = false): GridCell<T>[] {
     const offsets = includeDiagonals ? DIR_8 : DIR_4;
     const result: GridCell<T>[] = [];
 
-    for (let i = 0; i < offsets.length; i++) {
-      const [dc, dr] = offsets[i]!;
+    for (let index = 0; index < offsets.length; index += 1) {
+      const [dc, dr] = offsets[index]!;
       const cell = this.getCell(col + dc!, row + dr!);
-      if (cell) result.push(cell);
+      if (cell) {
+        result.push(cell);
+      }
     }
 
     return result;
@@ -358,9 +372,9 @@ export class Grid<T = number> {
    * ```
    */
   fillRect(col: number, row: number, w: number, h: number, value: T): void {
-    for (let r = row; r < row + h; r++) {
-      for (let c = col; c < col + w; c++) {
-        this.setCell(c, r, value);
+    for (let currentRow = row; currentRow < row + h; currentRow += 1) {
+      for (let currentCol = col; currentCol < col + w; currentCol += 1) {
+        this.setCell(currentCol, currentRow, value);
       }
     }
   }

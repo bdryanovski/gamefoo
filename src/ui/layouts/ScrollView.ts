@@ -8,12 +8,7 @@
 
 import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
-import type {
-  UIInputEvent,
-  UIKeyEvent,
-  UIMouseWheelEvent,
-  UISize,
-} from '../core/types';
+import type { UIInputEvent, UIKeyEvent, UIMouseWheelEvent } from '../core/types';
 
 /**
  * Configuration for ScrollView.
@@ -21,17 +16,29 @@ import type {
  * @since 0.5.0
  */
 export interface ScrollViewConfig extends ContainerConfig {
-  /** Content widget */
+  /**
+   * Content widget
+   */
   content?: import('../core/UIWidget').default;
-  /** Enable horizontal scrolling */
+  /**
+   * Enable horizontal scrolling
+   */
   horizontalScroll?: boolean;
-  /** Enable vertical scrolling */
+  /**
+   * Enable vertical scrolling
+   */
   verticalScroll?: boolean;
-  /** Scroll speed multiplier */
+  /**
+   * Scroll speed multiplier
+   */
   scrollSpeed?: number;
-  /** Show scrollbars */
+  /**
+   * Show scrollbars
+   */
   showScrollbars?: boolean;
-  /** Scrollbar width */
+  /**
+   * Scrollbar width
+   */
   scrollbarWidth?: number;
 }
 
@@ -57,28 +64,44 @@ export interface ScrollViewConfig extends ContainerConfig {
  * ```
  */
 export default class ScrollView extends Container {
-  /** Content widget */
+  /**
+   * Content widget
+   */
   protected _content: import('../core/UIWidget').default | null = null;
 
-  /** Enable horizontal scrolling */
+  /**
+   * Enable horizontal scrolling
+   */
   protected _horizontalScroll: boolean = false;
 
-  /** Enable vertical scrolling */
+  /**
+   * Enable vertical scrolling
+   */
   protected _verticalScroll: boolean = true;
 
-  /** Scroll position X */
+  /**
+   * Scroll position X
+   */
   protected _scrollX: number = 0;
 
-  /** Scroll position Y */
+  /**
+   * Scroll position Y
+   */
   protected _scrollY: number = 0;
 
-  /** Scroll speed multiplier */
+  /**
+   * Scroll speed multiplier
+   */
   protected _scrollSpeed: number = 20;
 
-  /** Show scrollbars */
+  /**
+   * Show scrollbars
+   */
   protected _showScrollbars: boolean = true;
 
-  /** Scrollbar width */
+  /**
+   * Scrollbar width
+   */
   protected _scrollbarWidth: number = 6;
 
   /**
@@ -90,17 +113,24 @@ export default class ScrollView extends Container {
    */
   constructor(config: ScrollViewConfig = {}) {
     super({ ...config, clip: true });
-    if (config.content) this.setContent(config.content);
-    if (config.horizontalScroll !== undefined)
+    if (config.content) {
+      this.setContent(config.content);
+    }
+    if (config.horizontalScroll !== undefined) {
       this._horizontalScroll = config.horizontalScroll;
-    if (config.verticalScroll !== undefined)
+    }
+    if (config.verticalScroll !== undefined) {
       this._verticalScroll = config.verticalScroll;
-    if (config.scrollSpeed !== undefined)
+    }
+    if (config.scrollSpeed !== undefined) {
       this._scrollSpeed = config.scrollSpeed;
-    if (config.showScrollbars !== undefined)
+    }
+    if (config.showScrollbars !== undefined) {
       this._showScrollbars = config.showScrollbars;
-    if (config.scrollbarWidth !== undefined)
+    }
+    if (config.scrollbarWidth !== undefined) {
       this._scrollbarWidth = config.scrollbarWidth;
+    }
 
     this._focusable = true;
   }
@@ -109,7 +139,9 @@ export default class ScrollView extends Container {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Current scroll position X */
+  /**
+   * Current scroll position X
+   */
   get scrollX(): number {
     return this._scrollX;
   }
@@ -120,7 +152,9 @@ export default class ScrollView extends Container {
     this.markLayoutDirty();
   }
 
-  /** Current scroll position Y */
+  /**
+   * Current scroll position Y
+   */
   get scrollY(): number {
     return this._scrollY;
   }
@@ -131,9 +165,13 @@ export default class ScrollView extends Container {
     this.markLayoutDirty();
   }
 
-  /** Maximum scroll X */
+  /**
+   * Maximum scroll X
+   */
   get maxScrollX(): number {
-    if (!this._content) return 0;
+    if (!this._content) {
+      return 0;
+    }
     const contentSize = this._content.getPreferredSize();
     const viewWidth = this._width - this._padding.left - this._padding.right;
     if (this._showScrollbars && this._verticalScroll) {
@@ -142,21 +180,24 @@ export default class ScrollView extends Container {
     return Math.max(0, contentSize.width - viewWidth);
   }
 
-  /** Maximum scroll Y */
+  /**
+   * Maximum scroll Y
+   */
   get maxScrollY(): number {
-    if (!this._content) return 0;
+    if (!this._content) {
+      return 0;
+    }
     const contentSize = this._content.getPreferredSize();
     const viewHeight = this._height - this._padding.top - this._padding.bottom;
     if (this._showScrollbars && this._horizontalScroll) {
-      return Math.max(
-        0,
-        contentSize.height - viewHeight + this._scrollbarWidth,
-      );
+      return Math.max(0, contentSize.height - viewHeight + this._scrollbarWidth);
     }
     return Math.max(0, contentSize.height - viewHeight);
   }
 
-  /** Scroll speed */
+  /**
+   * Scroll speed
+   */
   get scrollSpeed(): number {
     return this._scrollSpeed;
   }
@@ -280,7 +321,9 @@ export default class ScrollView extends Container {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mousewheel') {
       return this.handleMouseWheel(event as UIMouseWheelEvent);
@@ -349,20 +392,14 @@ export default class ScrollView extends Container {
         break;
       case 'PageUp':
         if (this._verticalScroll) {
-          this.scrollBy(
-            0,
-            -(this._height - this._padding.top - this._padding.bottom),
-          );
+          this.scrollBy(0, -(this._height - this._padding.top - this._padding.bottom));
           event.consume();
           return true;
         }
         break;
       case 'PageDown':
         if (this._verticalScroll) {
-          this.scrollBy(
-            0,
-            this._height - this._padding.top - this._padding.bottom,
-          );
+          this.scrollBy(0, this._height - this._padding.top - this._padding.bottom);
           event.consume();
           return true;
         }
@@ -428,7 +465,9 @@ export default class ScrollView extends Container {
   protected override drawSelf(ctx: RenderContext): void {
     super.drawSelf(ctx);
 
-    if (!this._showScrollbars) return;
+    if (!this._showScrollbars) {
+      return;
+    }
 
     try {
       const theme = this.getTheme();
@@ -438,10 +477,8 @@ export default class ScrollView extends Container {
       // Draw vertical scrollbar
       if (this._verticalScroll && this.maxScrollY > 0) {
         const scrollbarX = this._width - this._scrollbarWidth - 1;
-        const scrollbarHeight =
-          this._height - this._padding.top - this._padding.bottom;
-        const contentHeight =
-          this._content?.getPreferredSize().height ?? this._height;
+        const scrollbarHeight = this._height - this._padding.top - this._padding.bottom;
+        const contentHeight = this._content?.getPreferredSize().height ?? this._height;
 
         // Track
         ctx.fillRect(
@@ -453,30 +490,18 @@ export default class ScrollView extends Container {
         );
 
         // Thumb
-        const thumbHeight = Math.max(
-          10,
-          (scrollbarHeight / contentHeight) * scrollbarHeight,
-        );
+        const thumbHeight = Math.max(10, (scrollbarHeight / contentHeight) * scrollbarHeight);
         const thumbY =
-          this._padding.top
-          + (this._scrollY / this.maxScrollY) * (scrollbarHeight - thumbHeight);
+          this._padding.top + (this._scrollY / this.maxScrollY) * (scrollbarHeight - thumbHeight);
 
-        ctx.fillRect(
-          scrollbarX,
-          thumbY,
-          this._scrollbarWidth,
-          thumbHeight,
-          thumbColor,
-        );
+        ctx.fillRect(scrollbarX, thumbY, this._scrollbarWidth, thumbHeight, thumbColor);
       }
 
       // Draw horizontal scrollbar
       if (this._horizontalScroll && this.maxScrollX > 0) {
         const scrollbarY = this._height - this._scrollbarWidth - 1;
-        const scrollbarWidth =
-          this._width - this._padding.left - this._padding.right;
-        const contentWidth =
-          this._content?.getPreferredSize().width ?? this._width;
+        const scrollbarWidth = this._width - this._padding.left - this._padding.right;
+        const contentWidth = this._content?.getPreferredSize().width ?? this._width;
 
         // Track
         ctx.fillRect(
@@ -488,21 +513,11 @@ export default class ScrollView extends Container {
         );
 
         // Thumb
-        const thumbWidth = Math.max(
-          10,
-          (scrollbarWidth / contentWidth) * scrollbarWidth,
-        );
+        const thumbWidth = Math.max(10, (scrollbarWidth / contentWidth) * scrollbarWidth);
         const thumbX =
-          this._padding.left
-          + (this._scrollX / this.maxScrollX) * (scrollbarWidth - thumbWidth);
+          this._padding.left + (this._scrollX / this.maxScrollX) * (scrollbarWidth - thumbWidth);
 
-        ctx.fillRect(
-          thumbX,
-          scrollbarY,
-          thumbWidth,
-          this._scrollbarWidth,
-          thumbColor,
-        );
+        ctx.fillRect(thumbX, scrollbarY, thumbWidth, this._scrollbarWidth, thumbColor);
       }
     } catch {
       // No theme set, skip scrollbars

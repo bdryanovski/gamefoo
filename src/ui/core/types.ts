@@ -6,8 +6,6 @@
  * @since 0.5.0
  */
 
-import type { RenderContext } from '@/core/renderer/type';
-
 /**
  * Horizontal alignment options for layouts and text.
  *
@@ -98,9 +96,13 @@ export type MouseButton = 'left' | 'right' | 'middle';
  * @since 0.5.0
  */
 export interface UIEvent {
-  /** Whether the event has been consumed by a widget. */
+  /**
+   * Whether the event has been consumed by a widget.
+   */
   consumed: boolean;
-  /** Mark this event as consumed to stop propagation. */
+  /**
+   * Mark this event as consumed to stop propagation.
+   */
   consume(): void;
 }
 
@@ -262,12 +264,7 @@ export function createInsets(
  *
  * @since 0.5.0
  */
-export function createRect(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-): UIRect {
+export function createRect(x: number, y: number, width: number, height: number): UIRect {
   return { x, y, width, height };
 }
 
@@ -277,12 +274,7 @@ export function createRect(
  * @since 0.5.0
  */
 export function pointInRect(px: number, py: number, rect: UIRect): boolean {
-  return (
-    px >= rect.x
-    && px < rect.x + rect.width
-    && py >= rect.y
-    && py < rect.y + rect.height
-  );
+  return px >= rect.x && px < rect.x + rect.width && py >= rect.y && py < rect.y + rect.height;
 }
 
 /**

@@ -17,11 +17,17 @@ import type UIWidget from './UIWidget';
  * @since 0.5.0
  */
 export interface WidgetState {
-  /** Whether the widget is currently focused */
+  /**
+   * Whether the widget is currently focused
+   */
   focused: boolean;
-  /** Whether the mouse is over the widget */
+  /**
+   * Whether the mouse is over the widget
+   */
   hovered: boolean;
-  /** Whether the widget is being pressed */
+  /**
+   * Whether the widget is being pressed
+   */
   pressed: boolean;
 }
 
@@ -68,16 +74,24 @@ export type StateChangeListener = (event: StateChangeEvent) => void;
  * ```
  */
 export default class UIStateManager {
-  /** Currently focused widget */
+  /**
+   * Currently focused widget
+   */
   private _focused: UIWidget | null = null;
 
-  /** Currently hovered widget */
+  /**
+   * Currently hovered widget
+   */
   private _hovered: UIWidget | null = null;
 
-  /** Currently pressed widget */
+  /**
+   * Currently pressed widget
+   */
   private _pressed: UIWidget | null = null;
 
-  /** State change listeners */
+  /**
+   * State change listeners
+   */
   private _listeners: StateChangeListener[] = [];
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -103,7 +117,9 @@ export default class UIStateManager {
    * @since 0.5.0
    */
   setFocus(widget: UIWidget | null): void {
-    if (widget === this._focused) return;
+    if (widget === this._focused) {
+      return;
+    }
 
     // Check if widget is focusable
     if (widget && (!widget.focusable || !widget.enabled || !widget.visible)) {
@@ -160,7 +176,9 @@ export default class UIStateManager {
    * @since 0.5.0
    */
   setHover(widget: UIWidget | null): void {
-    if (widget === this._hovered) return;
+    if (widget === this._hovered) {
+      return;
+    }
 
     const previous = this._hovered;
     this._hovered = widget;
@@ -212,7 +230,9 @@ export default class UIStateManager {
    * @since 0.5.0
    */
   setPressed(widget: UIWidget | null): void {
-    if (widget === this._pressed) return;
+    if (widget === this._pressed) {
+      return;
+    }
 
     // Only enabled widgets can be pressed
     if (widget && (!widget.enabled || !widget.visible)) {

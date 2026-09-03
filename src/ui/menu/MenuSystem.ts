@@ -54,19 +54,33 @@ function createDitherPattern(size: number = 2): Bitmap {
  * @since 0.5.0
  */
 export interface MenuSystemConfig {
-  /** Menu width */
+  /**
+   * Menu width
+   */
   width?: number;
-  /** Menu height */
+  /**
+   * Menu height
+   */
   height?: number;
-  /** Theme to use */
+  /**
+   * Theme to use
+   */
   theme?: UITheme;
-  /** Action to toggle menu (default: 'MENU' which maps to Escape) */
+  /**
+   * Action to toggle menu (default: 'MENU' which maps to Escape)
+   */
   toggleAction?: string;
-  /** Initial pages */
+  /**
+   * Initial pages
+   */
   pages?: IMenuPage[];
-  /** Control scheme (defaults to DEFAULT_CONTROLS) */
+  /**
+   * Control scheme (defaults to DEFAULT_CONTROLS)
+   */
   controlScheme?: ControlScheme;
-  /** Overlay color for dithered background (default: '#000000') */
+  /**
+   * Overlay color for dithered background (default: '#000000')
+   */
   overlayColor?: string;
 }
 
@@ -103,70 +117,108 @@ export default class MenuSystem implements SubSystem {
   // SubSystem Implementation
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Subsystem identifier */
+  /**
+   * Subsystem identifier
+   */
   readonly id = 'menu';
 
-  /** Execution order (after UI system) */
+  /**
+   * Execution order (after UI system)
+   */
   readonly order = 95;
 
-  /** Whether the subsystem is enabled */
+  /**
+   * Whether the subsystem is enabled
+   */
   enabled: boolean = true;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Configuration
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Menu width */
+  /**
+   * Menu width
+   */
   private _width: number;
 
-  /** Menu height */
+  /**
+   * Menu height
+   */
   private _height: number;
 
-  /** Toggle action (semantic action name) */
+  /**
+   * Toggle action (semantic action name)
+   */
   private _toggleAction: string;
 
-  /** Control scheme */
+  /**
+   * Control scheme
+   */
   private _controlScheme: ControlScheme;
 
-  /** Theme */
+  /**
+   * Theme
+   */
   private _theme: UITheme;
 
-  /** Overlay color (for dither pattern) */
+  /**
+   * Overlay color (for dither pattern)
+   */
   private _overlayColor: string = '#000000';
 
-  /** Screen dimensions (for overlay) */
+  /**
+   * Screen dimensions (for overlay)
+   */
   private _screenWidth: number = 0;
   private _screenHeight: number = 0;
 
-  /** Dither pattern bitmap */
+  /**
+   * Dither pattern bitmap
+   */
   private _ditherPattern: Bitmap;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Components
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Internal UI system */
+  /**
+   * Internal UI system
+   */
   private _uiSystem: UISystem;
 
-  /** Main container panel */
+  /**
+   * Main container panel
+   */
   private _panel: Panel;
 
-  /** Tabs container */
+  /**
+   * Tabs container
+   */
   private _tabs: Tabs;
 
-  /** Registered pages */
+  /**
+   * Registered pages
+   */
   private _pages: Map<string, IMenuPage> = new Map();
 
-  /** Engine reference */
+  /**
+   * Engine reference
+   */
   private _engine: Engine | null = null;
 
-  /** Input reference */
+  /**
+   * Input reference
+   */
   private _input: Input | null = null;
 
-  /** Input mapper for semantic actions */
+  /**
+   * Input mapper for semantic actions
+   */
   private _inputMapper: InputMapper | null = null;
 
-  /** Whether menu is visible */
+  /**
+   * Whether menu is visible
+   */
   private _visible: boolean = false;
 
   /**
@@ -227,27 +279,37 @@ export default class MenuSystem implements SubSystem {
   // Accessors
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Whether menu is visible */
+  /**
+   * Whether menu is visible
+   */
   get visible(): boolean {
     return this._visible;
   }
 
-  /** Menu width */
+  /**
+   * Menu width
+   */
   get width(): number {
     return this._width;
   }
 
-  /** Menu height */
+  /**
+   * Menu height
+   */
   get height(): number {
     return this._height;
   }
 
-  /** Number of registered pages */
+  /**
+   * Number of registered pages
+   */
   get pageCount(): number {
     return this._pages.size;
   }
 
-  /** Active page ID */
+  /**
+   * Active page ID
+   */
   get activePageId(): string | null {
     const activePage = this._tabs.activePage;
     return activePage?.id ?? null;
@@ -342,7 +404,9 @@ export default class MenuSystem implements SubSystem {
    */
   unregisterPage(id: string): void {
     const page = this._pages.get(id);
-    if (!page) return;
+    if (!page) {
+      return;
+    }
 
     this._pages.delete(id);
 
@@ -640,15 +704,15 @@ export default class MenuSystem implements SubSystem {
         // Forward LEFT/RIGHT to the focused widget
         if (this._inputMapper.isActionPressed('LEFT')) {
           if (
-            'handleHorizontalNav' in focused!
-            && typeof (focused as any).handleHorizontalNav === 'function'
+            'handleHorizontalNav' in focused! &&
+            typeof (focused as any).handleHorizontalNav === 'function'
           ) {
             (focused as any).handleHorizontalNav('left');
           }
         } else if (this._inputMapper.isActionPressed('RIGHT')) {
           if (
-            'handleHorizontalNav' in focused!
-            && typeof (focused as any).handleHorizontalNav === 'function'
+            'handleHorizontalNav' in focused! &&
+            typeof (focused as any).handleHorizontalNav === 'function'
           ) {
             (focused as any).handleHorizontalNav('right');
           }
@@ -707,20 +771,24 @@ export default class MenuSystem implements SubSystem {
    */
   private renderOverlay(ctx: RenderContext): void {
     const canvas = ctx.getCanvas?.();
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const pattern = this._ditherPattern.render();
-    if (!pattern) return;
+    if (!pattern) {
+      return;
+    }
 
     canvas.save();
     canvas.fillStyle = this._overlayColor;
 
     // Tile the 2x2 dither pattern across the entire screen
     const patternSize = 2;
-    for (let y = 0; y < this._screenHeight; y += patternSize) {
-      for (let x = 0; x < this._screenWidth; x += patternSize) {
+    for (let patternY = 0; patternY < this._screenHeight; patternY += patternSize) {
+      for (let patternX = 0; patternX < this._screenWidth; patternX += patternSize) {
         canvas.save();
-        canvas.translate(x, y);
+        canvas.translate(patternX, patternY);
         canvas.fill(pattern);
         canvas.restore();
       }

@@ -36,6 +36,8 @@ export class Bitmap extends Node {
   }
 
   update() {
-    /** Bitmap are design to be static */
+    /**
+     * Bitmap are design to be static
+     */
   }
 }

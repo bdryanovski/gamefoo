@@ -306,7 +306,9 @@ export default class Engine {
    */
   private run<K extends keyof SubSystem>(hook: K, ...args: any[]): void {
     for (const subsystem of this.subsystems) {
-      if (subsystem.enabled === false) continue;
+      if (subsystem.enabled === false) {
+        continue;
+      }
       const fun = subsystem[hook];
       if (typeof fun === 'function') {
         // @ts-expect-error
@@ -352,7 +354,9 @@ export default class Engine {
    * @internal
    */
   private tick(deltaTime: number): void {
-    if (!this.running) return;
+    if (!this.running) {
+      return;
+    }
 
     this.run('preUpdate', deltaTime);
     this.run('update', deltaTime);
@@ -518,8 +522,8 @@ export default class Engine {
    */
   public destroy() {
     this.pause();
-    for (let i = this.subsystems.length - 1; i >= 0; i--) {
-      this.subsystems[i]?.destroy?.();
+    for (let index = this.subsystems.length - 1; index >= 0; index -= 1) {
+      this.subsystems[index]?.destroy?.();
     }
   }
 }

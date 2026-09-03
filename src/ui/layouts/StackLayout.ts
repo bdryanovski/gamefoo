@@ -6,7 +6,6 @@
  * @since 0.5.0
  */
 
-import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
 import type { HorizontalAlign, UISize, VerticalAlign } from '../core/types';
 
@@ -16,9 +15,13 @@ import type { HorizontalAlign, UISize, VerticalAlign } from '../core/types';
  * @since 0.5.0
  */
 export interface StackLayoutConfig extends ContainerConfig {
-  /** Horizontal alignment of children */
+  /**
+   * Horizontal alignment of children
+   */
   horizontalAlign?: HorizontalAlign;
-  /** Vertical alignment of children */
+  /**
+   * Vertical alignment of children
+   */
   verticalAlign?: VerticalAlign;
 }
 
@@ -44,10 +47,14 @@ export interface StackLayoutConfig extends ContainerConfig {
  * ```
  */
 export default class StackLayout extends Container {
-  /** Horizontal alignment */
+  /**
+   * Horizontal alignment
+   */
   protected _horizontalAlign: HorizontalAlign = 'center';
 
-  /** Vertical alignment */
+  /**
+   * Vertical alignment
+   */
   protected _verticalAlign: VerticalAlign = 'center';
 
   /**
@@ -59,17 +66,21 @@ export default class StackLayout extends Container {
    */
   constructor(config: StackLayoutConfig = {}) {
     super(config);
-    if (config.horizontalAlign !== undefined)
+    if (config.horizontalAlign !== undefined) {
       this._horizontalAlign = config.horizontalAlign;
-    if (config.verticalAlign !== undefined)
+    }
+    if (config.verticalAlign !== undefined) {
       this._verticalAlign = config.verticalAlign;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Horizontal alignment */
+  /**
+   * Horizontal alignment
+   */
   get horizontalAlign(): HorizontalAlign {
     return this._horizontalAlign;
   }
@@ -81,7 +92,9 @@ export default class StackLayout extends Container {
     }
   }
 
-  /** Vertical alignment */
+  /**
+   * Vertical alignment
+   */
   get verticalAlign(): VerticalAlign {
     return this._verticalAlign;
   }
@@ -107,7 +120,9 @@ export default class StackLayout extends Container {
     let maxHeight = 0;
 
     for (const child of this._children) {
-      if (!child.visible) continue;
+      if (!child.visible) {
+        continue;
+      }
 
       const childSize = child.getPreferredSize();
       const width = child.margin.left + childSize.width + child.margin.right;
@@ -118,14 +133,8 @@ export default class StackLayout extends Container {
     }
 
     return {
-      width: Math.max(
-        this._width,
-        maxWidth + this._padding.left + this._padding.right,
-      ),
-      height: Math.max(
-        this._height,
-        maxHeight + this._padding.top + this._padding.bottom,
-      ),
+      width: Math.max(this._width, maxWidth + this._padding.left + this._padding.right),
+      height: Math.max(this._height, maxHeight + this._padding.top + this._padding.bottom),
     };
   }
 
@@ -145,13 +154,13 @@ export default class StackLayout extends Container {
     }
 
     // Available space
-    const availableWidth =
-      this._width - this._padding.left - this._padding.right;
-    const availableHeight =
-      this._height - this._padding.top - this._padding.bottom;
+    const availableWidth = this._width - this._padding.left - this._padding.right;
+    const availableHeight = this._height - this._padding.top - this._padding.bottom;
 
     for (const child of this._children) {
-      if (!child.visible) continue;
+      if (!child.visible) {
+        continue;
+      }
 
       const childSize = child.getPreferredSize();
 
@@ -162,11 +171,7 @@ export default class StackLayout extends Container {
           x = this._padding.left + (availableWidth - childSize.width) / 2;
           break;
         case 'right':
-          x =
-            this._padding.left
-            + availableWidth
-            - childSize.width
-            - child.margin.right;
+          x = this._padding.left + availableWidth - childSize.width - child.margin.right;
           break;
       }
 
@@ -177,11 +182,7 @@ export default class StackLayout extends Container {
           y = this._padding.top + (availableHeight - childSize.height) / 2;
           break;
         case 'bottom':
-          y =
-            this._padding.top
-            + availableHeight
-            - childSize.height
-            - child.margin.bottom;
+          y = this._padding.top + availableHeight - childSize.height - child.margin.bottom;
           break;
       }
 

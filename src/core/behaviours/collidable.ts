@@ -1,10 +1,5 @@
-import type Entity from '../../entities/entity';
 import type { GameObject } from '../../entities/types';
-import type {
-  ColliderShape,
-  CollisionInfo,
-  WorldBounds,
-} from '../../generic_types';
+import type { ColliderShape, CollisionInfo, WorldBounds } from '../../generic_types';
 import { Behaviour } from '../behaviour';
 import type World from '../world';
 
@@ -143,7 +138,9 @@ export type CollidableOptions = {
  * @see {@link Behaviour}      — abstract base class
  */
 export class Collidable extends Behaviour<GameObject> {
-  /** @inheritDoc */
+  /**
+   * @inheritDoc
+   */
   readonly type = 'collidable';
 
   /**
@@ -195,7 +192,9 @@ export class Collidable extends Behaviour<GameObject> {
    */
   public onCollision: (info: CollisionInfo) => void;
 
-  /** Reference to the {@link World} this collider is registered with. */
+  /**
+   * Reference to the {@link World} this collider is registered with.
+   */
   private world: World;
 
   /**
@@ -260,10 +259,7 @@ export class Collidable extends Behaviour<GameObject> {
    */
   getWorldBounds(): WorldBounds {
     const pos = this.owner.getPosition();
-    const offset =
-      'offset' in this.shape && this.shape.offset
-        ? this.shape.offset
-        : { x: 0, y: 0 };
+    const offset = 'offset' in this.shape && this.shape.offset ? this.shape.offset : { x: 0, y: 0 };
 
     if (this.shape.type === 'aabb') {
       return {

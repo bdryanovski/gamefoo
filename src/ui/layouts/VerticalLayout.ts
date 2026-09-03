@@ -6,7 +6,6 @@
  * @since 0.5.0
  */
 
-import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
 import type { HorizontalAlign, JustifyContent, UISize } from '../core/types';
 
@@ -16,13 +15,21 @@ import type { HorizontalAlign, JustifyContent, UISize } from '../core/types';
  * @since 0.5.0
  */
 export interface VerticalLayoutConfig extends ContainerConfig {
-  /** Space between children in pixels */
+  /**
+   * Space between children in pixels
+   */
   spacing?: number;
-  /** Horizontal alignment of children */
+  /**
+   * Horizontal alignment of children
+   */
   align?: HorizontalAlign;
-  /** Vertical distribution of children */
+  /**
+   * Vertical distribution of children
+   */
   justify?: JustifyContent;
-  /** If true, children fill the available width */
+  /**
+   * If true, children fill the available width
+   */
   fillWidth?: boolean;
 }
 
@@ -45,16 +52,24 @@ export interface VerticalLayoutConfig extends ContainerConfig {
  * ```
  */
 export default class VerticalLayout extends Container {
-  /** Space between children */
+  /**
+   * Space between children
+   */
   protected _spacing: number = 0;
 
-  /** Horizontal alignment */
+  /**
+   * Horizontal alignment
+   */
   protected _align: HorizontalAlign = 'left';
 
-  /** Vertical justify */
+  /**
+   * Vertical justify
+   */
   protected _justify: JustifyContent = 'start';
 
-  /** Fill width mode */
+  /**
+   * Fill width mode
+   */
   protected _fillWidth: boolean = false;
 
   /**
@@ -66,17 +81,27 @@ export default class VerticalLayout extends Container {
    */
   constructor(config: VerticalLayoutConfig = {}) {
     super(config);
-    if (config.spacing !== undefined) this._spacing = config.spacing;
-    if (config.align !== undefined) this._align = config.align;
-    if (config.justify !== undefined) this._justify = config.justify;
-    if (config.fillWidth !== undefined) this._fillWidth = config.fillWidth;
+    if (config.spacing !== undefined) {
+      this._spacing = config.spacing;
+    }
+    if (config.align !== undefined) {
+      this._align = config.align;
+    }
+    if (config.justify !== undefined) {
+      this._justify = config.justify;
+    }
+    if (config.fillWidth !== undefined) {
+      this._fillWidth = config.fillWidth;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Space between children */
+  /**
+   * Space between children
+   */
   get spacing(): number {
     return this._spacing;
   }
@@ -88,7 +113,9 @@ export default class VerticalLayout extends Container {
     }
   }
 
-  /** Horizontal alignment */
+  /**
+   * Horizontal alignment
+   */
   get align(): HorizontalAlign {
     return this._align;
   }
@@ -100,7 +127,9 @@ export default class VerticalLayout extends Container {
     }
   }
 
-  /** Fill width mode */
+  /**
+   * Fill width mode
+   */
   get fillWidth(): boolean {
     return this._fillWidth;
   }
@@ -127,25 +156,21 @@ export default class VerticalLayout extends Container {
 
     const visibleChildren = this._children.filter((c) => c.visible);
 
-    for (let i = 0; i < visibleChildren.length; i++) {
-      const child = visibleChildren[i]!;
+    for (let index = 0; index < visibleChildren.length; index += 1) {
+      const child = visibleChildren[index]!;
       const childSize = child.getPreferredSize();
 
       totalHeight += child.margin.top + childSize.height + child.margin.bottom;
-      if (i < visibleChildren.length - 1) {
+      if (index < visibleChildren.length - 1) {
         totalHeight += this._spacing;
       }
 
-      const childWidth =
-        child.margin.left + childSize.width + child.margin.right;
+      const childWidth = child.margin.left + childSize.width + child.margin.right;
       maxWidth = Math.max(maxWidth, childWidth);
     }
 
     return {
-      width: Math.max(
-        this._width,
-        maxWidth + this._padding.left + this._padding.right,
-      ),
+      width: Math.max(this._width, maxWidth + this._padding.left + this._padding.right),
       height: Math.max(this._height, totalHeight),
     };
   }
@@ -166,10 +191,8 @@ export default class VerticalLayout extends Container {
     }
 
     // Available dimensions for children (minus padding)
-    const availableWidth =
-      this._width - this._padding.left - this._padding.right;
-    const availableHeight =
-      this._height - this._padding.top - this._padding.bottom;
+    const availableWidth = this._width - this._padding.left - this._padding.right;
+    const availableHeight = this._height - this._padding.top - this._padding.bottom;
 
     const visibleChildren = this._children.filter((c) => c.visible);
 
@@ -177,13 +200,12 @@ export default class VerticalLayout extends Container {
     let totalChildrenHeight = 0;
     const childSizes: { width: number; height: number }[] = [];
 
-    for (let i = 0; i < visibleChildren.length; i++) {
-      const child = visibleChildren[i]!;
+    for (let index = 0; index < visibleChildren.length; index += 1) {
+      const child = visibleChildren[index]!;
       const childSize = child.getPreferredSize();
       childSizes.push(childSize);
-      totalChildrenHeight +=
-        child.margin.top + childSize.height + child.margin.bottom;
-      if (i < visibleChildren.length - 1 && this._justify !== 'space-between') {
+      totalChildrenHeight += child.margin.top + childSize.height + child.margin.bottom;
+      if (index < visibleChildren.length - 1 && this._justify !== 'space-between') {
         totalChildrenHeight += this._spacing;
       }
     }
@@ -206,21 +228,19 @@ export default class VerticalLayout extends Container {
         y = this._padding.top;
         if (visibleChildren.length > 1) {
           let contentHeight = 0;
-          for (let i = 0; i < visibleChildren.length; i++) {
-            const child = visibleChildren[i]!;
-            contentHeight +=
-              child.margin.top + childSizes[i]!.height + child.margin.bottom;
+          for (let index = 0; index < visibleChildren.length; index += 1) {
+            const child = visibleChildren[index]!;
+            contentHeight += child.margin.top + childSizes[index]!.height + child.margin.bottom;
           }
-          effectiveSpacing =
-            (availableHeight - contentHeight) / (visibleChildren.length - 1);
+          effectiveSpacing = (availableHeight - contentHeight) / (visibleChildren.length - 1);
         }
         break;
     }
 
     // Layout children
-    for (let i = 0; i < visibleChildren.length; i++) {
-      const child = visibleChildren[i]!;
-      const childSize = childSizes[i]!;
+    for (let index = 0; index < visibleChildren.length; index += 1) {
+      const child = visibleChildren[index]!;
+      const childSize = childSizes[index]!;
 
       // Apply margin
       y += child.margin.top;
@@ -240,11 +260,7 @@ export default class VerticalLayout extends Container {
             x = this._padding.left + (availableWidth - childWidth) / 2;
             break;
           case 'right':
-            x =
-              this._padding.left
-              + availableWidth
-              - childWidth
-              - child.margin.right;
+            x = this._padding.left + availableWidth - childWidth - child.margin.right;
             break;
         }
       }

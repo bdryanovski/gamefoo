@@ -25,11 +25,17 @@ export type NavigationDirection = 'up' | 'down' | 'left' | 'right';
  * @since 0.5.0
  */
 export interface FocusConfig {
-  /** Whether to wrap around when reaching the end of focusable widgets */
+  /**
+   * Whether to wrap around when reaching the end of focusable widgets
+   */
   wrap?: boolean;
-  /** Whether to allow arrow key navigation */
+  /**
+   * Whether to allow arrow key navigation
+   */
   arrowNavigation?: boolean;
-  /** Whether to allow tab navigation */
+  /**
+   * Whether to allow tab navigation
+   */
   tabNavigation?: boolean;
 }
 
@@ -50,16 +56,24 @@ export interface FocusConfig {
  * ```
  */
 export default class FocusManager {
-  /** Reference to the state manager */
+  /**
+   * Reference to the state manager
+   */
   private _stateManager: UIStateManager;
 
-  /** Root widget for focus navigation */
+  /**
+   * Root widget for focus navigation
+   */
   private _root: UIWidget | null = null;
 
-  /** Focus trap stack (for modal dialogs) */
+  /**
+   * Focus trap stack (for modal dialogs)
+   */
   private _trapStack: UIWidget[] = [];
 
-  /** Navigation configuration */
+  /**
+   * Navigation configuration
+   */
   private _config: Required<FocusConfig> = {
     wrap: true,
     arrowNavigation: true,
@@ -206,7 +220,9 @@ export default class FocusManager {
    */
   getFocusableWidgets(root?: UIWidget): UIWidget[] {
     const effectiveRoot = root ?? this.getEffectiveRoot();
-    if (!effectiveRoot) return [];
+    if (!effectiveRoot) {
+      return [];
+    }
 
     const result: UIWidget[] = [];
     this.collectFocusable(effectiveRoot, result);
@@ -219,7 +235,9 @@ export default class FocusManager {
    * @internal
    */
   private collectFocusable(widget: UIWidget, result: UIWidget[]): void {
-    if (!widget.visible) return;
+    if (!widget.visible) {
+      return;
+    }
 
     if (widget.focusable && widget.enabled) {
       result.push(widget);
@@ -242,10 +260,14 @@ export default class FocusManager {
    * @since 0.5.0
    */
   focusNext(): boolean {
-    if (!this._config.tabNavigation) return false;
+    if (!this._config.tabNavigation) {
+      return false;
+    }
 
     const focusable = this.getFocusableWidgets();
-    if (focusable.length === 0) return false;
+    if (focusable.length === 0) {
+      return false;
+    }
 
     const current = this._stateManager.getFocused();
     if (!current) {
@@ -280,10 +302,14 @@ export default class FocusManager {
    * @since 0.5.0
    */
   focusPrevious(): boolean {
-    if (!this._config.tabNavigation) return false;
+    if (!this._config.tabNavigation) {
+      return false;
+    }
 
     const focusable = this.getFocusableWidgets();
-    if (focusable.length === 0) return false;
+    if (focusable.length === 0) {
+      return false;
+    }
 
     const current = this._stateManager.getFocused();
     if (!current) {
@@ -323,7 +349,9 @@ export default class FocusManager {
    * @since 0.5.0
    */
   focusDirection(direction: NavigationDirection): boolean {
-    if (!this._config.arrowNavigation) return false;
+    if (!this._config.arrowNavigation) {
+      return false;
+    }
 
     const current = this._stateManager.getFocused();
     if (!current) {
@@ -337,7 +365,9 @@ export default class FocusManager {
     }
 
     const focusable = this.getFocusableWidgets();
-    if (focusable.length <= 1) return false;
+    if (focusable.length <= 1) {
+      return false;
+    }
 
     const nearest = this.findNearestInDirection(current, focusable, direction);
     if (nearest) {
@@ -375,7 +405,9 @@ export default class FocusManager {
     let bestScore = Infinity;
 
     for (const candidate of candidates) {
-      if (candidate === from) continue;
+      if (candidate === from) {
+        continue;
+      }
 
       const bounds = candidate.getBounds();
       const centerX = bounds.x + bounds.width / 2;
@@ -398,7 +430,9 @@ export default class FocusManager {
           break;
       }
 
-      if (!inDirection) continue;
+      if (!inDirection) {
+        continue;
+      }
 
       // Calculate score (prefer widgets more aligned with direction)
       const dx = centerX - fromCenterX;
@@ -442,7 +476,9 @@ export default class FocusManager {
     let bestSecondaryDist = Infinity;
 
     for (const candidate of candidates) {
-      if (candidate === from) continue;
+      if (candidate === from) {
+        continue;
+      }
 
       const bounds = candidate.getBounds();
       const centerX = bounds.x + bounds.width / 2;
@@ -476,9 +512,8 @@ export default class FocusManager {
 
       // Prefer furthest in primary direction, then closest in secondary
       if (
-        primaryDist > bestPrimaryDist
-        || (primaryDist === bestPrimaryDist
-          && secondaryDist < bestSecondaryDist)
+        primaryDist > bestPrimaryDist ||
+        (primaryDist === bestPrimaryDist && secondaryDist < bestSecondaryDist)
       ) {
         bestPrimaryDist = primaryDist;
         bestSecondaryDist = secondaryDist;

@@ -20,52 +20,51 @@ import type { ConsoleName } from './index';
  *
  * @since 0.5.0
  */
-export const CONSOLE_DEFAULT_CONTROLS: Record<ConsoleName, ControlSchemeName> =
-  {
-    // Fantasy Consoles
-    PICO8: 'PICO8',
-    TIC80: 'TIC80',
+export const CONSOLE_DEFAULT_CONTROLS: Record<ConsoleName, ControlSchemeName> = {
+  // Fantasy Consoles
+  PICO8: 'PICO8',
+  TIC80: 'TIC80',
 
-    // Atari
-    ATARI_2600: 'ATARI_2600',
-    ATARI_5200: 'ATARI_2600',
-    ATARI_7800: 'ATARI_2600',
+  // Atari
+  ATARI_2600: 'ATARI_2600',
+  ATARI_5200: 'ATARI_2600',
+  ATARI_7800: 'ATARI_2600',
 
-    // Nintendo
-    NES: 'NES',
-    FAMICOM: 'FAMICOM',
-    SNES: 'SNES',
-    GAMEBOY: 'GAMEBOY',
-    GBC: 'GBC',
-    GBA: 'GBA',
-    N64: 'N64',
-    NDS: 'NDS',
-    N3DS: 'NDS', // 3DS uses similar layout to DS
-    SWITCH: 'SNES', // Switch Pro Controller is SNES-like
+  // Nintendo
+  NES: 'NES',
+  FAMICOM: 'FAMICOM',
+  SNES: 'SNES',
+  GAMEBOY: 'GAMEBOY',
+  GBC: 'GBC',
+  GBA: 'GBA',
+  N64: 'N64',
+  NDS: 'NDS',
+  N3DS: 'NDS', // 3DS uses similar layout to DS
+  SWITCH: 'SNES', // Switch Pro Controller is SNES-like
 
-    // Sega
-    GENESIS: 'GENESIS',
-    MEGADRIVE: 'GENESIS',
-    GAMEGEAR: 'GAMEGEAR',
-    DREAMCAST: 'DREAMCAST',
+  // Sega
+  GENESIS: 'GENESIS',
+  MEGADRIVE: 'GENESIS',
+  GAMEGEAR: 'GAMEGEAR',
+  DREAMCAST: 'DREAMCAST',
 
-    // Sony
-    PS1: 'PS1',
-    PSP: 'PSP',
+  // Sony
+  PS1: 'PS1',
+  PSP: 'PSP',
 
-    // SNK
-    NEO_GEO: 'NEO_GEO',
+  // SNK
+  NEO_GEO: 'NEO_GEO',
 
-    // Home Computers
-    C64: 'C64',
-    CGA: 'DEFAULT',
-    CGA_FULL: 'DEFAULT',
-    EGA: 'DEFAULT',
-    EGA_64: 'DEFAULT',
+  // Home Computers
+  C64: 'C64',
+  CGA: 'DEFAULT',
+  CGA_FULL: 'DEFAULT',
+  EGA: 'DEFAULT',
+  EGA_64: 'DEFAULT',
 
-    // Modern Handhelds
-    PLAYDATE: 'PLAYDATE',
-  };
+  // Modern Handhelds
+  PLAYDATE: 'PLAYDATE',
+};
 
 /**
  * Gets the default control scheme for a console.
@@ -99,8 +98,6 @@ export function getDefaultControls(consoleName: ConsoleName): ControlScheme {
  *
  * @since 0.5.0
  */
-export function getControlSchemeName(
-  consoleName: ConsoleName,
-): ControlSchemeName {
+export function getControlSchemeName(consoleName: ConsoleName): ControlSchemeName {
   return CONSOLE_DEFAULT_CONTROLS[consoleName];
 }

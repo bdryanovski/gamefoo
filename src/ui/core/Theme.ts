@@ -88,11 +88,17 @@ export type UIColorMap = Record<UIColorKey, HexColor>;
  * @since 0.5.0
  */
 export interface UIFonts {
-  /** Default font for most text */
+  /**
+   * Default font for most text
+   */
   default: FontBitmap;
-  /** Small font for labels, hints */
+  /**
+   * Small font for labels, hints
+   */
   small: FontBitmap;
-  /** Large font for headers, titles */
+  /**
+   * Large font for headers, titles
+   */
   large: FontBitmap;
 }
 
@@ -113,19 +119,33 @@ export interface UIFontNames {
  * @since 0.5.0
  */
 export interface UITheme {
-  /** Theme identifier */
+  /**
+   * Theme identifier
+   */
   readonly name: string;
-  /** Base color palette */
+  /**
+   * Base color palette
+   */
   readonly palette: ColorPalette;
-  /** Semantic color mappings */
+  /**
+   * Semantic color mappings
+   */
   readonly colors: UIColorMap;
-  /** Font instances */
+  /**
+   * Font instances
+   */
   readonly fonts: UIFonts;
-  /** Spacing unit in pixels (widgets use multiples of this) */
+  /**
+   * Spacing unit in pixels (widgets use multiples of this)
+   */
   readonly spacing: number;
-  /** Border radius in pixels (0 for pixel-art sharp corners) */
+  /**
+   * Border radius in pixels (0 for pixel-art sharp corners)
+   */
   readonly borderRadius: number;
-  /** Border width in pixels */
+  /**
+   * Border width in pixels
+   */
   readonly borderWidth: number;
 }
 
@@ -135,19 +155,33 @@ export interface UITheme {
  * @since 0.5.0
  */
 export interface UIThemeConfig {
-  /** Theme name */
+  /**
+   * Theme name
+   */
   name: string;
-  /** Base palette */
+  /**
+   * Base palette
+   */
   palette: ColorPalette;
-  /** Color overrides (partial) */
+  /**
+   * Color overrides (partial)
+   */
   colors?: Partial<UIColorMap>;
-  /** Font instances */
+  /**
+   * Font instances
+   */
   fonts: UIFonts;
-  /** Spacing unit (default: 4) */
+  /**
+   * Spacing unit (default: 4)
+   */
   spacing?: number;
-  /** Border radius (default: 0) */
+  /**
+   * Border radius (default: 0)
+   */
   borderRadius?: number;
-  /** Border width (default: 1) */
+  /**
+   * Border width (default: 1)
+   */
   borderWidth?: number;
 }
 

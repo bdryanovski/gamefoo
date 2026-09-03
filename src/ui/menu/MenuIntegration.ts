@@ -48,11 +48,17 @@ export interface DebugState {
  * @since 0.5.0
  */
 export interface GraphicsState {
-  /** Display scale */
+  /**
+   * Display scale
+   */
   scale: number;
-  /** Resolution width */
+  /**
+   * Resolution width
+   */
   width: number;
-  /** Resolution height */
+  /**
+   * Resolution height
+   */
   height: number;
 }
 
@@ -74,17 +80,29 @@ export interface AudioState {
  * @since 0.5.0
  */
 export interface MenuIntegrationConfig {
-  /** Available palettes (supports both ColorPalette and GeneratedPalette) */
+  /**
+   * Available palettes (supports both ColorPalette and GeneratedPalette)
+   */
   palettes?: AnyPalette[];
-  /** Initial palette index */
+  /**
+   * Initial palette index
+   */
   initialPaletteIndex?: number;
-  /** Initial control scheme */
+  /**
+   * Initial control scheme
+   */
   initialControlScheme?: ControlSchemeName;
-  /** Initial graphics state */
+  /**
+   * Initial graphics state
+   */
   initialGraphics?: Partial<GraphicsState>;
-  /** Initial audio state */
+  /**
+   * Initial audio state
+   */
   initialAudio?: Partial<AudioState>;
-  /** MonitorSystem for debug controls (optional) */
+  /**
+   * MonitorSystem for debug controls (optional)
+   */
   monitorSystem?: MonitorSystem;
 }
 
@@ -94,20 +112,29 @@ export interface MenuIntegrationConfig {
  * @since 0.5.0
  */
 export interface MenuIntegrationCallbacks {
-  /** Called when control scheme changes */
-  onControlSchemeChange?: (
-    scheme: ControlScheme,
-    name: ControlSchemeName,
-  ) => void;
-  /** Called when palette changes */
+  /**
+   * Called when control scheme changes
+   */
+  onControlSchemeChange?: (scheme: ControlScheme, name: ControlSchemeName) => void;
+  /**
+   * Called when palette changes
+   */
   onPaletteChange?: (palette: AnyPalette, index: number) => void;
-  /** Called when graphics settings change */
+  /**
+   * Called when graphics settings change
+   */
   onGraphicsChange?: (state: GraphicsState) => void;
-  /** Called when audio settings change */
+  /**
+   * Called when audio settings change
+   */
   onAudioChange?: (state: AudioState) => void;
-  /** Called when debug settings change */
+  /**
+   * Called when debug settings change
+   */
   onDebugChange?: (state: DebugState) => void;
-  /** Called when quit is confirmed */
+  /**
+   * Called when quit is confirmed
+   */
   onQuit?: () => void;
 }
 
@@ -133,25 +160,37 @@ export interface MenuIntegrationCallbacks {
  * ```
  */
 export default class MenuIntegration {
-  /** Engine reference */
+  /**
+   * Engine reference
+   */
   private _engine: Engine;
 
-  /** Menu system reference */
+  /**
+   * Menu system reference
+   */
   private _menuSystem: MenuSystem;
 
-  /** MonitorSystem reference for debug controls */
+  /**
+   * MonitorSystem reference for debug controls
+   */
   private _monitorSystem: MonitorSystem | null = null;
 
-  /** Current state */
+  /**
+   * Current state
+   */
   private _controlScheme: ControlSchemeName = 'DEFAULT';
   private _paletteIndex: number = 0;
   private _graphics: GraphicsState;
   private _audio: AudioState;
 
-  /** Available palettes */
+  /**
+   * Available palettes
+   */
   private _palettes: AnyPalette[] = [];
 
-  /** Callbacks */
+  /**
+   * Callbacks
+   */
   private _callbacks: MenuIntegrationCallbacks = {};
 
   /**
@@ -163,11 +202,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  constructor(
-    engine: Engine,
-    menuSystem: MenuSystem,
-    config: MenuIntegrationConfig = {},
-  ) {
+  constructor(engine: Engine, menuSystem: MenuSystem, config: MenuIntegrationConfig = {}) {
     this._engine = engine;
     this._menuSystem = menuSystem;
     this._monitorSystem = config.monitorSystem ?? null;
@@ -324,19 +359,19 @@ export default class MenuIntegration {
 
     const page = new DebugPage({
       monitorSystem: this._monitorSystem ?? undefined,
-      onShowFpsChange: (value: boolean) => {
+      onShowFpsChange: (_value: boolean) => {
         this._callbacks.onDebugChange?.(this.debug);
       },
-      onShowGraphChange: (value: boolean) => {
+      onShowGraphChange: (_value: boolean) => {
         this._callbacks.onDebugChange?.(this.debug);
       },
-      onShowMemoryChange: (value: boolean) => {
+      onShowMemoryChange: (_value: boolean) => {
         this._callbacks.onDebugChange?.(this.debug);
       },
-      onShowGridChange: (value: boolean) => {
+      onShowGridChange: (_value: boolean) => {
         this._callbacks.onDebugChange?.(this.debug);
       },
-      onGridSizeChange: (size: GridSize) => {
+      onGridSizeChange: (_size: GridSize) => {
         this._callbacks.onDebugChange?.(this.debug);
       },
     });

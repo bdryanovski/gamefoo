@@ -48,7 +48,9 @@ import type Input from '../input';
  * @since 0.1.0
  */
 export class Control extends Behaviour<DynamicEntity> {
-  /** @inheritDoc */
+  /**
+   * @inheritDoc
+   */
   readonly type = 'control';
 
   /**
@@ -86,11 +88,7 @@ export class Control extends Behaviour<DynamicEntity> {
    * player.attachBehaviour(new Control(player, input, CONTROL_SCHEMES.PICO8));
    * ```
    */
-  constructor(
-    owner: DynamicEntity,
-    input: Input,
-    scheme: ControlScheme = CONTROL_SCHEMES.DEFAULT,
-  ) {
+  constructor(owner: DynamicEntity, input: Input, scheme: ControlScheme = CONTROL_SCHEMES.DEFAULT) {
     super(owner);
     this.mapper = new InputMapper(input, scheme);
 

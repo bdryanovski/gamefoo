@@ -23,6 +23,7 @@ These goals are ordered by priority. All three matter. Good style advances these
 - No recursion in hot paths — stack depth is bounded
 - Split compound conditions into nested `if/else` for clarity
 - State invariants **positively** (prefer `if (index < length)` over `if (index >= length)`)
+- **Always brace bodies** — the body of every `if`/`else`/`for`/`while` goes in a block `{ … }` on its own lines. Single-line forms like `if (x) return;` are banned and enforced by the `no-single-line-if` codestyle rule.
 
 ```typescript
 // ✅ Good: Clear, explicit
@@ -45,7 +46,7 @@ if (index >= array.length) {
 - Assert all function arguments, return values, preconditions, postconditions, invariants
 - Assert compile-time relationships between constants
 - Split compound assertions: `assert(a); assert(b);` over `assert(a && b);`
-- Use single-line `if` to assert implications: `if (a) assert(b);`
+- Assert implications with a braced `if`: `if (a) { assert(b); }`
 
 ```typescript
 // ✅ Good: Multiple specific assertions
@@ -191,7 +192,8 @@ if (distance < radius) { /* ... */ }
 **Get the nouns and verbs just right.** Names are the essence of code.
 
 - Use `snake_case` for variables and functions, `PascalCase` for classes/types
-- Never abbreviate (except `i`, `j`, `k` for tight loops)
+- Never abbreviate — favour explicit, longer names. Prefer `AnimationDefinition` over `AnimationDef`, `SpriteRegionDefinition` over `SpriteRegionDef`. Humans read code far more often than they write it, so optimise for reading.
+- Name loop variables after what they iterate: `for (const entity of entities)`, or `for (let index = 0; index < count; index += 1)`. Never a bare `i`/`j`/`k`.
 - Add units to variable names, **units go last**: `latency_ms_max` not `max_latency_ms`
 - Related names should have the same length to align in code
 - Proper capitalization for acronyms: `VSRState`, not `VsrState`
@@ -240,6 +242,8 @@ function query(callback: (e: Entity) => void, world: World, filter: Filter): voi
 - Space after `//`
 - Explain **why**, not what
 - Show your workings
+- Doc comments (`/** … */`) on declarations are **block comments**: put `/**` on its own line, one `*`-prefixed line per sentence, and a blank ` *` line between the description and any tags. Never cram a declaration's doc comment onto a single line.
+- Add an `@since <version>` tag **only when introducing something new** — a new type, interface, class, function, property, or argument, or a meaningful extension of behaviour. It records when the API first appeared; don't add it to unchanged code.
 
 ```typescript
 // ✅ Good: Explains rationale

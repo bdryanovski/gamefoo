@@ -46,10 +46,14 @@ import type Sprite from '../sprite';
  * @see {@link Behaviour} — abstract base class
  */
 export class SpriteRender extends Behaviour<Entity> {
-  /** @inheritDoc */
+  /**
+   * @inheritDoc
+   */
   readonly type = 'sprite';
 
-  /** The spritesheet this renderer draws from. */
+  /**
+   * The spritesheet this renderer draws from.
+   */
   private sheet: Sprite;
 
   /**
@@ -163,9 +167,7 @@ export class SpriteRender extends Behaviour<Entity> {
     const animation = this.sheet.animations.get(this.currentFrame);
 
     if (!animation) {
-      console.warn(
-        `Animation "${this.currentFrame}" not found in sprite sheet.`,
-      );
+      console.warn(`Animation "${this.currentFrame}" not found in sprite sheet.`);
       return;
     }
 
@@ -176,9 +178,7 @@ export class SpriteRender extends Behaviour<Entity> {
       this.currentFrameIndex++;
 
       if (this.currentFrameIndex >= animation.frames.length) {
-        this.currentFrameIndex = animation.loop
-          ? 0
-          : animation.frames.length - 1;
+        this.currentFrameIndex = animation.loop ? 0 : animation.frames.length - 1;
       }
     }
   }

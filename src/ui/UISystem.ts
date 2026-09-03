@@ -28,13 +28,21 @@ import type UIWidget from './core/UIWidget';
  * @since 0.5.0
  */
 export interface UISystemConfig {
-  /** Initial theme */
+  /**
+   * Initial theme
+   */
   theme?: UITheme;
-  /** Whether to block game input when UI is active */
+  /**
+   * Whether to block game input when UI is active
+   */
   blockGameInput?: boolean;
-  /** Control scheme for UI navigation (defaults to DEFAULT_CONTROLS) */
+  /**
+   * Control scheme for UI navigation (defaults to DEFAULT_CONTROLS)
+   */
   controlScheme?: ControlScheme;
-  /** Disable horizontal focus navigation (when parent handles tab switching) */
+  /**
+   * Disable horizontal focus navigation (when parent handles tab switching)
+   */
   disableHorizontalNav?: boolean;
 }
 
@@ -63,56 +71,88 @@ export default class UISystem implements SubSystem {
   // SubSystem Implementation
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Subsystem identifier */
+  /**
+   * Subsystem identifier
+   */
   readonly id = 'ui';
 
-  /** Execution order (after game objects, before final render) */
+  /**
+   * Execution order (after game objects, before final render)
+   */
   readonly order = 90;
 
-  /** Whether the subsystem is enabled */
+  /**
+   * Whether the subsystem is enabled
+   */
   enabled: boolean = true;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Core Components
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Root widget of the UI tree */
+  /**
+   * Root widget of the UI tree
+   */
   private _root: UIWidget | null = null;
 
-  /** Current theme */
+  /**
+   * Current theme
+   */
   private _theme: UITheme | null = null;
 
-  /** State manager for focus/hover/pressed states */
+  /**
+   * State manager for focus/hover/pressed states
+   */
   private _stateManager: UIStateManager;
 
-  /** Focus navigation manager */
+  /**
+   * Focus navigation manager
+   */
   private _focusManager: FocusManager;
 
-  /** Input routing */
+  /**
+   * Input routing
+   */
   private _inputRouter: InputRouter | null = null;
 
-  /** Engine reference */
+  /**
+   * Engine reference
+   */
   private _engine: Engine | null = null;
 
-  /** Input system reference */
+  /**
+   * Input system reference
+   */
   private _input: Input | null = null;
 
-  /** Input mapper for semantic action queries */
+  /**
+   * Input mapper for semantic action queries
+   */
   private _inputMapper: InputMapper | null = null;
 
-  /** Control scheme for UI navigation */
+  /**
+   * Control scheme for UI navigation
+   */
   private _controlScheme: ControlScheme;
 
-  /** Whether UI is currently visible/active */
+  /**
+   * Whether UI is currently visible/active
+   */
   private _visible: boolean = false;
 
-  /** Whether to block game input when UI is active */
+  /**
+   * Whether to block game input when UI is active
+   */
   private _blockGameInput: boolean = true;
 
-  /** Disable horizontal navigation (when parent handles tab switching) */
+  /**
+   * Disable horizontal navigation (when parent handles tab switching)
+   */
   private _disableHorizontalNav: boolean = false;
 
-  /** Popup layer (for dropdowns, tooltips, etc.) */
+  /**
+   * Popup layer (for dropdowns, tooltips, etc.)
+   */
   private _popupLayer: UIWidget[] = [];
 
   /**
@@ -153,37 +193,51 @@ export default class UISystem implements SubSystem {
   // Accessors
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Gets the state manager */
+  /**
+   * Gets the state manager
+   */
   get stateManager(): UIStateManager {
     return this._stateManager;
   }
 
-  /** Gets the focus manager */
+  /**
+   * Gets the focus manager
+   */
   get focusManager(): FocusManager {
     return this._focusManager;
   }
 
-  /** Gets the input router */
+  /**
+   * Gets the input router
+   */
   get inputRouter(): InputRouter | null {
     return this._inputRouter;
   }
 
-  /** Gets the current theme */
+  /**
+   * Gets the current theme
+   */
   get theme(): UITheme | null {
     return this._theme;
   }
 
-  /** Whether the UI is currently visible */
+  /**
+   * Whether the UI is currently visible
+   */
   get visible(): boolean {
     return this._visible;
   }
 
-  /** Whether the UI is active and receiving input */
+  /**
+   * Whether the UI is active and receiving input
+   */
   get isActive(): boolean {
     return this._visible && this.enabled && this._root !== null;
   }
 
-  /** Whether game input should be blocked */
+  /**
+   * Whether game input should be blocked
+   */
   get shouldBlockGameInput(): boolean {
     return this._blockGameInput && this.isActive;
   }
@@ -362,13 +416,11 @@ export default class UISystem implements SubSystem {
   private sendNavigationToFocused(direction: 'up' | 'down'): void {
     const focused = this._stateManager.getFocused();
     if (
-      focused
-      && 'handleNavigation' in focused
-      && typeof focused.handleNavigation === 'function'
+      focused &&
+      'handleNavigation' in focused &&
+      typeof focused.handleNavigation === 'function'
     ) {
-      (focused as { handleNavigation: (dir: string) => void }).handleNavigation(
-        direction,
-      );
+      (focused as { handleNavigation: (dir: string) => void }).handleNavigation(direction);
     }
   }
 
@@ -417,11 +469,7 @@ export default class UISystem implements SubSystem {
     // Create InputMapper with the control scheme
     this._inputMapper = new InputMapper(this._input, this._controlScheme);
 
-    this._inputRouter = new InputRouter(
-      this._input,
-      this._stateManager,
-      this._focusManager,
-    );
+    this._inputRouter = new InputRouter(this._input, this._stateManager, this._focusManager);
     if (this._root) {
       this._inputRouter.setRoot(this._root);
     }
@@ -461,11 +509,13 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  preUpdate(deltaTime: number): void {
+  preUpdate(_deltaTime: number): void {
     // Update input state for "just pressed" detection
     this._input?.update();
 
-    if (!this.isActive) return;
+    if (!this.isActive) {
+      return;
+    }
 
     // Handle navigation using InputMapper (semantic actions)
     if (this._inputMapper) {
@@ -500,11 +550,7 @@ export default class UISystem implements SubSystem {
 
       // Action button activates focused widget
       if (this._inputMapper.isActionPressed('PRIMARY')) {
-        if (
-          focused
-          && 'activate' in focused
-          && typeof focused.activate === 'function'
-        ) {
+        if (focused && 'activate' in focused && typeof focused.activate === 'function') {
           (focused as { activate: () => void }).activate();
         }
       }
@@ -512,12 +558,7 @@ export default class UISystem implements SubSystem {
       // Secondary button for cancel/back
       if (this._inputMapper.isActionPressed('SECONDARY')) {
         // If focused widget captures navigation, let it handle cancel first
-        if (
-          captureNav
-          && focused
-          && 'cancel' in focused
-          && typeof focused.cancel === 'function'
-        ) {
+        if (captureNav && focused && 'cancel' in focused && typeof focused.cancel === 'function') {
           (focused as { cancel: () => void }).cancel();
         } else {
           // Otherwise clear popups
@@ -540,7 +581,9 @@ export default class UISystem implements SubSystem {
    * @since 0.5.0
    */
   update(deltaTime: number): void {
-    if (!this.isActive || !this._root) return;
+    if (!this.isActive || !this._root) {
+      return;
+    }
 
     this._root.update(deltaTime);
 
@@ -558,7 +601,9 @@ export default class UISystem implements SubSystem {
    * @since 0.5.0
    */
   render(ctx: RenderContext): void {
-    if (!this.isActive || !this._root) return;
+    if (!this.isActive || !this._root) {
+      return;
+    }
 
     // Render main UI tree
     this._root.render(ctx);

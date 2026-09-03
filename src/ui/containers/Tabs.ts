@@ -8,12 +8,7 @@
 
 import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
-import type {
-  UIInputEvent,
-  UIKeyEvent,
-  UIMouseButtonEvent,
-  UISize,
-} from '../core/types';
+import type { UIInputEvent, UISize } from '../core/types';
 import type UIWidget from '../core/UIWidget';
 
 /**
@@ -22,11 +17,17 @@ import type UIWidget from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface TabPage {
-  /** Tab identifier */
+  /**
+   * Tab identifier
+   */
   id: string;
-  /** Tab title */
+  /**
+   * Tab title
+   */
   title: string;
-  /** Page content widget */
+  /**
+   * Page content widget
+   */
   content: UIWidget;
 }
 
@@ -36,13 +37,21 @@ export interface TabPage {
  * @since 0.5.0
  */
 export interface TabsConfig extends ContainerConfig {
-  /** Tab pages */
+  /**
+   * Tab pages
+   */
   pages?: TabPage[];
-  /** Active tab index */
+  /**
+   * Active tab index
+   */
   activeIndex?: number;
-  /** Tab bar height */
+  /**
+   * Tab bar height
+   */
   tabHeight?: number;
-  /** Tab change callback */
+  /**
+   * Tab change callback
+   */
   onChange?: (index: number, page: TabPage) => void;
 }
 
@@ -66,19 +75,29 @@ export interface TabsConfig extends ContainerConfig {
  * ```
  */
 export default class Tabs extends Container {
-  /** Tab pages */
+  /**
+   * Tab pages
+   */
   protected _pages: TabPage[] = [];
 
-  /** Active tab index */
+  /**
+   * Active tab index
+   */
   protected _activeIndex: number = 0;
 
-  /** Tab bar height */
+  /**
+   * Tab bar height
+   */
   protected _tabHeight: number = 16;
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   protected _onChange: ((index: number, page: TabPage) => void) | null = null;
 
-  /** Cached tab widths */
+  /**
+   * Cached tab widths
+   */
   private _tabWidths: number[] = [];
 
   /**
@@ -102,33 +121,40 @@ export default class Tabs extends Container {
       padding: config.padding ?? 4,
       focusable: config.focusable ?? true,
     });
-    if (config.pages !== undefined) this.setPages(config.pages);
-    if (config.activeIndex !== undefined)
+    if (config.pages !== undefined) {
+      this.setPages(config.pages);
+    }
+    if (config.activeIndex !== undefined) {
       this._activeIndex = config.activeIndex;
-    if (config.tabHeight !== undefined) this._tabHeight = config.tabHeight;
-    if (config.onChange !== undefined) this._onChange = config.onChange;
+    }
+    if (config.tabHeight !== undefined) {
+      this._tabHeight = config.tabHeight;
+    }
+    if (config.onChange !== undefined) {
+      this._onChange = config.onChange;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Tab pages */
+  /**
+   * Tab pages
+   */
   get pages(): readonly TabPage[] {
     return this._pages;
   }
 
-  /** Active tab index */
+  /**
+   * Active tab index
+   */
   get activeIndex(): number {
     return this._activeIndex;
   }
 
   set activeIndex(value: number) {
-    if (
-      value >= 0
-      && value < this._pages.length
-      && this._activeIndex !== value
-    ) {
+    if (value >= 0 && value < this._pages.length && this._activeIndex !== value) {
       this._activeIndex = value;
       this.markLayoutDirty();
 
@@ -138,12 +164,16 @@ export default class Tabs extends Container {
     }
   }
 
-  /** Active page */
+  /**
+   * Active page
+   */
   get activePage(): TabPage | null {
     return this._pages[this._activeIndex] ?? null;
   }
 
-  /** Number of pages */
+  /**
+   * Number of pages
+   */
   get pageCount(): number {
     return this._pages.length;
   }
@@ -220,7 +250,9 @@ export default class Tabs extends Container {
    * @since 0.5.0
    */
   removePage(index: number): void {
-    if (index < 0 || index >= this._pages.length) return;
+    if (index < 0 || index >= this._pages.length) {
+      return;
+    }
 
     const page = this._pages[index]!;
     this.removeChild(page.content);
@@ -279,7 +311,9 @@ export default class Tabs extends Container {
     this._tabWidths = [];
     this._useAbbreviatedTitles = false;
 
-    if (this._pages.length === 0) return;
+    if (this._pages.length === 0) {
+      return;
+    }
 
     try {
       const theme = this.getTheme();
@@ -305,14 +339,10 @@ export default class Tabs extends Container {
       }
 
       // Available width for tabs
-      const availableWidth =
-        this._width - this._padding.left - this._padding.right;
+      const availableWidth = this._width - this._padding.left - this._padding.right;
 
       // Use abbreviated titles if full titles don't fit
-      if (
-        totalFullWidth > availableWidth
-        && totalAbbrevWidth <= availableWidth
-      ) {
+      if (totalFullWidth > availableWidth && totalAbbrevWidth <= availableWidth) {
         this._useAbbreviatedTitles = true;
         this._tabWidths = abbrevWidths;
       } else if (totalFullWidth > availableWidth) {
@@ -325,8 +355,7 @@ export default class Tabs extends Container {
       }
     } catch {
       // Fallback: simple calculation
-      const availableWidth =
-        this._width - this._padding.left - this._padding.right;
+      const availableWidth = this._width - this._padding.left - this._padding.right;
       const fullWidths = this._pages.map((p) => p.title.length * 6 + 8);
       const totalFullWidth = fullWidths.reduce((a, b) => a + b, 0);
 
@@ -378,10 +407,7 @@ export default class Tabs extends Container {
 
     // Add tab bar height
     return {
-      width: Math.max(
-        this._width,
-        maxWidth + this._padding.left + this._padding.right,
-      ),
+      width: Math.max(this._width, maxWidth + this._padding.left + this._padding.right),
       height: Math.max(
         this._height,
         this._tabHeight + maxHeight + this._padding.top + this._padding.bottom,
@@ -405,9 +431,9 @@ export default class Tabs extends Container {
     }
 
     // Update visibility and layout only active page
-    for (let i = 0; i < this._pages.length; i++) {
-      const page = this._pages[i]!;
-      const isActive = i === this._activeIndex;
+    for (let pageIndex = 0; pageIndex < this._pages.length; pageIndex += 1) {
+      const page = this._pages[pageIndex]!;
+      const isActive = pageIndex === this._activeIndex;
 
       page.content.visible = isActive;
 
@@ -415,13 +441,9 @@ export default class Tabs extends Container {
         // Position content below tab bar
         page.content.x = this._padding.left;
         page.content.y = this._tabHeight + this._padding.top;
-        page.content.width =
-          this._width - this._padding.left - this._padding.right;
+        page.content.width = this._width - this._padding.left - this._padding.right;
         page.content.height =
-          this._height
-          - this._tabHeight
-          - this._padding.top
-          - this._padding.bottom;
+          this._height - this._tabHeight - this._padding.top - this._padding.bottom;
         page.content.layout();
       }
     }
@@ -442,7 +464,9 @@ export default class Tabs extends Container {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     // Note: Mouse interaction removed - tabs are keyboard-only
     // Tab switching is handled by parent (MenuSystem) via LEFT/RIGHT actions
@@ -464,20 +488,20 @@ export default class Tabs extends Container {
   private getTabIndexAtPoint(x: number, y: number): number {
     // Check if in tab bar
     if (
-      y < this._absoluteY
-      || y >= this._absoluteY + this._tabHeight
-      || x < this._absoluteX
-      || x >= this._absoluteX + this._width
+      y < this._absoluteY ||
+      y >= this._absoluteY + this._tabHeight ||
+      x < this._absoluteX ||
+      x >= this._absoluteX + this._width
     ) {
       return -1;
     }
 
     // Find which tab
     let tabX = this._absoluteX + this._padding.left;
-    for (let i = 0; i < this._pages.length; i++) {
-      const tabWidth = this._tabWidths[i] ?? 40;
+    for (let pageIndex = 0; pageIndex < this._pages.length; pageIndex += 1) {
+      const tabWidth = this._tabWidths[pageIndex] ?? 40;
       if (x >= tabX && x < tabX + tabWidth) {
-        return i;
+        return pageIndex;
       }
       tabX += tabWidth;
     }
@@ -502,20 +526,14 @@ export default class Tabs extends Container {
       const font = theme.fonts.default;
 
       // Draw tab bar background
-      ctx.fillRect(
-        0,
-        0,
-        this._width,
-        this._tabHeight,
-        theme.colors['tabs.background'],
-      );
+      ctx.fillRect(0, 0, this._width, this._tabHeight, theme.colors['tabs.background']);
 
       // Draw tabs
       let tabX = this._padding.left;
-      for (let i = 0; i < this._pages.length; i++) {
-        const page = this._pages[i]!;
-        const tabWidth = this._tabWidths[i] ?? 40;
-        const isActive = i === this._activeIndex;
+      for (let pageIndex = 0; pageIndex < this._pages.length; pageIndex += 1) {
+        const page = this._pages[pageIndex]!;
+        const tabWidth = this._tabWidths[pageIndex] ?? 40;
+        const isActive = pageIndex === this._activeIndex;
         const displayTitle = this.getDisplayTitle(page);
 
         // Tab background
@@ -525,13 +543,9 @@ export default class Tabs extends Container {
         ctx.fillRect(tabX, 0, tabWidth, this._tabHeight, tabBg);
 
         // Tab text (centered if abbreviated)
-        const textColor = isActive
-          ? theme.colors['tabs.activeText']
-          : theme.colors['tabs.text'];
+        const textColor = isActive ? theme.colors['tabs.activeText'] : theme.colors['tabs.text'];
         const textWidth = font.getTextWidth(displayTitle);
-        const textX = this._useAbbreviatedTitles
-          ? tabX + (tabWidth - textWidth) / 2
-          : tabX + 4;
+        const textX = this._useAbbreviatedTitles ? tabX + (tabWidth - textWidth) / 2 : tabX + 4;
         const textY = (this._tabHeight - font.height) / 2;
 
         const canvas = ctx.getCanvas?.();
@@ -543,49 +557,26 @@ export default class Tabs extends Container {
         }
 
         // Tab border (right side)
-        ctx.fillRect(
-          tabX + tabWidth - 1,
-          0,
-          1,
-          this._tabHeight,
-          theme.colors['tabs.border'],
-        );
+        ctx.fillRect(tabX + tabWidth - 1, 0, 1, this._tabHeight, theme.colors['tabs.border']);
 
         tabX += tabWidth;
       }
 
       // Draw bottom border of tab bar
-      ctx.fillRect(
-        0,
-        this._tabHeight - 1,
-        this._width,
-        1,
-        theme.colors['tabs.border'],
-      );
+      ctx.fillRect(0, this._tabHeight - 1, this._width, 1, theme.colors['tabs.border']);
     } catch {
       // Fallback rendering - just tab bar
       ctx.fillRect(0, 0, this._width, this._tabHeight, '#222222');
 
       let tabX = this._padding.left;
-      for (let i = 0; i < this._pages.length; i++) {
-        const page = this._pages[i]!;
-        const tabWidth = this._tabWidths[i] ?? 40;
-        const isActive = i === this._activeIndex;
+      for (let pageIndex = 0; pageIndex < this._pages.length; pageIndex += 1) {
+        const page = this._pages[pageIndex]!;
+        const tabWidth = this._tabWidths[pageIndex] ?? 40;
+        const isActive = pageIndex === this._activeIndex;
         const displayTitle = this.getDisplayTitle(page);
 
-        ctx.fillRect(
-          tabX,
-          0,
-          tabWidth,
-          this._tabHeight,
-          isActive ? '#333333' : '#222222',
-        );
-        ctx.drawText(
-          displayTitle,
-          tabX + 4,
-          4,
-          isActive ? '#FFFFFF' : '#888888',
-        );
+        ctx.fillRect(tabX, 0, tabWidth, this._tabHeight, isActive ? '#333333' : '#222222');
+        ctx.drawText(displayTitle, tabX + 4, 4, isActive ? '#FFFFFF' : '#888888');
         tabX += tabWidth;
       }
     }

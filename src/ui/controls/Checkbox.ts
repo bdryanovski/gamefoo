@@ -7,12 +7,7 @@
  */
 
 import type { RenderContext } from '@/core/renderer/type';
-import type {
-  UIInputEvent,
-  UIKeyEvent,
-  UIMouseButtonEvent,
-  UISize,
-} from '../core/types';
+import type { UIInputEvent, UIKeyEvent, UIMouseButtonEvent, UISize } from '../core/types';
 import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
 
 /**
@@ -21,15 +16,25 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface CheckboxConfig extends UIWidgetConfig {
-  /** Label text */
+  /**
+   * Label text
+   */
   label?: string;
-  /** Checked state */
+  /**
+   * Checked state
+   */
   checked?: boolean;
-  /** Change callback */
+  /**
+   * Change callback
+   */
   onChange?: (checked: boolean) => void;
-  /** Box size in pixels */
+  /**
+   * Box size in pixels
+   */
   boxSize?: number;
-  /** Gap between box and label */
+  /**
+   * Gap between box and label
+   */
   gap?: number;
 }
 
@@ -50,19 +55,29 @@ export interface CheckboxConfig extends UIWidgetConfig {
  * ```
  */
 export default class Checkbox extends UIWidget {
-  /** Label text */
+  /**
+   * Label text
+   */
   protected _label: string = '';
 
-  /** Checked state */
+  /**
+   * Checked state
+   */
   protected _checked: boolean = false;
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   protected _onChange: ((checked: boolean) => void) | null = null;
 
-  /** Box size */
+  /**
+   * Box size
+   */
   protected _boxSize: number = 8;
 
-  /** Gap between box and label */
+  /**
+   * Gap between box and label
+   */
   protected _gap: number = 4;
 
   /**
@@ -78,18 +93,30 @@ export default class Checkbox extends UIWidget {
       focusable: config.focusable ?? true,
       padding: config.padding ?? 2,
     });
-    if (config.label !== undefined) this._label = config.label;
-    if (config.checked !== undefined) this._checked = config.checked;
-    if (config.onChange !== undefined) this._onChange = config.onChange;
-    if (config.boxSize !== undefined) this._boxSize = config.boxSize;
-    if (config.gap !== undefined) this._gap = config.gap;
+    if (config.label !== undefined) {
+      this._label = config.label;
+    }
+    if (config.checked !== undefined) {
+      this._checked = config.checked;
+    }
+    if (config.onChange !== undefined) {
+      this._onChange = config.onChange;
+    }
+    if (config.boxSize !== undefined) {
+      this._boxSize = config.boxSize;
+    }
+    if (config.gap !== undefined) {
+      this._gap = config.gap;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Label text */
+  /**
+   * Label text
+   */
   get label(): string {
     return this._label;
   }
@@ -101,7 +128,9 @@ export default class Checkbox extends UIWidget {
     }
   }
 
-  /** Checked state */
+  /**
+   * Checked state
+   */
   get checked(): boolean {
     return this._checked;
   }
@@ -115,7 +144,9 @@ export default class Checkbox extends UIWidget {
     }
   }
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   get onChange(): ((checked: boolean) => void) | null {
     return this._onChange;
   }
@@ -124,7 +155,9 @@ export default class Checkbox extends UIWidget {
     this._onChange = value;
   }
 
-  /** Box size */
+  /**
+   * Box size
+   */
   get boxSize(): number {
     return this._boxSize;
   }
@@ -162,15 +195,12 @@ export default class Checkbox extends UIWidget {
     }
 
     const width =
-      this._padding.left
-      + this._boxSize
-      + (this._label ? this._gap + labelWidth : 0)
-      + this._padding.right;
+      this._padding.left +
+      this._boxSize +
+      (this._label ? this._gap + labelWidth : 0) +
+      this._padding.right;
 
-    const height =
-      this._padding.top
-      + Math.max(this._boxSize, labelHeight)
-      + this._padding.bottom;
+    const height = this._padding.top + Math.max(this._boxSize, labelHeight) + this._padding.bottom;
 
     return {
       width: Math.max(this._width, width),
@@ -191,14 +221,13 @@ export default class Checkbox extends UIWidget {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mouseup') {
       const mouseEvent = event as UIMouseButtonEvent;
-      if (
-        mouseEvent.button === 'left'
-        && this.containsPoint(mouseEvent.x, mouseEvent.y)
-      ) {
+      if (mouseEvent.button === 'left' && this.containsPoint(mouseEvent.x, mouseEvent.y)) {
         this.toggle();
         event.consume();
         return true;
@@ -261,12 +290,8 @@ export default class Checkbox extends UIWidget {
       // Draw box
       const boxX = this._padding.left;
       const boxY =
-        this._padding.top
-        + (this._height
-          - this._padding.top
-          - this._padding.bottom
-          - this._boxSize)
-          / 2;
+        this._padding.top +
+        (this._height - this._padding.top - this._padding.bottom - this._boxSize) / 2;
 
       const boxBgColor = this._checked
         ? theme.colors['checkbox.backgroundChecked']
@@ -311,15 +336,9 @@ export default class Checkbox extends UIWidget {
         const font = theme.fonts.default;
         const labelX = boxX + this._boxSize + this._gap;
         const labelY =
-          this._padding.top
-          + (this._height
-            - this._padding.top
-            - this._padding.bottom
-            - font.height)
-            / 2;
-        const labelColor = isFocused
-          ? theme.colors['focus.ring']
-          : theme.colors['label.text'];
+          this._padding.top +
+          (this._height - this._padding.top - this._padding.bottom - font.height) / 2;
+        const labelColor = isFocused ? theme.colors['focus.ring'] : theme.colors['label.text'];
 
         const canvas = ctx.getCanvas?.();
         if (canvas) {

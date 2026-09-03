@@ -7,14 +7,8 @@
  */
 
 export { type AudioPageConfig, default as AudioPage } from './AudioPage';
-export {
-  type ControlsPageConfig,
-  default as ControlsPage,
-} from './ControlsPage';
+export { type ControlsPageConfig, default as ControlsPage } from './ControlsPage';
 export { type DebugPageConfig, default as DebugPage } from './DebugPage';
-export {
-  default as GraphicsPage,
-  type GraphicsPageConfig,
-} from './GraphicsPage';
+export { default as GraphicsPage, type GraphicsPageConfig } from './GraphicsPage';
 export { default as PalettePage, type PalettePageConfig } from './PalettePage';
 export { default as QuitPage, type QuitPageConfig } from './QuitPage';

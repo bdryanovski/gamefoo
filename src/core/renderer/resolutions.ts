@@ -68,37 +68,69 @@ export const CONSOLE_RESOLUTION = {
   PLAYDATE: { width: 400, height: 240 },
 
   // ── Legacy aliases (deprecated) ───────────────────────────────────
-  /** @deprecated Use NES instead */
+  /**
+   * @deprecated Use NES instead
+   */
   NINTENDO_NES: { width: 256, height: 240 },
-  /** @deprecated Use FAMICOM instead */
+  /**
+   * @deprecated Use FAMICOM instead
+   */
   NINTENDO_FEMICON: { width: 256, height: 240 },
-  /** @deprecated Use SNES instead */
+  /**
+   * @deprecated Use SNES instead
+   */
   NINTENDO_SNES: { width: 256, height: 224 },
-  /** @deprecated Use GAMEBOY instead */
+  /**
+   * @deprecated Use GAMEBOY instead
+   */
   NINTENDO_GAMEBOY: { width: 160, height: 144 },
-  /** @deprecated Use GBC instead */
+  /**
+   * @deprecated Use GBC instead
+   */
   NINTENDO_GBC: { width: 160, height: 144 },
-  /** @deprecated Use GBA instead */
+  /**
+   * @deprecated Use GBA instead
+   */
   NINTENDO_GBA: { width: 240, height: 160 },
-  /** @deprecated Use N64 instead */
+  /**
+   * @deprecated Use N64 instead
+   */
   NINTENDO_64: { width: 320, height: 240 },
-  /** @deprecated Use NDS instead */
+  /**
+   * @deprecated Use NDS instead
+   */
   NINTENDO_DS: { width: 256, height: 192 },
-  /** @deprecated Use N3DS instead */
+  /**
+   * @deprecated Use N3DS instead
+   */
   NINTENDO_3DS: { width: 400, height: 240 },
-  /** @deprecated Use SWITCH instead */
+  /**
+   * @deprecated Use SWITCH instead
+   */
   NINTENDO_SWITCH: { width: 1280, height: 720 },
-  /** @deprecated Use GENESIS instead */
+  /**
+   * @deprecated Use GENESIS instead
+   */
   SEGA_MEGADRIVE: { width: 320, height: 224 },
-  /** @deprecated Use GAMEGEAR instead */
+  /**
+   * @deprecated Use GAMEGEAR instead
+   */
   SEGA_GAMEGEAR: { width: 160, height: 144 },
-  /** @deprecated Use DREAMCAST instead */
+  /**
+   * @deprecated Use DREAMCAST instead
+   */
   SEGA_DREAMCAST: { width: 640, height: 480 },
-  /** @deprecated Use PS1 instead */
+  /**
+   * @deprecated Use PS1 instead
+   */
   SONY_PLAYSTATION: { width: 320, height: 240 },
-  /** @deprecated Use PSP instead */
+  /**
+   * @deprecated Use PSP instead
+   */
   SONY_PSP: { width: 480, height: 272 },
-  /** @deprecated Use ATARI_7800 instead */
+  /**
+   * @deprecated Use ATARI_7800 instead
+   */
   ATARI_7600: { width: 320, height: 240 },
 } as const satisfies Record<string, ScreenResolution>;
 

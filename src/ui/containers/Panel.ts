@@ -15,11 +15,17 @@ import Container, { type ContainerConfig } from '../core/Container';
  * @since 0.5.0
  */
 export interface PanelConfig extends ContainerConfig {
-  /** Optional title text */
+  /**
+   * Optional title text
+   */
   title?: string;
-  /** Whether to show border */
+  /**
+   * Whether to show border
+   */
   showBorder?: boolean;
-  /** Title height (0 for no title bar) */
+  /**
+   * Title height (0 for no title bar)
+   */
   titleHeight?: number;
 }
 
@@ -42,13 +48,19 @@ export interface PanelConfig extends ContainerConfig {
  * ```
  */
 export default class Panel extends Container {
-  /** Title text */
+  /**
+   * Title text
+   */
   protected _title: string = '';
 
-  /** Show border */
+  /**
+   * Show border
+   */
   protected _showBorder: boolean = true;
 
-  /** Title height */
+  /**
+   * Title height
+   */
   protected _titleHeight: number = 0;
 
   /**
@@ -67,16 +79,21 @@ export default class Panel extends Container {
       this._title = config.title;
       this._titleHeight = config.titleHeight ?? 12;
     }
-    if (config.showBorder !== undefined) this._showBorder = config.showBorder;
-    if (config.titleHeight !== undefined)
+    if (config.showBorder !== undefined) {
+      this._showBorder = config.showBorder;
+    }
+    if (config.titleHeight !== undefined) {
       this._titleHeight = config.titleHeight;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Title text */
+  /**
+   * Title text
+   */
   get title(): string {
     return this._title;
   }
@@ -91,7 +108,9 @@ export default class Panel extends Container {
     }
   }
 
-  /** Show border */
+  /**
+   * Show border
+   */
   get showBorder(): boolean {
     return this._showBorder;
   }
@@ -100,7 +119,9 @@ export default class Panel extends Container {
     this._showBorder = value;
   }
 
-  /** Title height */
+  /**
+   * Title height
+   */
   get titleHeight(): number {
     return this._titleHeight;
   }
@@ -150,44 +171,20 @@ export default class Panel extends Container {
       const theme = this.getTheme();
 
       // Draw background
-      ctx.fillRect(
-        0,
-        0,
-        this._width,
-        this._height,
-        theme.colors['panel.background'],
-      );
+      ctx.fillRect(0, 0, this._width, this._height, theme.colors['panel.background']);
 
       // Draw border
       if (this._showBorder && theme.borderWidth > 0) {
-        ctx.strokeRect(
-          0,
-          0,
-          this._width,
-          this._height,
-          theme.colors['panel.border'],
-        );
+        ctx.strokeRect(0, 0, this._width, this._height, theme.colors['panel.border']);
       }
 
       // Draw title bar
       if (this._title && this._titleHeight > 0) {
         // Title background
-        ctx.fillRect(
-          0,
-          0,
-          this._width,
-          this._titleHeight,
-          theme.colors['panel.header'],
-        );
+        ctx.fillRect(0, 0, this._width, this._titleHeight, theme.colors['panel.header']);
 
         // Title separator
-        ctx.fillRect(
-          0,
-          this._titleHeight - 1,
-          this._width,
-          1,
-          theme.colors['panel.border'],
-        );
+        ctx.fillRect(0, this._titleHeight - 1, this._width, 1, theme.colors['panel.border']);
 
         // Title text
         const font = theme.fonts.default;

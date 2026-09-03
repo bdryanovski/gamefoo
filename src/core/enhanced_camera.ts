@@ -114,7 +114,9 @@ export class EnhancedCamera extends Camera {
   private _lerpSpeed: number;
   private _pixelPerfect: boolean;
 
-  /** Cached view rect to avoid per-call allocation. */
+  /**
+   * Cached view rect to avoid per-call allocation.
+   */
   private _viewCache = { x: 0, y: 0, width: 0, height: 0 };
 
   /**

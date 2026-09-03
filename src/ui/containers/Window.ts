@@ -8,11 +8,7 @@
 
 import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
-import type {
-  UIInputEvent,
-  UIMouseButtonEvent,
-  UIMouseMoveEvent,
-} from '../core/types';
+import type { UIInputEvent, UIMouseButtonEvent, UIMouseMoveEvent } from '../core/types';
 
 /**
  * Configuration for Window.
@@ -20,15 +16,25 @@ import type {
  * @since 0.5.0
  */
 export interface WindowConfig extends ContainerConfig {
-  /** Window title */
+  /**
+   * Window title
+   */
   title?: string;
-  /** Whether window is closable */
+  /**
+   * Whether window is closable
+   */
   closable?: boolean;
-  /** Whether window is draggable */
+  /**
+   * Whether window is draggable
+   */
   draggable?: boolean;
-  /** Title bar height */
+  /**
+   * Title bar height
+   */
   titleHeight?: number;
-  /** Close callback */
+  /**
+   * Close callback
+   */
   onClose?: () => void;
 }
 
@@ -50,29 +56,45 @@ export interface WindowConfig extends ContainerConfig {
  * ```
  */
 export default class Window extends Container {
-  /** Window title */
+  /**
+   * Window title
+   */
   protected _title: string = 'Window';
 
-  /** Whether closable */
+  /**
+   * Whether closable
+   */
   protected _closable: boolean = true;
 
-  /** Whether draggable */
+  /**
+   * Whether draggable
+   */
   protected _draggable: boolean = false;
 
-  /** Title bar height */
+  /**
+   * Title bar height
+   */
   protected _titleHeight: number = 14;
 
-  /** Close callback */
+  /**
+   * Close callback
+   */
   protected _onClose: (() => void) | null = null;
 
-  /** Whether currently dragging */
+  /**
+   * Whether currently dragging
+   */
   private _dragging: boolean = false;
 
-  /** Drag offset */
+  /**
+   * Drag offset
+   */
   private _dragOffsetX: number = 0;
   private _dragOffsetY: number = 0;
 
-  /** Close button size */
+  /**
+   * Close button size
+   */
   private readonly CLOSE_BUTTON_SIZE = 10;
 
   /**
@@ -88,19 +110,30 @@ export default class Window extends Container {
       padding: config.padding ?? 6,
       clip: config.clip ?? true,
     });
-    if (config.title !== undefined) this._title = config.title;
-    if (config.closable !== undefined) this._closable = config.closable;
-    if (config.draggable !== undefined) this._draggable = config.draggable;
-    if (config.titleHeight !== undefined)
+    if (config.title !== undefined) {
+      this._title = config.title;
+    }
+    if (config.closable !== undefined) {
+      this._closable = config.closable;
+    }
+    if (config.draggable !== undefined) {
+      this._draggable = config.draggable;
+    }
+    if (config.titleHeight !== undefined) {
       this._titleHeight = config.titleHeight;
-    if (config.onClose !== undefined) this._onClose = config.onClose;
+    }
+    if (config.onClose !== undefined) {
+      this._onClose = config.onClose;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Window title */
+  /**
+   * Window title
+   */
   get title(): string {
     return this._title;
   }
@@ -109,7 +142,9 @@ export default class Window extends Container {
     this._title = value;
   }
 
-  /** Whether closable */
+  /**
+   * Whether closable
+   */
   get closable(): boolean {
     return this._closable;
   }
@@ -118,7 +153,9 @@ export default class Window extends Container {
     this._closable = value;
   }
 
-  /** Whether draggable */
+  /**
+   * Whether draggable
+   */
   get draggable(): boolean {
     return this._draggable;
   }
@@ -127,7 +164,9 @@ export default class Window extends Container {
     this._draggable = value;
   }
 
-  /** Title height */
+  /**
+   * Title height
+   */
   get titleHeight(): number {
     return this._titleHeight;
   }
@@ -180,16 +219,15 @@ export default class Window extends Container {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mousedown') {
       const mouseEvent = event as UIMouseButtonEvent;
       if (mouseEvent.button === 'left') {
         // Check close button
-        if (
-          this._closable
-          && this.isInCloseButton(mouseEvent.x, mouseEvent.y)
-        ) {
+        if (this._closable && this.isInCloseButton(mouseEvent.x, mouseEvent.y)) {
           this.close();
           event.consume();
           return true;
@@ -233,10 +271,10 @@ export default class Window extends Container {
    */
   private isInTitleBar(x: number, y: number): boolean {
     return (
-      x >= this._absoluteX
-      && x < this._absoluteX + this._width
-      && y >= this._absoluteY
-      && y < this._absoluteY + this._titleHeight
+      x >= this._absoluteX &&
+      x < this._absoluteX + this._width &&
+      y >= this._absoluteY &&
+      y < this._absoluteY + this._titleHeight
     );
   }
 
@@ -246,19 +284,14 @@ export default class Window extends Container {
    * @internal
    */
   private isInCloseButton(x: number, y: number): boolean {
-    const btnX =
-      this._absoluteX
-      + this._width
-      - this._padding.right
-      - this.CLOSE_BUTTON_SIZE;
-    const btnY =
-      this._absoluteY + (this._titleHeight - this.CLOSE_BUTTON_SIZE) / 2;
+    const btnX = this._absoluteX + this._width - this._padding.right - this.CLOSE_BUTTON_SIZE;
+    const btnY = this._absoluteY + (this._titleHeight - this.CLOSE_BUTTON_SIZE) / 2;
 
     return (
-      x >= btnX
-      && x < btnX + this.CLOSE_BUTTON_SIZE
-      && y >= btnY
-      && y < btnY + this.CLOSE_BUTTON_SIZE
+      x >= btnX &&
+      x < btnX + this.CLOSE_BUTTON_SIZE &&
+      y >= btnY &&
+      y < btnY + this.CLOSE_BUTTON_SIZE
     );
   }
 
@@ -278,38 +311,14 @@ export default class Window extends Container {
       const theme = this.getTheme();
 
       // Draw window background
-      ctx.fillRect(
-        0,
-        0,
-        this._width,
-        this._height,
-        theme.colors['panel.background'],
-      );
+      ctx.fillRect(0, 0, this._width, this._height, theme.colors['panel.background']);
 
       // Draw border
-      ctx.strokeRect(
-        0,
-        0,
-        this._width,
-        this._height,
-        theme.colors['panel.border'],
-      );
+      ctx.strokeRect(0, 0, this._width, this._height, theme.colors['panel.border']);
 
       // Draw title bar
-      ctx.fillRect(
-        0,
-        0,
-        this._width,
-        this._titleHeight,
-        theme.colors['panel.header'],
-      );
-      ctx.fillRect(
-        0,
-        this._titleHeight - 1,
-        this._width,
-        1,
-        theme.colors['panel.border'],
-      );
+      ctx.fillRect(0, 0, this._width, this._titleHeight, theme.colors['panel.header']);
+      ctx.fillRect(0, this._titleHeight - 1, this._width, 1, theme.colors['panel.border']);
 
       // Draw title text
       const font = theme.fonts.default;

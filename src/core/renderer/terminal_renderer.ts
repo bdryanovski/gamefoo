@@ -64,7 +64,9 @@ export interface TerminalRenderConfig {
   defaultFg?: string;
 }
 
-/** @internal */
+/**
+ * @internal
+ */
 interface Cell {
   char: string;
   fg: string;
@@ -174,10 +176,14 @@ export class TerminalRenderContext implements RenderContext {
     return this.gameScale;
   }
 
-  /** The back buffer — drawn into each frame. */
+  /**
+   * The back buffer — drawn into each frame.
+   */
   private buffer: Cell[][];
 
-  /** The front buffer — reflects what was last written to stdout. */
+  /**
+   * The front buffer — reflects what was last written to stdout.
+   */
   private prevBuffer: Cell[][];
 
   // Transform stack (translate only — scale is not supported in terminal mode)
@@ -214,9 +220,7 @@ export class TerminalRenderContext implements RenderContext {
     const defaultFg = this.defaultFg;
     const empty = (): Cell => ({ char: ' ', fg: defaultFg, bg: defaultBg });
 
-    this.buffer = Array.from({ length: this.rows }, () =>
-      Array.from({ length: this.cols }, empty),
-    );
+    this.buffer = Array.from({ length: this.rows }, () => Array.from({ length: this.cols }, empty));
     this.prevBuffer = Array.from({ length: this.rows }, () =>
       Array.from({ length: this.cols }, empty),
     );
@@ -303,16 +307,14 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @internal
    */
-  private setCell(
-    col: number,
-    row: number,
-    char: string,
-    fg: string,
-    bg: string,
-  ) {
-    if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) return;
+  private setCell(col: number, row: number, char: string, fg: string, bg: string) {
+    if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) {
+      return;
+    }
     const cell = this.buffer[row]?.[col];
-    if (!cell) return;
+    if (!cell) {
+      return;
+    }
     cell.char = char;
     cell.fg = fg;
     cell.bg = bg;
@@ -331,9 +333,9 @@ export class TerminalRenderContext implements RenderContext {
    * @since 0.4.0
    */
   clear(color = this.defaultBg) {
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
-        const cell = this.buffer[r]?.[c];
+    for (let row = 0; row < this.rows; row += 1) {
+      for (let col = 0; col < this.cols; col += 1) {
+        const cell = this.buffer[row]?.[col];
         if (cell) {
           cell.char = ' ';
           cell.fg = this.defaultFg;
@@ -371,9 +373,9 @@ export class TerminalRenderContext implements RenderContext {
   fillRect(x: number, y: number, w: number, h: number, color: string) {
     const [col0, row0] = this.worldToCell(x, y);
     const [col1, row1] = this.worldToCell(x + w, y + h);
-    for (let r = row0; r <= row1; r++) {
-      for (let c = col0; c <= col1; c++) {
-        this.setCell(c, r, ' ', color, color);
+    for (let row = row0; row <= row1; row += 1) {
+      for (let col = col0; col <= col1; col += 1) {
+        this.setCell(col, row, ' ', color, color);
       }
     }
   }
@@ -393,13 +395,13 @@ export class TerminalRenderContext implements RenderContext {
   strokeRect(x: number, y: number, w: number, h: number, color: string) {
     const [col0, row0] = this.worldToCell(x, y);
     const [col1, row1] = this.worldToCell(x + w, y + h);
-    for (let c = col0; c <= col1; c++) {
-      this.setCell(c, row0, '─', color, this.defaultBg);
-      this.setCell(c, row1, '─', color, this.defaultBg);
+    for (let col = col0; col <= col1; col += 1) {
+      this.setCell(col, row0, '─', color, this.defaultBg);
+      this.setCell(col, row1, '─', color, this.defaultBg);
     }
-    for (let r = row0; r <= row1; r++) {
-      this.setCell(col0, r, '│', color, this.defaultBg);
-      this.setCell(col1, r, '│', color, this.defaultBg);
+    for (let row = row0; row <= row1; row += 1) {
+      this.setCell(col0, row, '│', color, this.defaultBg);
+      this.setCell(col1, row, '│', color, this.defaultBg);
     }
     this.setCell(col0, row0, '┌', color, this.defaultBg);
     this.setCell(col1, row0, '┐', color, this.defaultBg);
@@ -421,16 +423,10 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawText(
-    text: string,
-    x: number,
-    y: number,
-    color = this.defaultFg,
-    bgColor = this.defaultBg,
-  ) {
+  drawText(text: string, x: number, y: number, color = this.defaultFg, bgColor = this.defaultBg) {
     const [col0, row0] = this.worldToCell(x, y);
-    for (let i = 0; i < text.length; i++) {
-      this.setCell(col0 + i, row0, text[i] ?? ' ', color, bgColor);
+    for (let index = 0; index < text.length; index += 1) {
+      this.setCell(col0 + index, row0, text[index] ?? ' ', color, bgColor);
     }
   }
 
@@ -452,13 +448,7 @@ export class TerminalRenderContext implements RenderContext {
    * ctx.drawChar("@", player.x, player.y, "#00ff00");
    * ```
    */
-  drawChar(
-    char: string,
-    x: number,
-    y: number,
-    color = this.defaultFg,
-    bgColor = this.defaultBg,
-  ) {
+  drawChar(char: string, x: number, y: number, color = this.defaultFg, bgColor = this.defaultBg) {
     const [col, row] = this.worldToCell(x, y);
     this.setCell(col, row, char[0] ?? ' ', color, bgColor);
   }
@@ -501,10 +491,17 @@ export class TerminalRenderContext implements RenderContext {
     let err = dc - dr;
 
     while (true) {
-      const char = dc > dr ? '─' : dr > dc ? '│' : '·';
+      let char = '·';
+      if (dc > dr) {
+        char = '─';
+      } else if (dr > dc) {
+        char = '│';
+      }
       this.setCell(c1, r1, char, color, this.defaultBg);
 
-      if (c1 === c2 && r1 === r2) break;
+      if (c1 === c2 && r1 === r2) {
+        break;
+      }
       const e2 = 2 * err;
       if (e2 > -dr) {
         err -= dr;
@@ -530,13 +527,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawCircle(
-    x: number,
-    y: number,
-    radius: number,
-    color: string,
-    _fill = false,
-  ) {
+  drawCircle(x: number, y: number, radius: number, color: string, _fill = false) {
     const [cx, cy] = this.worldToCell(x, y);
     const cr = Math.round(radius / this.cellWidth);
 
@@ -584,29 +575,28 @@ export class TerminalRenderContext implements RenderContext {
    */
   flush() {
     const out: string[] = [];
-    for (let r = 0; r < this.rows; r++) {
-      for (let c = 0; c < this.cols; c++) {
-        const curr = this.buffer[r]?.[c];
-        const prev = this.prevBuffer[r]?.[c];
-        if (!curr || !prev) continue;
-
-        if (
-          curr.char === prev.char
-          && curr.fg === prev.fg
-          && curr.bg === prev.bg
-        )
+    for (let row = 0; row < this.rows; row += 1) {
+      for (let col = 0; col < this.cols; col += 1) {
+        const curr = this.buffer[row]?.[col];
+        const prev = this.prevBuffer[row]?.[col];
+        if (!curr || !prev) {
           continue;
+        }
+
+        if (curr.char === prev.char && curr.fg === prev.fg && curr.bg === prev.bg) {
+          continue;
+        }
 
         const [fr, fg_c, fb] = ansi.hexToRGB(curr.fg);
         const [br, bg_g, bb] = ansi.hexToRGB(curr.bg);
         out.push(
-          ansi.moveTo(r + 1, c + 1),
+          ansi.moveTo(row + 1, col + 1),
           ansi.bgRGB(br, bg_g, bb),
           ansi.fgRGB(fr, fg_c, fb),
           curr.char,
           ansi.reset(),
         );
-        this.prevBuffer[r]![c] = { ...curr };
+        this.prevBuffer[row]![col] = { ...curr };
       }
     }
     if (out.length > 0) {
@@ -649,12 +639,8 @@ export class TerminalRenderContext implements RenderContext {
     const defaultFg = this.defaultFg;
     const empty = (): Cell => ({ char: ' ', fg: defaultFg, bg: defaultBg });
 
-    this.buffer = Array.from({ length: rows }, () =>
-      Array.from({ length: cols }, empty),
-    );
-    this.prevBuffer = Array.from({ length: rows }, () =>
-      Array.from({ length: cols }, empty),
-    );
+    this.buffer = Array.from({ length: rows }, () => Array.from({ length: cols }, empty));
+    this.prevBuffer = Array.from({ length: rows }, () => Array.from({ length: cols }, empty));
 
     // Force full redraw.
     process.stdout.write(ansi.clearScreen());

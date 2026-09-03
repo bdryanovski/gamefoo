@@ -18,7 +18,6 @@ import type {
   SizeConfig,
   UIEventHandlers,
   UIInputEvent,
-  UIPosition,
   UIRect,
   UISize,
 } from './types';
@@ -31,41 +30,61 @@ import type UIStateManager from './UIStateManager';
  * @since 0.5.0
  */
 export interface UIWidgetConfig {
-  /** Initial x position */
+  /**
+   * Initial x position
+   */
   x?: number;
-  /** Initial y position */
+  /**
+   * Initial y position
+   */
   y?: number;
-  /** Initial width */
+  /**
+   * Initial width
+   */
   width?: number;
-  /** Initial height */
+  /**
+   * Initial height
+   */
   height?: number;
-  /** Padding inside the widget */
-  padding?:
-    | number
-    | [number, number]
-    | [number, number, number, number]
-    | Insets;
-  /** Margin outside the widget */
-  margin?:
-    | number
-    | [number, number]
-    | [number, number, number, number]
-    | Insets;
-  /** Anchor point for positioning */
+  /**
+   * Padding inside the widget
+   */
+  padding?: number | [number, number] | [number, number, number, number] | Insets;
+  /**
+   * Margin outside the widget
+   */
+  margin?: number | [number, number] | [number, number, number, number] | Insets;
+  /**
+   * Anchor point for positioning
+   */
   anchor?: Anchor;
-  /** Rendering order (higher = on top) */
+  /**
+   * Rendering order (higher = on top)
+   */
   zIndex?: number;
-  /** Whether the widget is visible */
+  /**
+   * Whether the widget is visible
+   */
   visible?: boolean;
-  /** Whether the widget is enabled for interaction */
+  /**
+   * Whether the widget is enabled for interaction
+   */
   enabled?: boolean;
-  /** Whether this widget can receive focus */
+  /**
+   * Whether this widget can receive focus
+   */
   focusable?: boolean;
-  /** Unique identifier for this widget */
+  /**
+   * Unique identifier for this widget
+   */
   id?: string;
-  /** Width sizing configuration */
+  /**
+   * Width sizing configuration
+   */
   widthConfig?: SizeConfig;
-  /** Height sizing configuration */
+  /**
+   * Height sizing configuration
+   */
   heightConfig?: SizeConfig;
 }
 
@@ -89,65 +108,103 @@ export default abstract class UIWidget {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Unique identifier for this widget */
+  /**
+   * Unique identifier for this widget
+   */
   public readonly id: string;
 
-  /** Position relative to parent */
+  /**
+   * Position relative to parent
+   */
   protected _x: number = 0;
   protected _y: number = 0;
 
-  /** Dimensions */
+  /**
+   * Dimensions
+   */
   protected _width: number = 0;
   protected _height: number = 0;
 
-  /** Computed absolute position (set during layout) */
+  /**
+   * Computed absolute position (set during layout)
+   */
   protected _absoluteX: number = 0;
   protected _absoluteY: number = 0;
 
-  /** Padding inside the widget */
+  /**
+   * Padding inside the widget
+   */
   protected _padding: Insets = { top: 0, right: 0, bottom: 0, left: 0 };
 
-  /** Margin outside the widget */
+  /**
+   * Margin outside the widget
+   */
   protected _margin: Insets = { top: 0, right: 0, bottom: 0, left: 0 };
 
-  /** Anchor point for positioning */
+  /**
+   * Anchor point for positioning
+   */
   protected _anchor: Anchor = 'top-left';
 
-  /** Z-index for rendering order */
+  /**
+   * Z-index for rendering order
+   */
   protected _zIndex: number = 0;
 
-  /** Visibility flag */
+  /**
+   * Visibility flag
+   */
   protected _visible: boolean = true;
 
-  /** Enabled flag (affects interaction) */
+  /**
+   * Enabled flag (affects interaction)
+   */
   protected _enabled: boolean = true;
 
-  /** Whether this widget can receive focus */
+  /**
+   * Whether this widget can receive focus
+   */
   protected _focusable: boolean = false;
 
-  /** Parent widget reference */
+  /**
+   * Parent widget reference
+   */
   protected _parent: UIWidget | null = null;
 
-  /** Child widgets */
+  /**
+   * Child widgets
+   */
   protected _children: UIWidget[] = [];
 
-  /** Layout dirty flag */
+  /**
+   * Layout dirty flag
+   */
   protected _layoutDirty: boolean = true;
 
-  /** Theme reference (set by UISystem) */
+  /**
+   * Theme reference (set by UISystem)
+   */
   protected _theme: UITheme | null = null;
 
-  /** State manager reference (set by UISystem) */
+  /**
+   * State manager reference (set by UISystem)
+   */
   protected _stateManager: UIStateManager | null = null;
 
-  /** Sizing configuration */
+  /**
+   * Sizing configuration
+   */
   protected _widthConfig: SizeConfig = { mode: 'fixed' };
   protected _heightConfig: SizeConfig = { mode: 'fixed' };
 
-  /** Event handlers */
+  /**
+   * Event handlers
+   */
   protected _eventHandlers: UIEventHandlers = {};
 
-  /** Counter for generating unique IDs */
+  /**
+   * Counter for generating unique IDs
+   */
   private static _idCounter: number = 0;
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -164,29 +221,54 @@ export default abstract class UIWidget {
   constructor(config: UIWidgetConfig = {}) {
     this.id = config.id ?? `widget_${UIWidget._idCounter++}`;
 
-    if (config.x !== undefined) this._x = config.x;
-    if (config.y !== undefined) this._y = config.y;
-    if (config.width !== undefined) this._width = config.width;
-    if (config.height !== undefined) this._height = config.height;
-    if (config.padding !== undefined)
+    if (config.x !== undefined) {
+      this._x = config.x;
+    }
+    if (config.y !== undefined) {
+      this._y = config.y;
+    }
+    if (config.width !== undefined) {
+      this._width = config.width;
+    }
+    if (config.height !== undefined) {
+      this._height = config.height;
+    }
+    if (config.padding !== undefined) {
       this._padding = createInsets(config.padding);
-    if (config.margin !== undefined) this._margin = createInsets(config.margin);
-    if (config.anchor !== undefined) this._anchor = config.anchor;
-    if (config.zIndex !== undefined) this._zIndex = config.zIndex;
-    if (config.visible !== undefined) this._visible = config.visible;
-    if (config.enabled !== undefined) this._enabled = config.enabled;
-    if (config.focusable !== undefined) this._focusable = config.focusable;
-    if (config.widthConfig !== undefined)
+    }
+    if (config.margin !== undefined) {
+      this._margin = createInsets(config.margin);
+    }
+    if (config.anchor !== undefined) {
+      this._anchor = config.anchor;
+    }
+    if (config.zIndex !== undefined) {
+      this._zIndex = config.zIndex;
+    }
+    if (config.visible !== undefined) {
+      this._visible = config.visible;
+    }
+    if (config.enabled !== undefined) {
+      this._enabled = config.enabled;
+    }
+    if (config.focusable !== undefined) {
+      this._focusable = config.focusable;
+    }
+    if (config.widthConfig !== undefined) {
       this._widthConfig = config.widthConfig;
-    if (config.heightConfig !== undefined)
+    }
+    if (config.heightConfig !== undefined) {
       this._heightConfig = config.heightConfig;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Position & Size Accessors
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Horizontal position relative to parent */
+  /**
+   * Horizontal position relative to parent
+   */
   get x(): number {
     return this._x;
   }
@@ -198,7 +280,9 @@ export default abstract class UIWidget {
     }
   }
 
-  /** Vertical position relative to parent */
+  /**
+   * Vertical position relative to parent
+   */
   get y(): number {
     return this._y;
   }
@@ -210,7 +294,9 @@ export default abstract class UIWidget {
     }
   }
 
-  /** Widget width */
+  /**
+   * Widget width
+   */
   get width(): number {
     return this._width;
   }
@@ -222,7 +308,9 @@ export default abstract class UIWidget {
     }
   }
 
-  /** Widget height */
+  /**
+   * Widget height
+   */
   get height(): number {
     return this._height;
   }
@@ -234,17 +322,23 @@ export default abstract class UIWidget {
     }
   }
 
-  /** Absolute X position in screen coordinates */
+  /**
+   * Absolute X position in screen coordinates
+   */
   get absoluteX(): number {
     return this._absoluteX;
   }
 
-  /** Absolute Y position in screen coordinates */
+  /**
+   * Absolute Y position in screen coordinates
+   */
   get absoluteY(): number {
     return this._absoluteY;
   }
 
-  /** Padding */
+  /**
+   * Padding
+   */
   get padding(): Insets {
     return this._padding;
   }
@@ -254,7 +348,9 @@ export default abstract class UIWidget {
     this.markLayoutDirty();
   }
 
-  /** Margin */
+  /**
+   * Margin
+   */
   get margin(): Insets {
     return this._margin;
   }
@@ -264,7 +360,9 @@ export default abstract class UIWidget {
     this.markLayoutDirty();
   }
 
-  /** Anchor point */
+  /**
+   * Anchor point
+   */
   get anchor(): Anchor {
     return this._anchor;
   }
@@ -274,7 +372,9 @@ export default abstract class UIWidget {
     this.markLayoutDirty();
   }
 
-  /** Z-index */
+  /**
+   * Z-index
+   */
   get zIndex(): number {
     return this._zIndex;
   }
@@ -287,7 +387,9 @@ export default abstract class UIWidget {
   // State Accessors
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Whether the widget is visible */
+  /**
+   * Whether the widget is visible
+   */
   get visible(): boolean {
     return this._visible;
   }
@@ -296,7 +398,9 @@ export default abstract class UIWidget {
     this._visible = value;
   }
 
-  /** Whether the widget is enabled */
+  /**
+   * Whether the widget is enabled
+   */
   get enabled(): boolean {
     return this._enabled;
   }
@@ -305,7 +409,9 @@ export default abstract class UIWidget {
     this._enabled = value;
   }
 
-  /** Whether the widget can receive focus */
+  /**
+   * Whether the widget can receive focus
+   */
   get focusable(): boolean {
     return this._focusable;
   }
@@ -318,12 +424,16 @@ export default abstract class UIWidget {
   // Hierarchy
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Parent widget */
+  /**
+   * Parent widget
+   */
   get parent(): UIWidget | null {
     return this._parent;
   }
 
-  /** Child widgets (read-only copy) */
+  /**
+   * Child widgets (read-only copy)
+   */
   get children(): readonly UIWidget[] {
     return this._children;
   }
@@ -394,10 +504,14 @@ export default abstract class UIWidget {
    * @since 0.5.0
    */
   findById(id: string): UIWidget | null {
-    if (this.id === id) return this;
+    if (this.id === id) {
+      return this;
+    }
     for (const child of this._children) {
       const found = child.findById(id);
-      if (found) return found;
+      if (found) {
+        return found;
+      }
     }
     return null;
   }
@@ -414,8 +528,12 @@ export default abstract class UIWidget {
    * @since 0.5.0
    */
   getTheme(): UITheme {
-    if (this._theme) return this._theme;
-    if (this._parent) return this._parent.getTheme();
+    if (this._theme) {
+      return this._theme;
+    }
+    if (this._parent) {
+      return this._parent.getTheme();
+    }
     throw new Error('No theme set for UIWidget');
   }
 
@@ -636,10 +754,12 @@ export default abstract class UIWidget {
     }
 
     // Check children in reverse order (top-most first)
-    for (let i = this._children.length - 1; i >= 0; i--) {
-      const child = this._children[i]!;
+    for (let childIndex = this._children.length - 1; childIndex >= 0; childIndex -= 1) {
+      const child = this._children[childIndex]!;
       const hit = child.hitTest(x, y);
-      if (hit) return hit;
+      if (hit) {
+        return hit;
+      }
     }
 
     return this;
@@ -669,7 +789,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  handleEvent(event: UIInputEvent): boolean {
+  handleEvent(_event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -689,7 +809,9 @@ export default abstract class UIWidget {
    * @since 0.5.0
    */
   update(deltaTime: number): void {
-    if (!this._visible) return;
+    if (!this._visible) {
+      return;
+    }
 
     // Update children
     for (const child of this._children) {
@@ -706,7 +828,9 @@ export default abstract class UIWidget {
    * @since 0.5.0
    */
   render(ctx: RenderContext): void {
-    if (!this._visible) return;
+    if (!this._visible) {
+      return;
+    }
 
     // Layout if dirty
     if (this._layoutDirty) {
@@ -722,9 +846,7 @@ export default abstract class UIWidget {
     ctx.restore();
 
     // Render children (sorted by z-index)
-    const sortedChildren = [...this._children].sort(
-      (a, b) => a._zIndex - b._zIndex,
-    );
+    const sortedChildren = [...this._children].sort((a, b) => a._zIndex - b._zIndex);
     for (const child of sortedChildren) {
       child.render(ctx);
     }

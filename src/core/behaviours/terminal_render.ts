@@ -106,7 +106,9 @@ export interface TerminalGlyph {
  * @see {@link SpriteRender}         — canvas-mode counterpart
  */
 export class TerminalRender extends Behaviour<Entity> {
-  /** @inheritDoc */
+  /**
+   * @inheritDoc
+   */
   readonly type = 'terminal_render';
 
   /**
@@ -118,7 +120,9 @@ export class TerminalRender extends Behaviour<Entity> {
    */
   override priority = 10;
 
-  /** The current glyph definition. */
+  /**
+   * The current glyph definition.
+   */
   private glyph: TerminalGlyph;
 
   /**

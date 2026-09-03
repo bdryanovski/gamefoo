@@ -35,7 +35,9 @@ import type { TileSet } from './tileset';
  * ```
  */
 export interface TileSetConfig {
-  /** The sprite sheet containing all tile frames. */
+  /**
+   * The sprite sheet containing all tile frames.
+   */
   sprite: Sprite;
   /**
    * First global tile ID for this tileset. When combining multiple
@@ -81,13 +83,21 @@ export interface TileSetConfig {
  * ```
  */
 export interface TileLayerConfig {
-  /** Human-readable layer name (e.g. `"ground"`, `"collision"`). */
+  /**
+   * Human-readable layer name (e.g. `"ground"`, `"collision"`).
+   */
   name: string;
-  /** Number of tile columns in this layer. */
+  /**
+   * Number of tile columns in this layer.
+   */
   cols: number;
-  /** Number of tile rows in this layer. */
+  /**
+   * Number of tile rows in this layer.
+   */
   rows: number;
-  /** The tileset that maps tile IDs to sprite frames. */
+  /**
+   * The tileset that maps tile IDs to sprite frames.
+   */
   tileSet: TileSet;
   /**
    * Flat row-major tile data. Length must equal `cols × rows`.
@@ -146,9 +156,13 @@ export interface TileLayerConfig {
  * ```
  */
 export interface TileMapConfig {
-  /** The grid that defines map dimensions and cell walkability. */
+  /**
+   * The grid that defines map dimensions and cell walkability.
+   */
   grid: Grid;
-  /** Ordered list of tile layers (rendered back-to-front). */
+  /**
+   * Ordered list of tile layers (rendered back-to-front).
+   */
   layers: TileLayer[];
   /**
    * Isometric projection. When omitted the map renders in

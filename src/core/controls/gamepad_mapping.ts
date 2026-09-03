@@ -549,9 +549,6 @@ export type ButtonLabelStyle = keyof typeof BUTTON_LABELS;
  * getButtonLabel(0, 'NINTENDO');    // "B"
  * ```
  */
-export function getButtonLabel(
-  buttonIndex: number,
-  style: ButtonLabelStyle = 'GENERIC',
-): string {
+export function getButtonLabel(buttonIndex: number, style: ButtonLabelStyle = 'GENERIC'): string {
   return BUTTON_LABELS[style][buttonIndex] ?? `Button ${buttonIndex}`;
 }

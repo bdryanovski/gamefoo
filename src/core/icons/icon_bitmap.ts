@@ -104,7 +104,9 @@ export default class IconBitmap extends BitmapDataRenderer {
     }
     // Icon rendering is pixel-by-pixel; only meaningful on canvas contexts
     const canvasCtx = ctx.getCanvas?.();
-    if (!canvasCtx) return;
+    if (!canvasCtx) {
+      return;
+    }
     for (let row = 0; row < charData.length; row++) {
       const bits = charData[row]!;
       for (let col = 0; col < this.width - this.spacing; col++) {

@@ -103,7 +103,9 @@ export interface PathFollowerConfig {
 }
 
 export class PathFollower extends Behaviour<DynamicEntity> {
-  /** @inheritdoc */
+  /**
+   * @inheritdoc
+   */
   readonly type = 'pathfollower';
 
   private pathfinder: Pathfinder;
@@ -115,13 +117,19 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   private onPathComplete?: () => void;
   private onPathBlocked?: () => void;
 
-  /** The current computed path (array of grid waypoints). */
+  /**
+   * The current computed path (array of grid waypoints).
+   */
   private path: { col: number; row: number }[] = [];
 
-  /** Index of the current waypoint being approached. */
+  /**
+   * Index of the current waypoint being approached.
+   */
   private currentIndex = 0;
 
-  /** Whether the entity is actively following a path. */
+  /**
+   * Whether the entity is actively following a path.
+   */
   private _isMoving = false;
 
   /**
@@ -217,12 +225,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   moveTo(goalCol: number, goalRow: number): boolean {
     const ownerWorld = this.getOwnerGridPosition();
 
-    const result = this.pathfinder.findPath(
-      ownerWorld.col,
-      ownerWorld.row,
-      goalCol,
-      goalRow,
-    );
+    const result = this.pathfinder.findPath(ownerWorld.col, ownerWorld.row, goalCol, goalRow);
 
     if (!result) {
       this.stop();
@@ -261,11 +264,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * @since 0.4.0
    */
   override update(deltaTime: number): void {
-    if (
-      !this._isMoving
-      || this.path.length === 0
-      || this.currentIndex >= this.path.length
-    ) {
+    if (!this._isMoving || this.path.length === 0 || this.currentIndex >= this.path.length) {
       return;
     }
 

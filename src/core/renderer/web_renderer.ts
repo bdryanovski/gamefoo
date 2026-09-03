@@ -50,10 +50,14 @@ import type { RenderContext } from './type';
  * @see {@link TerminalRenderContext} — ANSI terminal alternative
  */
 export class WebRenderer implements RenderContext {
-  /** The underlying canvas 2-D rendering context. */
+  /**
+   * The underlying canvas 2-D rendering context.
+   */
   private ctx: CanvasRenderingContext2D;
 
-  /** The underlying canvas element. */
+  /**
+   * The underlying canvas element.
+   */
   private canvas: HTMLCanvasElement;
 
   /**
@@ -115,21 +119,14 @@ export class WebRenderer implements RenderContext {
    * const renderer = new WebRenderer("game", 200, 75, 4);
    * ```
    */
-  constructor(
-    canvasId: string,
-    width: number,
-    height: number,
-    gameScale: number = 1,
-  ) {
+  constructor(canvasId: string, width: number, height: number, gameScale: number = 1) {
     this.width = width;
     this.height = height;
     this.gameScale = gameScale;
 
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
     if (!canvas) {
-      throw new Error(
-        `WebRenderer: no canvas element found with id "${canvasId}"`,
-      );
+      throw new Error(`WebRenderer: no canvas element found with id "${canvasId}"`);
     }
     this.canvas = canvas;
 
@@ -150,9 +147,7 @@ export class WebRenderer implements RenderContext {
 
     const context = canvas.getContext('2d');
     if (!context) {
-      throw new Error(
-        `WebRenderer: failed to get 2D context for canvas "${canvasId}"`,
-      );
+      throw new Error(`WebRenderer: failed to get 2D context for canvas "${canvasId}"`);
     }
     this.ctx = context;
 
@@ -290,19 +285,9 @@ export class WebRenderer implements RenderContext {
     // Reset transform to identity to clear the whole buffer, then restore.
     this.ctx.save();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.ctx.clearRect(
-      0,
-      0,
-      this.width * this.gameScale,
-      this.height * this.gameScale,
-    );
+    this.ctx.clearRect(0, 0, this.width * this.gameScale, this.height * this.gameScale);
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(
-      0,
-      0,
-      this.width * this.gameScale,
-      this.height * this.gameScale,
-    );
+    this.ctx.fillRect(0, 0, this.width * this.gameScale, this.height * this.gameScale);
     this.ctx.restore();
     this.ctx.imageSmoothingEnabled = false;
   }
@@ -374,13 +359,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawText(
-    text: string,
-    x: number,
-    y: number,
-    color = '#ffffff',
-    _bgColor?: string,
-  ) {
+  drawText(text: string, x: number, y: number, color = '#ffffff', _bgColor?: string) {
     this.ctx.fillStyle = color;
     this.ctx.fillText(text, x, y);
   }
@@ -462,13 +441,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawCircle(
-    x: number,
-    y: number,
-    radius: number,
-    color: string,
-    fill = false,
-  ) {
+  drawCircle(x: number, y: number, radius: number, color: string, fill = false) {
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, Math.PI * 2);
     if (fill) {

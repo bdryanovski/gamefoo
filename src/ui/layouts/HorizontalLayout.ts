@@ -6,7 +6,6 @@
  * @since 0.5.0
  */
 
-import type { RenderContext } from '@/core/renderer/type';
 import Container, { type ContainerConfig } from '../core/Container';
 import type { JustifyContent, UISize, VerticalAlign } from '../core/types';
 
@@ -16,11 +15,17 @@ import type { JustifyContent, UISize, VerticalAlign } from '../core/types';
  * @since 0.5.0
  */
 export interface HorizontalLayoutConfig extends ContainerConfig {
-  /** Space between children in pixels */
+  /**
+   * Space between children in pixels
+   */
   spacing?: number;
-  /** Vertical alignment of children */
+  /**
+   * Vertical alignment of children
+   */
   align?: VerticalAlign;
-  /** Horizontal distribution of children */
+  /**
+   * Horizontal distribution of children
+   */
   justify?: JustifyContent;
 }
 
@@ -43,13 +48,19 @@ export interface HorizontalLayoutConfig extends ContainerConfig {
  * ```
  */
 export default class HorizontalLayout extends Container {
-  /** Space between children */
+  /**
+   * Space between children
+   */
   protected _spacing: number = 0;
 
-  /** Vertical alignment */
+  /**
+   * Vertical alignment
+   */
   protected _align: VerticalAlign = 'top';
 
-  /** Horizontal justify */
+  /**
+   * Horizontal justify
+   */
   protected _justify: JustifyContent = 'start';
 
   /**
@@ -61,16 +72,24 @@ export default class HorizontalLayout extends Container {
    */
   constructor(config: HorizontalLayoutConfig = {}) {
     super(config);
-    if (config.spacing !== undefined) this._spacing = config.spacing;
-    if (config.align !== undefined) this._align = config.align;
-    if (config.justify !== undefined) this._justify = config.justify;
+    if (config.spacing !== undefined) {
+      this._spacing = config.spacing;
+    }
+    if (config.align !== undefined) {
+      this._align = config.align;
+    }
+    if (config.justify !== undefined) {
+      this._justify = config.justify;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Space between children */
+  /**
+   * Space between children
+   */
   get spacing(): number {
     return this._spacing;
   }
@@ -82,7 +101,9 @@ export default class HorizontalLayout extends Container {
     }
   }
 
-  /** Vertical alignment */
+  /**
+   * Vertical alignment
+   */
   get align(): VerticalAlign {
     return this._align;
   }
@@ -94,7 +115,9 @@ export default class HorizontalLayout extends Container {
     }
   }
 
-  /** Horizontal justify */
+  /**
+   * Horizontal justify
+   */
   get justify(): JustifyContent {
     return this._justify;
   }
@@ -121,26 +144,22 @@ export default class HorizontalLayout extends Container {
 
     const visibleChildren = this._children.filter((c) => c.visible);
 
-    for (let i = 0; i < visibleChildren.length; i++) {
-      const child = visibleChildren[i]!;
+    for (let index = 0; index < visibleChildren.length; index += 1) {
+      const child = visibleChildren[index]!;
       const childSize = child.getPreferredSize();
 
       totalWidth += child.margin.left + childSize.width + child.margin.right;
-      if (i < visibleChildren.length - 1) {
+      if (index < visibleChildren.length - 1) {
         totalWidth += this._spacing;
       }
 
-      const childHeight =
-        child.margin.top + childSize.height + child.margin.bottom;
+      const childHeight = child.margin.top + childSize.height + child.margin.bottom;
       maxHeight = Math.max(maxHeight, childHeight);
     }
 
     return {
       width: Math.max(this._width, totalWidth),
-      height: Math.max(
-        this._height,
-        maxHeight + this._padding.top + this._padding.bottom,
-      ),
+      height: Math.max(this._height, maxHeight + this._padding.top + this._padding.bottom),
     };
   }
 
@@ -160,10 +179,8 @@ export default class HorizontalLayout extends Container {
     }
 
     // Available dimensions for children (minus padding)
-    const availableWidth =
-      this._width - this._padding.left - this._padding.right;
-    const availableHeight =
-      this._height - this._padding.top - this._padding.bottom;
+    const availableWidth = this._width - this._padding.left - this._padding.right;
+    const availableHeight = this._height - this._padding.top - this._padding.bottom;
 
     const visibleChildren = this._children.filter((c) => c.visible);
 
@@ -171,13 +188,12 @@ export default class HorizontalLayout extends Container {
     let totalChildrenWidth = 0;
     const childSizes: UISize[] = [];
 
-    for (let i = 0; i < visibleChildren.length; i++) {
-      const child = visibleChildren[i]!;
+    for (let index = 0; index < visibleChildren.length; index += 1) {
+      const child = visibleChildren[index]!;
       const childSize = child.getPreferredSize();
       childSizes.push(childSize);
-      totalChildrenWidth +=
-        child.margin.left + childSize.width + child.margin.right;
-      if (i < visibleChildren.length - 1 && this._justify !== 'space-between') {
+      totalChildrenWidth += child.margin.left + childSize.width + child.margin.right;
+      if (index < visibleChildren.length - 1 && this._justify !== 'space-between') {
         totalChildrenWidth += this._spacing;
       }
     }
@@ -201,21 +217,19 @@ export default class HorizontalLayout extends Container {
         if (visibleChildren.length > 1) {
           // Calculate total content width (just children, no spacing)
           let contentWidth = 0;
-          for (let i = 0; i < visibleChildren.length; i++) {
-            const child = visibleChildren[i]!;
-            contentWidth +=
-              child.margin.left + childSizes[i]!.width + child.margin.right;
+          for (let index = 0; index < visibleChildren.length; index += 1) {
+            const child = visibleChildren[index]!;
+            contentWidth += child.margin.left + childSizes[index]!.width + child.margin.right;
           }
-          effectiveSpacing =
-            (availableWidth - contentWidth) / (visibleChildren.length - 1);
+          effectiveSpacing = (availableWidth - contentWidth) / (visibleChildren.length - 1);
         }
         break;
     }
 
     // Layout children
-    for (let i = 0; i < visibleChildren.length; i++) {
-      const child = visibleChildren[i]!;
-      const childSize = childSizes[i]!;
+    for (let index = 0; index < visibleChildren.length; index += 1) {
+      const child = visibleChildren[index]!;
+      const childSize = childSizes[index]!;
 
       // Apply margin
       x += child.margin.left;
@@ -228,11 +242,7 @@ export default class HorizontalLayout extends Container {
           y = this._padding.top + (availableHeight - childSize.height) / 2;
           break;
         case 'bottom':
-          y =
-            this._padding.top
-            + availableHeight
-            - childSize.height
-            - child.margin.bottom;
+          y = this._padding.top + availableHeight - childSize.height - child.margin.bottom;
           break;
       }
 

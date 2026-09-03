@@ -60,16 +60,20 @@ export class PerlinNoise {
     this.perm = new Uint8Array(512);
     const p = new Uint8Array(256);
 
-    for (let i = 0; i < 256; i++) p[i] = i;
-
-    let s = seed >>> 0;
-    for (let i = 255; i > 0; i--) {
-      s = (Math.imul(1664525, s) + 1013904223) >>> 0;
-      const j = s % (i + 1);
-      [p[i], p[j]] = [p[j]!, p[i]!];
+    for (let index = 0; index < 256; index += 1) {
+      p[index] = index;
     }
 
-    for (let i = 0; i < 512; i++) this.perm[i] = p[i & 255]!;
+    let s = seed >>> 0;
+    for (let index = 255; index > 0; index -= 1) {
+      s = (Math.imul(1664525, s) + 1013904223) >>> 0;
+      const j = s % (index + 1);
+      [p[index], p[j]] = [p[j]!, p[index]!];
+    }
+
+    for (let index = 0; index < 512; index += 1) {
+      this.perm[index] = p[index & 255]!;
+    }
   }
 
   /**
@@ -148,11 +152,7 @@ export class PerlinNoise {
     const bb = this.perm[this.perm[xi + 1]! + yi + 1]!;
 
     const x1 = this.lerp(this.grad(aa, xf, yf), this.grad(ba, xf - 1, yf), u);
-    const x2 = this.lerp(
-      this.grad(ab, xf, yf - 1),
-      this.grad(bb, xf - 1, yf - 1),
-      u,
-    );
+    const x2 = this.lerp(this.grad(ab, xf, yf - 1), this.grad(bb, xf - 1, yf - 1), u);
 
     return this.lerp(x1, x2, v);
   }
@@ -182,19 +182,13 @@ export class PerlinNoise {
    * const height = noise.fbm(x * 0.01, y * 0.01, 6, 2.0, 0.5);
    * ```
    */
-  fbm(
-    x: number,
-    y: number,
-    octaves = 4,
-    lacunarity = 2,
-    persistence = 0.5,
-  ): number {
+  fbm(x: number, y: number, octaves = 4, lacunarity = 2, persistence = 0.5): number {
     let value = 0;
     let amplitude = 1;
     let frequency = 1;
     let max = 0;
 
-    for (let i = 0; i < octaves; i++) {
+    for (let index = 0; index < octaves; index += 1) {
       value += this.noise2d(x * frequency, y * frequency) * amplitude;
       max += amplitude;
       amplitude *= persistence;

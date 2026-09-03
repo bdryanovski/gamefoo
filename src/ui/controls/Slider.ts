@@ -22,23 +22,41 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface SliderConfig extends UIWidgetConfig {
-  /** Label text */
+  /**
+   * Label text
+   */
   label?: string;
-  /** Minimum value */
+  /**
+   * Minimum value
+   */
   min?: number;
-  /** Maximum value */
+  /**
+   * Maximum value
+   */
   max?: number;
-  /** Step size */
+  /**
+   * Step size
+   */
   step?: number;
-  /** Current value */
+  /**
+   * Current value
+   */
   value?: number;
-  /** Change callback */
+  /**
+   * Change callback
+   */
   onChange?: (value: number) => void;
-  /** Track height */
+  /**
+   * Track height
+   */
   trackHeight?: number;
-  /** Thumb width */
+  /**
+   * Thumb width
+   */
   thumbWidth?: number;
-  /** Show value text */
+  /**
+   * Show value text
+   */
   showValue?: boolean;
 }
 
@@ -63,34 +81,54 @@ export interface SliderConfig extends UIWidgetConfig {
  * ```
  */
 export default class Slider extends UIWidget {
-  /** Label text */
+  /**
+   * Label text
+   */
   protected _label: string = '';
 
-  /** Minimum value */
+  /**
+   * Minimum value
+   */
   protected _min: number = 0;
 
-  /** Maximum value */
+  /**
+   * Maximum value
+   */
   protected _max: number = 100;
 
-  /** Step size */
+  /**
+   * Step size
+   */
   protected _step: number = 1;
 
-  /** Current value */
+  /**
+   * Current value
+   */
   protected _value: number = 0;
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   protected _onChange: ((value: number) => void) | null = null;
 
-  /** Track height */
+  /**
+   * Track height
+   */
   protected _trackHeight: number = 4;
 
-  /** Thumb width */
+  /**
+   * Thumb width
+   */
   protected _thumbWidth: number = 6;
 
-  /** Show value text */
+  /**
+   * Show value text
+   */
   protected _showValue: boolean = false;
 
-  /** Whether dragging */
+  /**
+   * Whether dragging
+   */
   private _dragging: boolean = false;
 
   /**
@@ -106,16 +144,33 @@ export default class Slider extends UIWidget {
       focusable: config.focusable ?? true,
       padding: config.padding ?? 2,
     });
-    if (config.label !== undefined) this._label = config.label;
-    if (config.min !== undefined) this._min = config.min;
-    if (config.max !== undefined) this._max = config.max;
-    if (config.step !== undefined) this._step = config.step;
-    if (config.value !== undefined) this._value = config.value;
-    if (config.onChange !== undefined) this._onChange = config.onChange;
-    if (config.trackHeight !== undefined)
+    if (config.label !== undefined) {
+      this._label = config.label;
+    }
+    if (config.min !== undefined) {
+      this._min = config.min;
+    }
+    if (config.max !== undefined) {
+      this._max = config.max;
+    }
+    if (config.step !== undefined) {
+      this._step = config.step;
+    }
+    if (config.value !== undefined) {
+      this._value = config.value;
+    }
+    if (config.onChange !== undefined) {
+      this._onChange = config.onChange;
+    }
+    if (config.trackHeight !== undefined) {
       this._trackHeight = config.trackHeight;
-    if (config.thumbWidth !== undefined) this._thumbWidth = config.thumbWidth;
-    if (config.showValue !== undefined) this._showValue = config.showValue;
+    }
+    if (config.thumbWidth !== undefined) {
+      this._thumbWidth = config.thumbWidth;
+    }
+    if (config.showValue !== undefined) {
+      this._showValue = config.showValue;
+    }
 
     // Clamp initial value
     this._value = this.clampValue(this._value);
@@ -125,7 +180,9 @@ export default class Slider extends UIWidget {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Label text */
+  /**
+   * Label text
+   */
   get label(): string {
     return this._label;
   }
@@ -137,7 +194,9 @@ export default class Slider extends UIWidget {
     }
   }
 
-  /** Minimum value */
+  /**
+   * Minimum value
+   */
   get min(): number {
     return this._min;
   }
@@ -147,7 +206,9 @@ export default class Slider extends UIWidget {
     this._value = this.clampValue(this._value);
   }
 
-  /** Maximum value */
+  /**
+   * Maximum value
+   */
   get max(): number {
     return this._max;
   }
@@ -157,7 +218,9 @@ export default class Slider extends UIWidget {
     this._value = this.clampValue(this._value);
   }
 
-  /** Step size */
+  /**
+   * Step size
+   */
   get step(): number {
     return this._step;
   }
@@ -167,7 +230,9 @@ export default class Slider extends UIWidget {
     this._value = this.clampValue(this._value);
   }
 
-  /** Current value */
+  /**
+   * Current value
+   */
   get value(): number {
     return this._value;
   }
@@ -182,7 +247,9 @@ export default class Slider extends UIWidget {
     }
   }
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   get onChange(): ((value: number) => void) | null {
     return this._onChange;
   }
@@ -232,13 +299,12 @@ export default class Slider extends UIWidget {
    */
   private clampValue(value: number): number {
     // Clamp to range
-    value = Math.max(this._min, Math.min(this._max, value));
+    let result = Math.max(this._min, Math.min(this._max, value));
     // Snap to step
     if (this._step > 0) {
-      value =
-        Math.round((value - this._min) / this._step) * this._step + this._min;
+      result = Math.round((result - this._min) / this._step) * this._step + this._min;
     }
-    return value;
+    return result;
   }
 
   /**
@@ -254,14 +320,9 @@ export default class Slider extends UIWidget {
   } {
     const trackX = this._padding.left + this._thumbWidth / 2;
     const trackY =
-      this._padding.top
-      + (this._height
-        - this._padding.top
-        - this._padding.bottom
-        - this._trackHeight)
-        / 2;
-    const trackWidth =
-      this._width - this._padding.left - this._padding.right - this._thumbWidth;
+      this._padding.top +
+      (this._height - this._padding.top - this._padding.bottom - this._trackHeight) / 2;
+    const trackWidth = this._width - this._padding.left - this._padding.right - this._thumbWidth;
     return {
       x: trackX,
       y: trackY,
@@ -306,11 +367,7 @@ export default class Slider extends UIWidget {
       width: Math.max(this._width, 60),
       height: Math.max(
         this._height,
-        this._padding.top
-          + labelHeight
-          + this._trackHeight
-          + 4
-          + this._padding.bottom,
+        this._padding.top + labelHeight + this._trackHeight + 4 + this._padding.bottom,
       ),
     };
   }
@@ -328,14 +385,13 @@ export default class Slider extends UIWidget {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mousedown') {
       const mouseEvent = event as UIMouseButtonEvent;
-      if (
-        mouseEvent.button === 'left'
-        && this.containsPoint(mouseEvent.x, mouseEvent.y)
-      ) {
+      if (mouseEvent.button === 'left' && this.containsPoint(mouseEvent.x, mouseEvent.y)) {
         this._dragging = true;
         this.value = this.screenToValue(mouseEvent.x);
         event.consume();
@@ -413,9 +469,7 @@ export default class Slider extends UIWidget {
       // Draw label and value
       if (this._label || this._showValue) {
         const labelY = this._padding.top;
-        const labelColor = isFocused
-          ? theme.colors['focus.ring']
-          : theme.colors['label.text'];
+        const labelColor = isFocused ? theme.colors['focus.ring'] : theme.colors['label.text'];
 
         if (this._label) {
           const canvas = ctx.getCanvas?.();
@@ -447,14 +501,14 @@ export default class Slider extends UIWidget {
       // Draw track
       const track = this.getTrackBounds();
       const adjustedTrackY =
-        this._padding.top
-        + labelHeight
-        + (this._height
-          - this._padding.top
-          - labelHeight
-          - this._padding.bottom
-          - this._trackHeight)
-          / 2;
+        this._padding.top +
+        labelHeight +
+        (this._height -
+          this._padding.top -
+          labelHeight -
+          this._padding.bottom -
+          this._trackHeight) /
+          2;
 
       ctx.fillRect(
         track.x,
@@ -479,9 +533,7 @@ export default class Slider extends UIWidget {
       const thumbX = track.x + fillWidth - this._thumbWidth / 2;
       const thumbY = adjustedTrackY - 2;
       const thumbHeight = this._trackHeight + 4;
-      const thumbColor = isFocused
-        ? theme.colors['focus.ring']
-        : theme.colors['slider.thumb'];
+      const thumbColor = isFocused ? theme.colors['focus.ring'] : theme.colors['slider.thumb'];
 
       ctx.fillRect(thumbX, thumbY, this._thumbWidth, thumbHeight, thumbColor);
     } catch {
@@ -494,13 +546,7 @@ export default class Slider extends UIWidget {
       ctx.fillRect(track.x, track.y, fillWidth, track.height, '#00AAFF');
 
       const thumbX = track.x + fillWidth - this._thumbWidth / 2;
-      ctx.fillRect(
-        thumbX,
-        track.y - 2,
-        this._thumbWidth,
-        track.height + 4,
-        '#FFFFFF',
-      );
+      ctx.fillRect(thumbX, track.y - 2, this._thumbWidth, track.height + 4, '#FFFFFF');
     }
   }
 }

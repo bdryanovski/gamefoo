@@ -1,14 +1,17 @@
-export function createBunLoop(config: {
-  fps?: number;
-  onTick: (dt: number) => void;
-}) {
+// The terminal loop targets the Bun runtime; declare the subset of its
+// global API we use so type-checking does not depend on ambient Bun types.
+declare const Bun: { nanoseconds(): number };
+
+export function createBunLoop(config: { fps?: number; onTick: (dt: number) => void }) {
   const fps = config.fps ?? 30;
   const targetMs = 1000 / fps;
   let running = false;
   let lastNs = 0;
 
   const tick = () => {
-    if (!running) return;
+    if (!running) {
+      return;
+    }
     const nowNs = Bun.nanoseconds();
     const dt = (nowNs - lastNs) / 1e9;
     lastNs = nowNs;

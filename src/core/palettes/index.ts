@@ -54,12 +54,7 @@ export { SNES, to5Bit, toSNES } from './snes';
 export type { Tic80Colors } from './tic80';
 export { TIC80 } from './tic80';
 // Types
-export type {
-  ColorPalette,
-  GeneratedPalette,
-  HexColor,
-  NamedColorPalette,
-} from './types';
+export type { ColorPalette, GeneratedPalette, HexColor, NamedColorPalette } from './types';
 // Utilities
 export {
   getColor,

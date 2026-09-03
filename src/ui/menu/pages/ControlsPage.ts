@@ -6,11 +6,7 @@
  * @since 0.5.0
  */
 
-import {
-  CONTROL_SCHEMES,
-  type ControlSchemeName,
-  listControlSchemes,
-} from '@/core/controls';
+import { CONTROL_SCHEMES, type ControlSchemeName, listControlSchemes } from '@/core/controls';
 import type { ControlScheme } from '@/core/controls/types';
 import Button from '../../controls/Button';
 import type { UIInputEvent, UIKeyEvent } from '../../core/types';
@@ -26,9 +22,13 @@ import MenuPage from '../MenuPage';
  * @since 0.5.0
  */
 export interface ControlsPageConfig {
-  /** Initial control scheme name */
+  /**
+   * Initial control scheme name
+   */
   initialScheme?: ControlSchemeName;
-  /** Scheme change callback */
+  /**
+   * Scheme change callback
+   */
   onSchemeChange?: (scheme: ControlScheme, name: ControlSchemeName) => void;
 }
 
@@ -65,7 +65,9 @@ class SchemeSelector extends Button {
   }
 
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'keydown') {
       const keyEvent = event as UIKeyEvent;
@@ -139,19 +141,29 @@ class SchemeSelector extends Button {
  * @since 0.5.0
  */
 export default class ControlsPage extends MenuPage {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: ControlsPageConfig;
 
-  /** Content layout */
+  /**
+   * Content layout
+   */
   private _content: VerticalLayout;
 
-  /** Available scheme names */
+  /**
+   * Available scheme names
+   */
   private _schemeNames: ControlSchemeName[];
 
-  /** Scheme selector */
+  /**
+   * Scheme selector
+   */
   private _schemeSelector: SchemeSelector;
 
-  /** Bindings container */
+  /**
+   * Bindings container
+   */
   private _bindingsLayout: VerticalLayout;
 
   /**
@@ -172,7 +184,9 @@ export default class ControlsPage extends MenuPage {
     let initialIndex = 0;
     if (config.initialScheme) {
       const idx = this._schemeNames.indexOf(config.initialScheme);
-      if (idx >= 0) initialIndex = idx;
+      if (idx >= 0) {
+        initialIndex = idx;
+      }
     }
 
     // Create content layout - children fill available width
@@ -186,7 +200,7 @@ export default class ControlsPage extends MenuPage {
     this._schemeSelector = new SchemeSelector({
       schemeNames: this._schemeNames,
       initialIndex,
-      onSchemeChange: (index) => {
+      onSchemeChange: (_index) => {
         this.updateBindingsDisplay();
         this.notifyChange();
       },

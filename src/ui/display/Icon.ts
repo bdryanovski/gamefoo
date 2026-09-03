@@ -16,15 +16,25 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface IconConfig extends UIWidgetConfig {
-  /** Icon bitmap data (array of row values) */
+  /**
+   * Icon bitmap data (array of row values)
+   */
   data?: number[];
-  /** Icon width in pixels */
+  /**
+   * Icon width in pixels
+   */
   iconWidth?: number;
-  /** Icon height in pixels */
+  /**
+   * Icon height in pixels
+   */
   iconHeight?: number;
-  /** Custom color (uses theme if not set) */
+  /**
+   * Custom color (uses theme if not set)
+   */
   color?: string;
-  /** Scale factor */
+  /**
+   * Scale factor
+   */
   scale?: number;
 }
 
@@ -45,22 +55,34 @@ export interface IconConfig extends UIWidgetConfig {
  * ```
  */
 export default class Icon extends UIWidget {
-  /** Icon bitmap data */
+  /**
+   * Icon bitmap data
+   */
   protected _data: number[] = [];
 
-  /** Icon width in pixels */
+  /**
+   * Icon width in pixels
+   */
   protected _iconWidth: number = 8;
 
-  /** Icon height in pixels */
+  /**
+   * Icon height in pixels
+   */
   protected _iconHeight: number = 8;
 
-  /** Custom color */
+  /**
+   * Custom color
+   */
   protected _color: string | null = null;
 
-  /** Scale factor */
+  /**
+   * Scale factor
+   */
   protected _scale: number = 1;
 
-  /** Cached Path2D */
+  /**
+   * Cached Path2D
+   */
   private _cachedPath: Path2D | null = null;
 
   /**
@@ -72,11 +94,21 @@ export default class Icon extends UIWidget {
    */
   constructor(config: IconConfig = {}) {
     super(config);
-    if (config.data !== undefined) this.setData(config.data);
-    if (config.iconWidth !== undefined) this._iconWidth = config.iconWidth;
-    if (config.iconHeight !== undefined) this._iconHeight = config.iconHeight;
-    if (config.color !== undefined) this._color = config.color;
-    if (config.scale !== undefined) this._scale = config.scale;
+    if (config.data !== undefined) {
+      this.setData(config.data);
+    }
+    if (config.iconWidth !== undefined) {
+      this._iconWidth = config.iconWidth;
+    }
+    if (config.iconHeight !== undefined) {
+      this._iconHeight = config.iconHeight;
+    }
+    if (config.color !== undefined) {
+      this._color = config.color;
+    }
+    if (config.scale !== undefined) {
+      this._scale = config.scale;
+    }
 
     this.updateSize();
   }
@@ -85,7 +117,9 @@ export default class Icon extends UIWidget {
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Icon bitmap data */
+  /**
+   * Icon bitmap data
+   */
   get data(): number[] {
     return this._data;
   }
@@ -104,7 +138,9 @@ export default class Icon extends UIWidget {
     this.markLayoutDirty();
   }
 
-  /** Icon width */
+  /**
+   * Icon width
+   */
   get iconWidth(): number {
     return this._iconWidth;
   }
@@ -118,7 +154,9 @@ export default class Icon extends UIWidget {
     }
   }
 
-  /** Icon height */
+  /**
+   * Icon height
+   */
   get iconHeight(): number {
     return this._iconHeight;
   }
@@ -132,7 +170,9 @@ export default class Icon extends UIWidget {
     }
   }
 
-  /** Custom color */
+  /**
+   * Custom color
+   */
   get color(): string | null {
     return this._color;
   }
@@ -141,7 +181,9 @@ export default class Icon extends UIWidget {
     this._color = value;
   }
 
-  /** Scale factor */
+  /**
+   * Scale factor
+   */
   get scale(): number {
     return this._scale;
   }
@@ -164,10 +206,8 @@ export default class Icon extends UIWidget {
    * @internal
    */
   private updateSize(): void {
-    this._width =
-      this._iconWidth * this._scale + this._padding.left + this._padding.right;
-    this._height =
-      this._iconHeight * this._scale + this._padding.top + this._padding.bottom;
+    this._width = this._iconWidth * this._scale + this._padding.left + this._padding.right;
+    this._height = this._iconHeight * this._scale + this._padding.top + this._padding.bottom;
   }
 
   /**
@@ -183,20 +223,11 @@ export default class Icon extends UIWidget {
 
     const path = new Path2D();
 
-    for (
-      let row = 0;
-      row < this._data.length && row < this._iconHeight;
-      row++
-    ) {
+    for (let row = 0; row < this._data.length && row < this._iconHeight; row++) {
       const bits = this._data[row]!;
       for (let col = 0; col < this._iconWidth; col++) {
         if ((bits & (1 << (this._iconWidth - 1 - col))) !== 0) {
-          path.rect(
-            col * this._scale,
-            row * this._scale,
-            this._scale,
-            this._scale,
-          );
+          path.rect(col * this._scale, row * this._scale, this._scale, this._scale);
         }
       }
     }
@@ -215,14 +246,8 @@ export default class Icon extends UIWidget {
    */
   override getPreferredSize(): UISize {
     return {
-      width:
-        this._iconWidth * this._scale
-        + this._padding.left
-        + this._padding.right,
-      height:
-        this._iconHeight * this._scale
-        + this._padding.top
-        + this._padding.bottom,
+      width: this._iconWidth * this._scale + this._padding.left + this._padding.right,
+      height: this._iconHeight * this._scale + this._padding.top + this._padding.bottom,
     };
   }
 
@@ -242,7 +267,9 @@ export default class Icon extends UIWidget {
       this.buildPath();
     }
 
-    if (!this._cachedPath) return;
+    if (!this._cachedPath) {
+      return;
+    }
 
     // Determine color
     let color = this._color;
@@ -264,11 +291,7 @@ export default class Icon extends UIWidget {
       canvas.restore();
     } else {
       // Fallback for non-canvas renderers
-      for (
-        let row = 0;
-        row < this._data.length && row < this._iconHeight;
-        row++
-      ) {
+      for (let row = 0; row < this._data.length && row < this._iconHeight; row++) {
         const bits = this._data[row]!;
         for (let col = 0; col < this._iconWidth; col++) {
           if ((bits & (1 << (this._iconWidth - 1 - col))) !== 0) {

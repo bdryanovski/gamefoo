@@ -16,17 +16,29 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface LabelConfig extends UIWidgetConfig {
-  /** Text to display */
+  /**
+   * Text to display
+   */
   text?: string;
-  /** Text alignment */
+  /**
+   * Text alignment
+   */
   align?: HorizontalAlign;
-  /** Custom text color (uses theme if not set) */
+  /**
+   * Custom text color (uses theme if not set)
+   */
   color?: string;
-  /** Use muted color from theme */
+  /**
+   * Use muted color from theme
+   */
   muted?: boolean;
-  /** Use accent color from theme */
+  /**
+   * Use accent color from theme
+   */
   accent?: boolean;
-  /** Font size key: 'small', 'default', 'large' */
+  /**
+   * Font size key: 'small', 'default', 'large'
+   */
   fontSize?: 'small' | 'default' | 'large';
 }
 
@@ -52,22 +64,34 @@ export interface LabelConfig extends UIWidgetConfig {
  * ```
  */
 export default class Label extends UIWidget {
-  /** Text content */
+  /**
+   * Text content
+   */
   protected _text: string = '';
 
-  /** Text alignment */
+  /**
+   * Text alignment
+   */
   protected _align: HorizontalAlign = 'left';
 
-  /** Custom color override */
+  /**
+   * Custom color override
+   */
   protected _color: string | null = null;
 
-  /** Use muted style */
+  /**
+   * Use muted style
+   */
   protected _muted: boolean = false;
 
-  /** Use accent style */
+  /**
+   * Use accent style
+   */
   protected _accent: boolean = false;
 
-  /** Font size key */
+  /**
+   * Font size key
+   */
   protected _fontSize: 'small' | 'default' | 'large' = 'default';
 
   /**
@@ -79,19 +103,33 @@ export default class Label extends UIWidget {
    */
   constructor(config: LabelConfig = {}) {
     super(config);
-    if (config.text !== undefined) this._text = config.text;
-    if (config.align !== undefined) this._align = config.align;
-    if (config.color !== undefined) this._color = config.color;
-    if (config.muted !== undefined) this._muted = config.muted;
-    if (config.accent !== undefined) this._accent = config.accent;
-    if (config.fontSize !== undefined) this._fontSize = config.fontSize;
+    if (config.text !== undefined) {
+      this._text = config.text;
+    }
+    if (config.align !== undefined) {
+      this._align = config.align;
+    }
+    if (config.color !== undefined) {
+      this._color = config.color;
+    }
+    if (config.muted !== undefined) {
+      this._muted = config.muted;
+    }
+    if (config.accent !== undefined) {
+      this._accent = config.accent;
+    }
+    if (config.fontSize !== undefined) {
+      this._fontSize = config.fontSize;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Text content */
+  /**
+   * Text content
+   */
   get text(): string {
     return this._text;
   }
@@ -103,7 +141,9 @@ export default class Label extends UIWidget {
     }
   }
 
-  /** Text alignment */
+  /**
+   * Text alignment
+   */
   get align(): HorizontalAlign {
     return this._align;
   }
@@ -114,7 +154,9 @@ export default class Label extends UIWidget {
     }
   }
 
-  /** Custom color */
+  /**
+   * Custom color
+   */
   get color(): string | null {
     return this._color;
   }
@@ -123,7 +165,9 @@ export default class Label extends UIWidget {
     this._color = value;
   }
 
-  /** Muted style */
+  /**
+   * Muted style
+   */
   get muted(): boolean {
     return this._muted;
   }
@@ -132,7 +176,9 @@ export default class Label extends UIWidget {
     this._muted = value;
   }
 
-  /** Accent style */
+  /**
+   * Accent style
+   */
   get accent(): boolean {
     return this._accent;
   }
@@ -141,7 +187,9 @@ export default class Label extends UIWidget {
     this._accent = value;
   }
 
-  /** Font size key */
+  /**
+   * Font size key
+   */
   get fontSize(): 'small' | 'default' | 'large' {
     return this._fontSize;
   }
@@ -169,14 +217,8 @@ export default class Label extends UIWidget {
       const textWidth = font.getTextWidth(this._text);
 
       return {
-        width: Math.max(
-          this._width,
-          textWidth + this._padding.left + this._padding.right,
-        ),
-        height: Math.max(
-          this._height,
-          font.height + this._padding.top + this._padding.bottom,
-        ),
+        width: Math.max(this._width, textWidth + this._padding.left + this._padding.right),
+        height: Math.max(this._height, font.height + this._padding.top + this._padding.bottom),
       };
     } catch {
       // No theme, return current size
@@ -196,7 +238,9 @@ export default class Label extends UIWidget {
    * @since 0.5.0
    */
   protected drawSelf(ctx: RenderContext): void {
-    if (!this._text) return;
+    if (!this._text) {
+      return;
+    }
 
     try {
       const theme = this.getTheme();
@@ -239,12 +283,7 @@ export default class Label extends UIWidget {
       }
     } catch {
       // Fallback if no theme
-      ctx.drawText(
-        this._text,
-        this._padding.left,
-        this._padding.top,
-        '#FFFFFF',
-      );
+      ctx.drawText(this._text, this._padding.left, this._padding.top, '#FFFFFF');
     }
   }
 }

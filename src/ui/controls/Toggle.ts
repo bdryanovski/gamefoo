@@ -7,12 +7,7 @@
  */
 
 import type { RenderContext } from '@/core/renderer/type';
-import type {
-  UIInputEvent,
-  UIKeyEvent,
-  UIMouseButtonEvent,
-  UISize,
-} from '../core/types';
+import type { UIInputEvent, UIKeyEvent, UIMouseButtonEvent, UISize } from '../core/types';
 import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
 
 /**
@@ -21,19 +16,33 @@ import UIWidget, { type UIWidgetConfig } from '../core/UIWidget';
  * @since 0.5.0
  */
 export interface ToggleConfig extends UIWidgetConfig {
-  /** Label text */
+  /**
+   * Label text
+   */
   label?: string;
-  /** Toggle state */
+  /**
+   * Toggle state
+   */
   value?: boolean;
-  /** Change callback */
+  /**
+   * Change callback
+   */
   onChange?: (value: boolean) => void;
-  /** Track width */
+  /**
+   * Track width
+   */
   trackWidth?: number;
-  /** Track height */
+  /**
+   * Track height
+   */
   trackHeight?: number;
-  /** Gap between toggle and label */
+  /**
+   * Gap between toggle and label
+   */
   gap?: number;
-  /** Show ON/OFF text */
+  /**
+   * Show ON/OFF text
+   */
   showText?: boolean;
 }
 
@@ -56,25 +65,39 @@ export interface ToggleConfig extends UIWidgetConfig {
  * ```
  */
 export default class Toggle extends UIWidget {
-  /** Label text */
+  /**
+   * Label text
+   */
   protected _label: string = '';
 
-  /** Toggle value */
+  /**
+   * Toggle value
+   */
   protected _value: boolean = false;
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   protected _onChange: ((value: boolean) => void) | null = null;
 
-  /** Track width */
+  /**
+   * Track width
+   */
   protected _trackWidth: number = 20;
 
-  /** Track height */
+  /**
+   * Track height
+   */
   protected _trackHeight: number = 10;
 
-  /** Gap between toggle and label */
+  /**
+   * Gap between toggle and label
+   */
   protected _gap: number = 6;
 
-  /** Show ON/OFF text */
+  /**
+   * Show ON/OFF text
+   */
   protected _showText: boolean = false;
 
   /**
@@ -90,21 +113,36 @@ export default class Toggle extends UIWidget {
       focusable: config.focusable ?? true,
       padding: config.padding ?? 2,
     });
-    if (config.label !== undefined) this._label = config.label;
-    if (config.value !== undefined) this._value = config.value;
-    if (config.onChange !== undefined) this._onChange = config.onChange;
-    if (config.trackWidth !== undefined) this._trackWidth = config.trackWidth;
-    if (config.trackHeight !== undefined)
+    if (config.label !== undefined) {
+      this._label = config.label;
+    }
+    if (config.value !== undefined) {
+      this._value = config.value;
+    }
+    if (config.onChange !== undefined) {
+      this._onChange = config.onChange;
+    }
+    if (config.trackWidth !== undefined) {
+      this._trackWidth = config.trackWidth;
+    }
+    if (config.trackHeight !== undefined) {
       this._trackHeight = config.trackHeight;
-    if (config.gap !== undefined) this._gap = config.gap;
-    if (config.showText !== undefined) this._showText = config.showText;
+    }
+    if (config.gap !== undefined) {
+      this._gap = config.gap;
+    }
+    if (config.showText !== undefined) {
+      this._showText = config.showText;
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Properties
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /** Label text */
+  /**
+   * Label text
+   */
   get label(): string {
     return this._label;
   }
@@ -116,7 +154,9 @@ export default class Toggle extends UIWidget {
     }
   }
 
-  /** Toggle value */
+  /**
+   * Toggle value
+   */
   get value(): boolean {
     return this._value;
   }
@@ -130,7 +170,9 @@ export default class Toggle extends UIWidget {
     }
   }
 
-  /** Change callback */
+  /**
+   * Change callback
+   */
   get onChange(): ((value: boolean) => void) | null {
     return this._onChange;
   }
@@ -176,16 +218,14 @@ export default class Toggle extends UIWidget {
     }
 
     const width =
-      this._padding.left
-      + this._trackWidth
-      + textWidth
-      + (this._label ? this._gap + labelWidth : 0)
-      + this._padding.right;
+      this._padding.left +
+      this._trackWidth +
+      textWidth +
+      (this._label ? this._gap + labelWidth : 0) +
+      this._padding.right;
 
     const height =
-      this._padding.top
-      + Math.max(this._trackHeight, labelHeight)
-      + this._padding.bottom;
+      this._padding.top + Math.max(this._trackHeight, labelHeight) + this._padding.bottom;
 
     return {
       width: Math.max(this._width, width),
@@ -206,14 +246,13 @@ export default class Toggle extends UIWidget {
    * @since 0.5.0
    */
   override handleEvent(event: UIInputEvent): boolean {
-    if (!this._visible || !this._enabled) return false;
+    if (!this._visible || !this._enabled) {
+      return false;
+    }
 
     if (event.type === 'mouseup') {
       const mouseEvent = event as UIMouseButtonEvent;
-      if (
-        mouseEvent.button === 'left'
-        && this.containsPoint(mouseEvent.x, mouseEvent.y)
-      ) {
+      if (mouseEvent.button === 'left' && this.containsPoint(mouseEvent.x, mouseEvent.y)) {
         this.toggle();
         event.consume();
         return true;
@@ -274,27 +313,17 @@ export default class Toggle extends UIWidget {
       }
 
       const trackY =
-        this._padding.top
-        + (this._height
-          - this._padding.top
-          - this._padding.bottom
-          - this._trackHeight)
-          / 2;
+        this._padding.top +
+        (this._height - this._padding.top - this._padding.bottom - this._trackHeight) / 2;
 
       // Draw label on left
       if (this._label) {
         const font = theme.fonts.default;
         const labelX = this._padding.left;
         const labelY =
-          this._padding.top
-          + (this._height
-            - this._padding.top
-            - this._padding.bottom
-            - font.height)
-            / 2;
-        const labelColor = isFocused
-          ? theme.colors['focus.ring']
-          : theme.colors['label.text'];
+          this._padding.top +
+          (this._height - this._padding.top - this._padding.bottom - font.height) / 2;
+        const labelColor = isFocused ? theme.colors['focus.ring'] : theme.colors['label.text'];
 
         const canvas = ctx.getCanvas?.();
         if (canvas) {
@@ -313,31 +342,20 @@ export default class Toggle extends UIWidget {
       }
 
       // Draw track on right (account for text width)
-      const trackX =
-        this._width - this._padding.right - this._trackWidth - textWidth;
+      const trackX = this._width - this._padding.right - this._trackWidth - textWidth;
 
       const trackColor = this._value
         ? theme.colors['checkbox.backgroundChecked']
         : theme.colors['slider.track'];
 
-      ctx.fillRect(
-        trackX,
-        trackY,
-        this._trackWidth,
-        this._trackHeight,
-        trackColor,
-      );
+      ctx.fillRect(trackX, trackY, this._trackWidth, this._trackHeight, trackColor);
 
       // Draw thumb
       const thumbSize = this._trackHeight - 2;
-      const thumbX = this._value
-        ? trackX + this._trackWidth - thumbSize - 1
-        : trackX + 1;
+      const thumbX = this._value ? trackX + this._trackWidth - thumbSize - 1 : trackX + 1;
       const thumbY = trackY + 1;
 
-      const thumbColor = isFocused
-        ? theme.colors['focus.ring']
-        : theme.colors['slider.thumb'];
+      const thumbColor = isFocused ? theme.colors['focus.ring'] : theme.colors['slider.thumb'];
       ctx.fillRect(thumbX, thumbY, thumbSize, thumbSize, thumbColor);
 
       // Draw ON/OFF text after track
@@ -346,9 +364,7 @@ export default class Toggle extends UIWidget {
         const text = this._value ? 'ON' : 'OFF';
         const textX = trackX + this._trackWidth + 2;
         const textY = trackY + (this._trackHeight - smallFont.height) / 2;
-        const textColor = isFocused
-          ? theme.colors['focus.ring']
-          : theme.colors['label.text'];
+        const textColor = isFocused ? theme.colors['focus.ring'] : theme.colors['label.text'];
 
         const canvas = ctx.getCanvas?.();
         if (canvas) {
@@ -378,9 +394,7 @@ export default class Toggle extends UIWidget {
       );
 
       const thumbSize = this._trackHeight - 2;
-      const thumbX = this._value
-        ? trackX + this._trackWidth - thumbSize - 1
-        : trackX + 1;
+      const thumbX = this._value ? trackX + this._trackWidth - thumbSize - 1 : trackX + 1;
       ctx.fillRect(thumbX, trackY + 1, thumbSize, thumbSize, '#FFFFFF');
     }
   }

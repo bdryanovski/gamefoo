@@ -31,9 +31,13 @@ import type Entity from './entities/entity';
  * ```
  */
 export interface Vector2 {
-  /** Horizontal component (increases rightward). */
+  /**
+   * Horizontal component (increases rightward).
+   */
   x: number;
-  /** Vertical component (increases downward in canvas coordinates). */
+  /**
+   * Vertical component (increases downward in canvas coordinates).
+   */
   y: number;
 }
 
@@ -86,11 +90,17 @@ export interface Demension {
  */
 export type ColliderShape =
   | {
-      /** Discriminant for an axis-aligned bounding box. */
+      /**
+       * Discriminant for an axis-aligned bounding box.
+       */
       type: 'aabb';
-      /** Width of the bounding box in pixels. */
+      /**
+       * Width of the bounding box in pixels.
+       */
       width: number;
-      /** Height of the bounding box in pixels. */
+      /**
+       * Height of the bounding box in pixels.
+       */
       height: number;
       /**
        * Optional positional offset relative to the owning entity's origin.
@@ -99,9 +109,13 @@ export type ColliderShape =
       offset?: Vector2;
     }
   | {
-      /** Discriminant for a circular collider. */
+      /**
+       * Discriminant for a circular collider.
+       */
       type: 'circle';
-      /** Radius of the circle in pixels. */
+      /**
+       * Radius of the circle in pixels.
+       */
       radius: number;
       /**
        * Optional positional offset relative to the owning entity's origin.
@@ -130,13 +144,21 @@ export type ColliderShape =
  * ```
  */
 export interface CollisionInfo {
-  /** The entity that *owns* this collision callback. */
+  /**
+   * The entity that *owns* this collision callback.
+   */
   self: Entity;
-  /** The other entity involved in the collision. */
+  /**
+   * The other entity involved in the collision.
+   */
   other: Entity;
-  /** Tags belonging to {@link CollisionInfo.self | self}. */
+  /**
+   * Tags belonging to {@link CollisionInfo.self | self}.
+   */
   selfTags: Set<string>;
-  /** Tags belonging to {@link CollisionInfo.other | other}. */
+  /**
+   * Tags belonging to {@link CollisionInfo.other | other}.
+   */
   otherTags: Set<string>;
 }
 
@@ -151,13 +173,21 @@ export interface CollisionInfo {
  * @see {@link World} — consumes these bounds during the detection pass
  */
 export interface WorldBounds {
-  /** Left edge X coordinate. */
+  /**
+   * Left edge X coordinate.
+   */
   x: number;
-  /** Top edge Y coordinate. */
+  /**
+   * Top edge Y coordinate.
+   */
   y: number;
-  /** Horizontal extent in pixels. */
+  /**
+   * Horizontal extent in pixels.
+   */
   width: number;
-  /** Vertical extent in pixels. */
+  /**
+   * Vertical extent in pixels.
+   */
   height: number;
 }
 
@@ -169,3 +199,25 @@ export interface WorldBounds {
  * @since 0.4.0
  */
 export type Dimension = Demension;
+
+/**
+ * The amount of time between renders
+ *
+ * @category Types
+ * @since 0.5.0
+ */
+export type DeltaTime = number;
+
+/**
+ * HexColor value
+ *
+ * @example
+ *
+ *   - #ffffff
+ *   - #000000
+ *   - #000
+ *   - #f4f4f4
+ *
+ * @since 0.5.0
+ */
+export type HexColor = string;

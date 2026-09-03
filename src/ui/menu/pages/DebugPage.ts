@@ -22,19 +22,33 @@ import MenuPage from '../MenuPage';
  * @since 0.5.0
  */
 export interface DebugPageConfig {
-  /** Reference to MonitorSystem (optional - can be set later) */
+  /**
+   * Reference to MonitorSystem (optional - can be set later)
+   */
   monitorSystem?: MonitorSystem;
-  /** Show FPS counter */
+  /**
+   * Show FPS counter
+   */
   showFps?: boolean;
-  /** Show FPS graph */
+  /**
+   * Show FPS graph
+   */
   showGraph?: boolean;
-  /** Show memory usage */
+  /**
+   * Show memory usage
+   */
   showMemory?: boolean;
-  /** Show grid overlay */
+  /**
+   * Show grid overlay
+   */
   showGrid?: boolean;
-  /** Grid size */
+  /**
+   * Grid size
+   */
   gridSize?: GridSize;
-  /** Callbacks (used when MonitorSystem is not provided) */
+  /**
+   * Callbacks (used when MonitorSystem is not provided)
+   */
   onShowFpsChange?: (value: boolean) => void;
   onShowGraphChange?: (value: boolean) => void;
   onShowMemoryChange?: (value: boolean) => void;
@@ -42,7 +56,9 @@ export interface DebugPageConfig {
   onGridSizeChange?: (size: GridSize) => void;
 }
 
-/** Grid size options */
+/**
+ * Grid size options
+ */
 const GRID_SIZES: { label: string; value: GridSize }[] = [
   { label: 'None', value: 'none' },
   { label: '8x8', value: 8 },
@@ -59,19 +75,27 @@ const GRID_SIZES: { label: string; value: GridSize }[] = [
  * @since 0.5.0
  */
 export default class DebugPage extends MenuPage {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: DebugPageConfig;
 
-  /** MonitorSystem reference */
+  /**
+   * MonitorSystem reference
+   */
   private _monitorSystem: MonitorSystem | null = null;
 
-  /** Widgets */
+  /**
+   * Widgets
+   */
   private _fpsCheckbox: Checkbox;
   private _graphCheckbox: Checkbox;
   private _memoryCheckbox: Checkbox;
   private _gridDropdown: Dropdown;
 
-  /** Stats label */
+  /**
+   * Stats label
+   */
   private _statsLabel: Label;
 
   /**
@@ -131,8 +155,7 @@ export default class DebugPage extends MenuPage {
     // Grid size dropdown
     layout.addChild(new Label({ text: 'Grid Overlay', muted: true }));
 
-    const currentGridSize =
-      config.gridSize ?? this._monitorSystem?.gridSize ?? 'none';
+    const currentGridSize = config.gridSize ?? this._monitorSystem?.gridSize ?? 'none';
     const gridIndex = GRID_SIZES.findIndex((g) => g.value === currentGridSize);
 
     this._gridDropdown = new Dropdown({
@@ -182,7 +205,9 @@ export default class DebugPage extends MenuPage {
    * @since 0.5.0
    */
   syncFromMonitor(): void {
-    if (!this._monitorSystem) return;
+    if (!this._monitorSystem) {
+      return;
+    }
 
     this._fpsCheckbox.checked = this._monitorSystem.showFps;
     this._graphCheckbox.checked = this._monitorSystem.showGraph;

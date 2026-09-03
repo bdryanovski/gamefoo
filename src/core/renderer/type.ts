@@ -201,13 +201,7 @@ export interface RenderContext {
    *
    * @since 0.4.0
    */
-  fillRect(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    color: string,
-  ): void;
+  fillRect(x: number, y: number, width: number, height: number, color: string): void;
 
   /**
    * Draws a stroked (outlined) rectangle.
@@ -223,13 +217,7 @@ export interface RenderContext {
    *
    * @since 0.4.0
    */
-  strokeRect(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    color: string,
-  ): void;
+  strokeRect(x: number, y: number, width: number, height: number, color: string): void;
 
   /**
    * Draws a text string at the specified position.
@@ -250,13 +238,7 @@ export interface RenderContext {
    * ctx.drawText("SCORE: 100", 8, 8, "#ffff00");
    * ```
    */
-  drawText(
-    text: string,
-    x: number,
-    y: number,
-    color?: string,
-    bgColor?: string,
-  ): void;
+  drawText(text: string, x: number, y: number, color?: string, bgColor?: string): void;
 
   /**
    * Draws a single character at the specified position.
@@ -278,13 +260,7 @@ export interface RenderContext {
    * ctx.drawChar("@", player.x, player.y, "#00ff00");
    * ```
    */
-  drawChar(
-    character: string,
-    x: number,
-    y: number,
-    color?: string,
-    bgColor?: string,
-  ): void;
+  drawChar(character: string, x: number, y: number, color?: string, bgColor?: string): void;
 
   /**
    * Draws a sprite (image region) onto the surface. **Optional.**
@@ -346,13 +322,7 @@ export interface RenderContext {
    *
    * @since 0.4.0
    */
-  drawCircle(
-    x: number,
-    y: number,
-    radius: number,
-    color: string,
-    fill?: boolean,
-  ): void;
+  drawCircle(x: number, y: number, radius: number, color: string, fill?: boolean): void;
 
   /**
    * Flushes buffered output to the display. **Optional.**
@@ -394,11 +364,17 @@ export interface RenderContext {
  * @since 0.4.0
  */
 export interface TerminalCell {
-  /** The character occupying this cell. */
+  /**
+   * The character occupying this cell.
+   */
   char: string;
-  /** Foreground colour as a hex string (`#rrggbb`). */
+  /**
+   * Foreground colour as a hex string (`#rrggbb`).
+   */
   fg: string;
-  /** Background colour as a hex string (`#rrggbb`). */
+  /**
+   * Background colour as a hex string (`#rrggbb`).
+   */
   bg: string;
 }
 

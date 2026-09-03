@@ -18,15 +18,25 @@ import MenuPage from '../MenuPage';
  * @since 0.5.0
  */
 export interface AudioPageConfig {
-  /** Master volume (0-100) */
+  /**
+   * Master volume (0-100)
+   */
   masterVolume?: number;
-  /** Music volume (0-100) */
+  /**
+   * Music volume (0-100)
+   */
   musicVolume?: number;
-  /** SFX volume (0-100) */
+  /**
+   * SFX volume (0-100)
+   */
   sfxVolume?: number;
-  /** Mute all */
+  /**
+   * Mute all
+   */
   muted?: boolean;
-  /** Callbacks */
+  /**
+   * Callbacks
+   */
   onMasterVolumeChange?: (volume: number) => void;
   onMusicVolumeChange?: (volume: number) => void;
   onSfxVolumeChange?: (volume: number) => void;
@@ -39,10 +49,14 @@ export interface AudioPageConfig {
  * @since 0.5.0
  */
 export default class AudioPage extends MenuPage {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: AudioPageConfig;
 
-  /** Widgets */
+  /**
+   * Widgets
+   */
   private _masterSlider: Slider;
   private _musicSlider: Slider;
   private _sfxSlider: Slider;

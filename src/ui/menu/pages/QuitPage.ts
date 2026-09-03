@@ -18,11 +18,17 @@ import MenuPage from '../MenuPage';
  * @since 0.5.0
  */
 export interface QuitPageConfig {
-  /** Confirmation message */
+  /**
+   * Confirmation message
+   */
   message?: string;
-  /** Quit callback */
+  /**
+   * Quit callback
+   */
   onQuit?: () => void;
-  /** Cancel callback (returns to game) */
+  /**
+   * Cancel callback (returns to game)
+   */
   onCancel?: () => void;
 }
 
@@ -32,7 +38,9 @@ export interface QuitPageConfig {
  * @since 0.5.0
  */
 export default class QuitPage extends MenuPage {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: QuitPageConfig;
 
   /**

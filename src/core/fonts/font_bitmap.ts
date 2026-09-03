@@ -22,13 +22,7 @@ Catalog.set(FONT_6x8_METADATA.name, FONT_6x8_METADATA);
 Catalog.set(FONT_8x13_METADATA.name, FONT_8x13_METADATA);
 Catalog.set(FONT_8x8_METADATA.name, FONT_8x8_METADATA);
 
-export type InternalBitmapFontName =
-  | '3x5'
-  | '4x6'
-  | '5x5'
-  | '6x8'
-  | '8x13'
-  | '8x8';
+export type InternalBitmapFontName = '3x5' | '4x6' | '5x5' | '6x8' | '8x13' | '8x8';
 
 /**
  * Pixel-perfect bitmap font renderer.
@@ -102,7 +96,9 @@ export default class FontBitmap extends BitmapDataRenderer {
    */
   private buildGlyphPath(char: string): Path2D | null {
     const charData = this.getChar(char);
-    if (!charData) return null;
+    if (!charData) {
+      return null;
+    }
 
     const path = new Path2D();
     const w = this.width - this.spacing;
@@ -190,7 +186,9 @@ export default class FontBitmap extends BitmapDataRenderer {
     let path = this.glyphPaths.get(char);
     if (path === undefined) {
       const built = this.buildGlyphPath(char);
-      if (!built) return;
+      if (!built) {
+        return;
+      }
       path = built;
       this.glyphPaths.set(char, path);
     }

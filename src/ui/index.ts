@@ -77,19 +77,13 @@ export {
   Toggle,
   type ToggleConfig,
 } from './controls';
-export {
-  type ContainerConfig,
-  default as Container,
-} from './core/Container';
+export { type ContainerConfig, default as Container } from './core/Container';
 export {
   default as FocusManager,
   type FocusConfig,
   type NavigationDirection,
 } from './core/FocusManager';
-export {
-  default as InputRouter,
-  type InputRouterConfig,
-} from './core/InputRouter';
+export { default as InputRouter, type InputRouterConfig } from './core/InputRouter';
 export {
   createDefaultColorMap,
   createTheme,
@@ -105,10 +99,7 @@ export {
   type StateChangeEvent,
   type WidgetState,
 } from './core/UIStateManager';
-export {
-  default as UIWidget,
-  type UIWidgetConfig,
-} from './core/UIWidget';
+export { default as UIWidget, type UIWidgetConfig } from './core/UIWidget';
 // Display widgets
 export {
   Icon,

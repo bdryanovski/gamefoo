@@ -120,8 +120,7 @@ export const showCursor = () => `${CSI}?25h`;
  * process.stdout.write(ansi.fgRGB(0, 255, 0) + "GREEN TEXT" + ansi.reset());
  * ```
  */
-export const fgRGB = (r: number, g: number, b: number) =>
-  `${CSI}38;2;${r};${g};${b}m`;
+export const fgRGB = (r: number, g: number, b: number) => `${CSI}38;2;${r};${g};${b}m`;
 
 /**
  * Sets the background colour using 24-bit truecolour.
@@ -140,8 +139,7 @@ export const fgRGB = (r: number, g: number, b: number) =>
  * process.stdout.write(ansi.bgRGB(255, 0, 0) + "RED BG" + ansi.reset());
  * ```
  */
-export const bgRGB = (r: number, g: number, b: number) =>
-  `${CSI}48;2;${r};${g};${b}m`;
+export const bgRGB = (r: number, g: number, b: number) => `${CSI}48;2;${r};${g};${b}m`;
 
 /**
  * Resets all ANSI text attributes (colour, bold, underline, etc.)

@@ -155,7 +155,9 @@ export class TerminalInputDriver implements InputDriver {
     process.stdin.resume();
     process.stdin.setEncoding('utf8');
     process.stdin.on('data', (key: string) => {
-      if (key === '\u0003') process.exit(); // Ctrl+C
+      if (key === '\u0003') {
+        process.exit(); // Ctrl+C
+      }
       this.held.add(key);
       this.nextPressed.add(key);
     });

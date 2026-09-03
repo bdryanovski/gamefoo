@@ -6,10 +6,7 @@
  * @since 0.5.0
  */
 
-import {
-  CONSOLE_RESOLUTION,
-  type ScreenResolution,
-} from '@/core/renderer/resolutions';
+import { CONSOLE_RESOLUTION, type ScreenResolution } from '@/core/renderer/resolutions';
 import Dropdown from '../../controls/Dropdown';
 import Slider from '../../controls/Slider';
 import Label from '../../display/Label';
@@ -23,11 +20,17 @@ import MenuPage from '../MenuPage';
  * @since 0.5.0
  */
 export interface ResolutionOption {
-  /** Display name */
+  /**
+   * Display name
+   */
   name: string;
-  /** Resolution width */
+  /**
+   * Resolution width
+   */
   width: number;
-  /** Resolution height */
+  /**
+   * Resolution height
+   */
   height: number;
 }
 
@@ -37,20 +40,32 @@ export interface ResolutionOption {
  * @since 0.5.0
  */
 export interface GraphicsPageConfig {
-  /** Current scale */
+  /**
+   * Current scale
+   */
   scale?: number;
-  /** Available scales */
+  /**
+   * Available scales
+   */
   scales?: number[];
-  /** Current resolution */
+  /**
+   * Current resolution
+   */
   resolution?: ScreenResolution;
-  /** Available resolutions (defaults to common console resolutions) */
+  /**
+   * Available resolutions (defaults to common console resolutions)
+   */
   resolutions?: ResolutionOption[];
-  /** Callbacks */
+  /**
+   * Callbacks
+   */
   onScaleChange?: (scale: number) => void;
   onResolutionChange?: (resolution: ResolutionOption) => void;
 }
 
-/** Default resolution options */
+/**
+ * Default resolution options
+ */
 const DEFAULT_RESOLUTIONS: ResolutionOption[] = [
   { name: 'PICO-8 (128x128)', ...CONSOLE_RESOLUTION.PICO8 },
   { name: 'Game Boy (160x144)', ...CONSOLE_RESOLUTION.GAMEBOY },
@@ -73,14 +88,20 @@ const DEFAULT_RESOLUTIONS: ResolutionOption[] = [
  * @since 0.5.0
  */
 export default class GraphicsPage extends MenuPage {
-  /** Configuration */
+  /**
+   * Configuration
+   */
   private _config: GraphicsPageConfig;
 
-  /** Widgets */
+  /**
+   * Widgets
+   */
   private _scaleSlider: Slider;
   private _resolutionDropdown: Dropdown;
 
-  /** Resolution options */
+  /**
+   * Resolution options
+   */
   private _resolutions: ResolutionOption[];
 
   /**
@@ -157,7 +178,9 @@ export default class GraphicsPage extends MenuPage {
    * @since 0.5.0
    */
   private _findResolutionIndex(resolution?: ScreenResolution): number {
-    if (!resolution) return 0;
+    if (!resolution) {
+      return 0;
+    }
     const idx = this._resolutions.findIndex(
       (r) => r.width === resolution.width && r.height === resolution.height,
     );

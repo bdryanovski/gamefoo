@@ -73,10 +73,14 @@ export interface LoopDriver {
  * @see {@link IntervalLoopDriver} — alternative for terminal / server
  */
 export class RAFLoopDriver implements LoopDriver {
-  /** The handle returned by `requestAnimationFrame`. */
+  /**
+   * The handle returned by `requestAnimationFrame`.
+   */
   private handle = 0;
 
-  /** Timestamp of the previous frame in milliseconds. */
+  /**
+   * Timestamp of the previous frame in milliseconds.
+   */
   private lastTime = 0;
 
   /**
@@ -174,6 +178,8 @@ export class IntervalLoopDriver implements LoopDriver {
    * @since 0.4.0
    */
   stop() {
-    if (this.handle) clearInterval(this.handle);
+    if (this.handle) {
+      clearInterval(this.handle);
+    }
   }
 }

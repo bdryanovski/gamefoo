@@ -30,14 +30,10 @@
  * // Output: ✧ Player #1 destroyed (lived 1234ms)
  * ```
  */
-export function lifetime<T extends abstract new (...args: any[]) => any>(
-  ctor: T,
-): T {
+export function lifetime<T extends abstract new (...args: any[]) => any>(ctor: T): T {
   let instanceCount = 0;
 
-  const wrapped = class extends (ctor as unknown as new (
-    ...args: any[]
-  ) => any) {
+  const wrapped = class extends (ctor as unknown as new (...args: any[]) => any) {
     private __instanceId: number;
     private __createdAt: number;
 
@@ -76,13 +72,23 @@ export function lifetime<T extends abstract new (...args: any[]) => any>(
  * Formats constructor arguments for logging.
  */
 function formatArgs(args: any[]): string {
-  if (args.length === 0) return '';
+  if (args.length === 0) {
+    return '';
+  }
 
   const formatted = args.map((arg) => {
-    if (arg === null) return 'null';
-    if (arg === undefined) return 'undefined';
-    if (typeof arg === 'string') return `"${arg}"`;
-    if (typeof arg === 'number' || typeof arg === 'boolean') return String(arg);
+    if (arg === null) {
+      return 'null';
+    }
+    if (arg === undefined) {
+      return 'undefined';
+    }
+    if (typeof arg === 'string') {
+      return `"${arg}"`;
+    }
+    if (typeof arg === 'number' || typeof arg === 'boolean') {
+      return String(arg);
+    }
     if (typeof arg === 'object') {
       try {
         return JSON.stringify(arg);
@@ -100,8 +106,14 @@ function formatArgs(args: any[]): string {
  * Formats a duration in milliseconds to a human-readable string.
  */
 function formatDuration(ms: number): string {
-  if (ms < 1000) return `${ms}ms`;
-  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
-  if (ms < 3600000) return `${(ms / 60000).toFixed(1)}m`;
+  if (ms < 1000) {
+    return `${ms}ms`;
+  }
+  if (ms < 60000) {
+    return `${(ms / 1000).toFixed(1)}s`;
+  }
+  if (ms < 3600000) {
+    return `${(ms / 60000).toFixed(1)}m`;
+  }
   return `${(ms / 3600000).toFixed(1)}h`;
 }
