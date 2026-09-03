@@ -51,22 +51,22 @@ export class IsometricProjection {
   /**
    * Full width of an isometric tile in pixels.
    */
-  readonly tileWidth: number;
+  public readonly tileWidth: number;
 
   /**
    * Full height of an isometric tile in pixels.
    */
-  readonly tileHeight: number;
+  public readonly tileHeight: number;
 
   /**
    * Screen-space offset applied to all projected coordinates.
    */
-  readonly origin: Vector2;
+  public readonly origin: Vector2;
 
   /**
    * Layout mode: `"diamond"` or `"staggered"`.
    */
-  readonly layout: IsoLayout;
+  public readonly layout: IsoLayout;
 
   /**
    * Half-tile width, cached for performance.
@@ -144,7 +144,7 @@ export class IsometricProjection {
    * // Odd row offset by half a tile width
    * ```
    */
-  gridToScreen(col: number, row: number): Vector2 {
+  public gridToScreen(col: number, row: number): Vector2 {
     if (this.layout === 'staggered') {
       return this.gridToScreenStaggered(col, row);
     }
@@ -172,7 +172,7 @@ export class IsometricProjection {
    * }
    * ```
    */
-  screenToGrid(screenX: number, screenY: number): { col: number; row: number } {
+  public screenToGrid(screenX: number, screenY: number): { col: number; row: number } {
     if (this.layout === 'staggered') {
       return this.screenToGridStaggered(screenX, screenY);
     }
@@ -193,7 +193,7 @@ export class IsometricProjection {
    *
    * @since 0.4.0
    */
-  gridToScreenFast(col: number, row: number): Vector2 {
+  public gridToScreenFast(col: number, row: number): Vector2 {
     if (this.layout === 'staggered') {
       const offsetX = row % 2 === 1 ? this.hw : 0;
       this._screenOut.x = this.origin.x + col * this.tileWidth + offsetX;
@@ -216,7 +216,7 @@ export class IsometricProjection {
    *
    * @since 0.4.0
    */
-  screenToGridFast(screenX: number, screenY: number): { col: number; row: number } {
+  public screenToGridFast(screenX: number, screenY: number): { col: number; row: number } {
     if (this.layout === 'staggered') {
       const sx = screenX - this.origin.x;
       const sy = screenY - this.origin.y;
@@ -252,7 +252,7 @@ export class IsometricProjection {
    * building.moveTo(snapped.col, snapped.row);
    * ```
    */
-  snapToGrid(screenX: number, screenY: number): { col: number; row: number } {
+  public snapToGrid(screenX: number, screenY: number): { col: number; row: number } {
     return this.screenToGrid(screenX, screenY);
   }
 
@@ -284,7 +284,7 @@ export class IsometricProjection {
    * ctx.stroke();
    * ```
    */
-  getTileDiamond(col: number, row: number): [Vector2, Vector2, Vector2, Vector2] {
+  public getTileDiamond(col: number, row: number): [Vector2, Vector2, Vector2, Vector2] {
     const center = this.gridToScreenDiamond(col, row);
     const cx = center.x + this.hw;
     const cy = center.y + this.hh;
@@ -331,7 +331,7 @@ export class IsometricProjection {
    * }
    * ```
    */
-  getVisibleRange(
+  public getVisibleRange(
     viewX: number,
     viewY: number,
     viewW: number,

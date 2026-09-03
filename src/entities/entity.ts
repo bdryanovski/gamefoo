@@ -119,7 +119,7 @@ export default abstract class Entity extends Node {
    * if (ctrl) ctrl.enabled = false;
    * ```
    */
-  getBehaviour<T extends Behaviour>(key: string): T | undefined {
+  public getBehaviour<T extends Behaviour>(key: string): T | undefined {
     return this.behaviorMap.get(key.toLowerCase()) as T | undefined;
   }
 
@@ -136,7 +136,7 @@ export default abstract class Entity extends Node {
    * const renderers = entity.getBehavioursByType(SpriteRender);
    * ```
    */
-  getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
+  public getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 
@@ -147,7 +147,7 @@ export default abstract class Entity extends Node {
    *   (case-insensitive).
    * @returns `true` if the behaviour exists on this entity.
    */
-  hasBehaviour(key: string): boolean {
+  public hasBehaviour(key: string): boolean {
     return this.behaviorMap.has(key.toLowerCase());
   }
 
@@ -168,7 +168,7 @@ export default abstract class Entity extends Node {
    * hk.takeDamage(10);
    * ```
    */
-  attachBehaviour<T extends Behaviour>(behavior: T): T {
+  public attachBehaviour<T extends Behaviour>(behavior: T): T {
     this.behaviorMap.set(behavior.key, behavior);
     this._sortedBehaviors = null;
 
@@ -190,7 +190,7 @@ export default abstract class Entity extends Node {
    * entity.detachBehaviour("collidable");
    * ```
    */
-  detachBehaviour(key: string): void {
+  public detachBehaviour(key: string): void {
     const behavior = this.behaviorMap.get(key.toLowerCase());
     if (!behavior) {
       return;
@@ -260,7 +260,7 @@ export default abstract class Entity extends Node {
    *
    * @param shader - The shader to attach.
    */
-  attachShader<T extends Shader>(shader: T): T {
+  public attachShader<T extends Shader>(shader: T): T {
     return this.shaderStack.attach(shader);
   }
 
@@ -269,7 +269,7 @@ export default abstract class Entity extends Node {
    *
    * @since 0.5.0
    */
-  getShader<T extends Shader>(type: string): T | undefined {
+  public getShader<T extends Shader>(type: string): T | undefined {
     return this.shaderStack.get<T>(type);
   }
 
@@ -278,7 +278,7 @@ export default abstract class Entity extends Node {
    *
    * @since 0.5.0
    */
-  hasShader(type: string): boolean {
+  public hasShader(type: string): boolean {
     return this.shaderStack.has(type);
   }
 
@@ -287,7 +287,7 @@ export default abstract class Entity extends Node {
    *
    * @since 0.5.0
    */
-  detachShader(type: string): void {
+  public detachShader(type: string): void {
     this.shaderStack.detach(type);
   }
 

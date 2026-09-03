@@ -74,9 +74,9 @@ function overlapAABB(a: Rect, b: Rect): boolean {
  * ```
  */
 export default class CollisionMap {
-  readonly cols: number;
-  readonly rows: number;
-  readonly cellSize: number;
+  public readonly cols: number;
+  public readonly rows: number;
+  public readonly cellSize: number;
 
   private readonly statics: WorldCollider[] = [];
   private readonly cellIndex = new Map<number, number[]>();
@@ -93,7 +93,7 @@ export default class CollisionMap {
   /**
    * Adds a resident collider (from a tile/sprite) to the spatial index.
    */
-  addStatic(collider: WorldCollider): void {
+  public addStatic(collider: WorldCollider): void {
     const index = this.statics.length;
     this.statics.push(collider);
     for (const cell of this.cellsOf(collider.bounds)) {
@@ -109,7 +109,7 @@ export default class CollisionMap {
   /**
    * Marks a cell as walkable ground (or not).
    */
-  setWalkable(col: number, row: number, walkable = true): void {
+  public setWalkable(col: number, row: number, walkable = true): void {
     if (col < 0 || row < 0 || col >= this.cols || row >= this.rows) {
       return;
     }
@@ -119,28 +119,28 @@ export default class CollisionMap {
   /**
    * Registers a live object/character; its colliders are read each query.
    */
-  addOccupant(object: MapObject): void {
+  public addOccupant(object: MapObject): void {
     this.occupants.add(object);
   }
 
   /**
    * Unregisters a live object/character.
    */
-  removeOccupant(object: MapObject): void {
+  public removeOccupant(object: MapObject): void {
     this.occupants.delete(object);
   }
 
   /**
    * Drops every occupant (e.g. when leaving the screen).
    */
-  clearOccupants(): void {
+  public clearOccupants(): void {
     this.occupants.clear();
   }
 
   /**
    * Whether the world point `(x, y)` sits over walkable ground.
    */
-  isWalkable(x: number, y: number): boolean {
+  public isWalkable(x: number, y: number): boolean {
     const col = Math.floor(x / this.cellSize);
     const row = Math.floor(y / this.cellSize);
     if (col < 0 || row < 0 || col >= this.cols || row >= this.rows) {
@@ -152,7 +152,7 @@ export default class CollisionMap {
   /**
    * Colliders overlapping `bounds`, optionally filtered to one `layer`.
    */
-  query(bounds: Rect, layer?: string, ignore?: MapObject): WorldCollider[] {
+  public query(bounds: Rect, layer?: string, ignore?: MapObject): WorldCollider[] {
     const out: WorldCollider[] = [];
     for (const collider of this.candidates(bounds, ignore)) {
       if (layer && collider.layer !== layer) {
@@ -168,7 +168,7 @@ export default class CollisionMap {
   /**
    * Whether anything on `layer` overlaps `bounds`.
    */
-  overlaps(bounds: Rect, layer?: string, ignore?: MapObject): boolean {
+  public overlaps(bounds: Rect, layer?: string, ignore?: MapObject): boolean {
     for (const collider of this.candidates(bounds, ignore)) {
       if (layer && collider.layer !== layer) {
         continue;
@@ -183,7 +183,7 @@ export default class CollisionMap {
   /**
    * Distinct owning objects whose colliders overlap `bounds`.
    */
-  owners(bounds: Rect, layer?: string, ignore?: MapObject): MapObject[] {
+  public owners(bounds: Rect, layer?: string, ignore?: MapObject): MapObject[] {
     const out: MapObject[] = [];
     for (const collider of this.query(bounds, layer, ignore)) {
       if (collider.owner && !out.includes(collider.owner)) {
@@ -202,7 +202,7 @@ export default class CollisionMap {
    * @param dy     - Desired Y delta this step.
    * @param ignore - An owner to skip (usually the mover itself).
    */
-  resolve(box: Rect, dx: number, dy: number, ignore?: MapObject): { x: number; y: number } {
+  public resolve(box: Rect, dx: number, dy: number, ignore?: MapObject): { x: number; y: number } {
     let x = box.x;
     let y = box.y;
     const w = box.width;

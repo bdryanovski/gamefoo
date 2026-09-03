@@ -59,7 +59,7 @@ export default class World {
    *
    * @param collider - The collidable behaviour to register.
    */
-  register(collider: Collidable): void {
+  public register(collider: Collidable): void {
     this.colliders.add(collider);
   }
 
@@ -70,7 +70,7 @@ export default class World {
    *
    * @param collider - The collidable behaviour to remove.
    */
-  unregister(collider: Collidable): void {
+  public unregister(collider: Collidable): void {
     this.colliders.delete(collider);
   }
 
@@ -92,7 +92,7 @@ export default class World {
    * }
    * ```
    */
-  getColliders(): ReadonlySet<Collidable> {
+  public getColliders(): ReadonlySet<Collidable> {
     return this.colliders;
   }
 
@@ -111,7 +111,7 @@ export default class World {
    *
    * @since 0.1.0
    */
-  detect(): void {
+  public detect(): void {
     /**
      * Note: this naive O(n^2) approach is fine for small numbers of colliders
      * (e.g. <100) but will degrade rapidly as that grows. For larger games,

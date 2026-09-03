@@ -90,11 +90,11 @@ export default class HorizontalLayout extends Container {
   /**
    * Space between children
    */
-  get spacing(): number {
+  public get spacing(): number {
     return this._spacing;
   }
 
-  set spacing(value: number) {
+  public set spacing(value: number) {
     if (this._spacing !== value) {
       this._spacing = value;
       this.markLayoutDirty();
@@ -104,11 +104,11 @@ export default class HorizontalLayout extends Container {
   /**
    * Vertical alignment
    */
-  get align(): VerticalAlign {
+  public get align(): VerticalAlign {
     return this._align;
   }
 
-  set align(value: VerticalAlign) {
+  public set align(value: VerticalAlign) {
     if (this._align !== value) {
       this._align = value;
       this.markLayoutDirty();
@@ -118,11 +118,11 @@ export default class HorizontalLayout extends Container {
   /**
    * Horizontal justify
    */
-  get justify(): JustifyContent {
+  public get justify(): JustifyContent {
     return this._justify;
   }
 
-  set justify(value: JustifyContent) {
+  public set justify(value: JustifyContent) {
     if (this._justify !== value) {
       this._justify = value;
       this.markLayoutDirty();
@@ -138,7 +138,7 @@ export default class HorizontalLayout extends Container {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     let totalWidth = this._padding.left + this._padding.right;
     let maxHeight = 0;
 
@@ -168,7 +168,7 @@ export default class HorizontalLayout extends Container {
    *
    * @since 0.5.0
    */
-  override layout(): void {
+  public override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;

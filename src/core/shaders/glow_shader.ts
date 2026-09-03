@@ -49,7 +49,7 @@ const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
  * ```
  */
 export class GlowShader extends Shader {
-  readonly type = 'glow';
+  public readonly type = 'glow';
 
   private readonly color: string;
   private readonly radius: number;
@@ -67,7 +67,7 @@ export class GlowShader extends Shader {
     this.pulseAmount = clamp01(config.pulseAmount ?? 0);
   }
 
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     this.time += deltaTime;
   }
 
@@ -82,7 +82,7 @@ export class GlowShader extends Shader {
     return this.intensity * (1 - this.pulseAmount + this.pulseAmount * wave);
   }
 
-  render(ctx: RenderContext, region: ShaderRegion): void {
+  public render(ctx: RenderContext, region: ShaderRegion): void {
     const raw = this.raw(ctx);
     if (!raw || this.radius <= 0) {
       return;

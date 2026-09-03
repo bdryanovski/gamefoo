@@ -31,11 +31,11 @@ export class Bitmap extends Node {
     }
   }
 
-  render() {
+  public render() {
     return this.path;
   }
 
-  update() {
+  public update() {
     /**
      * Bitmap are design to be static
      */

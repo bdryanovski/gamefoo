@@ -66,7 +66,7 @@ export default class MapManager {
   /**
    * Shared catalog of images/frames/clips/machines.
    */
-  readonly assets = new AssetManager();
+  public readonly assets = new AssetManager();
 
   /**
    * Every screen keyed by `"x,y"`.
@@ -81,7 +81,7 @@ export default class MapManager {
    * @param url     - URL of the exported `*.map.project.json` document.
    * @param options - Image resolver and/or object-class registry.
    */
-  static async fromUrl(url: string, options: MapLoadOptions = {}): Promise<MapManager> {
+  public static async fromUrl(url: string, options: MapLoadOptions = {}): Promise<MapManager> {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to load map: ${url} (${response.status})`);
@@ -99,7 +99,7 @@ export default class MapManager {
    * @param project - The parsed project document.
    * @param options - Image resolver and/or object-class registry.
    */
-  async load(project: MapProject, options: MapLoadOptions = {}): Promise<void> {
+  public async load(project: MapProject, options: MapLoadOptions = {}): Promise<void> {
     await this.assets.load(project, options.resolve);
     this.map = project.map;
 
@@ -128,7 +128,7 @@ export default class MapManager {
    * @returns `true` if that screen exists, `false` otherwise (current
    *   stays put).
    */
-  navigateTo(x: number, y: number): boolean {
+  public navigateTo(x: number, y: number): boolean {
     const next = this.screens.get(screenKey(x, y));
     if (!next) {
       return false;
@@ -146,28 +146,28 @@ export default class MapManager {
   /**
    * The active screen, or `undefined` before {@link MapManager.load}.
    */
-  get current(): Screen | undefined {
+  public get current(): Screen | undefined {
     return this.currentScreen;
   }
 
   /**
    * The screen at `(x, y)`, if any.
    */
-  screenAt(x: number, y: number): Screen | undefined {
+  public screenAt(x: number, y: number): Screen | undefined {
     return this.screens.get(screenKey(x, y));
   }
 
   /**
    * Coordinates of every screen in the map.
    */
-  get coordinates(): ScreenCoordinate[] {
+  public get coordinates(): ScreenCoordinate[] {
     return [...this.screens.values()].map((s) => s.coordinate);
   }
 
   /**
    * Pixel size of a single screen.
    */
-  get screenSize(): { width: number; height: number } {
+  public get screenSize(): { width: number; height: number } {
     return {
       width: (this.map?.screenCols ?? 0) * (this.map?.blockSize ?? 0),
       height: (this.map?.screenRows ?? 0) * (this.map?.blockSize ?? 0),
@@ -177,14 +177,14 @@ export default class MapManager {
   /**
    * Advances the current screen's live objects.
    */
-  update(deltaTime: DeltaTime): void {
+  public update(deltaTime: DeltaTime): void {
     this.currentScreen?.update(deltaTime);
   }
 
   /**
    * Renders the current screen.
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     this.currentScreen?.render(ctx);
   }
 }

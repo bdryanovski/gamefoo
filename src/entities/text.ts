@@ -67,7 +67,7 @@ export default abstract class Text extends Entity {
    *
    * @return void
    */
-  setText(text: string) {
+  public setText(text: string) {
     this.text = text;
 
     this.setSize(this.font.width * this.text.length, this.font.height);
@@ -78,7 +78,7 @@ export default abstract class Text extends Entity {
    *
    * @return string
    */
-  getText(): string {
+  public getText(): string {
     return this.text;
   }
 
@@ -87,7 +87,7 @@ export default abstract class Text extends Entity {
    * On canvas: uses Path2D glyph rendering.
    * On terminal: delegates to drawText.
    */
-  override render(ctx: RenderContext): void {
+  public override render(ctx: RenderContext): void {
     // Set fill colour for canvas path rendering
     const raw = ctx.getCanvas?.();
     if (this.color && raw) {

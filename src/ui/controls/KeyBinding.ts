@@ -147,11 +147,11 @@ export default class KeyBinding extends UIWidget {
   /**
    * Action label
    */
-  get label(): string {
+  public get label(): string {
     return this._label;
   }
 
-  set label(value: string) {
+  public set label(value: string) {
     if (this._label !== value) {
       this._label = value;
       this.markLayoutDirty();
@@ -161,11 +161,11 @@ export default class KeyBinding extends UIWidget {
   /**
    * Current binding
    */
-  get binding(): string {
+  public get binding(): string {
     return this._binding;
   }
 
-  set binding(value: string) {
+  public set binding(value: string) {
     if (this._binding !== value) {
       this._binding = value;
       if (this._onChange) {
@@ -177,7 +177,7 @@ export default class KeyBinding extends UIWidget {
   /**
    * Whether in capture mode
    */
-  get capturing(): boolean {
+  public get capturing(): boolean {
     return this._capturing;
   }
 
@@ -190,7 +190,7 @@ export default class KeyBinding extends UIWidget {
    *
    * @since 0.5.0
    */
-  startCapture(): void {
+  public startCapture(): void {
     this._capturing = true;
     this._blinkTimer = 0;
     this._blinkVisible = true;
@@ -201,7 +201,7 @@ export default class KeyBinding extends UIWidget {
    *
    * @since 0.5.0
    */
-  stopCapture(): void {
+  public stopCapture(): void {
     this._capturing = false;
   }
 
@@ -212,7 +212,7 @@ export default class KeyBinding extends UIWidget {
    *
    * @since 0.5.0
    */
-  captureKey(key: string): void {
+  public captureKey(key: string): void {
     if (KeyBinding.IGNORE_KEYS.has(key)) {
       return;
     }
@@ -265,7 +265,7 @@ export default class KeyBinding extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     try {
       const theme = this.getTheme();
       const font = theme.fonts.default;
@@ -295,7 +295,7 @@ export default class KeyBinding extends UIWidget {
    *
    * @since 0.5.0
    */
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     super.update(deltaTime);
 
     if (this._capturing) {
@@ -319,7 +319,7 @@ export default class KeyBinding extends UIWidget {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }

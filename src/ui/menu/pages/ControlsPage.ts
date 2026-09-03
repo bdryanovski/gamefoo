@@ -64,7 +64,7 @@ class SchemeSelector extends Button {
     this._text = `< ${scheme.name} >`;
   }
 
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -90,14 +90,14 @@ class SchemeSelector extends Button {
   /**
    * Capture LEFT/RIGHT navigation when focused.
    */
-  override wantsCaptureHorizontalNav(): boolean {
+  public override wantsCaptureHorizontalNav(): boolean {
     return true;
   }
 
   /**
    * Handle LEFT/RIGHT navigation.
    */
-  handleHorizontalNav(direction: 'left' | 'right'): void {
+  public handleHorizontalNav(direction: 'left' | 'right'): void {
     if (direction === 'left') {
       this.prevScheme();
     } else {
@@ -105,7 +105,7 @@ class SchemeSelector extends Button {
     }
   }
 
-  prevScheme(): void {
+  public prevScheme(): void {
     this._currentIndex--;
     if (this._currentIndex < 0) {
       this._currentIndex = this._schemeNames.length - 1;
@@ -114,7 +114,7 @@ class SchemeSelector extends Button {
     this._onSchemeChange?.(this._currentIndex);
   }
 
-  nextScheme(): void {
+  public nextScheme(): void {
     this._currentIndex++;
     if (this._currentIndex >= this._schemeNames.length) {
       this._currentIndex = 0;
@@ -123,11 +123,11 @@ class SchemeSelector extends Button {
     this._onSchemeChange?.(this._currentIndex);
   }
 
-  get currentIndex(): number {
+  public get currentIndex(): number {
     return this._currentIndex;
   }
 
-  set currentIndex(value: number) {
+  public set currentIndex(value: number) {
     if (value >= 0 && value < this._schemeNames.length) {
       this._currentIndex = value;
       this.updateText();
@@ -289,7 +289,7 @@ export default class ControlsPage extends MenuPage {
   /**
    * Gets the currently selected scheme.
    */
-  get currentScheme(): ControlScheme {
+  public get currentScheme(): ControlScheme {
     const name = this._schemeNames[this._schemeSelector.currentIndex]!;
     return CONTROL_SCHEMES[name];
   }
@@ -297,14 +297,14 @@ export default class ControlsPage extends MenuPage {
   /**
    * Gets the currently selected scheme name.
    */
-  get currentSchemeName(): ControlSchemeName {
+  public get currentSchemeName(): ControlSchemeName {
     return this._schemeNames[this._schemeSelector.currentIndex]!;
   }
 
   /**
    * Sets the current scheme by name.
    */
-  setScheme(name: ControlSchemeName): void {
+  public setScheme(name: ControlSchemeName): void {
     const idx = this._schemeNames.indexOf(name);
     if (idx !== -1) {
       this._schemeSelector.currentIndex = idx;

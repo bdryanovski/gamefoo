@@ -64,17 +64,17 @@ export default abstract class MenuPage implements IMenuPage {
   /**
    * Page identifier
    */
-  readonly id: string;
+  public readonly id: string;
 
   /**
    * Page title
    */
-  readonly title: string;
+  public readonly title: string;
 
   /**
    * Root container for page content
    */
-  readonly root: Container;
+  public readonly root: Container;
 
   /**
    * Creates a new MenuPage.
@@ -98,7 +98,7 @@ export default abstract class MenuPage implements IMenuPage {
    *
    * @since 0.5.0
    */
-  onShow(): void {
+  public onShow(): void {
     // Override in subclasses
   }
 
@@ -107,7 +107,7 @@ export default abstract class MenuPage implements IMenuPage {
    *
    * @since 0.5.0
    */
-  onHide(): void {
+  public onHide(): void {
     // Override in subclasses
   }
 
@@ -116,7 +116,7 @@ export default abstract class MenuPage implements IMenuPage {
    *
    * @since 0.5.0
    */
-  refresh(): void {
+  public refresh(): void {
     // Override in subclasses
   }
 }

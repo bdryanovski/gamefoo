@@ -89,7 +89,7 @@ export class BitmapAnimator extends Node {
    *
    * @since 0.5.0
    */
-  state(name: string): void {
+  public state(name: string): void {
     if (this.current !== name) {
       this.current = name;
       this.progress = 0;
@@ -104,7 +104,7 @@ export class BitmapAnimator extends Node {
    *
    * @since 0.5.0
    */
-  loop(enabled: boolean): void {
+  public loop(enabled: boolean): void {
     this.enableLoop = enabled;
   }
 
@@ -124,7 +124,7 @@ export class BitmapAnimator extends Node {
    * animator.setDuration(0.05); // 20 fps, fast, smooth
    * ```
    */
-  setDuration(seconds: number): void {
+  public setDuration(seconds: number): void {
     this.duration = seconds;
   }
 
@@ -135,7 +135,7 @@ export class BitmapAnimator extends Node {
    *
    * @since 0.5.0
    */
-  getDuration(): number {
+  public getDuration(): number {
     return this.duration;
   }
 
@@ -146,7 +146,7 @@ export class BitmapAnimator extends Node {
    *
    * @since 0.5.0
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     const frames = this.current ? this.animations[this.current] : undefined;
     const frame = frames?.[this.progress];
 
@@ -170,7 +170,7 @@ export class BitmapAnimator extends Node {
    *
    * @since 0.5.0
    */
-  update(dt: number): void {
+  public update(dt: number): void {
     if (!this.current) {
       return;
     }

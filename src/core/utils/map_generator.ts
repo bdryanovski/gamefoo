@@ -90,7 +90,7 @@ export class MapGenerator {
    * console.log("Elevation at (5,10):", elevation);
    * ```
    */
-  generateNoiseMap(): Float64Array {
+  public generateNoiseMap(): Float64Array {
     const { cols, rows } = this.config;
     const scale = this.config.scale ?? 0.05;
     const octaves = this.config.octaves ?? 4;
@@ -134,7 +134,7 @@ export class MapGenerator {
    * // walkableMap[row][col] is a boolean
    * ```
    */
-  generateTileData(): GeneratedMapData {
+  public generateTileData(): GeneratedMapData {
     const noiseMap = this.generateNoiseMap();
     const { cols, rows, biomes } = this.config;
     const totalCells = cols * rows;
@@ -183,7 +183,7 @@ export class MapGenerator {
    * });
    * ```
    */
-  buildLayer(
+  public buildLayer(
     tileSet: TileSet,
     layerName: string,
     cellWidth = 64,

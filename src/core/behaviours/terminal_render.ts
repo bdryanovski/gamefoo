@@ -109,7 +109,7 @@ export class TerminalRender extends Behaviour<Entity> {
   /**
    * @inheritDoc
    */
-  readonly type = 'terminal_render';
+  public readonly type = 'terminal_render';
 
   /**
    * Execution priority. Lower values run first in the behaviour pipeline.
@@ -118,7 +118,7 @@ export class TerminalRender extends Behaviour<Entity> {
    *
    * @since 0.4.0
    */
-  override priority = 10;
+  public override priority = 10;
 
   /**
    * The current glyph definition.
@@ -161,7 +161,7 @@ export class TerminalRender extends Behaviour<Entity> {
    * setTimeout(() => tr.setGlyph({ char: "@", fg: "#00ff00" }), 200);
    * ```
    */
-  setGlyph(glyph: TerminalGlyph): void {
+  public setGlyph(glyph: TerminalGlyph): void {
     this.glyph = glyph;
   }
 
@@ -170,7 +170,7 @@ export class TerminalRender extends Behaviour<Entity> {
    *
    * @since 0.4.0
    */
-  getGlyph(): TerminalGlyph {
+  public getGlyph(): TerminalGlyph {
     return this.glyph;
   }
 
@@ -185,7 +185,7 @@ export class TerminalRender extends Behaviour<Entity> {
    *
    * @since 0.4.0
    */
-  override render(ctx: RenderContext): void {
+  public override render(ctx: RenderContext): void {
     ctx.drawChar(
       this.glyph.char,
       this.owner.x,

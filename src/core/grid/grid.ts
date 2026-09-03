@@ -47,27 +47,27 @@ export class Grid<T = number> {
   /**
    * Number of columns in the grid.
    */
-  readonly cols: number;
+  public readonly cols: number;
 
   /**
    * Number of rows in the grid.
    */
-  readonly rows: number;
+  public readonly rows: number;
 
   /**
    * Width of a single cell in world-space pixels.
    */
-  readonly cellWidth: number;
+  public readonly cellWidth: number;
 
   /**
    * Height of a single cell in world-space pixels.
    */
-  readonly cellHeight: number;
+  public readonly cellHeight: number;
 
   /**
    * World-space offset of cell (0, 0).
    */
-  readonly origin: Vector2;
+  public readonly origin: Vector2;
 
   /**
    * Internal 2-D array storing all cells, indexed `[row][col]`.
@@ -131,7 +131,7 @@ export class Grid<T = number> {
    * }
    * ```
    */
-  getCell(col: number, row: number): GridCell<T> | undefined {
+  public getCell(col: number, row: number): GridCell<T> | undefined {
     if (!this.isInBounds(col, row)) {
       return undefined;
     }
@@ -154,7 +154,7 @@ export class Grid<T = number> {
    * grid.setCell(5, 3, 4); // set tile ID 4 at column 5, row 3
    * ```
    */
-  setCell(col: number, row: number, value: T): void {
+  public setCell(col: number, row: number, value: T): void {
     if (!this.isInBounds(col, row)) {
       return;
     }
@@ -178,7 +178,7 @@ export class Grid<T = number> {
    * grid.setWalkable(10, 5, false); // mark as impassable
    * ```
    */
-  setWalkable(col: number, row: number, walkable: boolean): void {
+  public setWalkable(col: number, row: number, walkable: boolean): void {
     if (!this.isInBounds(col, row)) {
       return;
     }
@@ -201,7 +201,7 @@ export class Grid<T = number> {
    * grid.isInBounds(100, 0);  // false (if cols < 100)
    * ```
    */
-  isInBounds(col: number, row: number): boolean {
+  public isInBounds(col: number, row: number): boolean {
     return col >= 0 && col < this.cols && row >= 0 && row < this.rows;
   }
 
@@ -226,7 +226,7 @@ export class Grid<T = number> {
    * // For a 32×32 grid with origin (0,0): { x: 96, y: 64 }
    * ```
    */
-  cellToWorld(col: number, row: number): Vector2 {
+  public cellToWorld(col: number, row: number): Vector2 {
     return {
       x: this.origin.x + col * this.cellWidth,
       y: this.origin.y + row * this.cellHeight,
@@ -253,7 +253,7 @@ export class Grid<T = number> {
    * }
    * ```
    */
-  worldToCell(wx: number, wy: number): { col: number; row: number } {
+  public worldToCell(wx: number, wy: number): { col: number; row: number } {
     return {
       col: Math.floor((wx - this.origin.x) / this.cellWidth),
       row: Math.floor((wy - this.origin.y) / this.cellHeight),
@@ -280,7 +280,7 @@ export class Grid<T = number> {
    * });
    * ```
    */
-  forEach(callback: (cell: GridCell<T>, col: number, row: number) => void): void {
+  public forEach(callback: (cell: GridCell<T>, col: number, row: number) => void): void {
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         callback(this.cells[row]![col]!, col, row);
@@ -315,7 +315,7 @@ export class Grid<T = number> {
    * // Up to 8 cells
    * ```
    */
-  getNeighbours(col: number, row: number, includeDiagonals = false): Array<GridCell<T>> {
+  public getNeighbours(col: number, row: number, includeDiagonals = false): Array<GridCell<T>> {
     const offsets = includeDiagonals ? DIR_8 : DIR_4;
     const result: Array<GridCell<T>> = [];
 
@@ -346,7 +346,7 @@ export class Grid<T = number> {
    * grid.fill(0); // reset all tiles to 0
    * ```
    */
-  fill(value: T): void {
+  public fill(value: T): void {
     this.forEach((cell) => {
       cell.value = value;
     });
@@ -371,7 +371,7 @@ export class Grid<T = number> {
    * grid.fillRect(2, 2, 4, 3, 5);
    * ```
    */
-  fillRect(col: number, row: number, w: number, h: number, value: T): void {
+  public fillRect(col: number, row: number, w: number, h: number, value: T): void {
     for (let currentRow = row; currentRow < row + h; currentRow += 1) {
       for (let currentCol = col; currentCol < col + w; currentCol += 1) {
         this.setCell(currentCol, currentRow, value);

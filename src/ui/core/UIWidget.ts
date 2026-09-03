@@ -269,11 +269,11 @@ export default abstract class UIWidget {
   /**
    * Horizontal position relative to parent
    */
-  get x(): number {
+  public get x(): number {
     return this._x;
   }
 
-  set x(value: number) {
+  public set x(value: number) {
     if (this._x !== value) {
       this._x = value;
       this.markLayoutDirty();
@@ -283,11 +283,11 @@ export default abstract class UIWidget {
   /**
    * Vertical position relative to parent
    */
-  get y(): number {
+  public get y(): number {
     return this._y;
   }
 
-  set y(value: number) {
+  public set y(value: number) {
     if (this._y !== value) {
       this._y = value;
       this.markLayoutDirty();
@@ -297,11 +297,11 @@ export default abstract class UIWidget {
   /**
    * Widget width
    */
-  get width(): number {
+  public get width(): number {
     return this._width;
   }
 
-  set width(value: number) {
+  public set width(value: number) {
     if (this._width !== value) {
       this._width = value;
       this.markLayoutDirty();
@@ -311,11 +311,11 @@ export default abstract class UIWidget {
   /**
    * Widget height
    */
-  get height(): number {
+  public get height(): number {
     return this._height;
   }
 
-  set height(value: number) {
+  public set height(value: number) {
     if (this._height !== value) {
       this._height = value;
       this.markLayoutDirty();
@@ -325,25 +325,25 @@ export default abstract class UIWidget {
   /**
    * Absolute X position in screen coordinates
    */
-  get absoluteX(): number {
+  public get absoluteX(): number {
     return this._absoluteX;
   }
 
   /**
    * Absolute Y position in screen coordinates
    */
-  get absoluteY(): number {
+  public get absoluteY(): number {
     return this._absoluteY;
   }
 
   /**
    * Padding
    */
-  get padding(): Insets {
+  public get padding(): Insets {
     return this._padding;
   }
 
-  set padding(value: Insets) {
+  public set padding(value: Insets) {
     this._padding = value;
     this.markLayoutDirty();
   }
@@ -351,11 +351,11 @@ export default abstract class UIWidget {
   /**
    * Margin
    */
-  get margin(): Insets {
+  public get margin(): Insets {
     return this._margin;
   }
 
-  set margin(value: Insets) {
+  public set margin(value: Insets) {
     this._margin = value;
     this.markLayoutDirty();
   }
@@ -363,11 +363,11 @@ export default abstract class UIWidget {
   /**
    * Anchor point
    */
-  get anchor(): Anchor {
+  public get anchor(): Anchor {
     return this._anchor;
   }
 
-  set anchor(value: Anchor) {
+  public set anchor(value: Anchor) {
     this._anchor = value;
     this.markLayoutDirty();
   }
@@ -375,11 +375,11 @@ export default abstract class UIWidget {
   /**
    * Z-index
    */
-  get zIndex(): number {
+  public get zIndex(): number {
     return this._zIndex;
   }
 
-  set zIndex(value: number) {
+  public set zIndex(value: number) {
     this._zIndex = value;
   }
 
@@ -390,33 +390,33 @@ export default abstract class UIWidget {
   /**
    * Whether the widget is visible
    */
-  get visible(): boolean {
+  public get visible(): boolean {
     return this._visible;
   }
 
-  set visible(value: boolean) {
+  public set visible(value: boolean) {
     this._visible = value;
   }
 
   /**
    * Whether the widget is enabled
    */
-  get enabled(): boolean {
+  public get enabled(): boolean {
     return this._enabled;
   }
 
-  set enabled(value: boolean) {
+  public set enabled(value: boolean) {
     this._enabled = value;
   }
 
   /**
    * Whether the widget can receive focus
    */
-  get focusable(): boolean {
+  public get focusable(): boolean {
     return this._focusable;
   }
 
-  set focusable(value: boolean) {
+  public set focusable(value: boolean) {
     this._focusable = value;
   }
 
@@ -427,14 +427,14 @@ export default abstract class UIWidget {
   /**
    * Parent widget
    */
-  get parent(): UIWidget | null {
+  public get parent(): UIWidget | null {
     return this._parent;
   }
 
   /**
    * Child widgets (read-only copy)
    */
-  get children(): readonly UIWidget[] {
+  public get children(): readonly UIWidget[] {
     return this._children;
   }
 
@@ -446,7 +446,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  addChild(child: UIWidget): this {
+  public addChild(child: UIWidget): this {
     if (child._parent) {
       child._parent.removeChild(child);
     }
@@ -471,7 +471,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  removeChild(child: UIWidget): boolean {
+  public removeChild(child: UIWidget): boolean {
     const index = this._children.indexOf(child);
     if (index !== -1) {
       this._children.splice(index, 1);
@@ -487,7 +487,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  clearChildren(): void {
+  public clearChildren(): void {
     for (const child of this._children) {
       child._parent = null;
     }
@@ -503,7 +503,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  findById(id: string): UIWidget | null {
+  public findById(id: string): UIWidget | null {
     if (this.id === id) {
       return this;
     }
@@ -527,7 +527,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  getTheme(): UITheme {
+  public getTheme(): UITheme {
     if (this._theme) {
       return this._theme;
     }
@@ -544,7 +544,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  setTheme(theme: UITheme): void {
+  public setTheme(theme: UITheme): void {
     this._theme = theme;
     for (const child of this._children) {
       child.setTheme(theme);
@@ -558,7 +558,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  setStateManager(stateManager: UIStateManager | null): void {
+  public setStateManager(stateManager: UIStateManager | null): void {
     this._stateManager = stateManager;
     for (const child of this._children) {
       child.setStateManager(stateManager);
@@ -572,7 +572,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  isFocused(): boolean {
+  public isFocused(): boolean {
     return this._stateManager?.isFocused(this) ?? false;
   }
 
@@ -583,7 +583,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  isHovered(): boolean {
+  public isHovered(): boolean {
     return this._stateManager?.isHovered(this) ?? false;
   }
 
@@ -594,7 +594,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  isPressed(): boolean {
+  public isPressed(): boolean {
     return this._stateManager?.isPressed(this) ?? false;
   }
 
@@ -609,7 +609,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  wantsCaptureNavigation(): boolean {
+  public wantsCaptureNavigation(): boolean {
     return false;
   }
 
@@ -624,7 +624,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  wantsCaptureHorizontalNav(): boolean {
+  public wantsCaptureHorizontalNav(): boolean {
     return false;
   }
 
@@ -637,7 +637,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  markLayoutDirty(): void {
+  public markLayoutDirty(): void {
     this._layoutDirty = true;
     // Propagate to parent
     if (this._parent) {
@@ -650,7 +650,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  get layoutDirty(): boolean {
+  public get layoutDirty(): boolean {
     return this._layoutDirty;
   }
 
@@ -660,7 +660,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  layout(): void {
+  public layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent._absoluteX + this._x;
@@ -685,7 +685,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  getBounds(): UIRect {
+  public getBounds(): UIRect {
     return {
       x: this._absoluteX,
       y: this._absoluteY,
@@ -701,7 +701,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  getInnerBounds(): UIRect {
+  public getInnerBounds(): UIRect {
     return {
       x: this._absoluteX + this._padding.left,
       y: this._absoluteY + this._padding.top,
@@ -718,7 +718,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  getPreferredSize(): UISize {
+  public getPreferredSize(): UISize {
     return { width: this._width, height: this._height };
   }
 
@@ -735,7 +735,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  containsPoint(x: number, y: number): boolean {
+  public containsPoint(x: number, y: number): boolean {
     return pointInRect(x, y, this.getBounds());
   }
 
@@ -748,7 +748,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  hitTest(x: number, y: number): UIWidget | null {
+  public hitTest(x: number, y: number): UIWidget | null {
     if (!this._visible || !this.containsPoint(x, y)) {
       return null;
     }
@@ -776,7 +776,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  setEventHandlers(handlers: UIEventHandlers): void {
+  public setEventHandlers(handlers: UIEventHandlers): void {
     this._eventHandlers = { ...this._eventHandlers, ...handlers };
   }
 
@@ -789,7 +789,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  handleEvent(_event: UIInputEvent): boolean {
+  public handleEvent(_event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -808,7 +808,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  update(deltaTime: number): void {
+  public update(deltaTime: number): void {
     if (!this._visible) {
       return;
     }
@@ -827,7 +827,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     if (!this._visible) {
       return;
     }
@@ -872,7 +872,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  renderOverlay(ctx: RenderContext): void {
+  public renderOverlay(ctx: RenderContext): void {
     // Render children's overlays
     for (const child of this._children) {
       child.renderOverlay(ctx);
@@ -885,7 +885,7 @@ export default abstract class UIWidget {
    *
    * @since 0.5.0
    */
-  destroy(): void {
+  public destroy(): void {
     for (const child of this._children) {
       child.destroy();
     }

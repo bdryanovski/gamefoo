@@ -180,17 +180,17 @@ export default class MenuSubSystem implements SubSystem {
   /**
    * Subsystem ID
    */
-  readonly id = 'menu-subsystem';
+  public readonly id = 'menu-subsystem';
 
   /**
    * Execution order (after MonitorSystem at 90, but defines MenuSystem at 95)
    */
-  readonly order = 92;
+  public readonly order = 92;
 
   /**
    * Subsystem enabled state
    */
-  enabled = true;
+  public enabled = true;
 
   /**
    * Engine reference
@@ -253,7 +253,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  init(engine: Engine): void {
+  public init(engine: Engine): void {
     this._engine = engine;
 
     // Create MenuSystem
@@ -325,7 +325,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  preUpdate(deltaTime: number): void {
+  public preUpdate(deltaTime: number): void {
     this._menuSystem?.preUpdate(deltaTime);
 
     // Track visibility changes for callbacks
@@ -347,7 +347,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  update(deltaTime: number): void {
+  public update(deltaTime: number): void {
     this._menuSystem?.update(deltaTime);
   }
 
@@ -358,7 +358,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     this._menuSystem?.render(ctx);
   }
 
@@ -367,7 +367,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  destroy(): void {
+  public destroy(): void {
     this._menuSystem?.destroy();
     this._menuSystem = null;
     this._integration = null;
@@ -413,7 +413,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  show(): void {
+  public show(): void {
     this._menuSystem?.show();
   }
 
@@ -422,7 +422,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  hide(): void {
+  public hide(): void {
     this._menuSystem?.hide();
   }
 
@@ -431,7 +431,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  toggle(): void {
+  public toggle(): void {
     this._menuSystem?.toggle();
   }
 
@@ -440,7 +440,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get visible(): boolean {
+  public get visible(): boolean {
     return this._menuSystem?.visible ?? false;
   }
 
@@ -451,7 +451,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get menuSystem(): MenuSystem | null {
+  public get menuSystem(): MenuSystem | null {
     return this._menuSystem;
   }
 
@@ -462,7 +462,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get integration(): MenuIntegration | null {
+  public get integration(): MenuIntegration | null {
     return this._integration;
   }
 
@@ -475,7 +475,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  setMonitorSystem(monitor: MonitorSystem): void {
+  public setMonitorSystem(monitor: MonitorSystem): void {
     this._monitorSystem = monitor;
     this._integration?.setMonitorSystem(monitor);
   }
@@ -489,7 +489,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onControlSchemeChange(callback: MenuSubSystemCallbacks['onControlSchemeChange']) {
+  public set onControlSchemeChange(callback: MenuSubSystemCallbacks['onControlSchemeChange']) {
     this._callbacks.onControlSchemeChange = callback;
   }
 
@@ -498,7 +498,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onPaletteChange(callback: MenuSubSystemCallbacks['onPaletteChange']) {
+  public set onPaletteChange(callback: MenuSubSystemCallbacks['onPaletteChange']) {
     this._callbacks.onPaletteChange = callback;
   }
 
@@ -510,7 +510,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onGraphicsChange(callback: MenuSubSystemCallbacks['onGraphicsChange']) {
+  public set onGraphicsChange(callback: MenuSubSystemCallbacks['onGraphicsChange']) {
     this._callbacks.onGraphicsChange = callback;
   }
 
@@ -521,7 +521,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onAudioChange(callback: MenuSubSystemCallbacks['onAudioChange']) {
+  public set onAudioChange(callback: MenuSubSystemCallbacks['onAudioChange']) {
     this._callbacks.onAudioChange = callback;
   }
 
@@ -533,7 +533,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onDebugChange(callback: MenuSubSystemCallbacks['onDebugChange']) {
+  public set onDebugChange(callback: MenuSubSystemCallbacks['onDebugChange']) {
     this._callbacks.onDebugChange = callback;
   }
 
@@ -544,7 +544,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onQuit(callback: MenuSubSystemCallbacks['onQuit']) {
+  public set onQuit(callback: MenuSubSystemCallbacks['onQuit']) {
     this._callbacks.onQuit = callback;
   }
 
@@ -553,7 +553,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onShow(callback: MenuSubSystemCallbacks['onShow']) {
+  public set onShow(callback: MenuSubSystemCallbacks['onShow']) {
     this._callbacks.onShow = callback;
   }
 
@@ -562,7 +562,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  set onHide(callback: MenuSubSystemCallbacks['onHide']) {
+  public set onHide(callback: MenuSubSystemCallbacks['onHide']) {
     this._callbacks.onHide = callback;
   }
 
@@ -575,7 +575,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get controlScheme(): ControlSchemeName {
+  public get controlScheme(): ControlSchemeName {
     return this._integration?.controlScheme ?? 'DEFAULT';
   }
 
@@ -584,7 +584,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get controlSchemeConfig(): ControlScheme {
+  public get controlSchemeConfig(): ControlScheme {
     return this._integration?.controlSchemeConfig ?? getControlScheme('DEFAULT');
   }
 
@@ -593,7 +593,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get paletteIndex(): number {
+  public get paletteIndex(): number {
     return this._integration?.paletteIndex ?? 0;
   }
 
@@ -602,7 +602,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get palette(): AnyPalette | null {
+  public get palette(): AnyPalette | null {
     return this._integration?.palette ?? null;
   }
 
@@ -611,7 +611,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get graphics(): Readonly<GraphicsState> {
+  public get graphics(): Readonly<GraphicsState> {
     return (
       this._integration?.graphics ?? {
         scale: 1,
@@ -626,7 +626,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get audio(): Readonly<AudioState> {
+  public get audio(): Readonly<AudioState> {
     return (
       this._integration?.audio ?? {
         masterVolume: 100,
@@ -642,7 +642,7 @@ export default class MenuSubSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get debug(): Readonly<DebugState> {
+  public get debug(): Readonly<DebugState> {
     return (
       this._integration?.debug ?? {
         showFps: false,

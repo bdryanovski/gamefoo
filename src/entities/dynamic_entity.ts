@@ -68,7 +68,7 @@ export default abstract class DynamicEntity extends Entity {
    * entity.setVelocity({ x: -1, y: 0 }); // moving left
    * ```
    */
-  setVelocity(velocity: Vector2): void {
+  public setVelocity(velocity: Vector2): void {
     this.velocity = velocity;
   }
 
@@ -77,7 +77,7 @@ export default abstract class DynamicEntity extends Entity {
    *
    * @returns A new {@link Vector2}.
    */
-  getVelocity(): Vector2 {
+  public getVelocity(): Vector2 {
     return { ...this.velocity };
   }
 
@@ -91,7 +91,7 @@ export default abstract class DynamicEntity extends Entity {
    * entity.setSpeed(200);
    * ```
    */
-  setSpeed(speed: number): void {
+  public setSpeed(speed: number): void {
     this.speed = speed;
   }
 
@@ -100,7 +100,7 @@ export default abstract class DynamicEntity extends Entity {
    *
    * @returns Speed in pixels per second.
    */
-  getSpeed(): number {
+  public getSpeed(): number {
     return this.speed;
   }
 
@@ -115,7 +115,7 @@ export default abstract class DynamicEntity extends Entity {
    *
    * @since 0.4.0
    */
-  update(deltaTime: number): void {
+  public update(deltaTime: number): void {
     this.updateBehaviours(deltaTime);
     this.x += this.velocity.x * this.speed * deltaTime;
     this.y += this.velocity.y * this.speed * deltaTime;

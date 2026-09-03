@@ -170,7 +170,7 @@ export class TerminalInputDriver implements InputDriver {
    *
    * @since 0.4.0
    */
-  isKeyDown(key: string) {
+  public isKeyDown(key: string) {
     return this.held.has(key);
   }
 
@@ -182,7 +182,7 @@ export class TerminalInputDriver implements InputDriver {
    *
    * @since 0.4.0
    */
-  isKeyPressed(key: string) {
+  public isKeyPressed(key: string) {
     return this.pressed.has(key);
   }
 
@@ -195,7 +195,7 @@ export class TerminalInputDriver implements InputDriver {
    *
    * @since 0.4.0
    */
-  update() {
+  public update() {
     this.pressed = new Set(this.nextPressed);
     this.nextPressed.clear();
   }
@@ -207,7 +207,7 @@ export class TerminalInputDriver implements InputDriver {
    *
    * @since 0.4.0
    */
-  destroy() {
+  public destroy() {
     if (process.stdin.isTTY) {
       process.stdin.setRawMode(false);
     }

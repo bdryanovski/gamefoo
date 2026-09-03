@@ -80,7 +80,7 @@ class ColorSwatch extends Container {
     this._color = color;
   }
 
-  set color(value: string) {
+  public set color(value: string) {
     this._color = value;
   }
 
@@ -251,7 +251,7 @@ export default class PalettePage extends MenuPage {
    *
    * @since 0.5.0
    */
-  setPalettes(palettes: AnyPalette[]): void {
+  public setPalettes(palettes: AnyPalette[]): void {
     this._config.palettes = palettes;
 
     const items: DropdownItem[] = palettes.map((p, i) => ({
@@ -270,7 +270,7 @@ export default class PalettePage extends MenuPage {
    *
    * @since 0.5.0
    */
-  override refresh(): void {
+  public override refresh(): void {
     const palettes = this._config.palettes ?? [];
     const index = this._dropdown.selectedIndex;
     if (index >= 0 && palettes[index]) {

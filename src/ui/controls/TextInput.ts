@@ -155,11 +155,11 @@ export default class TextInput extends UIWidget {
   /**
    * Current text value
    */
-  get value(): string {
+  public get value(): string {
     return this._value;
   }
 
-  set value(val: string) {
+  public set value(val: string) {
     const newValue = val.slice(0, this._maxLength);
     if (this._value !== newValue) {
       this._value = newValue;
@@ -173,22 +173,22 @@ export default class TextInput extends UIWidget {
   /**
    * Placeholder text
    */
-  get placeholder(): string {
+  public get placeholder(): string {
     return this._placeholder;
   }
 
-  set placeholder(value: string) {
+  public set placeholder(value: string) {
     this._placeholder = value;
   }
 
   /**
    * Maximum length
    */
-  get maxLength(): number {
+  public get maxLength(): number {
     return this._maxLength;
   }
 
-  set maxLength(value: number) {
+  public set maxLength(value: number) {
     this._maxLength = value;
     if (this._value.length > value) {
       this.value = this._value.slice(0, value);
@@ -198,11 +198,11 @@ export default class TextInput extends UIWidget {
   /**
    * Password mode
    */
-  get password(): boolean {
+  public get password(): boolean {
     return this._password;
   }
 
-  set password(value: boolean) {
+  public set password(value: boolean) {
     this._password = value;
   }
 
@@ -217,7 +217,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  insertText(text: string): void {
+  public insertText(text: string): void {
     if (this._selectionStart >= 0) {
       // Replace selection
       const start = Math.min(this._selectionStart, this._cursorPosition);
@@ -245,7 +245,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  deleteText(direction: 'backward' | 'forward'): void {
+  public deleteText(direction: 'backward' | 'forward'): void {
     if (this._selectionStart >= 0) {
       // Delete selection
       const start = Math.min(this._selectionStart, this._cursorPosition);
@@ -272,7 +272,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  moveCursor(direction: 'left' | 'right' | 'home' | 'end', select: boolean = false): void {
+  public moveCursor(direction: 'left' | 'right' | 'home' | 'end', select: boolean = false): void {
     if (select && this._selectionStart < 0) {
       this._selectionStart = this._cursorPosition;
     } else if (!select) {
@@ -301,7 +301,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  selectAll(): void {
+  public selectAll(): void {
     this._selectionStart = 0;
     this._cursorPosition = this._value.length;
   }
@@ -325,7 +325,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     try {
       const theme = this.getTheme();
       const font = theme.fonts.default;
@@ -350,7 +350,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     super.update(deltaTime);
 
     // Update cursor blink
@@ -373,7 +373,7 @@ export default class TextInput extends UIWidget {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }

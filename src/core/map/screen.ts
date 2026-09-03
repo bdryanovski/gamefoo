@@ -94,24 +94,24 @@ export default class Screen {
   /**
    * Stable `"x,y"` identifier.
    */
-  readonly name: ScreenName;
+  public readonly name: ScreenName;
   /**
    * Grid coordinate `[x, y]`.
    */
-  readonly coordinate: ScreenCoordinate;
+  public readonly coordinate: ScreenCoordinate;
   /**
    * Screen width in pixels (`screenCols * blockSize`).
    */
-  readonly width: number;
+  public readonly width: number;
   /**
    * Screen height in pixels (`screenRows * blockSize`).
    */
-  readonly height: number;
+  public readonly height: number;
 
   /**
    * Precomputed collision world for this screen (solids + ground + objects).
    */
-  readonly collision: CollisionMap;
+  public readonly collision: CollisionMap;
 
   /**
    * Sparse, index === z-level. Holes are skipped when iterating.
@@ -219,7 +219,7 @@ export default class Screen {
   /**
    * Instantiates every live object and fires their spawn hooks.
    */
-  activate(): void {
+  public activate(): void {
     if (this.active) {
       return;
     }
@@ -249,7 +249,7 @@ export default class Screen {
   /**
    * Disposes every live object (spawn/despawn is idempotent).
    */
-  deactivate(): void {
+  public deactivate(): void {
     if (!this.active) {
       return;
     }
@@ -272,7 +272,7 @@ export default class Screen {
   /**
    * Advances every live object (no-op while inactive).
    */
-  update(deltaTime: DeltaTime): void {
+  public update(deltaTime: DeltaTime): void {
     if (!this.active) {
       return;
     }
@@ -290,7 +290,7 @@ export default class Screen {
   /**
    * Draws every layer back-to-front (tiles then live objects per layer).
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     for (const layer of this.layers) {
       if (!layer) {
         continue;
@@ -339,7 +339,7 @@ export default class Screen {
   /**
    * Live {@link MapObject}s on the active screen (empty while inactive).
    */
-  get objects(): MapObject[] {
+  public get objects(): MapObject[] {
     const out: MapObject[] = [];
     for (const layer of this.layers) {
       if (!layer) {
@@ -357,7 +357,7 @@ export default class Screen {
   /**
    * Live objects that are instances of `type`.
    */
-  objectsByType<T extends MapObject>(type: new (...args: never[]) => T): T[] {
+  public objectsByType<T extends MapObject>(type: new (...args: never[]) => T): T[] {
     return this.objects.filter((o): o is T => o instanceof type);
   }
 

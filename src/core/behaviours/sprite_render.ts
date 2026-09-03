@@ -49,7 +49,7 @@ export class SpriteRender extends Behaviour<Entity> {
   /**
    * @inheritDoc
    */
-  readonly type = 'sprite';
+  public readonly type = 'sprite';
 
   /**
    * The spritesheet this renderer draws from.
@@ -119,7 +119,7 @@ export class SpriteRender extends Behaviour<Entity> {
    * spriteRender.play("run");
    * ```
    */
-  play(animation: string): void {
+  public play(animation: string): void {
     if (this.currentFrame === animation) {
       return;
     }
@@ -134,7 +134,7 @@ export class SpriteRender extends Behaviour<Entity> {
    * After calling `stop`, nothing is drawn until {@link SpriteRender.play}
    * is called again.
    */
-  stop(): void {
+  public stop(): void {
     this.currentFrame = null;
     this.currentFrameIndex = 0;
     this.elapsedTime = 0;
@@ -147,7 +147,7 @@ export class SpriteRender extends Behaviour<Entity> {
    *
    * @param flip - `true` to mirror horizontally, `false` for normal.
    */
-  setFlipX(flip: boolean): void {
+  public setFlipX(flip: boolean): void {
     this.flipX = flip;
   }
 
@@ -159,7 +159,7 @@ export class SpriteRender extends Behaviour<Entity> {
    *
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     if (!this.currentFrame) {
       return;
     }
@@ -192,7 +192,7 @@ export class SpriteRender extends Behaviour<Entity> {
    *
    * @param ctx - The canvas 2-D rendering context.
    */
-  override render(ctx: RenderContext): void {
+  public override render(ctx: RenderContext): void {
     if (!this.currentFrame) {
       return;
     }

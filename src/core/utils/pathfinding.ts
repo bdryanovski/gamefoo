@@ -57,16 +57,16 @@ import type { HeuristicName, PathfinderConfig, PathNode } from './pathfinding_ty
 class MinHeap {
   private items: PathNode[] = [];
 
-  get size(): number {
+  public get size(): number {
     return this.items.length;
   }
 
-  push(node: PathNode): void {
+  public push(node: PathNode): void {
     this.items.push(node);
     this.bubbleUp(this.items.length - 1);
   }
 
-  pop(): PathNode | undefined {
+  public pop(): PathNode | undefined {
     if (this.items.length === 0) {
       return undefined;
     }
@@ -164,7 +164,7 @@ export class Pathfinder {
    * }
    * ```
    */
-  findPath(
+  public findPath(
     startCol: number,
     startRow: number,
     goalCol: number,
@@ -290,7 +290,12 @@ export class Pathfinder {
    * }
    * ```
    */
-  isReachable(startCol: number, startRow: number, goalCol: number, goalRow: number): boolean {
+  public isReachable(
+    startCol: number,
+    startRow: number,
+    goalCol: number,
+    goalRow: number,
+  ): boolean {
     return this.findPath(startCol, startRow, goalCol, goalRow) !== null;
   }
 

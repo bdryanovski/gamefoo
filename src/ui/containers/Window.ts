@@ -134,40 +134,40 @@ export default class Window extends Container {
   /**
    * Window title
    */
-  get title(): string {
+  public get title(): string {
     return this._title;
   }
 
-  set title(value: string) {
+  public set title(value: string) {
     this._title = value;
   }
 
   /**
    * Whether closable
    */
-  get closable(): boolean {
+  public get closable(): boolean {
     return this._closable;
   }
 
-  set closable(value: boolean) {
+  public set closable(value: boolean) {
     this._closable = value;
   }
 
   /**
    * Whether draggable
    */
-  get draggable(): boolean {
+  public get draggable(): boolean {
     return this._draggable;
   }
 
-  set draggable(value: boolean) {
+  public set draggable(value: boolean) {
     this._draggable = value;
   }
 
   /**
    * Title height
    */
-  get titleHeight(): number {
+  public get titleHeight(): number {
     return this._titleHeight;
   }
 
@@ -180,7 +180,7 @@ export default class Window extends Container {
    *
    * @since 0.5.0
    */
-  close(): void {
+  public close(): void {
     if (this._onClose) {
       this._onClose();
     }
@@ -195,7 +195,7 @@ export default class Window extends Container {
    *
    * @since 0.5.0
    */
-  override layout(): void {
+  public override layout(): void {
     // Adjust effective padding for title bar
     const originalPaddingTop = this._padding.top;
     this._padding.top += this._titleHeight;
@@ -218,7 +218,7 @@ export default class Window extends Container {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }

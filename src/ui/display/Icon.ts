@@ -120,7 +120,7 @@ export default class Icon extends UIWidget {
   /**
    * Icon bitmap data
    */
-  get data(): number[] {
+  public get data(): number[] {
     return this._data;
   }
 
@@ -131,7 +131,7 @@ export default class Icon extends UIWidget {
    *
    * @since 0.5.0
    */
-  setData(value: number[]): void {
+  public setData(value: number[]): void {
     this._data = value;
     this._cachedPath = null;
     this.buildPath();
@@ -141,11 +141,11 @@ export default class Icon extends UIWidget {
   /**
    * Icon width
    */
-  get iconWidth(): number {
+  public get iconWidth(): number {
     return this._iconWidth;
   }
 
-  set iconWidth(value: number) {
+  public set iconWidth(value: number) {
     if (this._iconWidth !== value) {
       this._iconWidth = value;
       this._cachedPath = null;
@@ -157,11 +157,11 @@ export default class Icon extends UIWidget {
   /**
    * Icon height
    */
-  get iconHeight(): number {
+  public get iconHeight(): number {
     return this._iconHeight;
   }
 
-  set iconHeight(value: number) {
+  public set iconHeight(value: number) {
     if (this._iconHeight !== value) {
       this._iconHeight = value;
       this._cachedPath = null;
@@ -173,22 +173,22 @@ export default class Icon extends UIWidget {
   /**
    * Custom color
    */
-  get color(): string | null {
+  public get color(): string | null {
     return this._color;
   }
 
-  set color(value: string | null) {
+  public set color(value: string | null) {
     this._color = value;
   }
 
   /**
    * Scale factor
    */
-  get scale(): number {
+  public get scale(): number {
     return this._scale;
   }
 
-  set scale(value: number) {
+  public set scale(value: number) {
     if (this._scale !== value) {
       this._scale = value;
       this.updateSize();
@@ -244,7 +244,7 @@ export default class Icon extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     return {
       width: this._iconWidth * this._scale + this._padding.left + this._padding.right,
       height: this._iconHeight * this._scale + this._padding.top + this._padding.bottom,

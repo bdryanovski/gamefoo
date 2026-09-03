@@ -141,7 +141,7 @@ export class Collidable extends Behaviour<GameObject> {
   /**
    * @inheritDoc
    */
-  readonly type = 'collidable';
+  public readonly type = 'collidable';
 
   /**
    * Geometric shape used for intersection tests.
@@ -231,7 +231,7 @@ export class Collidable extends Behaviour<GameObject> {
    *
    * @see {@link Behaviour.onAttach}
    */
-  override onAttach(): void {
+  public override onAttach(): void {
     this.world.register(this);
   }
 
@@ -241,7 +241,7 @@ export class Collidable extends Behaviour<GameObject> {
    *
    * @see {@link Behaviour.onDetach}
    */
-  override onDetach(): void {
+  public override onDetach(): void {
     this.world.unregister(this);
   }
 
@@ -257,7 +257,7 @@ export class Collidable extends Behaviour<GameObject> {
    * // { x: 100, y: 200, width: 30, height: 30 }
    * ```
    */
-  getWorldBounds(): WorldBounds {
+  public getWorldBounds(): WorldBounds {
     const pos = this.owner.getPosition();
     const offset = 'offset' in this.shape && this.shape.offset ? this.shape.offset : { x: 0, y: 0 };
 

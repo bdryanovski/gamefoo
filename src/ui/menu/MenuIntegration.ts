@@ -234,7 +234,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  setCallbacks(callbacks: MenuIntegrationCallbacks): void {
+  public setCallbacks(callbacks: MenuIntegrationCallbacks): void {
     this._callbacks = { ...this._callbacks, ...callbacks };
   }
 
@@ -249,7 +249,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createControlsPage(): ControlsPage {
+  public createControlsPage(): ControlsPage {
     // Dynamic import to avoid circular dependencies
     const { default: ControlsPage } = require('./pages/ControlsPage');
 
@@ -269,7 +269,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createGraphicsPage(): GraphicsPage {
+  public createGraphicsPage(): GraphicsPage {
     const { default: GraphicsPage } = require('./pages/GraphicsPage');
 
     return new GraphicsPage({
@@ -298,7 +298,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createAudioPage(): AudioPage {
+  public createAudioPage(): AudioPage {
     const { default: AudioPage } = require('./pages/AudioPage');
 
     return new AudioPage({
@@ -332,7 +332,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createPalettePage(): PalettePage {
+  public createPalettePage(): PalettePage {
     const { default: PalettePage } = require('./pages/PalettePage');
 
     return new PalettePage({
@@ -355,7 +355,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createDebugPage(): DebugPage {
+  public createDebugPage(): DebugPage {
     const { default: DebugPage } = require('./pages/DebugPage');
 
     const page = new DebugPage({
@@ -388,7 +388,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  createQuitPage(message?: string): QuitPage {
+  public createQuitPage(message?: string): QuitPage {
     const { default: QuitPage } = require('./pages/QuitPage');
 
     return new QuitPage({
@@ -407,7 +407,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  registerAllPages(): void {
+  public registerAllPages(): void {
     this._menuSystem.registerPage(this.createControlsPage());
     this._menuSystem.registerPage(this.createGraphicsPage());
     this._menuSystem.registerPage(this.createAudioPage());
@@ -429,7 +429,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get controlScheme(): ControlSchemeName {
+  public get controlScheme(): ControlSchemeName {
     return this._controlScheme;
   }
 
@@ -438,7 +438,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get controlSchemeConfig(): ControlScheme {
+  public get controlSchemeConfig(): ControlScheme {
     return getControlScheme(this._controlScheme);
   }
 
@@ -447,7 +447,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get paletteIndex(): number {
+  public get paletteIndex(): number {
     return this._paletteIndex;
   }
 
@@ -456,7 +456,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get palette(): AnyPalette | null {
+  public get palette(): AnyPalette | null {
     return this._palettes[this._paletteIndex] ?? null;
   }
 
@@ -465,7 +465,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get graphics(): Readonly<GraphicsState> {
+  public get graphics(): Readonly<GraphicsState> {
     return this._graphics;
   }
 
@@ -474,7 +474,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get audio(): Readonly<AudioState> {
+  public get audio(): Readonly<AudioState> {
     return this._audio;
   }
 
@@ -483,7 +483,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get debug(): Readonly<DebugState> {
+  public get debug(): Readonly<DebugState> {
     if (this._monitorSystem) {
       return {
         showFps: this._monitorSystem.showFps,
@@ -508,7 +508,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  get monitorSystem(): MonitorSystem | null {
+  public get monitorSystem(): MonitorSystem | null {
     return this._monitorSystem;
   }
 
@@ -519,7 +519,7 @@ export default class MenuIntegration {
    *
    * @since 0.5.0
    */
-  setMonitorSystem(monitor: MonitorSystem): void {
+  public setMonitorSystem(monitor: MonitorSystem): void {
     this._monitorSystem = monitor;
   }
 }

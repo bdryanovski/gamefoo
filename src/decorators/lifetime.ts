@@ -48,7 +48,7 @@ export function lifetime<T extends abstract new (...args: any[]) => any>(ctor: T
       console.log(`✦ ${ctor.name} #${this.__instanceId} created${argsStr}`);
     }
 
-    [Symbol.dispose](): void {
+    public [Symbol.dispose](): void {
       const lifespan = Date.now() - this.__createdAt;
 
       console.log(

@@ -33,7 +33,7 @@ export default class ScreenRegistry {
   /**
    * Binds a screen class to a single grid coordinate.
    */
-  register(x: number, y: number, ctor: ScreenConstructor): void {
+  public register(x: number, y: number, ctor: ScreenConstructor): void {
     this.byCoordinate.set(screenKey(x, y), ctor);
   }
 
@@ -41,7 +41,7 @@ export default class ScreenRegistry {
    * Sets the class used for every screen without an explicit coordinate
    * entry.
    */
-  setDefault(ctor: ScreenConstructor): void {
+  public setDefault(ctor: ScreenConstructor): void {
     this.defaultConstructor = ctor;
   }
 
@@ -49,7 +49,7 @@ export default class ScreenRegistry {
    * The screen class for `(x, y)` — the per-coordinate entry, else the
    * default, else `undefined` (caller falls back to the base `Screen`).
    */
-  resolve(x: number, y: number): ScreenConstructor | undefined {
+  public resolve(x: number, y: number): ScreenConstructor | undefined {
     return this.byCoordinate.get(screenKey(x, y)) ?? this.defaultConstructor;
   }
 }

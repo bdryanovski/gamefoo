@@ -69,7 +69,7 @@ export default class Input implements SubSystem {
    *
    * @since 0.5.0
    */
-  readonly id = 'input';
+  public readonly id = 'input';
 
   /**
    * Subsystem execution order. Runs early (order 0) so input state
@@ -77,14 +77,14 @@ export default class Input implements SubSystem {
    *
    * @since 0.5.0
    */
-  readonly order = 0;
+  public readonly order = 0;
 
   /**
    * Whether the subsystem is enabled.
    *
    * @since 0.5.0
    */
-  enabled = true;
+  public enabled = true;
   /**
    * Set of currently-pressed keyboard keys (lowercased).
    *
@@ -237,7 +237,7 @@ export default class Input implements SubSystem {
    *
    * @since 0.5.0
    */
-  preUpdate(_deltaTime: number): void {
+  public preUpdate(_deltaTime: number): void {
     this.update();
   }
 
@@ -265,7 +265,7 @@ export default class Input implements SubSystem {
    * }
    * ```
    */
-  update(): void {
+  public update(): void {
     // Find keys that are down now but weren't last frame
     this.keysJustPressed.clear();
     for (const key of this.keys) {
@@ -293,7 +293,7 @@ export default class Input implements SubSystem {
    * }
    * ```
    */
-  isKeyDown(key: string): boolean {
+  public isKeyDown(key: string): boolean {
     return this.keys.has(key.toLowerCase());
   }
 
@@ -318,7 +318,7 @@ export default class Input implements SubSystem {
    * }
    * ```
    */
-  isKeyPressed(key: string): boolean {
+  public isKeyPressed(key: string): boolean {
     return this.keysJustPressed.has(key.toLowerCase());
   }
 
@@ -336,7 +336,7 @@ export default class Input implements SubSystem {
    * console.log([...pressed]); // e.g. ["w", "shift"]
    * ```
    */
-  getPressedKeys(): Set<string> {
+  public getPressedKeys(): Set<string> {
     return new Set(this.keys);
   }
 
@@ -354,7 +354,7 @@ export default class Input implements SubSystem {
    * }
    * ```
    */
-  isMouseButtonDown(button: number): boolean {
+  public isMouseButtonDown(button: number): boolean {
     return this.mouseButtons.has(button);
   }
 
@@ -378,7 +378,7 @@ export default class Input implements SubSystem {
    * ctx.fillRect(pos.x, pos.y, 4, 4); // draw cursor dot at mouse position
    * ```
    */
-  getMousePosition(): { x: number; y: number } {
+  public getMousePosition(): { x: number; y: number } {
     return { ...this.mousePosition };
   }
 
@@ -408,7 +408,7 @@ export default class Input implements SubSystem {
    * }
    * ```
    */
-  getGamepad(index: number = 0): Gamepad | null {
+  public getGamepad(index: number = 0): Gamepad | null {
     if (typeof navigator === 'undefined' || !navigator.getGamepads) {
       return null;
     }
@@ -422,7 +422,7 @@ export default class Input implements SubSystem {
    *
    * @since 0.5.0
    */
-  getDeadzone(): number {
+  public getDeadzone(): number {
     return this.gamepadDeadzone;
   }
 
@@ -442,7 +442,7 @@ export default class Input implements SubSystem {
    * input.setDeadzone(0.4); // Higher deadzone for less sensitivity
    * ```
    */
-  setDeadzone(value: number): void {
+  public setDeadzone(value: number): void {
     this.gamepadDeadzone = Math.max(0, Math.min(1, value));
   }
 
@@ -458,7 +458,7 @@ export default class Input implements SubSystem {
    * input.reset();
    * ```
    */
-  reset(): void {
+  public reset(): void {
     this.keys.clear();
     this.keysLastFrame.clear();
     this.keysJustPressed.clear();

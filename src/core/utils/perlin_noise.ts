@@ -137,7 +137,7 @@ export class PerlinNoise {
    * // n is a smooth, deterministic value in [-1, 1]
    * ```
    */
-  noise2d(x: number, y: number): number {
+  public noise2d(x: number, y: number): number {
     const xi = Math.floor(x) & 255;
     const yi = Math.floor(y) & 255;
     const xf = x - Math.floor(x);
@@ -182,7 +182,7 @@ export class PerlinNoise {
    * const height = noise.fbm(x * 0.01, y * 0.01, 6, 2.0, 0.5);
    * ```
    */
-  fbm(x: number, y: number, octaves = 4, lacunarity = 2, persistence = 0.5): number {
+  public fbm(x: number, y: number, octaves = 4, lacunarity = 2, persistence = 0.5): number {
     let value = 0;
     let amplitude = 1;
     let frequency = 1;

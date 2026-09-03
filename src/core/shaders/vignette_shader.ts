@@ -39,7 +39,7 @@ const clamp01 = (value: number): number => Math.min(1, Math.max(0, value));
  * ```
  */
 export class VignetteShader extends Shader {
-  readonly type = 'vignette';
+  public readonly type = 'vignette';
 
   private readonly color: string;
   private readonly intensity: number;
@@ -52,7 +52,7 @@ export class VignetteShader extends Shader {
     this.inner = clamp01(config.inner ?? 0.55);
   }
 
-  render(ctx: RenderContext, region: ShaderRegion): void {
+  public render(ctx: RenderContext, region: ShaderRegion): void {
     const raw = this.raw(ctx);
     if (!raw || this.intensity <= 0) {
       return;

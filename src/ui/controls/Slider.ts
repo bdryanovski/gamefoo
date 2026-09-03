@@ -183,11 +183,11 @@ export default class Slider extends UIWidget {
   /**
    * Label text
    */
-  get label(): string {
+  public get label(): string {
     return this._label;
   }
 
-  set label(value: string) {
+  public set label(value: string) {
     if (this._label !== value) {
       this._label = value;
       this.markLayoutDirty();
@@ -197,11 +197,11 @@ export default class Slider extends UIWidget {
   /**
    * Minimum value
    */
-  get min(): number {
+  public get min(): number {
     return this._min;
   }
 
-  set min(value: number) {
+  public set min(value: number) {
     this._min = value;
     this._value = this.clampValue(this._value);
   }
@@ -209,11 +209,11 @@ export default class Slider extends UIWidget {
   /**
    * Maximum value
    */
-  get max(): number {
+  public get max(): number {
     return this._max;
   }
 
-  set max(value: number) {
+  public set max(value: number) {
     this._max = value;
     this._value = this.clampValue(this._value);
   }
@@ -221,11 +221,11 @@ export default class Slider extends UIWidget {
   /**
    * Step size
    */
-  get step(): number {
+  public get step(): number {
     return this._step;
   }
 
-  set step(value: number) {
+  public set step(value: number) {
     this._step = value;
     this._value = this.clampValue(this._value);
   }
@@ -233,11 +233,11 @@ export default class Slider extends UIWidget {
   /**
    * Current value
    */
-  get value(): number {
+  public get value(): number {
     return this._value;
   }
 
-  set value(val: number) {
+  public set value(val: number) {
     const clamped = this.clampValue(val);
     if (this._value !== clamped) {
       this._value = clamped;
@@ -250,11 +250,11 @@ export default class Slider extends UIWidget {
   /**
    * Change callback
    */
-  get onChange(): ((value: number) => void) | null {
+  public get onChange(): ((value: number) => void) | null {
     return this._onChange;
   }
 
-  set onChange(value: ((value: number) => void) | null) {
+  public set onChange(value: ((value: number) => void) | null) {
     this._onChange = value;
   }
 
@@ -269,7 +269,7 @@ export default class Slider extends UIWidget {
    *
    * @since 0.5.0
    */
-  override wantsCaptureHorizontalNav(): boolean {
+  public override wantsCaptureHorizontalNav(): boolean {
     return this.isFocused();
   }
 
@@ -280,7 +280,7 @@ export default class Slider extends UIWidget {
    *
    * @since 0.5.0
    */
-  handleHorizontalNav(direction: 'left' | 'right'): void {
+  public handleHorizontalNav(direction: 'left' | 'right'): void {
     if (direction === 'left') {
       this.value -= this._step;
     } else {
@@ -352,7 +352,7 @@ export default class Slider extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     let labelHeight = 0;
     if (this._label || this._showValue) {
       try {
@@ -384,7 +384,7 @@ export default class Slider extends UIWidget {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }

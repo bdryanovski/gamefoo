@@ -46,24 +46,24 @@ export class CameraSystem implements SubSystem {
   /**
    * Subsystem identifier.
    */
-  id = 'camera';
+  public id = 'camera';
 
   /**
    * Execution order. `10` ensures the camera transform is applied
    * before tilemap (15) and entity (20) rendering.
    */
-  order = 10;
+  public order = 10;
 
   /**
    * The underlying enhanced camera. Exposed for external consumers.
    */
-  camera: EnhancedCamera;
+  public camera: EnhancedCamera;
 
   /**
    * Optional isometric projection reference, stored for convenience.
    * `null` for orthogonal games.
    */
-  projection: IsometricProjection | null;
+  public projection: IsometricProjection | null;
 
   /**
    * Target position supplier. Returns `null` for free camera.
@@ -108,7 +108,7 @@ export class CameraSystem implements SubSystem {
    *
    * @param deltaTime - Seconds since the last frame.
    */
-  update(deltaTime: number): void {
+  public update(deltaTime: number): void {
     const t = this.target();
     if (t) {
       this.camera.smoothFollow(t, deltaTime);
@@ -124,7 +124,7 @@ export class CameraSystem implements SubSystem {
    *
    * @param ctx - Canvas 2D rendering context.
    */
-  preRender(ctx: RenderContext): void {
+  public preRender(ctx: RenderContext): void {
     const view = this.camera.getViewRect();
     ctx.save();
     ctx.scale(this.camera.zoom, this.camera.zoom);
@@ -142,7 +142,7 @@ export class CameraSystem implements SubSystem {
    *
    * @param ctx - The active render context.
    */
-  postRender(ctx: RenderContext): void {
+  public postRender(ctx: RenderContext): void {
     ctx.restore();
   }
 }

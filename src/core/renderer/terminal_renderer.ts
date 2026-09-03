@@ -154,14 +154,14 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  readonly width: number;
+  public readonly width: number;
 
   /**
    * Logical height in game-world units (`rows × cellHeight`).
    *
    * @since 0.4.0
    */
-  readonly height: number;
+  public readonly height: number;
 
   private cols: number;
   private rows: number;
@@ -170,9 +170,9 @@ export class TerminalRenderContext implements RenderContext {
   private defaultBg: string;
   private defaultFg: string;
 
-  readonly gameScale: number;
+  public readonly gameScale: number;
 
-  readGameScale(): number {
+  public readGameScale(): number {
     return this.gameScale;
   }
 
@@ -240,7 +240,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  save() {
+  public save() {
     this.transformStack.push({ tx: this.tx, ty: this.ty });
   }
 
@@ -249,7 +249,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  restore() {
+  public restore() {
     const t = this.transformStack.pop();
     if (t) {
       this.tx = t.tx;
@@ -268,7 +268,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  translate(x: number, y: number) {
+  public translate(x: number, y: number) {
     this.tx += x;
     this.ty += y;
   }
@@ -278,7 +278,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  scale(_x: number, _y: number) {
+  public scale(_x: number, _y: number) {
     // Terminal cells cannot scale; future versions may map zoom to cell density.
   }
 
@@ -332,7 +332,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  clear(color = this.defaultBg) {
+  public clear(color = this.defaultBg) {
     for (let row = 0; row < this.rows; row += 1) {
       for (let col = 0; col < this.cols; col += 1) {
         const cell = this.buffer[row]?.[col];
@@ -352,7 +352,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.5.0
    */
-  fill(_path?: Path2D): void {
+  public fill(_path?: Path2D): void {
     // Terminal does not support Path2D rendering
   }
 
@@ -370,7 +370,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  fillRect(x: number, y: number, w: number, h: number, color: string) {
+  public fillRect(x: number, y: number, w: number, h: number, color: string) {
     const [col0, row0] = this.worldToCell(x, y);
     const [col1, row1] = this.worldToCell(x + w, y + h);
     for (let row = row0; row <= row1; row += 1) {
@@ -392,7 +392,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  strokeRect(x: number, y: number, w: number, h: number, color: string) {
+  public strokeRect(x: number, y: number, w: number, h: number, color: string) {
     const [col0, row0] = this.worldToCell(x, y);
     const [col1, row1] = this.worldToCell(x + w, y + h);
     for (let col = col0; col <= col1; col += 1) {
@@ -423,7 +423,13 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawText(text: string, x: number, y: number, color = this.defaultFg, bgColor = this.defaultBg) {
+  public drawText(
+    text: string,
+    x: number,
+    y: number,
+    color = this.defaultFg,
+    bgColor = this.defaultBg,
+  ) {
     const [col0, row0] = this.worldToCell(x, y);
     for (let index = 0; index < text.length; index += 1) {
       this.setCell(col0 + index, row0, text[index] ?? ' ', color, bgColor);
@@ -448,7 +454,13 @@ export class TerminalRenderContext implements RenderContext {
    * ctx.drawChar("@", player.x, player.y, "#00ff00");
    * ```
    */
-  drawChar(char: string, x: number, y: number, color = this.defaultFg, bgColor = this.defaultBg) {
+  public drawChar(
+    char: string,
+    x: number,
+    y: number,
+    color = this.defaultFg,
+    bgColor = this.defaultBg,
+  ) {
     const [col, row] = this.worldToCell(x, y);
     this.setCell(col, row, char[0] ?? ' ', color, bgColor);
   }
@@ -461,7 +473,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawSprite() {
+  public drawSprite() {
     // No-op. Use TerminalRender behaviour for terminal visuals.
   }
 
@@ -480,7 +492,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawLine(x1: number, y1: number, x2: number, y2: number, color: string) {
+  public drawLine(x1: number, y1: number, x2: number, y2: number, color: string) {
     let [c1, r1] = this.worldToCell(x1, y1);
     const [c2, r2] = this.worldToCell(x2, y2);
 
@@ -527,7 +539,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawCircle(x: number, y: number, radius: number, color: string, _fill = false) {
+  public drawCircle(x: number, y: number, radius: number, color: string, _fill = false) {
     const [cx, cy] = this.worldToCell(x, y);
     const cr = Math.round(radius / this.cellWidth);
 
@@ -573,7 +585,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  flush() {
+  public flush() {
     const out: string[] = [];
     for (let row = 0; row < this.rows; row += 1) {
       for (let col = 0; col < this.cols; col += 1) {
@@ -629,7 +641,7 @@ export class TerminalRenderContext implements RenderContext {
    * });
    * ```
    */
-  resize(cols: number, rows: number): void {
+  public resize(cols: number, rows: number): void {
     this.cols = cols;
     this.rows = rows;
     (this as { width: number }).width = cols * this.cellWidth;
@@ -663,7 +675,7 @@ export class TerminalRenderContext implements RenderContext {
    *
    * @since 0.4.0
    */
-  destroy() {
+  public destroy() {
     process.stdout.write(ansi.showCursor());
     process.stdout.write(`${ansi.ESC}[?1049l`); // restore normal screen
   }

@@ -51,7 +51,7 @@ export class Control extends Behaviour<DynamicEntity> {
   /**
    * @inheritDoc
    */
-  readonly type = 'control';
+  public readonly type = 'control';
 
   /**
    * Input mapper for action-based queries.
@@ -110,7 +110,7 @@ export class Control extends Behaviour<DynamicEntity> {
    *
    * @since 0.1.0
    */
-  override update(_deltaTime: number): void {
+  public override update(_deltaTime: number): void {
     const dir = this.mapper.getDirection();
 
     if (dir.x !== 0 || dir.y !== 0) {
@@ -142,7 +142,7 @@ export class Control extends Behaviour<DynamicEntity> {
    * }
    * ```
    */
-  getMapper(): InputMapper {
+  public getMapper(): InputMapper {
     return this.mapper;
   }
 
@@ -159,7 +159,7 @@ export class Control extends Behaviour<DynamicEntity> {
    * control.setScheme(CONTROL_SCHEMES.SNES);
    * ```
    */
-  setScheme(scheme: ControlScheme): void {
+  public setScheme(scheme: ControlScheme): void {
     this.mapper = this.mapper.withScheme(scheme);
   }
 
@@ -170,7 +170,7 @@ export class Control extends Behaviour<DynamicEntity> {
    *
    * @since 0.5.0
    */
-  getScheme(): ControlScheme {
+  public getScheme(): ControlScheme {
     return this.mapper.getScheme();
   }
 
@@ -181,7 +181,7 @@ export class Control extends Behaviour<DynamicEntity> {
    *
    * @since 0.5.0
    */
-  setSpeed(speed: number): void {
+  public setSpeed(speed: number): void {
     this.speed = speed;
   }
 
@@ -192,7 +192,7 @@ export class Control extends Behaviour<DynamicEntity> {
    *
    * @since 0.5.0
    */
-  getSpeed(): number {
+  public getSpeed(): number {
     return this.speed;
   }
 }

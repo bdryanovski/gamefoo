@@ -142,18 +142,18 @@ export default class Tabs extends Container {
   /**
    * Tab pages
    */
-  get pages(): readonly TabPage[] {
+  public get pages(): readonly TabPage[] {
     return this._pages;
   }
 
   /**
    * Active tab index
    */
-  get activeIndex(): number {
+  public get activeIndex(): number {
     return this._activeIndex;
   }
 
-  set activeIndex(value: number) {
+  public set activeIndex(value: number) {
     if (value >= 0 && value < this._pages.length && this._activeIndex !== value) {
       this._activeIndex = value;
       this.markLayoutDirty();
@@ -167,14 +167,14 @@ export default class Tabs extends Container {
   /**
    * Active page
    */
-  get activePage(): TabPage | null {
+  public get activePage(): TabPage | null {
     return this._pages[this._activeIndex] ?? null;
   }
 
   /**
    * Number of pages
    */
-  get pageCount(): number {
+  public get pageCount(): number {
     return this._pages.length;
   }
 
@@ -183,7 +183,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  override set width(value: number) {
+  public override set width(value: number) {
     if (this._width !== value) {
       this._width = value;
       this.updateTabWidths();
@@ -191,7 +191,7 @@ export default class Tabs extends Container {
     }
   }
 
-  override get width(): number {
+  public override get width(): number {
     return this._width;
   }
 
@@ -206,7 +206,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  setPages(pages: TabPage[]): void {
+  public setPages(pages: TabPage[]): void {
     // Clear existing
     this._children = [];
     this._pages = pages;
@@ -234,7 +234,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  addPage(page: TabPage): void {
+  public addPage(page: TabPage): void {
     this._pages.push(page);
     this.addChild(page.content);
     page.content.visible = this._pages.length - 1 === this._activeIndex;
@@ -249,7 +249,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  removePage(index: number): void {
+  public removePage(index: number): void {
     if (index < 0 || index >= this._pages.length) {
       return;
     }
@@ -280,7 +280,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  getPageById(id: string): TabPage | null {
+  public getPageById(id: string): TabPage | null {
     return this._pages.find((p) => p.id === id) ?? null;
   }
 
@@ -291,7 +291,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  switchTo(id: string): boolean {
+  public switchTo(id: string): boolean {
     const index = this._pages.findIndex((p) => p.id === id);
     if (index !== -1) {
       this.activeIndex = index;
@@ -394,7 +394,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     // Find largest page content
     let maxWidth = 0;
     let maxHeight = 0;
@@ -420,7 +420,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  override layout(): void {
+  public override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;
@@ -463,7 +463,7 @@ export default class Tabs extends Container {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }

@@ -83,22 +83,22 @@ export default class Container extends UIWidget {
   /**
    * Whether clipping is enabled
    */
-  get clip(): boolean {
+  public get clip(): boolean {
     return this._clip;
   }
 
-  set clip(value: boolean) {
+  public set clip(value: boolean) {
     this._clip = value;
   }
 
   /**
    * Background color
    */
-  get background(): string | null {
+  public get background(): string | null {
     return this._background;
   }
 
-  set background(value: string | null) {
+  public set background(value: string | null) {
     this._background = value;
   }
 
@@ -113,7 +113,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     if (this._children.length === 0) {
       return { width: this._width, height: this._height };
     }
@@ -146,7 +146,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  override layout(): void {
+  public override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;
@@ -186,7 +186,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  override render(ctx: RenderContext): void {
+  public override render(ctx: RenderContext): void {
     if (!this._visible) {
       return;
     }
@@ -258,7 +258,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  addChildren(...children: UIWidget[]): this {
+  public addChildren(...children: UIWidget[]): this {
     for (const child of children) {
       this.addChild(child);
     }
@@ -273,7 +273,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  getChildAt(index: number): UIWidget | undefined {
+  public getChildAt(index: number): UIWidget | undefined {
     return this._children[index];
   }
 
@@ -282,7 +282,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  get childCount(): number {
+  public get childCount(): number {
     return this._children.length;
   }
 
@@ -291,7 +291,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  get hasChildren(): boolean {
+  public get hasChildren(): boolean {
     return this._children.length > 0;
   }
 
@@ -302,7 +302,7 @@ export default class Container extends UIWidget {
    *
    * @since 0.5.0
    */
-  forEachChild(callback: (child: UIWidget, index: number) => void): void {
+  public forEachChild(callback: (child: UIWidget, index: number) => void): void {
     this._children.forEach(callback);
   }
 }

@@ -116,11 +116,11 @@ export default class Button extends UIWidget {
   /**
    * Button text
    */
-  get text(): string {
+  public get text(): string {
     return this._text;
   }
 
-  set text(value: string) {
+  public set text(value: string) {
     if (this._text !== value) {
       this._text = value;
       this.markLayoutDirty();
@@ -130,22 +130,22 @@ export default class Button extends UIWidget {
   /**
    * Text alignment
    */
-  get align(): HorizontalAlign {
+  public get align(): HorizontalAlign {
     return this._align;
   }
 
-  set align(value: HorizontalAlign) {
+  public set align(value: HorizontalAlign) {
     this._align = value;
   }
 
   /**
    * Click callback
    */
-  get onClick(): (() => void) | null {
+  public get onClick(): (() => void) | null {
     return this._onClick;
   }
 
-  set onClick(value: (() => void) | null) {
+  public set onClick(value: (() => void) | null) {
     this._onClick = value;
   }
 
@@ -158,7 +158,7 @@ export default class Button extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     try {
       const theme = this.getTheme();
       const font = theme.fonts.default;
@@ -185,7 +185,7 @@ export default class Button extends UIWidget {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -216,7 +216,7 @@ export default class Button extends UIWidget {
    *
    * @since 0.5.0
    */
-  activate(): void {
+  public activate(): void {
     if (this._enabled && this._onClick) {
       this._onClick();
     }
@@ -233,7 +233,7 @@ export default class Button extends UIWidget {
    *
    * @since 0.5.0
    */
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     super.update(deltaTime);
 
     // Check hover callback

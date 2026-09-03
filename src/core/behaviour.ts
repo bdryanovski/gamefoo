@@ -71,7 +71,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * }
    * ```
    */
-  abstract readonly type: string;
+  public abstract readonly type: string;
 
   /**
    * Execution priority — lower numbers run first.
@@ -99,7 +99,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * Used internally by the entity's behaviour map so that look-ups are
    * case-insensitive.
    */
-  get key(): string {
+  public get key(): string {
     return this.type.toLowerCase();
   }
 
@@ -119,7 +119,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @since 0.4.0
    */
-  getOwner(): T {
+  public getOwner(): T {
     return this.owner;
   }
 
@@ -133,7 +133,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * @param _deltaTime - Seconds elapsed since the previous frame.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(_deltaTime: number): void {}
+  public update(_deltaTime: number): void {}
 
   /**
    * Optional rendering hook invoked after the entity's own
@@ -143,7 +143,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @param ctx - The rendering context.
    */
-  render?(ctx: RenderContext): void;
+  public render?(ctx: RenderContext): void;
 
   /**
    * Lifecycle hook called immediately after the behaviour is attached
@@ -152,7 +152,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * Use this for one-time setup such as registering with the
    * collision {@link World}.
    */
-  onAttach?(): void;
+  public onAttach?(): void;
 
   /**
    * Lifecycle hook called when the behaviour is removed from an entity
@@ -160,5 +160,5 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * Use this to unregister from external systems or release resources.
    */
-  onDetach?(): void;
+  public onDetach?(): void;
 }

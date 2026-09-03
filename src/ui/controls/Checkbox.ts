@@ -117,11 +117,11 @@ export default class Checkbox extends UIWidget {
   /**
    * Label text
    */
-  get label(): string {
+  public get label(): string {
     return this._label;
   }
 
-  set label(value: string) {
+  public set label(value: string) {
     if (this._label !== value) {
       this._label = value;
       this.markLayoutDirty();
@@ -131,11 +131,11 @@ export default class Checkbox extends UIWidget {
   /**
    * Checked state
    */
-  get checked(): boolean {
+  public get checked(): boolean {
     return this._checked;
   }
 
-  set checked(value: boolean) {
+  public set checked(value: boolean) {
     if (this._checked !== value) {
       this._checked = value;
       if (this._onChange) {
@@ -147,22 +147,22 @@ export default class Checkbox extends UIWidget {
   /**
    * Change callback
    */
-  get onChange(): ((checked: boolean) => void) | null {
+  public get onChange(): ((checked: boolean) => void) | null {
     return this._onChange;
   }
 
-  set onChange(value: ((checked: boolean) => void) | null) {
+  public set onChange(value: ((checked: boolean) => void) | null) {
     this._onChange = value;
   }
 
   /**
    * Box size
    */
-  get boxSize(): number {
+  public get boxSize(): number {
     return this._boxSize;
   }
 
-  set boxSize(value: number) {
+  public set boxSize(value: number) {
     if (this._boxSize !== value) {
       this._boxSize = value;
       this.markLayoutDirty();
@@ -178,7 +178,7 @@ export default class Checkbox extends UIWidget {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     let labelWidth = 0;
     let labelHeight = 0;
 
@@ -220,7 +220,7 @@ export default class Checkbox extends UIWidget {
    *
    * @since 0.5.0
    */
-  override handleEvent(event: UIInputEvent): boolean {
+  public override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -251,7 +251,7 @@ export default class Checkbox extends UIWidget {
    *
    * @since 0.5.0
    */
-  toggle(): void {
+  public toggle(): void {
     this.checked = !this._checked;
   }
 
@@ -261,7 +261,7 @@ export default class Checkbox extends UIWidget {
    *
    * @since 0.5.0
    */
-  activate(): void {
+  public activate(): void {
     this.toggle();
   }
 

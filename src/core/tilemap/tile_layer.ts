@@ -39,42 +39,42 @@ export class TileLayer {
   /**
    * Human-readable name of this layer.
    */
-  readonly name: string;
+  public readonly name: string;
 
   /**
    * Number of tile columns.
    */
-  readonly cols: number;
+  public readonly cols: number;
 
   /**
    * Number of tile rows.
    */
-  readonly rows: number;
+  public readonly rows: number;
 
   /**
    * The tileset used to resolve tile IDs to sprite frames.
    */
-  tileSet: TileSet;
+  public tileSet: TileSet;
 
   /**
    * Whether this layer is rendered.
    */
-  visible: boolean;
+  public visible: boolean;
 
   /**
    * Layer opacity in `[0, 1]`.
    */
-  opacity: number;
+  public opacity: number;
 
   /**
    * Horizontal pixel offset (parallax).
    */
-  offsetX: number;
+  public offsetX: number;
 
   /**
    * Vertical pixel offset (parallax).
    */
-  offsetY: number;
+  public offsetY: number;
 
   /**
    * Flat row-major tile data. `-1` means empty.
@@ -128,7 +128,7 @@ export class TileLayer {
    * }
    * ```
    */
-  getTile(col: number, row: number): number {
+  public getTile(col: number, row: number): number {
     if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) {
       return -1;
     }
@@ -152,7 +152,7 @@ export class TileLayer {
    * layer.setTile(5, 4, -1); // clear tile
    * ```
    */
-  setTile(col: number, row: number, tileId: number): void {
+  public setTile(col: number, row: number, tileId: number): void {
     if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) {
       return;
     }
@@ -196,7 +196,7 @@ export class TileLayer {
     }
   }
 
-  renderOrthogonal(
+  public renderOrthogonal(
     ctx: RenderContext,
     cellWidth: number,
     cellHeight: number,
@@ -272,7 +272,7 @@ export class TileLayer {
    * layer.renderIsometric(ctx, projection, camera.getViewRect(), 32, 32);
    * ```
    */
-  renderIsometric(
+  public renderIsometric(
     ctx: RenderContext,
     projection: IsometricProjection,
     viewport: { x: number; y: number; width: number; height: number },

@@ -37,7 +37,7 @@ export default class AnimatedObject {
    *
    * @since 0.5.0
    */
-  get frame(): Frame | undefined {
+  public get frame(): Frame | undefined {
     return this.clip.frames[this.frameIndex];
   }
 
@@ -46,7 +46,7 @@ export default class AnimatedObject {
    *
    * @since 0.5.0
    */
-  update(deltaTime: DeltaTime): void {
+  public update(deltaTime: DeltaTime): void {
     const count = this.clip.frames.length;
 
     /**
@@ -74,7 +74,7 @@ export default class AnimatedObject {
    *
    * @since 0.5.0
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     const frame = this.frame;
     if (frame) {
       drawFrame(ctx, frame, this.x, this.y, this.transform);

@@ -132,11 +132,11 @@ export default class GridLayout extends Container {
   /**
    * Number of columns
    */
-  get columns(): number {
+  public get columns(): number {
     return this._columns;
   }
 
-  set columns(value: number) {
+  public set columns(value: number) {
     if (this._columns !== value) {
       this._columns = Math.max(1, value);
       this.markLayoutDirty();
@@ -146,11 +146,11 @@ export default class GridLayout extends Container {
   /**
    * Number of rows
    */
-  get rows(): number {
+  public get rows(): number {
     return this._rows;
   }
 
-  set rows(value: number) {
+  public set rows(value: number) {
     if (this._rows !== value) {
       this._rows = value;
       this.markLayoutDirty();
@@ -160,11 +160,11 @@ export default class GridLayout extends Container {
   /**
    * Horizontal gap between cells
    */
-  get columnGap(): number {
+  public get columnGap(): number {
     return this._columnGap;
   }
 
-  set columnGap(value: number) {
+  public set columnGap(value: number) {
     if (this._columnGap !== value) {
       this._columnGap = value;
       this.markLayoutDirty();
@@ -174,11 +174,11 @@ export default class GridLayout extends Container {
   /**
    * Vertical gap between cells
    */
-  get rowGap(): number {
+  public get rowGap(): number {
     return this._rowGap;
   }
 
-  set rowGap(value: number) {
+  public set rowGap(value: number) {
     if (this._rowGap !== value) {
       this._rowGap = value;
       this.markLayoutDirty();
@@ -188,11 +188,11 @@ export default class GridLayout extends Container {
   /**
    * Cell width
    */
-  get cellWidth(): number {
+  public get cellWidth(): number {
     return this._cellWidth;
   }
 
-  set cellWidth(value: number) {
+  public set cellWidth(value: number) {
     if (this._cellWidth !== value) {
       this._cellWidth = value;
       this.markLayoutDirty();
@@ -202,11 +202,11 @@ export default class GridLayout extends Container {
   /**
    * Cell height
    */
-  get cellHeight(): number {
+  public get cellHeight(): number {
     return this._cellHeight;
   }
 
-  set cellHeight(value: number) {
+  public set cellHeight(value: number) {
     if (this._cellHeight !== value) {
       this._cellHeight = value;
       this.markLayoutDirty();
@@ -222,7 +222,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  get actualRows(): number {
+  public get actualRows(): number {
     if (this._rows > 0) {
       return this._rows;
     }
@@ -235,7 +235,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  get computedCellWidth(): number {
+  public get computedCellWidth(): number {
     if (this._cellWidth > 0) {
       return this._cellWidth;
     }
@@ -249,7 +249,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  get computedCellHeight(): number {
+  public get computedCellHeight(): number {
     if (this._cellHeight > 0) {
       return this._cellHeight;
     }
@@ -271,7 +271,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  override getPreferredSize(): UISize {
+  public override getPreferredSize(): UISize {
     const rows = this.actualRows;
     const cellW = this._cellWidth > 0 ? this._cellWidth : 16; // Default cell size
     const cellH = this._cellHeight > 0 ? this._cellHeight : 16;
@@ -299,7 +299,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  override layout(): void {
+  public override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;
@@ -357,7 +357,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  getChildAtCell(column: number, row: number): UIWidget | undefined {
+  public getChildAtCell(column: number, row: number): UIWidget | undefined {
     const index = row * this._columns + column;
     return this._children[index];
   }
@@ -370,7 +370,7 @@ export default class GridLayout extends Container {
    *
    * @since 0.5.0
    */
-  getCellOfChild(child: UIWidget): { column: number; row: number } | null {
+  public getCellOfChild(child: UIWidget): { column: number; row: number } | null {
     const index = this._children.indexOf(child);
     if (index === -1) {
       return null;

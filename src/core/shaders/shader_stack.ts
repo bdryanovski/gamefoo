@@ -21,7 +21,7 @@ export class ShaderStack {
    * Adds a shader (rendered in insertion order) and returns it for
    * fluent configuration.
    */
-  attach<T extends Shader>(shader: T): T {
+  public attach<T extends Shader>(shader: T): T {
     this.items.push(shader);
     return shader;
   }
@@ -29,21 +29,21 @@ export class ShaderStack {
   /**
    * The first shader whose `type` matches `type`, or `undefined`.
    */
-  get<T extends Shader>(type: string): T | undefined {
+  public get<T extends Shader>(type: string): T | undefined {
     return this.items.find((shader) => shader.type === type) as T | undefined;
   }
 
   /**
    * Whether a shader with `type` is attached.
    */
-  has(type: string): boolean {
+  public has(type: string): boolean {
     return this.items.some((shader) => shader.type === type);
   }
 
   /**
    * Removes the first shader with `type`, if present.
    */
-  detach(type: string): void {
+  public detach(type: string): void {
     const index = this.items.findIndex((shader) => shader.type === type);
     if (index !== -1) {
       this.items.splice(index, 1);
@@ -53,21 +53,21 @@ export class ShaderStack {
   /**
    * Removes every shader.
    */
-  clear(): void {
+  public clear(): void {
     this.items.length = 0;
   }
 
   /**
    * A read-only view of the attached shaders, in render order.
    */
-  get all(): readonly Shader[] {
+  public get all(): readonly Shader[] {
     return this.items;
   }
 
   /**
    * Advances every enabled shader.
    */
-  update(deltaTime: DeltaTime): void {
+  public update(deltaTime: DeltaTime): void {
     for (const shader of this.items) {
       if (shader.enabled) {
         shader.update(deltaTime);
@@ -78,7 +78,7 @@ export class ShaderStack {
   /**
    * Renders every enabled shader over `region`, in insertion order.
    */
-  render(ctx: RenderContext, region: ShaderRegion): void {
+  public render(ctx: RenderContext, region: ShaderRegion): void {
     for (const shader of this.items) {
       if (shader.enabled) {
         shader.render(ctx, region);

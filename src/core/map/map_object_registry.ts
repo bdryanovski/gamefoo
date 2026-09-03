@@ -31,9 +31,9 @@ export default class MapObjectRegistry {
    * @throws {Error} When called with a single class that has no static
    *   `type`.
    */
-  register(ctor: MapObjectConstructor): void;
-  register(type: string, ctor: MapObjectConstructor): void;
-  register(a: MapObjectConstructor | string, b?: MapObjectConstructor): void {
+  public register(ctor: MapObjectConstructor): void;
+  public register(type: string, ctor: MapObjectConstructor): void;
+  public register(a: MapObjectConstructor | string, b?: MapObjectConstructor): void {
     if (typeof a === 'string') {
       if (!b) {
         throw new Error(`MapObjectRegistry.register("${a}", …) requires a class`);
@@ -53,7 +53,7 @@ export default class MapObjectRegistry {
   /**
    * The class registered for `key`, or `undefined`.
    */
-  resolve(key: string): MapObjectConstructor | undefined {
+  public resolve(key: string): MapObjectConstructor | undefined {
     return this.byType.get(key);
   }
 }

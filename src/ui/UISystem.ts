@@ -74,17 +74,17 @@ export default class UISystem implements SubSystem {
   /**
    * Subsystem identifier
    */
-  readonly id = 'ui';
+  public readonly id = 'ui';
 
   /**
    * Execution order (after game objects, before final render)
    */
-  readonly order = 90;
+  public readonly order = 90;
 
   /**
    * Whether the subsystem is enabled
    */
-  enabled: boolean = true;
+  public enabled: boolean = true;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Core Components
@@ -185,7 +185,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  setDisableHorizontalNav(disabled: boolean): void {
+  public setDisableHorizontalNav(disabled: boolean): void {
     this._disableHorizontalNav = disabled;
   }
 
@@ -196,49 +196,49 @@ export default class UISystem implements SubSystem {
   /**
    * Gets the state manager
    */
-  get stateManager(): UIStateManager {
+  public get stateManager(): UIStateManager {
     return this._stateManager;
   }
 
   /**
    * Gets the focus manager
    */
-  get focusManager(): FocusManager {
+  public get focusManager(): FocusManager {
     return this._focusManager;
   }
 
   /**
    * Gets the input router
    */
-  get inputRouter(): InputRouter | null {
+  public get inputRouter(): InputRouter | null {
     return this._inputRouter;
   }
 
   /**
    * Gets the current theme
    */
-  get theme(): UITheme | null {
+  public get theme(): UITheme | null {
     return this._theme;
   }
 
   /**
    * Whether the UI is currently visible
    */
-  get visible(): boolean {
+  public get visible(): boolean {
     return this._visible;
   }
 
   /**
    * Whether the UI is active and receiving input
    */
-  get isActive(): boolean {
+  public get isActive(): boolean {
     return this._visible && this.enabled && this._root !== null;
   }
 
   /**
    * Whether game input should be blocked
    */
-  get shouldBlockGameInput(): boolean {
+  public get shouldBlockGameInput(): boolean {
     return this._blockGameInput && this.isActive;
   }
 
@@ -253,7 +253,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  setTheme(theme: UITheme): void {
+  public setTheme(theme: UITheme): void {
     this._theme = theme;
     if (this._root) {
       this._root.setTheme(theme);
@@ -268,7 +268,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  getTheme(): UITheme {
+  public getTheme(): UITheme {
     if (!this._theme) {
       throw new Error('No theme set for UISystem');
     }
@@ -286,7 +286,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  setRoot(root: UIWidget | null): void {
+  public setRoot(root: UIWidget | null): void {
     if (this._root) {
       this._stateManager.onWidgetDestroyed(this._root);
       this._root.setStateManager(null);
@@ -314,7 +314,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  getRoot(): UIWidget | null {
+  public getRoot(): UIWidget | null {
     return this._root;
   }
 
@@ -327,7 +327,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  show(): void {
+  public show(): void {
     this._visible = true;
     if (this._root) {
       // Force layout before focusing so visibility is set correctly
@@ -341,7 +341,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  hide(): void {
+  public hide(): void {
     this._visible = false;
     this._stateManager.resetAll();
   }
@@ -353,7 +353,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  toggle(): boolean {
+  public toggle(): boolean {
     if (this._visible) {
       this.hide();
     } else {
@@ -373,7 +373,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  addPopup(widget: UIWidget): void {
+  public addPopup(widget: UIWidget): void {
     if (this._theme) {
       widget.setTheme(this._theme);
     }
@@ -387,7 +387,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  removePopup(widget: UIWidget): void {
+  public removePopup(widget: UIWidget): void {
     const index = this._popupLayer.indexOf(widget);
     if (index !== -1) {
       this._popupLayer.splice(index, 1);
@@ -399,7 +399,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  clearPopups(): void {
+  public clearPopups(): void {
     this._popupLayer = [];
   }
 
@@ -436,7 +436,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  findById(id: string): UIWidget | null {
+  public findById(id: string): UIWidget | null {
     return this._root?.findById(id) ?? null;
   }
 
@@ -453,7 +453,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  init(engine: Engine): void {
+  public init(engine: Engine): void {
     this._engine = engine;
 
     // Get canvas element from the engine's render context
@@ -482,7 +482,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  get inputMapper(): InputMapper | null {
+  public get inputMapper(): InputMapper | null {
     return this._inputMapper;
   }
 
@@ -493,7 +493,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  setControlScheme(scheme: ControlScheme): void {
+  public setControlScheme(scheme: ControlScheme): void {
     this._controlScheme = scheme;
     if (this._input) {
       this._inputMapper = new InputMapper(this._input, scheme);
@@ -509,7 +509,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  preUpdate(_deltaTime: number): void {
+  public preUpdate(_deltaTime: number): void {
     // Update input state for "just pressed" detection
     this._input?.update();
 
@@ -580,7 +580,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  update(deltaTime: number): void {
+  public update(deltaTime: number): void {
     if (!this.isActive || !this._root) {
       return;
     }
@@ -600,7 +600,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     if (!this.isActive || !this._root) {
       return;
     }
@@ -622,7 +622,7 @@ export default class UISystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  destroy(): void {
+  public destroy(): void {
     if (this._root) {
       this._root.destroy();
       this._root = null;

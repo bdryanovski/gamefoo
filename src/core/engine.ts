@@ -244,7 +244,7 @@ export default class Engine {
    * console.log(`Game area: ${width}×${height}`);
    * ```
    */
-  get dementions(): { width: number; height: number } {
+  public get dementions(): { width: number; height: number } {
     return {
       width: this.width,
       height: this.height,
@@ -264,7 +264,7 @@ export default class Engine {
    * const canvas = engine.renderer.getCanvas?.()?.canvas;
    * ```
    */
-  get renderer(): RenderContext {
+  public get renderer(): RenderContext {
     return this.ctx;
   }
 
@@ -337,7 +337,7 @@ export default class Engine {
    * });
    * ```
    */
-  resize(width: number, height: number): void {
+  public resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
   }
