@@ -6,7 +6,7 @@
     "image": "props.png",
     "imageWidth": 304,
     "imageHeight": 128,
-    "exportedAt": "2026-08-25T15:12:10.361Z"
+    "exportedAt": "2026-09-01T15:32:22.642Z"
   },
   "grid": {
     "frameWidth": 16,
@@ -23,17 +23,7 @@
     "rocks_crystal": 79,
     "sign": 41,
     "skeleton": 57,
-    "shelf": 15,
-    "sprite_3_3": 60,
-    "sprite_1_5": 96,
-    "sprite_5_1": 24,
-    "sprite_6_1": 25,
-    "sprite_7_1": 26,
-    "sprite_8_1": 27,
-    "sprite_1_0": 1,
-    "sprite_0_0": 0,
-    "sprite_2_0": 2,
-    "sprite_3_0": 3
+    "shelf": 15
   },
   "animations": {}
 }

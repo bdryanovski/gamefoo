@@ -1,10 +1,11 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useState } from "react";
 import type { AppState, AppAction, SpriteRegion, AnimationDef } from "../types";
 import { objectMachines } from "../types";
 import type { StateMachineDef } from "../statemachine/types";
 import type { MapAction, MapPlacement } from "./types";
 import { resolvePlacementDisplay, resolveMachineState } from "./types";
 import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
+import { Icon } from "../components/Icon";
 
 interface Props {
   state: AppState;
@@ -26,7 +27,7 @@ function ThumbShell({
 }: {
   selected: boolean;
   title: string;
-  badge?: string;
+  badge?: React.ReactNode;
   onClick: () => void;
   children: React.ReactNode;
 }) {
@@ -106,7 +107,7 @@ function FramePreview({
   imageMap: Map<string, HTMLImageElement>;
   selected: boolean;
   title: string;
-  badge?: string;
+  badge?: React.ReactNode;
   onClick: () => void;
 }) {
   return (
@@ -142,7 +143,7 @@ function MachineThumb({
   const st = resolveMachineState(machine);
   let frames: string[] = [];
   let duration = 0.15;
-  let badge = "⚙";
+  let badge: React.ReactNode = <Icon name="settings" size={9} />;
   if (st) {
     if (st.display.kind === "sprite" && st.display.spriteId) {
       frames = [st.display.spriteId];
@@ -152,7 +153,7 @@ function MachineThumb({
       if (anim && anim.frames.length > 0) {
         frames = anim.frames;
         duration = anim.duration;
-        badge = "⚙▶";
+        badge = (<><Icon name="settings" size={9} /><Icon name="play" size={9} /></>);
       }
     }
   }
@@ -179,6 +180,7 @@ export function MapPalettePanel({
   imageMap,
 }: Props) {
   const map = state.map;
+  const [dragLayer, setDragLayer] = useState<number | null>(null);
   const spriteById = useMemo(
     () => new Map(state.sprites.map((s) => [s.id, s])),
     [state.sprites],
@@ -315,35 +317,54 @@ export function MapPalettePanel({
             }
           />
         </div>
-        <div className="field-row">
-          <span className="field-label">Level:</span>
-          <button
-            className="btn btn-sm"
-            onClick={() =>
-              mapDispatch({ type: "SET_ACTIVE_LEVEL", level: map.activeLevel - 1 })
-            }
-            disabled={map.activeLevel <= 0}
-          >
-            −
-          </button>
-          <span className="text-xs">{map.activeLevel}</span>
-          <button
-            className="btn btn-sm"
-            onClick={() =>
-              mapDispatch({ type: "SET_ACTIVE_LEVEL", level: map.activeLevel + 1 })
-            }
-          >
-            +
-          </button>
-          <button
-            className={`btn btn-sm ${map.showAllLevels ? "active" : ""}`}
-            onClick={() =>
-              mapDispatch({ type: "SET_SHOW_ALL_LEVELS", show: !map.showAllLevels })
-            }
-          >
-            {map.showAllLevels ? "All" : "Active"}
-          </button>
+        <div className="section-title" style={{ marginTop: 4 }}>
+          <span>Layers ({map.layers.length})</span>
+          <button className="btn btn-sm" onClick={() => mapDispatch({ type: "ADD_LAYER" })}>+ Layer</button>
         </div>
+        <div className="active-layer-banner">
+          Placing on: <b>{map.layers[map.activeLevel]?.name ?? "?"}</b>
+          <span className="text-dim"> (layer {map.activeLevel})</span>
+        </div>
+        {[...map.layers]
+          .map((l, i) => ({ l, i }))
+          .reverse()
+          .map(({ l, i }) => (
+            <div
+              key={i}
+              className={`object-layer-row ${map.activeLevel === i ? "selected" : ""} ${dragLayer === i ? "dragging" : ""}`}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={() => {
+                if (dragLayer !== null && dragLayer !== i) mapDispatch({ type: "MOVE_LAYER", from: dragLayer, to: i });
+                setDragLayer(null);
+              }}
+              onClick={() => mapDispatch({ type: "SET_ACTIVE_LEVEL", level: i })}
+            >
+              <span
+                className="text-xs text-dim layer-grip"
+                title="Drag to reorder"
+                draggable
+                onDragStart={(e) => { e.stopPropagation(); setDragLayer(i); }}
+                onDragEnd={() => setDragLayer(null)}
+              >
+                <Icon name="grip" size={12} />
+              </span>
+              <span className="text-xs" style={{ minWidth: 12, textAlign: "center" }}>{map.activeLevel === i ? <Icon name="play" size={11} /> : i}</span>
+              <input
+                type="text"
+                className="input input-full"
+                value={l.name}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => mapDispatch({ type: "RENAME_LAYER", level: i, name: e.target.value })}
+              />
+              <button
+                className={`btn btn-sm ${l.visible ? "active" : ""}`}
+                title={l.visible ? "Visible — click to hide" : "Hidden — click to show"}
+                onClick={(e) => { e.stopPropagation(); mapDispatch({ type: "SET_LAYER_VISIBLE", level: i, visible: !l.visible }); }}
+              >
+                {l.visible ? <Icon name="eye" size={13} /> : <Icon name="eye-off" size={13} />}
+              </button>
+            </div>
+          ))}
         <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
           Screen = {map.screenCols * map.blockSize}×
           {map.screenRows * map.blockSize}px ({map.screenCols}×
@@ -658,7 +679,7 @@ export function MapPalettePanel({
                       spriteById={spriteById}
                       imageMap={imageMap}
                       selected={sel}
-                      badge="▶"
+                      badge={<Icon name="play" size={9} />}
                       title={`${a.name} (${a.frames.length} frames)`}
                       onClick={() =>
                         mapDispatch({

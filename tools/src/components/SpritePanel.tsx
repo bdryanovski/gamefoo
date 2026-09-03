@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useMemo } from "react";
 import type { AppState, AppAction, SpriteRegion } from "../types";
 import { AnimatedSpritePreview } from "./AnimatedSpritePreview";
+import { CollisionEditor } from "./CollisionEditor";
 
 interface Props {
   state: AppState;
@@ -303,6 +304,34 @@ export function SpritePanel({ state, dispatch, image }: Props) {
               <SpritePreview sprite={selected} image={image} />
             </div>
           )}
+
+          {/* Collision volumes */}
+          <div className="mt-4">
+            <CollisionEditor
+              width={selected.width}
+              height={selected.height}
+              collisions={selected.collisions}
+              layers={state.collisionLayers}
+              onChange={(collisions) => updateSelected({ collisions })}
+              dispatch={dispatch}
+              drawBackdrop={
+                image
+                  ? (ctx, scale) =>
+                      ctx.drawImage(
+                        image,
+                        selected.x,
+                        selected.y,
+                        selected.width,
+                        selected.height,
+                        0,
+                        0,
+                        selected.width * scale,
+                        selected.height * scale,
+                      )
+                  : undefined
+              }
+            />
+          </div>
         </div>
       )}
     </div>

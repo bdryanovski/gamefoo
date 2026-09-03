@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import type { StateMachineDef, StateNodeDef } from "./types";
 import type { AnimationDef, SpriteRegion } from "../types";
+import { Icon } from "../components/Icon";
 
 const NODE_W = 150;
 const NODE_H = 96;
@@ -468,7 +469,7 @@ export function StateMachineCanvas({
       </div>
       {!machine && (
         <div className="upload-overlay">
-          <div className="big-icon">⚙</div>
+          <div className="big-icon"><Icon name="settings" size={48} /></div>
           <div>No state machine selected</div>
           <div>Create one in the panel →</div>
         </div>

@@ -6,7 +6,7 @@
     "image": "props.png",
     "imageWidth": 304,
     "imageHeight": 128,
-    "exportedAt": "2026-08-25T15:12:10.361Z"
+    "exportedAt": "2026-09-01T15:32:22.642Z"
   },
   "frames": {
     "jar": {
@@ -50,66 +50,6 @@
       "y": 2,
       "width": 16,
       "height": 30
-    },
-    "sprite_3_3": {
-      "x": 48,
-      "y": 48,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_1_5": {
-      "x": 16,
-      "y": 80,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_5_1": {
-      "x": 80,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_6_1": {
-      "x": 96,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_7_1": {
-      "x": 112,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_8_1": {
-      "x": 128,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_1_0": {
-      "x": 16,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_0_0": {
-      "x": 0,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_2_0": {
-      "x": 32,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_3_0": {
-      "x": 48,
-      "y": 0,
-      "width": 16,
-      "height": 16
     }
   },
   "animations": {}

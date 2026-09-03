@@ -34,54 +34,5 @@
     ],
     "duration": 0.15,
     "loop": true
-  },
-  "Chest": {
-    "frames": [
-      "sprite_4_0",
-      "sprite_5_0",
-      "sprite_6_0"
-    ],
-    "duration": 0.15,
-    "loop": true
-  },
-  "Spike": {
-    "frames": [
-      "sprite_4_3",
-      "sprite_5_3",
-      "sprite_6_3"
-    ],
-    "duration": 0.15,
-    "loop": true
-  },
-  "switch": {
-    "frames": [
-      "sprite_4_1",
-      "sprite_5_1",
-      "sprite_6_1"
-    ],
-    "duration": 0.3,
-    "loop": true
-  },
-  "Money": {
-    "frames": [
-      "sprite_7_0",
-      "sprite_8_0",
-      "sprite_9_0",
-      "sprite_10_0"
-    ],
-    "duration": 0.1,
-    "loop": true
-  },
-  "Slime_idle": {
-    "frames": [
-      "sprite_0_5",
-      "sprite_0_3",
-      "sprite_1_3",
-      "sprite_2_3",
-      "sprite_1_3",
-      "sprite_0_3"
-    ],
-    "duration": 0.21,
-    "loop": true
   }
 }

@@ -1,0 +1,233 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-statemachine-editor",
+    "projectName": "Experiment00",
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "machines": {
+    "object_0": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "animation",
+            "animation": "campfire"
+          }
+        },
+        "off": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_2_2"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "object_1": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_15_1"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "object_2": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "animation",
+            "animation": "light"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "object_3": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_16_0"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "object_4": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_3_2"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "player": {
+      "initial": "Idle",
+      "states": {
+        "Idle": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_idle_front"
+          }
+        },
+        "Up": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_walk_back"
+          }
+        },
+        "Down": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_walk_front"
+          }
+        },
+        "Left": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_walk_right"
+          }
+        },
+        "Right": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_walk_right"
+          }
+        },
+        "idle_up": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_idle_back"
+          }
+        },
+        "death_front": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_dead_front"
+          }
+        },
+        "death_left": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_dead_right"
+          }
+        },
+        "death_right": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_dead_right"
+          }
+        },
+        "death_back_left": {
+          "display": {
+            "kind": "animation",
+            "animation": "p_dead_back"
+          }
+        }
+      },
+      "transitions": [
+        {
+          "from": "Idle",
+          "to": "Up",
+          "condition": "move_up"
+        },
+        {
+          "from": "Up",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Down",
+          "condition": "move_down"
+        },
+        {
+          "from": "Down",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Left",
+          "condition": "move_left"
+        },
+        {
+          "from": "Left",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Right",
+          "condition": "move_right"
+        },
+        {
+          "from": "Right",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "idle_up",
+          "condition": "idle_up"
+        },
+        {
+          "from": "idle_up",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "death_front",
+          "condition": "death_front"
+        },
+        {
+          "from": "death_front",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "death_left",
+          "condition": "death_left"
+        },
+        {
+          "from": "death_left",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "death_right",
+          "condition": "death_right"
+        },
+        {
+          "from": "death_right",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "death_back_left",
+          "condition": "death_back_left"
+        },
+        {
+          "from": "death_back_left",
+          "to": "Idle",
+          "condition": "stop"
+        }
+      ]
+    }
+  }
+}

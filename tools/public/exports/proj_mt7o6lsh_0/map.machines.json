@@ -3,7 +3,7 @@
     "version": "1.0",
     "tool": "gamefoo-statemachine-editor",
     "projectName": "Map",
-    "exportedAt": "2026-08-25T15:12:10.361Z"
+    "exportedAt": "2026-09-01T15:32:22.642Z"
   },
   "machines": {
     "torch": {
@@ -53,24 +53,12 @@
       ]
     },
     "object_5": {
-      "initial": "state_0",
+      "initial": "init",
       "states": {
-        "state_0": {
+        "init": {
           "display": {
-            "kind": "animation",
-            "animation": null
-          }
-        }
-      },
-      "transitions": []
-    },
-    "Slime": {
-      "initial": "Idle",
-      "states": {
-        "Idle": {
-          "display": {
-            "kind": "animation",
-            "animation": "Slime_idle"
+            "kind": "sprite",
+            "sprite": "skeleton"
           }
         }
       },

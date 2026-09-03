@@ -6,7 +6,7 @@
     "image": "animated_props.png",
     "imageWidth": 176,
     "imageHeight": 128,
-    "exportedAt": "2026-08-25T15:12:10.361Z"
+    "exportedAt": "2026-09-01T15:32:22.642Z"
   },
   "frames": {
     "torch": {
@@ -80,84 +80,6 @@
       "y": 16,
       "width": 16,
       "height": 16
-    },
-    "sprite_4_0": {
-      "x": 64,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_5_0": {
-      "x": 80,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_6_0": {
-      "x": 96,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_4_3": {
-      "x": 64,
-      "y": 48,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_5_3": {
-      "x": 80,
-      "y": 48,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_6_3": {
-      "x": 96,
-      "y": 48,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_4_1": {
-      "x": 64,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_5_1": {
-      "x": 80,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_6_1": {
-      "x": 96,
-      "y": 16,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_7_0": {
-      "x": 112,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_8_0": {
-      "x": 128,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_9_0": {
-      "x": 144,
-      "y": 0,
-      "width": 16,
-      "height": 16
-    },
-    "sprite_10_0": {
-      "x": 160,
-      "y": 0,
-      "width": 16,
-      "height": 16
     }
   },
   "animations": {
@@ -195,43 +117,6 @@
         "sprite_10_1"
       ],
       "duration": 0.15,
-      "loop": true
-    },
-    "Chest": {
-      "frames": [
-        "sprite_4_0",
-        "sprite_5_0",
-        "sprite_6_0"
-      ],
-      "duration": 0.15,
-      "loop": true
-    },
-    "Spike": {
-      "frames": [
-        "sprite_4_3",
-        "sprite_5_3",
-        "sprite_6_3"
-      ],
-      "duration": 0.15,
-      "loop": true
-    },
-    "switch": {
-      "frames": [
-        "sprite_4_1",
-        "sprite_5_1",
-        "sprite_6_1"
-      ],
-      "duration": 0.3,
-      "loop": true
-    },
-    "Money": {
-      "frames": [
-        "sprite_7_0",
-        "sprite_8_0",
-        "sprite_9_0",
-        "sprite_10_0"
-      ],
-      "duration": 0.1,
       "loop": true
     }
   }

@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "idle.png",
+    "imageWidth": 64,
+    "imageHeight": 96,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "frames": {
+    "sprite_0_0": {
+      "x": 8,
+      "y": 8,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "x": 40,
+      "y": 8,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_2": {
+      "x": 40,
+      "y": 40,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_4": {
+      "x": 40,
+      "y": 72,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_4": {
+      "x": 8,
+      "y": 72,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_2": {
+      "x": 8,
+      "y": 40,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "p_idle_front": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_2_0"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_idle_back": {
+      "frames": [
+        "sprite_0_4",
+        "sprite_2_4"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_idle_right": {
+      "frames": [
+        "sprite_0_2",
+        "sprite_2_2"
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  }
+}

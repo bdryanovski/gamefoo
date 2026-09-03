@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "death.png",
+    "imageWidth": 96,
+    "imageHeight": 96,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "sprite_0_0": 7,
+    "sprite_2_0": 9,
+    "sprite_4_0": 11,
+    "sprite_0_2": 19,
+    "sprite_2_2": 21,
+    "sprite_4_2": 23,
+    "sprite_0_4": 31,
+    "sprite_2_4": 32,
+    "sprite_4_4": 34
+  },
+  "animations": {
+    "p_dead_front": {
+      "frames": [
+        7,
+        9,
+        11
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_dead_right": {
+      "frames": [
+        19,
+        21,
+        23
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_dead_back": {
+      "frames": [
+        31,
+        32,
+        34
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  }
+}

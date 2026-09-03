@@ -1,4 +1,6 @@
-import type { AppState, LibraryImage, SpriteRegion, AnimationDef, GameObjectDef } from "../types";
+import type { AppState, LibraryImage, SpriteRegion, AnimationDef, GameObjectDef, CollisionVolume, CollisionLayerDef } from "../types";
+import type { ObjectExport } from "../objects/objectExport";
+import { exportObject } from "../objects/objectExport";
 
 /**
  * Atlas export format — compatible with Sprite.fromAtlas().
@@ -47,6 +49,8 @@ export interface FullExport {
     exportedAt: string;
   };
   images: Array<{ id: string; name: string; url: string; width: number; height: number }>;
+  /** Project-wide collision layer registry (name + colour per layer). */
+  collisionLayers: CollisionLayerDef[];
   grid?: GridExport["grid"];
   frames: Record<string, AtlasExport["frames"][string] & { image: string }>;
   animations: AtlasExport["animations"];
@@ -57,6 +61,10 @@ export interface FullExport {
     category: string;
     description: string;
     tags: string[];
+    grid: ObjectExport["grid"];
+    collisionLayers: ObjectExport["collisionLayers"];
+    states: ObjectExport["states"];
+    initial: string | null;
   }>;
   spriteMetadata: Record<string, {
     image: string;
@@ -65,6 +73,7 @@ export interface FullExport {
     order: number;
     level: number;
     properties: Record<string, string>;
+    collisions?: CollisionVolume[];
   }>;
 }
 
@@ -217,6 +226,7 @@ export function exportFull(state: AppState): FullExport {
   const imageNames = new Map(state.images.map((i) => [i.id, i.name]));
 
   for (const o of state.objects) {
+    const def = exportObject(state, o);
     objects[o.name] = {
       sprites: o.sprites
         .map((sid) => spriteMap.get(sid)?.name)
@@ -228,6 +238,10 @@ export function exportFull(state: AppState): FullExport {
       category: o.meta.category,
       description: o.meta.description,
       tags: [...o.meta.tags],
+      grid: def.grid,
+      collisionLayers: def.collisionLayers,
+      states: def.states,
+      initial: def.initial,
     };
   }
 
@@ -247,6 +261,9 @@ export function exportFull(state: AppState): FullExport {
       level: s.level,
       properties: { ...s.properties },
     };
+    if (s.collisions.length > 0) {
+      spriteMetadata[s.name]!.collisions = s.collisions.map((c) => ({ ...c }));
+    }
   }
 
   const result: FullExport = {
@@ -266,6 +283,7 @@ export function exportFull(state: AppState): FullExport {
     frames,
     animations: buildAnimations(state.animations, state.sprites),
     objects,
+    collisionLayers: state.collisionLayers.map((l) => ({ ...l })),
     spriteMetadata,
   };
 
@@ -281,6 +299,22 @@ export function exportFull(state: AppState): FullExport {
   }
 
   return result;
+}
+
+/**
+ * Project configuration constants — default map layers + the collision
+ * layer registry. Standalone reference file inlined by other exports.
+ */
+export function exportConfig(state: AppState) {
+  return {
+    meta: {
+      version: "1.0",
+      tool: "gamefoo-project-config",
+      projectName: state.projectName,
+    },
+    defaultLayers: [...state.config.defaultLayers],
+    collisionLayers: state.collisionLayers.map((l) => ({ ...l })),
+  };
 }
 
 /** Save project state for later reload. */

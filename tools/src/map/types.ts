@@ -66,7 +66,7 @@ export interface MapScreen {
   placements: MapPlacement[];
 }
 
-export type MapToolType = "paint" | "erase" | "fill" | "pick" | "move" | "pan";
+export type MapToolType = "paint" | "stream" | "erase" | "fill" | "pick" | "move" | "pan";
 
 /** What the paint tool currently places. */
 export type PaletteSelection =
@@ -74,6 +74,12 @@ export type PaletteSelection =
   | { kind: "machine"; id: string }
   | { kind: "animation"; id: string }
   | null;
+
+/** A named, toggleable map layer. Its array index is the placement `level`. */
+export interface MapLayer {
+  name: string;
+  visible: boolean;
+}
 
 export interface MapState {
   /** Px per block. */
@@ -88,15 +94,21 @@ export interface MapState {
   selected: PaletteSelection;
   /** Placement selected for editing (move/rotate/flip/level). */
   selectedPlacementId: string | null;
-  /** Level new placements go to. */
+  /**
+   * Ordered layers (index = level). Layer 0 is "base". A placement is drawn
+   * when its layer's `visible` is true; all visible ⇒ the whole map shows.
+   */
+  layers: MapLayer[];
+  /** Layer new placements go to, and the one that's editable. */
   activeLevel: number;
-  /** Render every level (true) or only activeLevel (false). */
-  showAllLevels: boolean;
   activeTool: MapToolType;
   zoom: number;
   pan: { x: number; y: number };
 }
 
+
+/** Default layer names new projects (and the "reset" action) start from. */
+export const DEFAULT_LAYER_NAMES: readonly string[] = ["base", "walls", "objects"];
 export const screenKey = (x: number, y: number) => `${x},${y}`;
 
 export const INITIAL_MAP_STATE: MapState = {
@@ -107,8 +119,8 @@ export const INITIAL_MAP_STATE: MapState = {
   screens: {},
   selected: null,
   selectedPlacementId: null,
+  layers: DEFAULT_LAYER_NAMES.map((name) => ({ name, visible: true })),
   activeLevel: 0,
-  showAllLevels: false,
   activeTool: "paint",
   zoom: 0.5,
   pan: { x: 40, y: 40 },
@@ -125,7 +137,11 @@ export type MapAction =
   | { type: "SELECT_PLACEMENT"; id: string | null }
   | { type: "SET_MAP_DEFAULT"; spriteId: string | null }
   | { type: "SET_ACTIVE_LEVEL"; level: number }
-  | { type: "SET_SHOW_ALL_LEVELS"; show: boolean }
+  | { type: "ADD_LAYER" }
+  | { type: "RENAME_LAYER"; level: number; name: string }
+  | { type: "SET_LAYER_VISIBLE"; level: number; visible: boolean }
+  | { type: "MOVE_LAYER"; from: number; to: number }
+  | { type: "SET_LAYERS"; layers: MapLayer[] }
   | { type: "ADD_SCREEN"; x: number; y: number }
   | { type: "REMOVE_SCREEN"; x: number; y: number }
   | { type: "SET_SCREEN_DEFAULT"; x: number; y: number; spriteId: string | null }
@@ -171,11 +187,55 @@ export function mapReducer(state: MapState, action: MapAction): MapState {
     case "SET_ACTIVE_LEVEL":
       return {
         ...state,
-        activeLevel: Math.max(0, Math.min(99, action.level)),
+        activeLevel: Math.max(0, Math.min(state.layers.length - 1, action.level)),
       };
 
-    case "SET_SHOW_ALL_LEVELS":
-      return { ...state, showAllLevels: action.show };
+    case "ADD_LAYER": {
+      const layers = [...state.layers, { name: `layer_${state.layers.length}`, visible: true }];
+      return { ...state, layers, activeLevel: layers.length - 1 };
+    }
+
+    case "RENAME_LAYER":
+      return {
+        ...state,
+        layers: state.layers.map((l, i) => (i === action.level ? { ...l, name: action.name } : l)),
+      };
+
+    case "SET_LAYER_VISIBLE":
+      return {
+        ...state,
+        layers: state.layers.map((l, i) => (i === action.level ? { ...l, visible: action.visible } : l)),
+      };
+
+    case "MOVE_LAYER": {
+      const n = state.layers.length;
+      const { from, to } = action;
+      if (from < 0 || from >= n || to < 0 || to >= n || from === to) return state;
+      // Reorder the layer array, tracking where each old index lands.
+      const order = state.layers.map((_, i) => i);
+      const [moved] = order.splice(from, 1);
+      order.splice(to, 0, moved!);
+      const oldToNew: number[] = new Array(n);
+      order.forEach((oldIdx, newIdx) => (oldToNew[oldIdx] = newIdx));
+      const layers = order.map((oldIdx) => state.layers[oldIdx]!);
+      const remap = (lvl: number) => (lvl >= 0 && lvl < n ? oldToNew[lvl]! : lvl);
+      const screens: Record<string, MapScreen> = {};
+      for (const [k, s] of Object.entries(state.screens)) {
+        screens[k] = { ...s, placements: s.placements.map((p) => ({ ...p, level: remap(p.level) })) };
+      }
+      return { ...state, layers, screens, activeLevel: remap(state.activeLevel) };
+    }
+
+    case "SET_LAYERS": {
+      const layers = action.layers.length > 0 ? action.layers : [{ name: "base", visible: true }];
+      // Clamp any placement level / active level into the new layer range.
+      const max = layers.length - 1;
+      const screens: Record<string, MapScreen> = {};
+      for (const [k, s] of Object.entries(state.screens)) {
+        screens[k] = { ...s, placements: s.placements.map((p) => ({ ...p, level: Math.min(p.level, max) })) };
+      }
+      return { ...state, layers, screens, activeLevel: Math.min(state.activeLevel, max) };
+    }
 
     case "ADD_SCREEN": {
       const key = screenKey(action.x, action.y);
@@ -447,7 +507,7 @@ export function migrateMapState(raw: unknown): MapState {
     selectedSpriteId?: string | null;
     selectedAssetId?: string | null;
     activeLevel?: number;
-    showAllLevels?: boolean;
+    layers?: Array<Record<string, unknown>>;
     activeTool?: MapToolType;
     zoom?: number;
     pan?: { x: number; y: number };
@@ -501,6 +561,21 @@ export function migrateMapState(raw: unknown): MapState {
         ? { kind: "sprite", id: (old.selectedSpriteId ?? old.selectedAssetId)! }
         : INITIAL_MAP_STATE.selected;
 
+  const maxLevel = Object.values(screens).reduce(
+    (m, s) => s.placements.reduce((mm, p) => Math.max(mm, p.level), m),
+    0,
+  );
+  const layers: MapLayer[] = Array.isArray(old.layers)
+    ? old.layers.map((l, i) => ({
+        name: l && typeof l.name === "string" ? l.name : i === 0 ? "base" : `layer_${i}`,
+        visible: l && typeof l.visible === "boolean" ? l.visible : true,
+      }))
+    : [];
+  while (layers.length <= maxLevel || layers.length === 0) {
+    const i = layers.length;
+    layers.push({ name: i === 0 ? "base" : `layer_${i}`, visible: true });
+  }
+
   return {
     ...INITIAL_MAP_STATE,
     blockSize: old.blockSize ?? INITIAL_MAP_STATE.blockSize,
@@ -513,8 +588,8 @@ export function migrateMapState(raw: unknown): MapState {
       typeof old.selectedPlacementId === "string"
         ? old.selectedPlacementId
         : INITIAL_MAP_STATE.selectedPlacementId,
-    activeLevel: old.activeLevel ?? INITIAL_MAP_STATE.activeLevel,
-    showAllLevels: old.showAllLevels ?? INITIAL_MAP_STATE.showAllLevels,
+    activeLevel: Math.max(0, Math.min(layers.length - 1, old.activeLevel ?? 0)),
+    layers,
     activeTool: old.activeTool ?? INITIAL_MAP_STATE.activeTool,
     zoom: old.zoom ?? INITIAL_MAP_STATE.zoom,
     pan: old.pan ?? INITIAL_MAP_STATE.pan,

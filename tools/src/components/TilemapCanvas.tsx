@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import type { AppState, AppAction, SpriteRegion } from "../types";
 import { uid } from "../utils/uid";
+import { Icon } from "./Icon";
 
 interface Props {
   state: AppState;
@@ -291,6 +292,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
             order: state.sprites.length,
             level: 0,
             properties: {},
+            collisions: [],
           };
           dispatch({ type: "ADD_SPRITE", sprite });
           dispatch({ type: "SELECT_SPRITE", id: sprite.id });
@@ -364,6 +366,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
             order: state.sprites.length,
             level: 0,
             properties: {},
+            collisions: [],
           };
           dispatch({ type: "ADD_SPRITE", sprite });
           dispatch({ type: "SELECT_SPRITE", id: sprite.id });
@@ -414,7 +417,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
       />
       {!image && (
         <div className="upload-overlay">
-          <div className="big-icon">▣</div>
+          <div className="big-icon"><Icon name="sprite-editor" size={48} /></div>
           <div>Drop a tilemap image here</div>
           <div>— or —</div>
           <button className="btn" onClick={onUploadClick}>

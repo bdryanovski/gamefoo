@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "pickup_items_animated.png",
+    "imageWidth": 64,
+    "imageHeight": 128,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "sprite_0_0": 0,
+    "sprite_1_0": 1,
+    "sprite_2_0": 2,
+    "sprite_3_0": 3,
+    "sprite_0_1": 4,
+    "sprite_1_1": 5,
+    "sprite_2_1": 6,
+    "sprite_3_1": 7,
+    "sprite_0_2": 8,
+    "sprite_1_2": 9,
+    "sprite_2_2": 10,
+    "sprite_3_2": 11,
+    "sprite_0_4": 16,
+    "sprite_1_4": 17,
+    "sprite_2_4": 18,
+    "sprite_3_4": 19
+  },
+  "animations": {
+    "olive": {
+      "frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "key": {
+      "frames": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "potion": {
+      "frames": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "heart": {
+      "frames": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  }
+}

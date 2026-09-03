@@ -7,10 +7,12 @@ import {
   exportFull,
   exportSprites,
   exportAnimations,
+  exportConfig,
   spritesOfImage,
 } from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
 import { exportStateMachines } from "../statemachine/smExport";
+import { exportObject } from "../objects/objectExport";
 
 interface Props {
   state: AppState;
@@ -38,6 +40,11 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
     const full = exportFull(state);
 
     const list: ExportFile[] = [
+      {
+        filename: `${baseName}.config.json`,
+        label: "Project Config (default layers + collision layers)",
+        data: exportConfig(state),
+      },
       {
         filename: `${baseName}.sprites.json`,
         label: "Sprites Export (name + coordinates + size)",
@@ -77,6 +84,16 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
           data: exportGridForImage(state, img),
         });
       }
+    }
+
+    // One standalone, self-contained JSON per object.
+    for (const o of state.objects) {
+      const objBase = o.name.replace(/\s+/g, "_").toLowerCase() || o.id;
+      list.push({
+        filename: `${objBase}.object.json`,
+        label: `Object — ${o.name} (standalone: grid, layers, collisions, states)`,
+        data: exportObject(state, o),
+      });
     }
 
     list.push({

@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useCallback } from "react";
+import { Icon } from "../components/Icon";
 import type {
   AppState,
   AppAction,
   GameObjectDef,
   SpriteRegion,
+  CharacterSlot,
 } from "../types";
 import {
   STANDARD_SLOTS,
@@ -17,6 +19,11 @@ import {
   characterPreviewFrames,
 } from "./character";
 import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
+import { CollisionEditor } from "../components/CollisionEditor";
+import { drawObjectLayers } from "./composition";
+import { objectPixelSize, objectStateLayers, stateCollisions, stateHasOwnCollisions } from "../types";
+import type { CollisionVolume } from "../types";
+import { uid } from "../utils/uid";
 
 interface Props {
   state: AppState;
@@ -50,6 +57,7 @@ export function CharacterEditor({
 
   const [pick, setPick] = useState<{ key: string; kind: "sprite" | "animation" } | null>(null);
   const [newAction, setNewAction] = useState("");
+  const [collisionStateId, setCollisionStateId] = useState<string | null>(null);
 
   const spriteById = useMemo(
     () => new Map(state.sprites.map((s) => [s.id, s])),
@@ -87,10 +95,35 @@ export function CharacterEditor({
     [animById],
   );
 
+  // Per-state collisions (idle fallback), editable per character state.
+  const colStateId = selected
+    ? collisionStateId && selected.machine.states.some((s) => s.id === collisionStateId)
+      ? collisionStateId
+      : selected.machine.initialStateId
+    : null;
+  const colIsIdle = !!selected && colStateId === selected.machine.initialStateId;
+  const colInherited =
+    !!selected && !!colStateId && !colIsIdle && !stateHasOwnCollisions(selected, colStateId);
+  const colEffective: CollisionVolume[] =
+    selected && colStateId ? stateCollisions(selected, colStateId) : [];
+  const setColStateCollisions = useCallback(
+    (vols: CollisionVolume[]) => {
+      if (!selected || !colStateId) return;
+      apply({ ...selected, collisionsByState: { ...selected.collisionsByState, [colStateId]: vols } });
+    },
+    [selected, colStateId, apply],
+  );
+  const resetColState = useCallback(() => {
+    if (!selected || !colStateId) return;
+    const cbs = { ...selected.collisionsByState };
+    delete cbs[colStateId];
+    apply({ ...selected, collisionsByState: cbs });
+  }, [selected, colStateId, apply]);
+
   return (
     <div className="app-layout">
       <div className="title-bar">
-        <span className="title-bar__icon">☺</span>
+        <span className="title-bar__icon"><Icon name="character" size={15} /></span>
         <span className="title-bar__name">
           GameFoo Character — {state.projectName}
           {projectId ? "" : " (unsaved)"}
@@ -104,7 +137,7 @@ export function CharacterEditor({
           disabled={state.history.length === 0}
           title="Undo — Ctrl/Cmd+Z"
         >
-          ↶ Undo{state.history.length > 0 ? ` (${state.history.length})` : ""}
+          <Icon name="undo" size={13} /> Undo{state.history.length > 0 ? ` (${state.history.length})` : ""}
         </button>
         <button
           className="btn btn-sm title-btn"
@@ -158,6 +191,7 @@ export function CharacterEditor({
                         spriteById={spriteById}
                         imageMap={imageMap}
                         size={26}
+                        transform={pv.transform}
                       />
                     </div>
                     <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -197,6 +231,7 @@ export function CharacterEditor({
                       spriteById={spriteById}
                       imageMap={imageMap}
                       size={62}
+                      transform={headerPreview.transform}
                     />
                   </div>
                   <div className="col" style={{ flex: 1, gap: 4 }}>
@@ -234,6 +269,8 @@ export function CharacterEditor({
                       onSetSprite={() => setPick({ key: s.key, kind: "sprite" })}
                       onSetAnim={() => setPick({ key: s.key, kind: "animation" })}
                       onClear={() => apply(clearSlot(selected, s.key))}
+                      slot={selected.character?.slots[s.key]}
+                      onTransform={(patch) => { const cur = selected.character?.slots[s.key]; if (cur) apply(assignSlot(selected, s.key, { ...cur, ...patch })); }}
                     />
                   ))}
                 </div>
@@ -258,6 +295,8 @@ export function CharacterEditor({
                       onSetSprite={() => setPick({ key: a.id, kind: "sprite" })}
                       onSetAnim={() => setPick({ key: a.id, kind: "animation" })}
                       onClear={() => apply(clearSlot(selected, a.id))}
+                      slot={selected.character?.slots[a.id]}
+                      onTransform={(patch) => { const cur = selected.character?.slots[a.id]; if (cur) apply(assignSlot(selected, a.id, { ...cur, ...patch })); }}
                     />
                   ))}
                 </div>
@@ -287,6 +326,58 @@ export function CharacterEditor({
                   </button>
                 </div>
               </div>
+
+              {/* Collisions — per state, with idle fallback */}
+              {colStateId && (
+                <div className="section">
+                  <div className="section-title">
+                    <span>Collisions</span>
+                    <select
+                      className="input input-sm"
+                      value={colStateId}
+                      onChange={(e) => setCollisionStateId(e.target.value)}
+                    >
+                      {selected.machine.states.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name}
+                          {s.id === selected.machine.initialStateId ? " (idle)" : ""}
+                        </option>
+                      ))}
+                    </select>
+                    {!colIsIdle &&
+                      (colInherited ? (
+                        <button
+                          className="btn btn-sm"
+                          title="Copy idle collisions to edit them just for this state"
+                          onClick={() => setColStateCollisions(colEffective.map((c) => ({ ...c, id: uid("col") })))}
+                        >
+                          Override
+                        </button>
+                      ) : (
+                        <button className="btn btn-sm" title="Discard this state's collisions and inherit idle" onClick={resetColState}>
+                          Reset to idle
+                        </button>
+                      ))}
+                  </div>
+                  {colInherited && (
+                    <div className="text-xs text-dim" style={{ padding: "0 4px 4px" }}>
+                      This state uses the idle collisions. Click Override to change them here.
+                    </div>
+                  )}
+                  <CollisionEditor
+                    key={colStateId}
+                    width={objectPixelSize(selected.grid).width}
+                    height={objectPixelSize(selected.grid).height}
+                    collisions={colEffective}
+                    layers={state.collisionLayers}
+                    onChange={setColStateCollisions}
+                    dispatch={dispatch}
+                    drawBackdrop={(ctx, scale) =>
+                      drawObjectLayers(ctx, objectStateLayers(selected, colStateId), selected.grid.cell, spriteById, animById, imageMap, scale, () => 1)
+                    }
+                  />
+                </div>
+              )}
 
               <div className="section">
                 <div className="text-xs text-dim" style={{ padding: 4 }}>
@@ -385,6 +476,8 @@ function SlotCard({
   onSetSprite,
   onSetAnim,
   onClear,
+  slot,
+  onTransform,
 }: {
   label: string;
   editableLabel?: boolean;
@@ -396,6 +489,8 @@ function SlotCard({
   onSetSprite: () => void;
   onSetAnim: () => void;
   onClear: () => void;
+  slot?: CharacterSlot;
+  onTransform?: (patch: Partial<CharacterSlot>) => void;
 }) {
   return (
     <div
@@ -426,7 +521,7 @@ function SlotCard({
             style={{ padding: "0 3px", minHeight: 14, fontSize: 8 }}
             onClick={onRemove}
           >
-            ✕
+            <Icon name="close" size={11} />
           </button>
         )}
       </div>
@@ -438,6 +533,7 @@ function SlotCard({
               duration={frames.duration}
               spriteById={spriteById}
               imageMap={imageMap}
+              transform={slot && (slot.flipX || slot.flipY || slot.rotation) ? { flipX: slot.flipX, flipY: slot.flipY, rotation: slot.rotation } : undefined}
             />
           ) : (
             <div
@@ -462,6 +558,13 @@ function SlotCard({
           </button>
         )}
       </div>
+      {slot && onTransform && (
+        <div className="row" style={{ gap: 2, justifyContent: "center" }}>
+          <button className={`btn btn-sm ${slot.flipX ? "active" : ""}`} style={{ fontSize: 9, padding: "0 4px" }} title="Flip horizontal (mirror — e.g. left = right flipped)" onClick={() => onTransform({ flipX: !slot.flipX })}>⇋</button>
+          <button className={`btn btn-sm ${slot.flipY ? "active" : ""}`} style={{ fontSize: 9, padding: "0 4px" }} title="Flip vertical" onClick={() => onTransform({ flipY: !slot.flipY })}>⇅</button>
+          <button className="btn btn-sm" style={{ fontSize: 8, padding: "0 4px" }} title="Rotate 90°" onClick={() => onTransform({ rotation: ((slot.rotation ?? 0) + 90) % 360 })}>{(slot.rotation ?? 0)}°</button>
+        </div>
+      )}
     </div>
   );
 }

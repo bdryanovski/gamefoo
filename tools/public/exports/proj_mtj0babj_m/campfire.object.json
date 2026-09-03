@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "campfire",
+    "category": "",
+    "exportedAt": "2026-09-03T07:14:51.279Z"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 2,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 32
+  },
+  "properties": {},
+  "images": {
+    "props.png": {
+      "src": "/uploads/1788287738546_props.png",
+      "width": 304,
+      "height": 128
+    },
+    "animated_props.png": {
+      "src": "/uploads/1788287745065_animated_props.png",
+      "width": 176,
+      "height": 128
+    }
+  },
+  "frames": {
+    "sprite_2_2": {
+      "image": "props.png",
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_4": {
+      "image": "animated_props.png",
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_1_4": {
+      "image": "animated_props.png",
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_2_4": {
+      "image": "animated_props.png",
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_3_4": {
+      "image": "animated_props.png",
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    }
+  },
+  "animations": {
+    "campfire": {
+      "frames": [
+        "sprite_0_4",
+        "sprite_1_4",
+        "sprite_2_4",
+        "sprite_3_4"
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "campfire"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtk2gzfo_8",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8028846153846154,
+            "y": 18.441346153846155,
+            "width": 14.295673076923078,
+            "height": 13.432692307692307
+          }
+        }
+      ]
+    },
+    "off": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 1,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_2_2"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtk2gzfo_8",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8028846153846154,
+            "y": 18.441346153846155,
+            "width": 14.295673076923078,
+            "height": 13.432692307692307
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

@@ -6,7 +6,7 @@
     "image": "grounds.png",
     "imageWidth": 208,
     "imageHeight": 256,
-    "exportedAt": "2026-08-25T15:12:10.361Z"
+    "exportedAt": "2026-09-01T15:32:22.642Z"
   },
   "grid": {
     "frameWidth": 16,
@@ -30,16 +30,7 @@
     "ground_9": 193,
     "ground_10": 190,
     "ground_11": 177,
-    "ground_12": 180,
-    "sprite_10_1": 23,
-    "sprite_5_14": 187,
-    "sprite_6_13": 175,
-    "sprite_2_14": 184,
-    "sprite_3_13": 172,
-    "sprite_10_13": 179,
-    "sprite_6_14": 188,
-    "sprite_5_13": 174,
-    "sprite_0_15": 195
+    "ground_12": 180
   },
   "animations": {}
 }

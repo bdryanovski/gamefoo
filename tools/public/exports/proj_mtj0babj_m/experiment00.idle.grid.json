@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "idle.png",
+    "imageWidth": 64,
+    "imageHeight": 96,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "sprite_0_0": 5,
+    "sprite_2_0": 7,
+    "sprite_2_2": 15,
+    "sprite_2_4": 23,
+    "sprite_0_4": 21,
+    "sprite_0_2": 13
+  },
+  "animations": {
+    "p_idle_front": {
+      "frames": [
+        5,
+        7
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_idle_back": {
+      "frames": [
+        21,
+        23
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_idle_right": {
+      "frames": [
+        13,
+        15
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  }
+}

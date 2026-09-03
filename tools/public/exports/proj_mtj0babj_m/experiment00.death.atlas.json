@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "death.png",
+    "imageWidth": 96,
+    "imageHeight": 96,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "frames": {
+    "sprite_0_0": {
+      "x": 8,
+      "y": 8,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "x": 40,
+      "y": 8,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_4_0": {
+      "x": 72,
+      "y": 8,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_2": {
+      "x": 8,
+      "y": 40,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_2": {
+      "x": 40,
+      "y": 40,
+      "width": 18,
+      "height": 16
+    },
+    "sprite_4_2": {
+      "x": 72,
+      "y": 40,
+      "width": 18,
+      "height": 16
+    },
+    "sprite_0_4": {
+      "x": 8,
+      "y": 72,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_4": {
+      "x": 38,
+      "y": 72,
+      "width": 18,
+      "height": 16
+    },
+    "sprite_4_4": {
+      "x": 70,
+      "y": 72,
+      "width": 18,
+      "height": 16
+    }
+  },
+  "animations": {
+    "p_dead_front": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_2_0",
+        "sprite_4_0"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_dead_right": {
+      "frames": [
+        "sprite_0_2",
+        "sprite_2_2",
+        "sprite_4_2"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "p_dead_back": {
+      "frames": [
+        "sprite_0_4",
+        "sprite_2_4",
+        "sprite_4_4"
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  }
+}

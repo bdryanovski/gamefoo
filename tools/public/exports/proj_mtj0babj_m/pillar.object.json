@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "pillar",
+    "category": "",
+    "exportedAt": "2026-09-03T07:14:51.279Z"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 2,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 32
+  },
+  "properties": {},
+  "images": {
+    "props.png": {
+      "src": "/uploads/1788287738546_props.png",
+      "width": 304,
+      "height": 128
+    }
+  },
+  "frames": {
+    "sprite_16_0": {
+      "image": "props.png",
+      "x": 256,
+      "y": 0,
+      "width": 16,
+      "height": 32
+    }
+  },
+  "animations": {},
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_16_0"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtk2euqx_3",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.45625,
+            "y": 18.46201923076923,
+            "width": 14.164903846153845,
+            "height": 13.180288461538467
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

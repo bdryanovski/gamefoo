@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "animated_props.png",
+    "imageWidth": 176,
+    "imageHeight": 128,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "sprite_0_4": 44,
+    "sprite_1_4": 45,
+    "sprite_2_4": 46,
+    "sprite_3_4": 47,
+    "sprite_0_0": 0,
+    "sprite_1_0": 1,
+    "sprite_2_0": 2,
+    "sprite_3_0": 3,
+    "sprite_4_0": 4,
+    "sprite_5_0": 5,
+    "sprite_6_0": 6,
+    "sprite_9_1": 20,
+    "sprite_10_1": 21,
+    "sprite_0_6": 66,
+    "sprite_1_6": 67,
+    "sprite_2_6": 68,
+    "sprite_3_6": 69,
+    "sprite_0_5": 55
+  },
+  "animations": {
+    "campfire": {
+      "frames": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "light": {
+      "frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  }
+}

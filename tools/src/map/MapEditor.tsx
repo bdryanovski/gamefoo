@@ -5,6 +5,7 @@ import type { MapAction, MapToolType } from "./types";
 import { MapCanvas } from "./MapCanvas";
 import { MapPalettePanel } from "./MapPalettePanel";
 import { MapExportPanel } from "./MapExportPanel";
+import { Icon, type IconName } from "../components/Icon";
 
 interface Props {
   state: AppState;
@@ -17,17 +18,19 @@ interface Props {
   onOpenProjects: () => void;
 }
 
-const MAP_TOOLS: { key: MapToolType; icon: string; title: string }[] = [
-  { key: "paint", icon: "▣", title: "Paint (P) — place selected sprite" },
-  { key: "erase", icon: "✕", title: "Erase (E) — remove placements" },
-  { key: "fill", icon: "▒", title: "Fill (F) — set screen default tile" },
-  { key: "pick", icon: "◌", title: "Pick (I) — select sprite under cursor" },
-  { key: "move", icon: "✜", title: "Move (M) — drag a placement to reposition it" },
-  { key: "pan", icon: "✥", title: "Pan (H) — drag to move view (or Space)" },
+const MAP_TOOLS: { key: MapToolType; icon: IconName; title: string }[] = [
+  { key: "paint", icon: "tool-paint", title: "Paint (P) — place selected sprite" },
+  { key: "stream", icon: "tool-stream", title: "Stream (S) — click to toggle continuous painting; paints wherever the mouse moves" },
+  { key: "erase", icon: "tool-erase", title: "Erase (E) — remove placements" },
+  { key: "fill", icon: "tool-fill", title: "Fill (F) — set screen default tile" },
+  { key: "pick", icon: "tool-pick", title: "Pick (I) — select sprite under cursor" },
+  { key: "move", icon: "tool-move", title: "Move (M) — drag a placement to reposition it" },
+  { key: "pan", icon: "tool-pan", title: "Pan (H) — drag to move view (or Space)" },
 ];
 
 const KEY_MAP: Record<string, MapToolType> = {
   p: "paint",
+  s: "stream",
   e: "erase",
   f: "fill",
   i: "pick",
@@ -124,7 +127,7 @@ export function MapEditor({
     <div className="app-layout">
       {/* Title bar — shared project lifecycle */}
       <div className="title-bar">
-        <span className="title-bar__icon">▦</span>
+        <span className="title-bar__icon"><Icon name="map-editor" size={15} /></span>
         <span className="title-bar__name">
           GameFoo Map Editor — {state.projectName}
           {projectId ? "" : " (unsaved)"}
@@ -138,7 +141,7 @@ export function MapEditor({
           disabled={state.history.length === 0}
           title="Undo — Ctrl/Cmd+Z"
         >
-          ↶ Undo{state.history.length > 0 ? ` (${state.history.length})` : ""}
+          <Icon name="undo" size={13} /> Undo{state.history.length > 0 ? ` (${state.history.length})` : ""}
         </button>
         <button
           className="btn btn-sm title-btn"
@@ -167,7 +170,7 @@ export function MapEditor({
               title={t.title}
               onClick={() => mapDispatch({ type: "SET_TOOL", tool: t.key })}
             >
-              {t.icon}
+              <Icon name={t.icon} size={16} />
             </button>
           ))}
           <div className="toolbar-sep" />
@@ -176,7 +179,7 @@ export function MapEditor({
             title="Zoom out"
             onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom / 1.25 })}
           >
-            −
+            <Icon name="subtract" size={16} />
           </button>
           <button
             className="tool-btn"
@@ -186,14 +189,14 @@ export function MapEditor({
               mapDispatch({ type: "SET_PAN", x: 40, y: 40 });
             }}
           >
-            ⊙
+            <Icon name="zoom-reset" size={16} />
           </button>
           <button
             className="tool-btn"
             title="Zoom in"
             onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom * 1.25 })}
           >
-            +
+            <Icon name="add" size={16} />
           </button>
         </div>
 

@@ -3,6 +3,8 @@ import type {
   CharacterConfig,
   CharacterSlot,
   AnimationDef,
+  ObjectLayer,
+  ObjectCell,
 } from "../types";
 import { makeObject } from "../types";
 import type {
@@ -126,6 +128,37 @@ export function regenerateMachine(o: GameObjectDef): StateMachineDef {
   };
 }
 
+/** One cell rendering a slot's sprite/animation, carrying its flip/rotation. */
+function slotCell(stateId: string, slot: CharacterSlot): ObjectCell {
+  return {
+    id: `cell_${stateId}`,
+    col: 0,
+    row: 0,
+    source: slot.kind === "sprite" ? { kind: "sprite", spriteId: slot.id } : { kind: "animation", animationId: slot.id },
+    ...(slot.flipX ? { flipX: true } : {}),
+    ...(slot.flipY ? { flipY: true } : {}),
+    ...(slot.rotation ? { rotation: slot.rotation } : {}),
+  };
+}
+
+/**
+ * Rebuild both the machine AND each state's composition from the character
+ * slots, so a slot's sprite/animation (with its flip/rotation) renders and
+ * exports like any object cell.
+ */
+export function regenerateCharacter(o: GameObjectDef): GameObjectDef {
+  const machine = regenerateMachine(o);
+  const config = emptyConfig(o);
+  const layersByState: Record<string, ObjectLayer[]> = {};
+  for (const s of machine.states) {
+    const slot = config.slots[s.id.replace(/^st_/, "")];
+    layersByState[s.id] = [
+      { id: `lyr_${s.id}`, name: "base", visible: true, cells: slot ? [slotCell(s.id, slot)] : [] },
+    ];
+  }
+  return { ...o, machine, layersByState };
+}
+
 /** Create a new character object (an object flagged with character config). */
 export function makeCharacter(name: string): GameObjectDef {
   const base = makeObject(name);
@@ -134,7 +167,7 @@ export function makeCharacter(name: string): GameObjectDef {
     meta: { ...base.meta, category: "character" },
     character: { slots: {}, actions: [] },
   };
-  return { ...withConfig, machine: regenerateMachine(withConfig) };
+  return regenerateCharacter(withConfig);
 }
 
 /** Assign a slot to a sprite/animation, attach the asset, regenerate. */
@@ -158,7 +191,7 @@ export function assignSlot(
     animations,
     character: { ...config, slots: { ...config.slots, [key]: slot } },
   };
-  return { ...withConfig, machine: regenerateMachine(withConfig) };
+  return regenerateCharacter(withConfig);
 }
 
 export function clearSlot(o: GameObjectDef, key: string): GameObjectDef {
@@ -166,7 +199,7 @@ export function clearSlot(o: GameObjectDef, key: string): GameObjectDef {
   const slots = { ...config.slots };
   delete slots[key];
   const withConfig: GameObjectDef = { ...o, character: { ...config, slots } };
-  return { ...withConfig, machine: regenerateMachine(withConfig) };
+  return regenerateCharacter(withConfig);
 }
 
 export function addAction(o: GameObjectDef, name: string): GameObjectDef {
@@ -178,7 +211,7 @@ export function addAction(o: GameObjectDef, name: string): GameObjectDef {
       actions: [...config.actions, { id: uid("act"), name }],
     },
   };
-  return { ...withConfig, machine: regenerateMachine(withConfig) };
+  return regenerateCharacter(withConfig);
 }
 
 export function renameAction(
@@ -194,7 +227,7 @@ export function renameAction(
       actions: config.actions.map((a) => (a.id === actionId ? { ...a, name } : a)),
     },
   };
-  return { ...withConfig, machine: regenerateMachine(withConfig) };
+  return regenerateCharacter(withConfig);
 }
 
 export function removeAction(o: GameObjectDef, actionId: string): GameObjectDef {
@@ -209,14 +242,14 @@ export function removeAction(o: GameObjectDef, actionId: string): GameObjectDef 
       actions: config.actions.filter((a) => a.id !== actionId),
     },
   };
-  return { ...withConfig, machine: regenerateMachine(withConfig) };
+  return regenerateCharacter(withConfig);
 }
 
 /** Preview frames for a character: idle slot, else the first filled slot. */
 export function characterPreviewFrames(
   o: GameObjectDef,
   animById: Map<string, AnimationDef>,
-): { frames: string[]; duration: number } {
+): { frames: string[]; duration: number; transform?: { flipX?: boolean; flipY?: boolean; rotation?: number } } {
   const config = o.character;
   if (config) {
     const ordered = [
@@ -226,9 +259,11 @@ export function characterPreviewFrames(
     ];
     const pick = ordered.find((s): s is CharacterSlot => s != null);
     if (pick) {
-      if (pick.kind === "sprite") return { frames: [pick.id], duration: 0 };
+      const transform =
+        pick.flipX || pick.flipY || pick.rotation ? { flipX: pick.flipX, flipY: pick.flipY, rotation: pick.rotation } : undefined;
+      if (pick.kind === "sprite") return { frames: [pick.id], duration: 0, transform };
       const a = animById.get(pick.id);
-      if (a && a.frames.length > 0) return { frames: a.frames, duration: a.duration };
+      if (a && a.frames.length > 0) return { frames: a.frames, duration: a.duration, transform };
     }
   }
   return { frames: [], duration: 0 };

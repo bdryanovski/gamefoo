@@ -8,6 +8,7 @@ import type {
 import { screenKey, resolvePlacementDisplay } from "./types";
 import type { AppState, SpriteRegion } from "../types";
 import { objectMachines } from "../types";
+import { Icon } from "../components/Icon";
 
 /** World-space gap between screens (px in image space). */
 const GAP = 16;
@@ -81,6 +82,9 @@ export function MapCanvas({
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0 });
   const [spaceHeld, setSpaceHeld] = useState(false);
+  /** Stream tool: toggled continuous painting + last cell painted (dedupe). */
+  const [streaming, setStreaming] = useState(false);
+  const lastStreamCellRef = useRef<string | null>(null);
   /** Move tool: the placement being dragged. */
   const movingRef = useRef<{
     id: string;
@@ -129,35 +133,25 @@ export function MapCanvas({
     [map.screens, screenW, screenH],
   );
 
-  /**
-   * Visible in the current view mode. In "All" mode every level shows;
-   * otherwise the active level plus every level below it (as dimmed
-   * positioning reference). Levels above the active level are hidden.
-   */
+  /** A layer is visible when its eye is on (unknown levels default visible). */
   const levelVisible = useCallback(
-    (level: number) =>
-      map.showAllLevels || level <= map.activeLevel,
-    [map.showAllLevels, map.activeLevel],
+    (level: number) => map.layers[level]?.visible ?? true,
+    [map.layers],
   );
 
-  /** Interactive (hit-testable) — only the active level, unless "All". */
+  /** Interactive (hit-testable) — only the active layer, and only if visible. */
   const levelInteractive = useCallback(
-    (level: number) => map.showAllLevels || level === map.activeLevel,
-    [map.showAllLevels, map.activeLevel],
+    (level: number) => level === map.activeLevel && (map.layers[level]?.visible ?? true),
+    [map.layers, map.activeLevel],
   );
 
   /**
-   * Render opacity for a level. Full opacity in "All" mode and for the
-   * active level. Lower levels dim progressively with depth so stacked
-   * levels stay distinguishable while positioning.
+   * Render opacity: visible layers draw solid; the active layer stays full
+   * while other visible layers dim slightly to keep the edit target clear.
    */
   const alphaForLevel = useCallback(
-    (level: number) => {
-      if (map.showAllLevels || level === map.activeLevel) return 1;
-      const depth = map.activeLevel - level; // >= 1 (only below reaches here)
-      return Math.max(0.15, 0.5 - (depth - 1) * 0.12);
-    },
-    [map.showAllLevels, map.activeLevel],
+    (level: number) => (level === map.activeLevel ? 1 : 0.7),
+    [map.activeLevel],
   );
 
   // ── ResizeObserver ─────────────────────────────────────
@@ -189,6 +183,10 @@ export function MapCanvas({
       );
     };
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setStreaming(false);
+        lastStreamCellRef.current = null;
+      }
       if (e.code !== "Space" || e.repeat) return;
       if (isTypingTarget(e.target)) return;
       e.preventDefault();
@@ -198,7 +196,7 @@ export function MapCanvas({
       if (e.code !== "Space") return;
       setSpaceHeld(false);
     };
-    const handleBlur = () => setSpaceHeld(false);
+    const handleBlur = () => { setSpaceHeld(false); setStreaming(false); };
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     window.addEventListener("blur", handleBlur);
@@ -221,7 +219,7 @@ export function MapCanvas({
     }
     return false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map.screens, map.showAllLevels, map.activeLevel, state.animations, state.objects, displayOf]);
+  }, [map.screens, map.layers, map.activeLevel, state.animations, state.objects, displayOf]);
 
   useEffect(() => {
     if (!hasAnimatedPlacements) return;
@@ -393,15 +391,14 @@ export function MapCanvas({
           drawPlacement(p, alpha);
         }
 
-        // Level badge on each screen (top-right)
+        // Layer badge on each screen (top-right): "L:all" when every layer
+        // is visible, else the active layer's name.
+        const allVisible = map.layers.every((l) => l.visible);
+        const badge = allVisible ? "L:all" : `L:${map.layers[map.activeLevel]?.name ?? map.activeLevel}`;
         ctx.fillStyle = "#00ff66";
         ctx.font = `bold ${Math.max(9, 10 / map.zoom)}px monospace`;
         ctx.textBaseline = "top";
-        ctx.fillText(
-          map.showAllLevels ? "L:all" : `L:${map.activeLevel}`,
-          r.w - (map.showAllLevels ? 46 : 34) / map.zoom,
-          3 / map.zoom,
-        );
+        ctx.fillText(badge, r.w - (badge.length * 6 + 6) / map.zoom, 3 / map.zoom);
         ctx.textBaseline = "alphabetic";
 
         // Move-tool preview: ghost of the dragged placement
@@ -465,7 +462,7 @@ export function MapCanvas({
         if (
           hover &&
           hover.screenKey === screenKey(r.screen.x, r.screen.y) &&
-          map.activeTool === "paint" &&
+          (map.activeTool === "paint" || map.activeTool === "stream") &&
           map.selected
         ) {
           const col = Math.floor(hover.localX / map.blockSize);
@@ -608,7 +605,7 @@ export function MapCanvas({
       return null;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [screenRects, state.sprites, state.animations, state.objects, map.showAllLevels, map.activeLevel],
+    [screenRects, state.sprites, state.animations, state.objects, map.layers, map.activeLevel],
   );
 
   /** Build a new placement for the current palette selection. */
@@ -751,6 +748,33 @@ export function MapCanvas({
     ],
   );
 
+  /** Paint the held selection at the cursor cell (deduped per cell). */
+  const streamPaintAt = useCallback(
+    (e: React.MouseEvent) => {
+      const world = getWorldPos(e);
+      const r = findScreenAt(world.x, world.y);
+      if (!r) return;
+      const key = screenKey(r.screen.x, r.screen.y);
+      const col = Math.max(0, Math.floor((world.x - r.wx) / map.blockSize));
+      const row = Math.max(0, Math.floor((world.y - r.wy) / map.blockSize));
+      const cellKey = `${key}:${col},${row}`;
+      if (cellKey === lastStreamCellRef.current) return;
+      lastStreamCellRef.current = cellKey;
+      const placement = makePlacement(col, row);
+      if (placement) mapDispatch({ type: "ADD_PLACEMENT", screenKey: key, placement });
+      onActiveScreen(key);
+    },
+    [getWorldPos, findScreenAt, map.blockSize, makePlacement, mapDispatch, onActiveScreen],
+  );
+
+  // Leaving the stream tool cancels any active stream.
+  useEffect(() => {
+    if (map.activeTool !== "stream") {
+      setStreaming(false);
+      lastStreamCellRef.current = null;
+    }
+  }, [map.activeTool]);
+
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (
@@ -766,9 +790,17 @@ export function MapCanvas({
         return;
       }
       if (e.button !== 0) return;
+      // Stream tool: a click toggles continuous painting on/off.
+      if (map.activeTool === "stream") {
+        const activating = !streaming;
+        setStreaming(activating);
+        lastStreamCellRef.current = null;
+        if (activating) streamPaintAt(e);
+        return;
+      }
       applyTool(e);
     },
-    [map.activeTool, map.pan, spaceHeld, applyTool],
+    [map.activeTool, map.pan, spaceHeld, applyTool, streaming, streamPaintAt],
   );
 
   const handleMouseMove = useCallback(
@@ -818,6 +850,9 @@ export function MapCanvas({
         return;
       }
 
+      // Stream tool active: paint wherever the cursor moves (no button held).
+      if (map.activeTool === "stream" && streaming) streamPaintAt(e);
+
       // Hover only — placement/erase happen on click (mousedown).
       if (!r) {
         onStatus({ screenKey: null, block: null });
@@ -832,7 +867,7 @@ export function MapCanvas({
       onStatus({ screenKey: key, block: { col, row } });
       setHover({ screenKey: key, localX, localY });
     },
-    [isPanning, mapDispatch, getWorldPos, findScreenAt, map, onStatus],
+    [isPanning, mapDispatch, getWorldPos, findScreenAt, map, onStatus, streaming, streamPaintAt],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -954,7 +989,7 @@ export function MapCanvas({
       ))}
       {Object.keys(map.screens).length === 0 && (
         <div className="upload-overlay">
-          <div className="big-icon">▦</div>
+          <div className="big-icon"><Icon name="map-editor" size={48} /></div>
           <div>No screens yet</div>
           <div>Click + to add the first screen at 0,0</div>
           <button

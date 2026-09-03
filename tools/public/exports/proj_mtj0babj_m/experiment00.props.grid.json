@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "props.png",
+    "imageWidth": 304,
+    "imageHeight": 128,
+    "exportedAt": "2026-09-03T07:14:31.880Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "sprite_0_3": 57,
+    "sprite_2_4": 78,
+    "sprite_2_2": 40,
+    "sprite_0_1": 19,
+    "sprite_3_1": 22,
+    "sprite_1_1": 20,
+    "sprite_5_1": 24,
+    "sprite_6_1": 25,
+    "sprite_7_1": 26,
+    "sprite_8_1": 27,
+    "sprite_10_0": 10,
+    "sprite_15_1": 15,
+    "sprite_16_0": 16,
+    "sprite_0_4": 76,
+    "sprite_3_2": 41
+  },
+  "animations": {}
+}

@@ -1,6 +1,7 @@
 import React, { useReducer, useCallback, useState, useEffect, useRef, useMemo } from "react";
-import type { AppState, AppAction, ProjectSnapshot } from "./types";
-import { INITIAL_STATE, migrateSpriteState } from "./types";
+import type { AppState, AppAction, ProjectSnapshot, CollisionVolume } from "./types";
+import { INITIAL_STATE, migrateSpriteState, sanitizeObject } from "./types";
+import { Icon } from "./components/Icon";
 import { mapReducer } from "./map/types";
 import { sanitizeMachine } from "./statemachine/types";
 import { Toolbar } from "./components/Toolbar";
@@ -15,6 +16,7 @@ import { StatusBar } from "./components/StatusBar";
 import { ProjectManager } from "./components/ProjectManager";
 import { SaveScreen } from "./components/SaveScreen";
 import { MapEditor } from "./map/MapEditor";
+import { ProjectConfigPanel } from "./components/ProjectConfigPanel";
 import {
   saveStateToLocal,
   loadStateFromLocal,
@@ -24,8 +26,11 @@ import {
   reuploadDataUrl,
   saveProject,
   loadProject,
+  exportProjectFiles,
 } from "./utils/storage";
 import { uid } from "./utils/uid";
+import { exportObject } from "./objects/objectExport";
+import { exportConfig } from "./utils/export";
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -88,11 +93,13 @@ function reducer(state: AppState, action: AppAction): AppState {
         ...a,
         frames: a.frames.filter((f) => f !== action.id),
       }));
-      const objects = state.objects.map((o) => ({
-        ...o,
-        sprites: o.sprites.filter((s) => s !== action.id),
-        machine: sanitizeMachine(o.machine, sprites, animations),
-      }));
+      const objects = state.objects.map((o) =>
+        sanitizeObject(
+          { ...o, sprites: o.sprites.filter((s) => s !== action.id) },
+          sprites,
+          animations,
+        ),
+      );
       return {
         ...state,
         sprites,
@@ -119,6 +126,39 @@ function reducer(state: AppState, action: AppAction): AppState {
     case "DESELECT_ALL_SPRITES":
       return { ...state, selectedSpriteIds: [] };
 
+    case "ADD_COLLISION_LAYER":
+      if (state.collisionLayers.some((l) => l.id === action.layer.id)) return state;
+      return { ...state, collisionLayers: [...state.collisionLayers, action.layer] };
+
+    case "UPDATE_COLLISION_LAYER":
+      return {
+        ...state,
+        collisionLayers: state.collisionLayers.map((l) =>
+          l.id === action.id ? { ...l, ...action.updates } : l,
+        ),
+      };
+
+    case "DELETE_COLLISION_LAYER":
+      return {
+        ...state,
+        collisionLayers: state.collisionLayers.filter((l) => l.id !== action.id),
+        // Drop volumes on the removed layer everywhere — no orphans.
+        sprites: state.sprites.map((s) => {
+          const collisions = s.collisions.filter((c) => c.layerId !== action.id);
+          return collisions.length === s.collisions.length ? s : { ...s, collisions };
+        }),
+        objects: state.objects.map((o) => {
+          let changed = false;
+          const collisionsByState: Record<string, CollisionVolume[]> = {};
+          for (const [k, vols] of Object.entries(o.collisionsByState)) {
+            const f = vols.filter((c) => c.layerId !== action.id);
+            if (f.length !== vols.length) changed = true;
+            collisionsByState[k] = f;
+          }
+          return changed ? { ...o, collisionsByState } : o;
+        }),
+      };
+
     case "ADD_ANIMATION":
       return {
         ...state,
@@ -135,11 +175,13 @@ function reducer(state: AppState, action: AppAction): AppState {
 
     case "DELETE_ANIMATION": {
       const animations = state.animations.filter((a) => a.id !== action.id);
-      const objects = state.objects.map((o) => ({
-        ...o,
-        animations: o.animations.filter((a) => a !== action.id),
-        machine: sanitizeMachine(o.machine, state.sprites, animations),
-      }));
+      const objects = state.objects.map((o) =>
+        sanitizeObject(
+          { ...o, animations: o.animations.filter((a) => a !== action.id) },
+          state.sprites,
+          animations,
+        ),
+      );
       return {
         ...state,
         animations,
@@ -155,13 +197,18 @@ function reducer(state: AppState, action: AppAction): AppState {
       return { ...state, selectedAnimationId: action.id };
 
     case "ADD_OBJECT":
-      return { ...state, objects: [...state.objects, action.object] };
+      return {
+        ...state,
+        objects: [...state.objects, sanitizeObject(action.object, state.sprites, state.animations)],
+      };
 
     case "UPDATE_OBJECT":
       return {
         ...state,
         objects: state.objects.map((o) =>
-          o.id === action.id ? { ...o, ...action.updates } : o,
+          o.id === action.id
+            ? sanitizeObject({ ...o, ...action.updates }, state.sprites, state.animations)
+            : o,
         ),
       };
 
@@ -175,6 +222,9 @@ function reducer(state: AppState, action: AppAction): AppState {
 
     case "SELECT_OBJECT":
       return { ...state, selectedObjectId: action.id };
+
+    case "SET_CONFIG_DEFAULT_LAYERS":
+      return { ...state, config: { ...state.config, defaultLayers: action.layers } };
 
     case "SET_TOOL":
       return { ...state, activeTool: action.tool };
@@ -250,9 +300,9 @@ function historyReducer(state: AppState, action: AppAction): AppState {
 
 export function App() {
   const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
-  const [mode, setMode] = useState<"sprite" | "map" | "objects" | "character">(() => {
+  const [mode, setMode] = useState<"sprite" | "map" | "objects" | "character" | "config">(() => {
     const saved = localStorage.getItem("gamefoo-tools-mode");
-    return saved === "map" || saved === "objects" || saved === "character"
+    return saved === "map" || saved === "objects" || saved === "character" || saved === "config"
       ? saved
       : "sprite";
   });
@@ -325,11 +375,31 @@ export function App() {
   // ── Load saved state on mount ──────────────────────────
 
   useEffect(() => {
-    const saved = loadStateFromLocal();
-    if (saved) {
-      dispatch({ type: "LOAD_PROJECT", state: migrateSpriteState(saved) });
-    }
-    setInitialized(true);
+    let cancelled = false;
+    (async () => {
+      // A saved project lives on the server (authoritative, no size cap).
+      // Prefer it on refresh; localStorage is only an offline fallback.
+      const id = getProjectId();
+      if (id) {
+        try {
+          const data = await loadProject(id);
+          if (data && !cancelled) {
+            dispatch({ type: "LOAD_PROJECT", state: migrateSpriteState(data) });
+            setInitialized(true);
+            return;
+          }
+        } catch {
+          // server unreachable — fall back to the local cache
+        }
+      }
+      if (cancelled) return;
+      const saved = loadStateFromLocal();
+      if (saved) dispatch({ type: "LOAD_PROJECT", state: migrateSpriteState(saved) });
+      setInitialized(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // ── Auto-save to localStorage (debounced) ──────────────
@@ -449,6 +519,18 @@ export function App() {
         }
         await saveProject(projId, state);
         lastSavedStateRef.current = state;
+        // Emit standalone reference files: project config + each object.
+        {
+          const projBase = state.projectName.replace(/\s+/g, "_").toLowerCase() || "project";
+          const files: Record<string, unknown> = {
+            [`${projBase}.config.json`]: exportConfig(state),
+          };
+          for (const o of state.objects) {
+            const base = o.name.replace(/\s+/g, "_").toLowerCase() || o.id;
+            files[`${base}.object.json`] = exportObject(state, o);
+          }
+          await exportProjectFiles(projId, files);
+        }
         if (mode === "save") {
           setShowSaveScreen(true);
         } else {
@@ -583,25 +665,31 @@ export function App() {
           className={`mode-btn ${mode === "sprite" ? "active" : ""}`}
           onClick={() => setMode("sprite")}
         >
-          ▣ Sprite Editor
+          <Icon name="sprite-editor" size={15} /> Sprite Editor
         </button>
         <button
           className={`mode-btn ${mode === "map" ? "active" : ""}`}
           onClick={() => setMode("map")}
         >
-          ▦ Map Editor
+          <Icon name="map-editor" size={15} /> Map Editor
         </button>
         <button
           className={`mode-btn ${mode === "objects" ? "active" : ""}`}
           onClick={() => setMode("objects")}
         >
-          ⬡ Objects
+          <Icon name="objects" size={15} /> Objects
         </button>
         <button
           className={`mode-btn ${mode === "character" ? "active" : ""}`}
           onClick={() => setMode("character")}
         >
-          ☺ Character
+          <Icon name="character" size={15} /> Character
+        </button>
+        <button
+          className={`mode-btn ${mode === "config" ? "active" : ""}`}
+          onClick={() => setMode("config")}
+        >
+          <Icon name="settings" size={15} /> Project
         </button>
         <span className="mode-bar__project">
           {state.projectName}
@@ -613,7 +701,7 @@ export function App() {
           <div className="app-layout">
             {/* Title bar */}
             <div className="title-bar">
-              <span className="title-bar__icon">▣</span>
+              <span className="title-bar__icon"><Icon name="sprite-editor" size={15} /></span>
               <span className="title-bar__name">
                 GameFoo Sprite Editor — {state.projectName}
               </span>
@@ -745,11 +833,20 @@ export function App() {
             onSave={handleSave}
             onOpenProjects={() => setShowProjects(true)}
           />
-        ) : (
+        ) : mode === "character" ? (
           <CharacterEditor
             state={state}
             dispatch={dispatch}
             imageMap={imageMap}
+            projectId={currentProjectId}
+            saving={saving}
+            onSave={handleSave}
+            onOpenProjects={() => setShowProjects(true)}
+          />
+        ) : (
+          <ProjectConfigPanel
+            state={state}
+            dispatch={dispatch}
             projectId={currentProjectId}
             saving={saving}
             onSave={handleSave}
@@ -778,7 +875,7 @@ export function App() {
 
       {/* QuickSave toast */}
       {flashQuickSaved && (
-        <div className="quicksave-toast">✓ Saved</div>
+        <div className="quicksave-toast"><Icon name="check" size={12} /> Saved</div>
       )}
     </div>
   );

@@ -46,6 +46,7 @@ export function exportMap(state: AppState) {
         },
       ]),
     ),
+    layers: m.layers.map((l) => ({ name: l.name, visible: l.visible })),
     mapDefaultSpriteId: m.defaultSpriteId,
     screens: Object.fromEntries(
       Object.values(m.screens).map((s) => [

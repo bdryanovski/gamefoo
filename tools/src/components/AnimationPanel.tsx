@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import type { AppState, AppAction, AnimationDef, SpriteRegion } from "../types";
 import { uid } from "../utils/uid";
+import { Icon } from "./Icon";
 
 interface Props {
   state: AppState;
@@ -307,14 +308,14 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
                         disabled={i === 0}
                         style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
                       >
-                        ◀
+                        <Icon name="prev" size={11} />
                       </button>
                       <button
                         className="btn btn-sm danger"
                         onClick={() => removeFrame(i)}
                         style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
                       >
-                        ✕
+                        <Icon name="close" size={11} />
                       </button>
                       <button
                         className="btn btn-sm"
@@ -322,7 +323,7 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
                         disabled={i === selectedAnim.frames.length - 1}
                         style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
                       >
-                        ▶
+                        <Icon name="next" size={11} />
                       </button>
                     </div>
                   </div>
