@@ -43,6 +43,7 @@ describe('exports — classes', () => {
     'GlowShader',
     'ParticleShader',
     'VignetteShader',
+    'ScreenRegistry',
     'ShaderSystem',
     'Sprite',
     'SpriteRender',

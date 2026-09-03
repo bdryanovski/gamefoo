@@ -94,6 +94,8 @@ export type { ShaderConfig, ShaderRegion } from './core/shaders/types';
 export { default as MapManager } from './core/map/map_manager';
 export { default as AssetManager } from './core/map/asset_manager';
 export { default as Screen } from './core/map/screen';
+export type { ScreenConstructor, ScreenContext } from './core/map/screen';
+export { default as ScreenRegistry } from './core/map/screen_registry';
 export { default as AnimatedObject } from './core/map/animated_object';
 export { default as MapObject } from './core/map/map_object';
 export type { MapObjectConstructor } from './core/map/map_object';

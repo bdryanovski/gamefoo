@@ -3,6 +3,7 @@ import type { RenderContext } from '../renderer/type';
 import AssetManager from './asset_manager';
 import type MapObjectRegistry from './map_object_registry';
 import Screen from './screen';
+import type ScreenRegistry from './screen_registry';
 import {
   type ImageResolver,
   type MapData,
@@ -23,6 +24,10 @@ export interface MapLoadOptions {
    * Custom-class registry used to instantiate machine placements.
    */
   registry?: MapObjectRegistry;
+  /**
+   * Custom-class registry used to instantiate specific screens.
+   */
+  screens?: ScreenRegistry;
 }
 
 /**
@@ -102,7 +107,13 @@ export default class MapManager {
     this.screens.clear();
 
     for (const data of Object.values(project.map.screens)) {
-      const screen = new Screen(data, this.assets, project.map, options.registry);
+      const ScreenClass = options.screens?.resolve(data.x, data.y) ?? Screen;
+      const screen = new ScreenClass({
+        data,
+        assets: this.assets,
+        map: project.map,
+        registry: options.registry,
+      });
       this.screens.set(screen.name, screen);
     }
 

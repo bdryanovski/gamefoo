@@ -52,6 +52,26 @@ interface Layer {
 }
 
 /**
+ * Everything a {@link Screen} needs to build itself, bundled so custom
+ * screen subclasses only need a single `super(context)` call.
+ *
+ * @since 0.5.0
+ */
+export interface ScreenContext {
+  data: ScreenData;
+  assets: AssetManager;
+  map: MapData;
+  registry?: MapObjectRegistry;
+}
+
+/**
+ * Constructor shape a {@link ScreenRegistry} stores.
+ *
+ * @since 0.5.0
+ */
+export type ScreenConstructor = new (context: ScreenContext) => Screen;
+
+/**
  * One navigable screen.
  *
  * Built once at load into z-{@link Layer}s: static `sprite` placements
@@ -99,7 +119,8 @@ export default class Screen {
   private readonly layers: Layer[] = [];
   private active = false;
 
-  constructor(data: ScreenData, assets: AssetManager, map: MapData, registry?: MapObjectRegistry) {
+  constructor(context: ScreenContext) {
+    const { data, assets, map, registry } = context;
     this.coordinate = [data.x, data.y];
     this.name = screenKey(data.x, data.y);
     this.width = map.screenCols * map.blockSize;
@@ -222,6 +243,7 @@ export default class Screen {
         }
       }
     }
+    this.onEnter();
   }
 
   /**
@@ -232,6 +254,7 @@ export default class Screen {
       return;
     }
     this.active = false;
+    this.onExit();
     for (const layer of this.layers) {
       if (!layer) {
         continue;
@@ -261,6 +284,7 @@ export default class Screen {
         instance.update(deltaTime);
       }
     }
+    this.onUpdate(deltaTime);
   }
 
   /**
@@ -278,7 +302,39 @@ export default class Screen {
         instance.render(ctx);
       }
     }
+    this.onRender(ctx);
   }
+
+  /**
+   * Hook fired once after this screen's objects spawn (it became active).
+   * Override in a subclass to configure objects (variants), apply story
+   * state, or trigger UI. Default: no-op.
+   *
+   * @since 0.5.0
+   */
+  protected onEnter(): void {}
+
+  /**
+   * Hook fired once before this screen's objects are disposed (it is being
+   * left). Objects are still live here. Default: no-op.
+   *
+   * @since 0.5.0
+   */
+  protected onExit(): void {}
+
+  /**
+   * Per-frame hook after the live objects update. Default: no-op.
+   *
+   * @since 0.5.0
+   */
+  protected onUpdate(_deltaTime: DeltaTime): void {}
+
+  /**
+   * Per-frame hook after the screen's layers render. Default: no-op.
+   *
+   * @since 0.5.0
+   */
+  protected onRender(_ctx: RenderContext): void {}
 
   /**
    * Live {@link MapObject}s on the active screen (empty while inactive).
