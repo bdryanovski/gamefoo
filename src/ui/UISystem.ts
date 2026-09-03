@@ -389,7 +389,7 @@ export default class UISystem implements SubSystem {
    */
   removePopup(widget: UIWidget): void {
     const index = this._popupLayer.indexOf(widget);
-    if (index >= 0) {
+    if (index !== -1) {
       this._popupLayer.splice(index, 1);
     }
   }

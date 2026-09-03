@@ -372,7 +372,7 @@ export default class GridLayout extends Container {
    */
   getCellOfChild(child: UIWidget): { column: number; row: number } | null {
     const index = this._children.indexOf(child);
-    if (index < 0) {
+    if (index === -1) {
       return null;
     }
     return {

@@ -276,7 +276,7 @@ export default class FocusManager {
     }
 
     const currentIndex = focusable.indexOf(current);
-    if (currentIndex < 0) {
+    if (currentIndex === -1) {
       this._stateManager.setFocus(focusable[0]!);
       return true;
     }
@@ -318,7 +318,7 @@ export default class FocusManager {
     }
 
     const currentIndex = focusable.indexOf(current);
-    if (currentIndex < 0) {
+    if (currentIndex === -1) {
       this._stateManager.setFocus(focusable[focusable.length - 1]!);
       return true;
     }

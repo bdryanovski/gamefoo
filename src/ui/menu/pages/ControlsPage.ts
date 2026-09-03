@@ -184,7 +184,7 @@ export default class ControlsPage extends MenuPage {
     let initialIndex = 0;
     if (config.initialScheme) {
       const idx = this._schemeNames.indexOf(config.initialScheme);
-      if (idx >= 0) {
+      if (idx !== -1) {
         initialIndex = idx;
       }
     }
@@ -306,7 +306,7 @@ export default class ControlsPage extends MenuPage {
    */
   setScheme(name: ControlSchemeName): void {
     const idx = this._schemeNames.indexOf(name);
-    if (idx >= 0) {
+    if (idx !== -1) {
       this._schemeSelector.currentIndex = idx;
       this.updateBindingsDisplay();
     }

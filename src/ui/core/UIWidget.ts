@@ -473,7 +473,7 @@ export default abstract class UIWidget {
    */
   removeChild(child: UIWidget): boolean {
     const index = this._children.indexOf(child);
-    if (index >= 0) {
+    if (index !== -1) {
       this._children.splice(index, 1);
       child._parent = null;
       this.markLayoutDirty();

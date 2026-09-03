@@ -293,7 +293,7 @@ export default class Tabs extends Container {
    */
   switchTo(id: string): boolean {
     const index = this._pages.findIndex((p) => p.id === id);
-    if (index >= 0) {
+    if (index !== -1) {
       this.activeIndex = index;
       return true;
     }

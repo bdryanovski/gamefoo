@@ -184,7 +184,7 @@ export default class GraphicsPage extends MenuPage {
     const idx = this._resolutions.findIndex(
       (r) => r.width === resolution.width && r.height === resolution.height,
     );
-    return idx >= 0 ? idx : 0;
+    return idx !== -1 ? idx : 0;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

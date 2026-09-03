@@ -412,7 +412,7 @@ export default class MenuSystem implements SubSystem {
 
     // Remove from tabs
     const index = this._tabs.pages.findIndex((p: TabPage) => p.id === id);
-    if (index >= 0) {
+    if (index !== -1) {
       this._tabs.removePage(index);
     }
   }

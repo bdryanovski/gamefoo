@@ -313,7 +313,7 @@ export default class UIStateManager {
     this._listeners.push(listener);
     return () => {
       const index = this._listeners.indexOf(listener);
-      if (index >= 0) {
+      if (index !== -1) {
         this._listeners.splice(index, 1);
       }
     };
@@ -328,7 +328,7 @@ export default class UIStateManager {
    */
   removeListener(listener: StateChangeListener): void {
     const index = this._listeners.indexOf(listener);
-    if (index >= 0) {
+    if (index !== -1) {
       this._listeners.splice(index, 1);
     }
   }

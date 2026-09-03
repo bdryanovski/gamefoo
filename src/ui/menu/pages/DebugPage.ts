@@ -160,7 +160,7 @@ export default class DebugPage extends MenuPage {
 
     this._gridDropdown = new Dropdown({
       items: GRID_SIZES.map((g) => ({ label: g.label })),
-      selectedIndex: gridIndex >= 0 ? gridIndex : 0,
+      selectedIndex: gridIndex !== -1 ? gridIndex : 0,
       maxVisibleItems: 4,
       onChange: (index: number) => {
         const size = GRID_SIZES[index]?.value ?? 'none';
@@ -215,7 +215,7 @@ export default class DebugPage extends MenuPage {
 
     const gridSize = this._monitorSystem.gridSize;
     const gridIndex = GRID_SIZES.findIndex((g) => g.value === gridSize);
-    if (gridIndex >= 0) {
+    if (gridIndex !== -1) {
       this._gridDropdown.selectedIndex = gridIndex;
     }
   }
