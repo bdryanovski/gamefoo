@@ -44,16 +44,20 @@ function portalDef(withActivation = true): GameObjectDefinition {
 function makePortal(opts: {
   stateId?: string;
   targetScreen?: string;
+  spawn?: string;
   x?: number;
   y?: number;
   activation?: boolean;
 }): Portal {
   const def = portalDef(opts.activation ?? true);
+  const properties: Record<string, string> = {};
+  if (opts.targetScreen !== undefined) properties.targetScreen = opts.targetScreen;
+  if (opts.spawn !== undefined) properties.spawn = opts.spawn;
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,
     def,
-    properties: opts.targetScreen !== undefined ? { targetScreen: opts.targetScreen } : {},
+    properties,
     x: opts.x ?? 0,
     y: opts.y ?? 0,
     level: 0,
@@ -77,6 +81,18 @@ describe('Portal', () => {
     expect(makePortal({}).target).toBeNull();
     expect(makePortal({ targetScreen: 'nope' }).target).toBeNull();
     expect(makePortal({ targetScreen: '1,2,3' }).target).toBeNull();
+  });
+
+  test('spawn parses the "col,row" spawn property as grid cells', () => {
+    expect(makePortal({ spawn: '3,10' }).spawn).toEqual({ col: 3, row: 10 });
+    expect(makePortal({ spawn: ' 1 , 15 ' }).spawn).toEqual({ col: 1, row: 15 });
+  });
+
+  test('spawn is null when unset, malformed, or the "0,0" default sentinel', () => {
+    expect(makePortal({}).spawn).toBeNull();
+    expect(makePortal({ spawn: '0,0' }).spawn).toBeNull();
+    expect(makePortal({ spawn: 'nope' }).spawn).toBeNull();
+    expect(makePortal({ spawn: '1,2,3' }).spawn).toBeNull();
   });
 
   test('activationBox uses the activation collider in world space', () => {

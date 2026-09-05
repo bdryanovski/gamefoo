@@ -23,6 +23,9 @@ const SCREEN_W = 320;
 const SCREEN_H = 256;
 const SCALE = 2;
 const PLAYER_SIZE = 16;
+// Screen tile size (px). Portal `spawn` cells are authored in grid col/row
+// and converted to pixels with this.
+const BLOCK_SIZE = 16;
 // The player draws on this z-level; layers above it (e.g. the `pillars`
 // layer at level 3) occlude it, so keep it below them.
 const PLAYER_LEVEL = 2;
@@ -131,7 +134,16 @@ class MapGame extends Engine {
       portal.open();
       const target = portal.target;
       if (target && this.navigate(target.x, target.y)) {
-        player.place((SCREEN_W - PLAYER_SIZE) / 2, (SCREEN_H - PLAYER_SIZE) / 2);
+        // Author-set spawn cell (grid col/row) → pixels, clamped so the player
+        // stays on-screen; falls back to centre when the portal sets none.
+        const spawn = portal.spawn;
+        const px = spawn
+          ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
+          : (SCREEN_W - PLAYER_SIZE) / 2;
+        const py = spawn
+          ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
+          : (SCREEN_H - PLAYER_SIZE) / 2;
+        player.place(px, py);
         this.lastSafe = { x: player.x, y: player.y };
       }
       return;

@@ -14,7 +14,9 @@
     "width": 16,
     "height": 16
   },
-  "properties": {},
+  "properties": {
+    "message": "0"
+  },
   "images": {
     "props.png": {
       "src": "/uploads/1788287738546_props.png",
@@ -36,6 +38,10 @@
     "solid": {
       "name": "Solid",
       "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
     }
   },
   "states": {
@@ -66,6 +72,17 @@
             "y": 1.2083333333333333,
             "width": 13.793619791666666,
             "height": 8.962890625
+          }
+        },
+        {
+          "id": "col_mtolr23n_0",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
           }
         }
       ]

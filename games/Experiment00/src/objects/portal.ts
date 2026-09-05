@@ -1,9 +1,21 @@
 import { MapObject, type Rect, type RenderContext } from '../../../../src/index';
 
 /**
+ * Parse a `"x,y"` property into a coordinate, or `null` when absent or
+ * malformed. Whitespace around each number is tolerated.
+ */
+function parseCoord(raw: string | undefined): { x: number; y: number } | null {
+  if (!raw) return null;
+  const parts = raw.split(',');
+  if (parts.length !== 2) return null;
+  const x = Number(parts[0]!.trim());
+  const y = Number(parts[1]!.trim());
+  return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
+}
+
+/**
  * Custom class bound to the "portal" object — the only way to travel between
- * screens in this demo. A portal is a placed object that carries, per
- * placement, two things authored in the map editor:
+ * placement, three things authored in the map editor:
  *
  * - **state** — its state machine spawns in a state whose name marks it open
  *   or closed (`top-open`/`top-close`, `portal-open`/`portal-close`, …). Only
@@ -11,6 +23,9 @@ import { MapObject, type Rect, type RenderContext } from '../../../../src/index'
  * - **`targetScreen` property** — the destination screen coordinate as
  *   `"x,y"` (e.g. `"1,3"`). Set it on the placement (or the object default)
  *   in the editor's placement panel.
+ * - **`spawn` property** — which cell to drop the player on the destination
+ *   screen, as grid `"col,row"`. `"0,0"` (the default) means "unset — use
+ *   the screen centre".
  *
  * The portal defines its reach with an `activation` collider on its current
  * state (authored in the object editor; its footprint is used when none is).
@@ -42,13 +57,20 @@ export class Portal extends MapObject {
    * `null` when unset/malformed.
    */
   get target(): { x: number; y: number } | null {
-    const raw = this.properties.targetScreen;
-    if (!raw) return null;
-    const parts = raw.split(',');
-    if (parts.length !== 2) return null;
-    const x = Number(parts[0]!.trim());
-    const y = Number(parts[1]!.trim());
-    return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
+    return parseCoord(this.properties.targetScreen);
+  }
+
+  /**
+   * Player spawn cell on the destination screen, as grid **column/row**
+   * (the screen's tile coordinate system, e.g. a 20×16 grid of 16px blocks).
+   * Parsed from the `spawn` property (`"col,row"`). `null` when unset,
+   * malformed, or `"0,0"` — the sentinel meaning "no explicit cell, drop the
+   * player at the screen centre". The game converts cells to pixels.
+   */
+  get spawn(): { col: number; row: number } | null {
+    const point = parseCoord(this.properties.spawn);
+    if (!point || (point.x === 0 && point.y === 0)) return null;
+    return { col: point.x, row: point.y };
   }
 
   /**
