@@ -1,6 +1,6 @@
 ---
 description: Use pnpm and standard Node.js tooling for this project.
-globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
+globs: '*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json'
 alwaysApply: false
 ---
 
@@ -34,6 +34,7 @@ describe('my test suite', () => {
 ```
 
 Run tests:
+
 ```sh
 pnpm test        # Run once
 pnpm test:watch  # Watch mode
@@ -82,11 +83,8 @@ const port = process.env.PORT || 3000;
 ## APIs
 
 - Use `node:fs` for file system operations
-- Use `express` for HTTP servers
 - Use `ws` for WebSocket servers
 - Use `better-sqlite3` for SQLite
-- Use `ioredis` for Redis
-- Use `pg` for PostgreSQL
 
 ## Best Practices
 

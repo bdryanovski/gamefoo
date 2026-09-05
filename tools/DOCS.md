@@ -35,7 +35,7 @@ multi-screen tile maps from your spritesheets (see
 cd tools
 pnpm install
 pnpm dev
-# → Dev UI at http://localhost:5173 (API proxied to :3001)
+# → http://localhost:5173 — UI + API in ONE process (no separate API server)
 
 # Production build & serve:
 pnpm build
@@ -565,8 +565,10 @@ tools/public/
 tools/
 ├── package.json          # Separate deps (React, types)
 ├── tsconfig.json         # TypeScript config
-├── vite.config.ts        # Vite config (React plugin, @ alias, API proxy)
-├── server.ts             # Express + API routes (upload, CRUD, export)
+├── vite.config.ts        # Vite config (React plugin, @ alias, embedded API server)
+├── server/
+│   └── app.ts            # Express API factory (upload, CRUD, export, statics)
+├── server.ts             # Production entry — serves built UI + API on one port
 ├── index.html            # HTML shell
 ├── DOCS.md               # This file
 ├── public/

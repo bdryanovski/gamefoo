@@ -1,6 +1,7 @@
 # GameFoo Style Guide
 
-> Inspired by [TigerBeetle's TigerStyle](https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md)
+> Inspired by
+> [TigerBeetle's TigerStyle](https://github.com/tigerbeetle/tigerbeetle/blob/main/docs/TIGER_STYLE.md)
 
 ## Design Goals
 
@@ -14,7 +15,8 @@ These goals are ordered by priority. All three matter. Good style advances these
 
 ### Safety First
 
-> "The rules act like the seat-belt in your car: initially they are perhaps a little uncomfortable, but after a while their use becomes second-nature and not using them becomes unimaginable."  
+> "The rules act like the seat-belt in your car: initially they are perhaps a little uncomfortable,
+> but after a while their use becomes second-nature and not using them becomes unimaginable."  
 > — Gerard J. Holzmann
 
 #### Explicit Control Flow
@@ -23,7 +25,9 @@ These goals are ordered by priority. All three matter. Good style advances these
 - No recursion in hot paths — stack depth is bounded
 - Split compound conditions into nested `if/else` for clarity
 - State invariants **positively** (prefer `if (index < length)` over `if (index >= length)`)
-- **Always brace bodies** — the body of every `if`/`else`/`for`/`while` goes in a block `{ … }` on its own lines. Single-line forms like `if (x) return;` are banned and enforced by the `no-single-line-if` codestyle rule.
+- **Always brace bodies** — the body of every `if`/`else`/`for`/`while` goes in a block `{ … }` on
+  its own lines. Single-line forms like `if (x) return;` are banned and enforced by the
+  `no-single-line-if` codestyle rule.
 
 ```typescript
 // ✅ Good: Clear, explicit
@@ -41,7 +45,8 @@ if (index >= array.length) {
 
 #### Assert Everything
 
-**Assertions detect programmer errors.** Unlike operating errors (which must be handled), assertion failures are unexpected. The only correct way to handle corrupt code is to crash early.
+**Assertions detect programmer errors.** Unlike operating errors (which must be handled), assertion
+failures are unexpected. The only correct way to handle corrupt code is to crash early.
 
 - Assert all function arguments, return values, preconditions, postconditions, invariants
 - Assert compile-time relationships between constants
@@ -54,9 +59,9 @@ function update(entity: Entity, deltaTime: number): void {
   assert(entity !== null);
   assert(deltaTime > 0);
   assert(deltaTime < 1); // Sanity check: no frame should take >1 second
-  
+
   // ... implementation
-  
+
   assert(entity.x >= 0); // Postcondition: stayed in bounds
   assert(entity.y >= 0);
 }
@@ -67,7 +72,9 @@ function update(entity: Entity, deltaTime: number): void {
 }
 ```
 
-**The golden rule:** Assert the **positive space** (what you expect) AND the **negative space** (what you don't expect). Where data crosses the boundary between valid and invalid is where bugs hide.
+**The golden rule:** Assert the **positive space** (what you expect) AND the **negative space**
+(what you don't expect). Where data crosses the boundary between valid and invalid is where bugs
+hide.
 
 #### Bounds Everywhere
 
@@ -131,7 +138,8 @@ function processEntities(entities: Entity[]): void {
 
 #### Think Early
 
-The best time to solve performance is **during design**, not after profiling. The design phase is where you get 1000x wins.
+The best time to solve performance is **during design**, not after profiling. The design phase is
+where you get 1000x wins.
 
 #### Optimize Resources in Order
 
@@ -171,7 +179,9 @@ Don't rely on the compiler to do the right thing. Be explicit:
 ```typescript
 // ✅ Good: Explicit intent
 const distance_squared = dx * dx + dy * dy; // Avoid Math.sqrt
-if (distance_squared < radius * radius) { /* ... */ }
+if (distance_squared < radius * radius) {
+  /* ... */
+}
 
 // ✅ Good: Show division intent
 const tile_x = Math.floor(x / TILE_SIZE);
@@ -179,12 +189,15 @@ const chunks_count = Math.ceil(total / CHUNK_SIZE);
 
 // ❌ Avoid: Implicit behavior
 const distance = Math.sqrt(dx * dx + dy * dy); // Unnecessary sqrt
-if (distance < radius) { /* ... */ }
+if (distance < radius) {
+  /* ... */
+}
 ```
 
 ### Developer Experience
 
-> "There are only two hard things in Computer Science: cache invalidation, naming things, and off-by-one errors."  
+> "There are only two hard things in Computer Science: cache invalidation, naming things, and
+> off-by-one errors."  
 > — Phil Karlton
 
 #### Naming
@@ -192,8 +205,11 @@ if (distance < radius) { /* ... */ }
 **Get the nouns and verbs just right.** Names are the essence of code.
 
 - Use `snake_case` for variables and functions, `PascalCase` for classes/types
-- Never abbreviate — favour explicit, longer names. Prefer `AnimationDefinition` over `AnimationDef`, `SpriteRegionDefinition` over `SpriteRegionDef`. Humans read code far more often than they write it, so optimise for reading.
-- Name loop variables after what they iterate: `for (const entity of entities)`, or `for (let index = 0; index < count; index += 1)`. Never a bare `i`/`j`/`k`.
+- Never abbreviate — favour explicit, longer names. Prefer `AnimationDefinition` over
+  `AnimationDef`, `SpriteRegionDefinition` over `SpriteRegionDef`. Humans read code far more often
+  than they write it, so optimise for reading.
+- Name loop variables after what they iterate: `for (const entity of entities)`, or
+  `for (let index = 0; index < count; index += 1)`. Never a bare `i`/`j`/`k`.
 - Add units to variable names, **units go last**: `latency_ms_max` not `max_latency_ms`
 - Related names should have the same length to align in code
 - Proper capitalization for acronyms: `VSRState`, not `VsrState`
@@ -217,7 +233,7 @@ const enemySpd = 80; // Abbreviated
 ```typescript
 // ✅ Good: Name tells you about lifecycle
 const gpa: Allocator = createAllocator(); // General Purpose — needs deinit
-const arena: Allocator = createArena();   // Arena — cleared in bulk
+const arena: Allocator = createArena(); // Arena — cleared in bulk
 
 // ❌ Avoid: Generic
 const allocator1: Allocator = createAllocator();
@@ -226,7 +242,8 @@ const allocator2: Allocator = createArena();
 
 #### Callbacks Go Last
 
-When a function takes a callback, put it **last** in the parameter list. This mirrors control flow — callbacks are invoked last.
+When a function takes a callback, put it **last** in the parameter list. This mirrors control flow —
+callbacks are invoked last.
 
 ```typescript
 // ✅ Good: Callback last
@@ -242,8 +259,12 @@ function query(callback: (e: Entity) => void, world: World, filter: Filter): voi
 - Space after `//`
 - Explain **why**, not what
 - Show your workings
-- Doc comments (`/** … */`) on declarations are **block comments**: put `/**` on its own line, one `*`-prefixed line per sentence, and a blank ` *` line between the description and any tags. Never cram a declaration's doc comment onto a single line.
-- Add an `@since <version>` tag **only when introducing something new** — a new type, interface, class, function, property, or argument, or a meaningful extension of behaviour. It records when the API first appeared; don't add it to unchanged code.
+- Doc comments (`/** … */`) on declarations are **block comments**: put `/**` on its own line, one
+  `*`-prefixed line per sentence, and a blank ` *` line between the description and any tags. Never
+  cram a declaration's doc comment onto a single line.
+- Add an `@since <version>` tag **only when introducing something new** — a new type, interface,
+  class, function, property, or argument, or a meaningful extension of behaviour. It records when
+  the API first appeared; don't add it to unchanged code.
 
 ```typescript
 // ✅ Good: Explains rationale
@@ -295,7 +316,8 @@ This is a physical constraint: fit two files side-by-side on screen.
 
 **Hard limit: 70 lines per function.**
 
-There's a sharp discontinuity between fitting on screen and scrolling. 70 lines forces good function shape:
+There's a sharp discontinuity between fitting on screen and scrolling. 70 lines forces good function
+shape:
 
 - **Centralize control flow** — keep `if`/`switch` in parent, move logic to helpers
 - **Centralize state** — parent owns state, helpers compute what to change
@@ -333,7 +355,8 @@ function updateEntity(entity: Entity, dt: number): void {
 
 ### Block Statements
 
-Add braces to `if` statements unless it fits on a single line. Defense in depth against goto-fail bugs.
+Add braces to `if` statements unless it fits on a single line. Defense in depth against goto-fail
+bugs.
 
 ```typescript
 // ✅ Good: Single line, no braces needed
@@ -345,8 +368,7 @@ if (entity.health < LOW_HEALTH_THRESHOLD) {
 }
 
 // ❌ Avoid: Multi-line without braces
-if (entity.health < LOW_HEALTH_THRESHOLD)
-  entity.state = 'warning';
+if (entity.health < LOW_HEALTH_THRESHOLD) entity.state = 'warning';
 ```
 
 ## Dependencies & Tooling
@@ -372,7 +394,8 @@ A small, standardized toolbox > specialized instruments with dedicated manuals.
 
 > "You shall not pass!" — Gandalf
 
-Code is like steel: cheaper to change while it's hot. Fix showstoppers during design or implementation, not in production.
+Code is like steel: cheaper to change while it's hot. Fix showstoppers during design or
+implementation, not in production.
 
 ## The Golden Rule
 
@@ -389,22 +412,24 @@ If you explain the rationale for a decision, it:
 
 ## Summary
 
-| Principle                          | Rule                                                   |
-| ---------------------------------- | ------------------------------------------------------ |
-| **Safety**                         | Assert everything. Explicit control flow. Bound all.   |
-| **Performance**                    | Design for speed. Batch. Work with the grain.          |
-| **Developer Experience**           | Names matter. Tight scope. Say why.                    |
-| **Line length**                    | Max 100 columns. No exceptions.                        |
-| **Function length**                | Max 70 lines. Centralize control flow.                 |
-| **Indentation**                    | 2 spaces. Use `biome format`.                          |
-| **Dependencies**                   | Zero. Use pnpm.                                        |
-| **Technical Debt**                 | Zero. Fix it now or don't ship it.                     |
+| Principle                | Rule                                                 |
+| ------------------------ | ---------------------------------------------------- |
+| **Safety**               | Assert everything. Explicit control flow. Bound all. |
+| **Performance**          | Design for speed. Batch. Work with the grain.        |
+| **Developer Experience** | Names matter. Tight scope. Say why.                  |
+| **Line length**          | Max 100 columns. No exceptions.                      |
+| **Function length**      | Max 70 lines. Centralize control flow.               |
+| **Indentation**          | 2 spaces. Use `biome format`.                        |
+| **Dependencies**         | Zero. Use pnpm.                                      |
+| **Technical Debt**       | Zero. Fix it now or don't ship it.                   |
 
 ---
 
-Remember: Good code is not just about what it does, but how it does it. CodeStyle principles make code **safe**, **fast**, and **maintainable**.
+Remember: Good code is not just about what it does, but how it does it. CodeStyle principles make
+code **safe**, **fast**, and **maintainable**.
 
-> "Simplicity and elegance are unpopular because they require hard work and discipline to achieve."  
+> "Simplicity and elegance are unpopular because they require hard work and discipline to
+> achieve."  
 > — Edsger Dijkstra
 
 Now go make great games. 🎮
