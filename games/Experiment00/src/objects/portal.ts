@@ -1,10 +1,4 @@
-import {
-  MapObject,
-  type Rect,
-  type RenderContext,
-  shapeBounds,
-  translateShape,
-} from '../../../../src/index';
+import { MapObject, type Rect, type RenderContext } from '../../../../src/index';
 
 /**
  * Custom class bound to the "portal" object — the only way to travel between
@@ -62,13 +56,8 @@ export class Portal extends MapObject {
    * object's footprint when none is authored.
    */
   activationBox(): Rect {
-    const defs = this.def.collisionsByState?.[this.state] ?? [];
-    const activation = defs.find((c) => c.layerId === 'activation' && c.enabled !== false);
-    if (activation) {
-      const b = shapeBounds(translateShape(activation.shape, this.x, this.y));
-      return { x: b.x, y: b.y, width: b.width, height: b.height };
-    }
-    return this.bounds();
+    const activation = this.worldColliders().find((c) => c.layer === 'activation');
+    return activation ? activation.bounds : this.bounds();
   }
 
   /** True when `box` overlaps this portal's activation zone. */

@@ -1,5 +1,5 @@
 import type MapObject from './map_object';
-import type { CollisionShape, Rect } from './types';
+import type { CollisionShape, Rect, Transform } from './types';
 
 /**
  * A collision shape resolved into world (screen) pixels, tagged with its
@@ -45,6 +45,62 @@ export function translateShape(shape: CollisionShape, dx: number, dy: number): C
   }
   const { x, y, width, height } = shape;
   return { kind: 'rect', x: x + dx, y: y + dy, width, height };
+}
+
+/**
+ * Returns `shape` moved into world space with a placement `transform`
+ * applied — flip then rotation about the object's footprint centre — so a
+ * rotated/flipped object's colliders track its sprite instead of staying
+ * axis-aligned in the original orientation.
+ *
+ * Rectangles come back as the axis-aligned bounds of the transformed shape
+ * (exact for 90°/180°/270°; a conservative box for other angles), which is
+ * what the AABB collision world consumes.
+ */
+export function transformShape(
+  shape: CollisionShape,
+  x: number,
+  y: number,
+  transform: Transform | undefined,
+  footprint: { width: number; height: number },
+): CollisionShape {
+  const rotation = transform?.rotation ?? 0;
+  const flipX = transform?.flipX ? -1 : 1;
+  const flipY = transform?.flipY ? -1 : 1;
+  if (!rotation && flipX === 1 && flipY === 1) {
+    return translateShape(shape, x, y);
+  }
+  const cx = footprint.width / 2;
+  const cy = footprint.height / 2;
+  const rad = (rotation * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const project = (px: number, py: number): { x: number; y: number } => {
+    const dx = cx + (px - cx) * flipX - cx;
+    const dy = cy + (py - cy) * flipY - cy;
+    return { x: x + cx + dx * cos - dy * sin, y: y + cy + dx * sin + dy * cos };
+  };
+  if (shape.kind === 'circle') {
+    const c = project(shape.cx, shape.cy);
+    return { kind: 'circle', cx: c.x, cy: c.y, radius: shape.radius };
+  }
+  const corners = [
+    project(shape.x, shape.y),
+    project(shape.x + shape.width, shape.y),
+    project(shape.x + shape.width, shape.y + shape.height),
+    project(shape.x, shape.y + shape.height),
+  ];
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const p of corners) {
+    minX = Math.min(minX, p.x);
+    minY = Math.min(minY, p.y);
+    maxX = Math.max(maxX, p.x);
+    maxY = Math.max(maxY, p.y);
+  }
+  return { kind: 'rect', x: minX, y: minY, width: maxX - minX, height: maxY - minY };
 }
 
 function overlapAABB(a: Rect, b: Rect): boolean {

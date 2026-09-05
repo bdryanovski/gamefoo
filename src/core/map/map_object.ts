@@ -3,7 +3,7 @@ import StateMachine from '../state_machine';
 import AnimatedObject from './animated_object';
 import type AssetManager from './asset_manager';
 import { drawFrame } from './draw';
-import { shapeBounds, translateShape, type WorldCollider } from './collision_map';
+import { shapeBounds, transformShape, type WorldCollider } from './collision_map';
 import type { Shader } from '../shaders/shader';
 import { ShaderStack } from '../shaders/shader_stack';
 import type { ShaderRegion } from '../shaders/types';
@@ -242,11 +242,15 @@ export default class MapObject {
   public worldColliders(): WorldCollider[] {
     const defs = this.def.collisionsByState?.[this.state] ?? [];
     const out: WorldCollider[] = [];
+    const grid = this.def.grid;
+    const footprint = grid
+      ? { width: grid.cols * grid.cell, height: grid.rows * grid.cell }
+      : { width: 16, height: 16 };
     for (const collision of defs) {
       if (collision.enabled === false) {
         continue;
       }
-      const shape = translateShape(collision.shape, this.x, this.y);
+      const shape = transformShape(collision.shape, this.x, this.y, this.transform, footprint);
       out.push({ layer: collision.layerId, shape, bounds: shapeBounds(shape), owner: this });
     }
     return out;
