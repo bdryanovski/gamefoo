@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "chest",
+    "category": ""
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {},
+  "images": {
+    "animated_props.png": {
+      "src": "/uploads/1788287745065_animated_props.png",
+      "width": 176,
+      "height": 128
+    }
+  },
+  "frames": {
+    "sprite_4_0": {
+      "image": "animated_props.png",
+      "x": 64,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_0": {
+      "image": "animated_props.png",
+      "x": 96,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {},
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_4_0"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mton9iam_q",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.009114583333333334,
+            "y": 0.4296875,
+            "width": 15.680989583333332,
+            "height": 7.859049479166666
+          }
+        },
+        {
+          "id": "col_mton9wxl_r",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    },
+    "open": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_6_0"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mton9iam_q",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.009114583333333334,
+            "y": 0.4296875,
+            "width": 15.680989583333332,
+            "height": 7.859049479166666
+          }
+        },
+        {
+          "id": "col_mton9wxl_r",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

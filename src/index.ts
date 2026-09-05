@@ -118,6 +118,22 @@ export type {
   StateMachineDefinition,
   Transform,
 } from './core/map/types';
+// ── Dialog ──────────────────────────────────────────────────────────
+/**
+ * @since 0.5.0
+ */
+export { DialogRunner } from './core/dialog/dialog_runner';
+export type { DialogRunnerConfig } from './core/dialog/dialog_runner';
+export { DialogBox } from './core/dialog/dialog_box';
+export type { DialogBoxConfig, DialogBoxTheme } from './core/dialog/dialog_box';
+export type {
+  DialogChoice,
+  DialogDocument,
+  DialogMessageData,
+  DialogOptionData,
+  DialogPhase,
+  DialogTreeData,
+} from './core/dialog/types';
 // ── Tilemap ─────────────────────────────────────────────────────────
 export { TileLayer } from './core/tilemap/tile_layer';
 export { TileMap } from './core/tilemap/tilemap';

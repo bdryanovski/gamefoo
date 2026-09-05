@@ -14,7 +14,9 @@
     "width": 16,
     "height": 32
   },
-  "properties": {},
+  "properties": {
+    "message": "0"
+  },
   "images": {
     "props.png": {
       "src": "/uploads/1788287738546_props.png",
@@ -36,6 +38,10 @@
     "solid": {
       "name": "Solid",
       "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
     }
   },
   "states": {
@@ -66,6 +72,17 @@
             "y": 2.345673076923077,
             "width": 15.525480769230768,
             "height": 16.694711538461537
+          }
+        },
+        {
+          "id": "col_mtooqdbp_1k",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 16,
+            "radius": 8
           }
         }
       ]

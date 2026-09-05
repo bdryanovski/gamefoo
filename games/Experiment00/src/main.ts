@@ -1,4 +1,7 @@
 import {
+  DialogBox,
+  type DialogDocument,
+  DialogRunner,
   Engine,
   Input,
   MapManager,
@@ -12,8 +15,10 @@ import {
 } from '../../../src/index';
 import { drawMessages, updateMessages } from './hud';
 import { Campfire, loadCampfireConfig } from './objects/campfire';
+import { Bookshelf } from './objects/bookshelf';
 import { Player } from './objects/player';
 import { Portal } from './objects/portal';
+import { Sign } from './objects/sign';
 import { DarkChamberScreen } from './screens/dark-chamber';
 import { RoomScreen } from './screens/room';
 
@@ -51,6 +56,8 @@ class MapGame extends Engine {
   private readonly input = new Input();
   private player?: Player;
   private lastSafe = { x: 0, y: 0 };
+  private dialog?: DialogRunner;
+  private readonly dialogBox = new DialogBox();
 
   async load() {
     // Objects: the map instantiates a class wherever it places a matching
@@ -58,6 +65,8 @@ class MapGame extends Engine {
     const registry = new MapObjectRegistry();
     registry.register(Campfire);
     registry.register(Portal);
+    registry.register(Sign);
+    registry.register(Bookshelf);
     await loadCampfireConfig('/project/exports/proj_mtj0babj_m/campfire.object.json');
 
     // Screens: a default class for every room, overridden per coordinate.
@@ -68,11 +77,23 @@ class MapGame extends Engine {
     // Read the editor's live working project straight from disk (served at
     // /project/…), unmodified. Image urls are "/uploads/<file>".
     const url = '/project/projects/proj_mtj0babj_m.json';
-    this.map = await MapManager.fromUrl(url, {
+    const project = await fetch(url).then((r) => r.json());
+    const map = new MapManager();
+    await map.load(project, {
       resolve: (img) => `/project${img.url}`,
       registry,
       screens,
     });
+    this.map = map;
+
+    // Dialogs come from the editor's standalone export (kept current on every
+    // save) — the runtime consumes that file directly.
+    const dialogs: DialogDocument = await fetch(
+      '/project/exports/proj_mtj0babj_m/experiment00.dialogs.json',
+    )
+      .then((r) => (r.ok ? r.json() : { trees: {} }))
+      .catch(() => ({ trees: {} }));
+    this.dialog = new DialogRunner(dialogs);
 
     const shaders = new ShaderSystem();
     shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
@@ -149,6 +170,24 @@ class MapGame extends Engine {
       return;
     }
 
+    // Signs: open the dialog modal for a nearby sign that names a tree.
+    const sign = this.map?.current
+      ?.objectsByType(Sign)
+      .find((s) => s.overlaps(player.interactionBox()));
+    if (sign) {
+      const ref = sign.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Bookshelves: open the dialog modal for a nearby shelf that has one.
+    const shelf = this.map?.current
+      ?.objectsByType(Bookshelf)
+      .find((b) => b.overlaps(player.interactionBox()));
+    if (shelf) {
+      const ref = shelf.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
     // Campfires: toggle the nearest within reach.
     const p = player.box();
     const pcx = p.x + p.width / 2;
@@ -166,10 +205,25 @@ class MapGame extends Engine {
   }
 
   private onKey(e: KeyboardEvent): void {
+    const dialog = this.dialog;
+    if (dialog?.active) {
+      // Modal is up: arrows move the option cursor, E/Enter confirms.
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') dialog.moveSelection(-1);
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') dialog.moveSelection(1);
+      else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter') dialog.confirm();
+      else return;
+      e.preventDefault();
+      return;
+    }
     if (e.key === 'e' || e.key === 'E' || e.key === ' ') this.interact();
   }
 
   override update(dt: number) {
+    // Advance the dialog typewriter + slide animation every frame; while the
+    // modal is open it freezes the world (no map/player updates).
+    this.dialog?.update(dt);
+    this.dialogBox.update(dt, this.dialog?.active ?? false);
+    if (this.dialog?.active) return;
     this.map?.update(dt);
     updateMessages(dt);
     const player = this.player;
@@ -213,6 +267,9 @@ class MapGame extends Engine {
       '#ffffff',
     );
     drawMessages(ctx, 8, 40);
+
+    // Dialog modal on top of everything (screen space).
+    if (this.dialog) this.dialogBox.render(ctx, this.dialog);
   }
 }
 

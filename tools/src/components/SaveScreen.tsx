@@ -12,6 +12,7 @@ import {
 } from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
 import { exportStateMachines } from "../statemachine/smExport";
+import { exportDialogs } from "../dialog/dialogExport";
 import { exportObject } from "../objects/objectExport";
 
 interface Props {
@@ -62,6 +63,14 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
         filename: `${baseName}.machines.json`,
         label: "State Machines Export (states, transitions, conditions)",
         data: exportStateMachines(state),
+      });
+    }
+
+    if (state.dialog.trees.length > 0) {
+      list.push({
+        filename: `${baseName}.dialogs.json`,
+        label: "Dialogs Export (trees, messages, options, meta)",
+        data: exportDialogs(state),
       });
     }
 

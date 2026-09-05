@@ -34,6 +34,7 @@ import {
 import { uid } from './utils/uid';
 import { exportObject } from './objects/objectExport';
 import { exportConfig } from './utils/export';
+import { exportDialogs } from './dialog/dialogExport';
 
 function reducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
@@ -525,6 +526,7 @@ export function App() {
     const projBase = s.projectName.replace(/\s+/g, '_').toLowerCase() || 'project';
     const files: Record<string, unknown> = {
       [`${projBase}.config.json`]: exportConfig(s),
+      [`${projBase}.dialogs.json`]: exportDialogs(s),
     };
     for (const o of s.objects) {
       const base = o.name.replace(/\s+/g, '_').toLowerCase() || o.id;

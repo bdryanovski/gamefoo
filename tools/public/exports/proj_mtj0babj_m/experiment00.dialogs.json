@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-dialog-editor",
+    "projectName": "Experiment00"
+  },
+  "trees": {
+    "Welcome": {
+      "id": "dlg_mtojp4nh_3",
+      "name": "Welcome",
+      "root": "msg_mtombzfb_a",
+      "messages": {
+        "msg_mtombzfb_a": {
+          "title": "You are here",
+          "segments": [
+            "Where am I ?",
+            "Voice: Keep going ...",
+            "Wait ... wait ... how ?",
+            "Use AWSD and E to activate shits ... ready? Never mind you are ready, you will never be ready anyway ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "First Sign": {
+      "id": "dlg_mtomi0j6_g",
+      "name": "First Sign",
+      "root": "msg_mtomi0j6_f",
+      "messages": {
+        "msg_mtomi0j6_f": {
+          "title": "SAFE PLACE",
+          "segments": [
+            "Is this the SAVE PLACE that you promise me ?",
+            "Don't look safe, but kind-a familiar ? This is not the first time I'm here ...",
+            "Why does everything here remind me of ... her?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "You lost": {
+      "id": "dlg_mton1hnd_k",
+      "name": "You lost",
+      "root": "msg_mton1hnd_j",
+      "messages": {
+        "msg_mton1hnd_j": {
+          "title": "Hey",
+          "segments": [
+            "Not this way, dummy!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire": {
+      "id": "dlg_mtooike6_1f",
+      "name": "Campfire",
+      "root": "msg_mtooike6_1e",
+      "messages": {
+        "msg_mtooike6_1e": {
+          "title": "Silence",
+          "segments": [
+            "Voice: You're quiet",
+            "I don't know what to say either ...",
+            "So I'll just stay here",
+            "Voice: Sometimes not talking feels louder than talking ",
+            "Voice: Still here ?",
+            "Voice: Good"
+          ],
+          "options": [],
+          "meta": {
+            "memory": "1"
+          }
+        }
+      }
+    },
+    "Bookshelf 0": {
+      "id": "dlg_mtoon4r9_1j",
+      "name": "Bookshelf 0",
+      "root": "msg_mtoon4r9_1i",
+      "messages": {
+        "msg_mtoon4r9_1i": {
+          "title": "Start",
+          "segments": [
+            "Found some books: \"A guide to getting lost\", \"Things I should have said\", \"The book of small things\", \"How to find someone\", \"An empty book\", \"Olives\", \"Dreams\""
+          ],
+          "options": [
+            {
+              "label": "Book: A guide to getting lost",
+              "target": "msg_mtoozas0_1o"
+            },
+            {
+              "label": "Book: The book of small things",
+              "target": "msg_mtop298s_1s"
+            },
+            {
+              "label": "Book: Olives",
+              "target": "msg_mtop55o3_1w"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtoozas0_1o": {
+          "title": "A guide to getting lost",
+          "segments": [
+            "Chapter 1",
+            "Go forward ...",
+            "Chapter 2",
+            "You are still going forward ...",
+            "Chapter 3",
+            "You have been here before ...",
+            "Chapter 4",
+            "You just didn't notice"
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtop298s_1s": {
+          "title": "Book of small things",
+          "segments": [
+            "There are things you remember because they mattered",
+            "And there are things that mattered because you remembered them",
+            "Sometime you don't know which came first"
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtop55o3_1w": {
+          "title": "Book about Olives",
+          "segments": [
+            "Olives",
+            "Green",
+            "Apparently thirty is reasonable",
+            "It isn't",
+            "She disagrees ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    }
+  }
+}
