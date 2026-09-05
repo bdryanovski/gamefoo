@@ -245,6 +245,48 @@
         }
       },
       "transitions": []
+    },
+    "object_7": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_4_0"
+          }
+        },
+        "open": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_6_0"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "object_8": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "animation",
+            "animation": "lanter"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "object_9": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "animation",
+            "animation": "olive"
+          }
+        }
+      },
+      "transitions": []
     }
   }
 }

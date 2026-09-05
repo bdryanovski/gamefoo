@@ -55,6 +55,14 @@
       ],
       "duration": 0.15,
       "loop": true
+    },
+    "lanter": {
+      "frames": [
+        20,
+        21
+      ],
+      "duration": 0.15,
+      "loop": true
     }
   }
 }

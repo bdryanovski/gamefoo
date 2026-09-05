@@ -137,6 +137,14 @@
       ],
       "duration": 0.15,
       "loop": true
+    },
+    "lanter": {
+      "frames": [
+        "sprite_9_1",
+        "sprite_10_1"
+      ],
+      "duration": 0.15,
+      "loop": true
     }
   }
 }
