@@ -45,9 +45,13 @@ export default defineConfig({
   root: here,
   plugins: [serveProject()],
   server: {
+    host: '0.0.0.0',
     port: 5173,
     open: true,
     fs: { allow: [repoRoot] },
+  },
+  preview: {
+    host: '0.0.0.0',
   },
   resolve: {
     alias: { '@': resolve(repoRoot, 'src') },

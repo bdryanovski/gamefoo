@@ -4426,7 +4426,7 @@
       },
       "properties": {
         "targetScreen": "0,0",
-        "navigate": "0,0"
+        "spawn": "0,0"
       },
       "meta": {
         "description": "",
@@ -4526,7 +4526,7 @@
     "spr_mtj0ifm1_28"
   ],
   "selectedAnimationId": "anim_mtjyt05b_g",
-  "selectedObjectId": "obj_mtjy35sv_q",
+  "selectedObjectId": "obj_mto16yyf_2",
   "activeTool": "grid-pick",
   "zoom": 2.2612585277781925,
   "pan": {
@@ -20641,10 +20641,7 @@
             "x": 0,
             "y": 224,
             "level": 2,
-            "rotation": 270,
-            "properties": {
-              "targetScreen": "0,5"
-            }
+            "rotation": 270
           },
           {
             "id": "1788613718433_c2wgcb",
@@ -31064,7 +31061,7 @@
       "kind": "sprite",
       "id": "spr_mtocg7ki_0"
     },
-    "selectedPlacementId": "1788608630844_y0jqz1",
+    "selectedPlacementId": "1788608628542_5g45lp",
     "layers": [
       {
         "name": "base",
@@ -31085,12 +31082,12 @@
     ],
     "activeLevel": 2,
     "activeTool": "select",
-    "zoom": 0.7434070938697109,
+    "zoom": 1.1306292638890962,
     "pan": {
-      "x": -927.1723876522965,
-      "y": 393.4047047514289
+      "x": -673.3837510786166,
+      "y": 364.38676671985877
     }
   },
   "history": [],
-  "lastModified": "2026-09-05T13:55:38.590Z"
+  "lastModified": "2026-09-05T14:27:27.674Z"
 }

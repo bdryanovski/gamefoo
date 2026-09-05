@@ -24,12 +24,16 @@ for (const folder of demoFolders) {
 export default defineConfig({
   root: demosDir,
   server: {
+    host: '0.0.0.0',
     port: 3000,
     open: true,
     fs: {
       // Allow serving files from parent directory (src/)
       allow: ['..'],
     },
+  },
+  preview: {
+    host: '0.0.0.0',
   },
   resolve: {
     alias: {

@@ -20,7 +20,7 @@ app.use((_req, res) => {
 });
 
 const port = Number(process.env.PORT) || 3001;
-const server = app.listen(port, () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`🔧 GameFoo Dev Tools — UI + API at http://localhost:${port}`);
   console.log('🔧 Development with HMR: pnpm dev → http://localhost:5173');
 });
