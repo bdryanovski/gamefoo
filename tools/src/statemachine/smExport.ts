@@ -19,7 +19,6 @@ export function exportStateMachines(state: AppState) {
       version: "1.0",
       tool: "gamefoo-statemachine-editor",
       projectName: state.projectName,
-      exportedAt: new Date().toISOString(),
     },
     machines: Object.fromEntries(
       objectMachines(state.objects).map((m) => {

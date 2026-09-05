@@ -10,7 +10,7 @@ import { downloadJSON } from "../utils/export";
  * and collisions.
  */
 export interface ObjectExport {
-  meta: { version: string; tool: string; name: string; category: string; exportedAt: string };
+  meta: { version: string; tool: string; name: string; category: string };
   grid: { cols: number; rows: number; cell: number };
   size: { width: number; height: number };
   properties: Record<string, string>;
@@ -122,7 +122,6 @@ export function exportObject(state: AppState, object: GameObjectDef): ObjectExpo
       tool: "gamefoo-object-editor",
       name: object.name,
       category: object.meta.category,
-      exportedAt: new Date().toISOString(),
     },
     grid: { ...object.grid },
     size: objectPixelSize(object.grid),

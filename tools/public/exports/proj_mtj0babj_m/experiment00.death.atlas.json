@@ -5,8 +5,7 @@
     "projectName": "Experiment00",
     "image": "death.png",
     "imageWidth": 96,
-    "imageHeight": 96,
-    "exportedAt": "2026-09-05T12:33:14.472Z"
+    "imageHeight": 96
   },
   "frames": {
     "sprite_0_0": {
@@ -71,7 +70,7 @@
         "sprite_2_0",
         "sprite_4_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_right": {
@@ -80,7 +79,7 @@
         "sprite_2_2",
         "sprite_4_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_back": {
@@ -89,7 +88,7 @@
         "sprite_2_4",
         "sprite_4_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     }
   }

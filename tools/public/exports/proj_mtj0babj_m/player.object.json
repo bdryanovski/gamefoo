@@ -3,8 +3,7 @@
     "version": "1.0",
     "tool": "gamefoo-object-editor",
     "name": "player",
-    "category": "character",
-    "exportedAt": "2026-09-05T14:27:27.686Z"
+    "category": "character"
   },
   "grid": {
     "cols": 1,

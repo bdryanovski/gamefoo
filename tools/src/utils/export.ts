@@ -19,7 +19,6 @@ export interface AtlasExport {
     image: string;
     imageWidth: number;
     imageHeight: number;
-    exportedAt: string;
   };
   frames: Record<string, { x: number; y: number; width: number; height: number; anchor?: { x: number; y: number } }>;
   animations: Record<string, { frames: string[]; duration: number; loop: boolean }>;
@@ -46,7 +45,6 @@ export interface FullExport {
     version: string;
     tool: string;
     projectName: string;
-    exportedAt: string;
   };
   images: Array<{ id: string; name: string; url: string; width: number; height: number }>;
   /** Project-wide collision layer registry (name + colour per layer). */
@@ -85,7 +83,6 @@ function buildMeta(state: AppState, image: LibraryImage): AtlasExport["meta"] {
     image: image.name,
     imageWidth: image.width,
     imageHeight: image.height,
-    exportedAt: new Date().toISOString(),
   };
 }
 
@@ -271,7 +268,6 @@ export function exportFull(state: AppState): FullExport {
       version: "1.0",
       tool: "gamefoo-tilemap-editor",
       projectName: state.projectName,
-      exportedAt: new Date().toISOString(),
     },
     images: state.images.map((i) => ({
       id: i.id,

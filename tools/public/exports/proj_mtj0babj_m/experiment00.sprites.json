@@ -126,8 +126,8 @@
     "height": 16
   },
   "sprite_4_0": {
-    "x": 72,
-    "y": 8,
+    "x": 64,
+    "y": 0,
     "width": 16,
     "height": 16
   },
@@ -138,8 +138,8 @@
     "height": 16
   },
   "sprite_6_0": {
-    "x": 104,
-    "y": 8,
+    "x": 96,
+    "y": 0,
     "width": 16,
     "height": 16
   },
@@ -159,25 +159,25 @@
     "x": 0,
     "y": 96,
     "width": 16,
-    "height": 32
+    "height": 16
   },
   "sprite_1_6": {
     "x": 16,
     "y": 96,
     "width": 16,
-    "height": 32
+    "height": 16
   },
   "sprite_2_6": {
     "x": 32,
     "y": 96,
     "width": 16,
-    "height": 32
+    "height": 16
   },
   "sprite_3_6": {
     "x": 48,
     "y": 96,
     "width": 16,
-    "height": 32
+    "height": 16
   },
   "sprite_2_1": {
     "x": 32,
@@ -570,26 +570,26 @@
     "height": 16
   },
   "sprite_6_2": {
-    "x": 104,
-    "y": 40,
+    "x": 96,
+    "y": 32,
     "width": 16,
     "height": 16
   },
   "sprite_4_2": {
-    "x": 72,
-    "y": 40,
-    "width": 18,
+    "x": 64,
+    "y": 32,
+    "width": 16,
     "height": 16
   },
   "sprite_4_4": {
-    "x": 70,
-    "y": 72,
-    "width": 18,
+    "x": 64,
+    "y": 64,
+    "width": 16,
     "height": 16
   },
   "sprite_6_4": {
-    "x": 104,
-    "y": 72,
+    "x": 96,
+    "y": 64,
     "width": 16,
     "height": 16
   },
@@ -602,6 +602,324 @@
   "sprite_12_5": {
     "x": 192,
     "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_0": {
+    "x": 112,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_0": {
+    "x": 128,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_0": {
+    "x": 144,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_4_1": {
+    "x": 64,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_5_2": {
+    "x": 80,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_2": {
+    "x": 112,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_2": {
+    "x": 128,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_2": {
+    "x": 144,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_11_3": {
+    "x": 176,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_10_3": {
+    "x": 160,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_3": {
+    "x": 144,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_3": {
+    "x": 128,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_3": {
+    "x": 112,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_6_3": {
+    "x": 96,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_5_3": {
+    "x": 80,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_4_3": {
+    "x": 64,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_5_4": {
+    "x": 80,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_4": {
+    "x": 112,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_4": {
+    "x": 128,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_4": {
+    "x": 144,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_10_4": {
+    "x": 160,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_11_4": {
+    "x": 176,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_11_5": {
+    "x": 176,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_10_5": {
+    "x": 160,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_5": {
+    "x": 144,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_5": {
+    "x": 128,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_5": {
+    "x": 112,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_6_5": {
+    "x": 96,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_5_5": {
+    "x": 80,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_4_5": {
+    "x": 64,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_3_5": {
+    "x": 48,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_2_5": {
+    "x": 32,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_1_5": {
+    "x": 16,
+    "y": 80,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_4_6": {
+    "x": 64,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_5_6": {
+    "x": 80,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_6_6": {
+    "x": 96,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_6": {
+    "x": 112,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_6": {
+    "x": 128,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_6": {
+    "x": 144,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_10_6": {
+    "x": 160,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_11_6": {
+    "x": 176,
+    "y": 96,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_11_7": {
+    "x": 176,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_10_7": {
+    "x": 160,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_9_7": {
+    "x": 144,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_8_7": {
+    "x": 128,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_7_7": {
+    "x": 112,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_6_7": {
+    "x": 96,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_4_7": {
+    "x": 64,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_5_7": {
+    "x": 80,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_3_7": {
+    "x": 48,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_2_7": {
+    "x": 32,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_1_7": {
+    "x": 16,
+    "y": 112,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_0_7": {
+    "x": 0,
+    "y": 112,
     "width": 16,
     "height": 16
   }

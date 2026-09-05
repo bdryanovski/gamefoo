@@ -4,6 +4,7 @@ import type { AppState, AppAction, ProjectSnapshot, CollisionVolume } from './ty
 import { INITIAL_STATE, migrateSpriteState, sanitizeObject } from './types';
 import { Icon } from './components/Icon';
 import { mapReducer } from './map/types';
+import { dialogReducer } from './dialog/types';
 import { sanitizeMachine } from './statemachine/types';
 import { Toolbar } from './components/Toolbar';
 import { TilemapCanvas } from './components/TilemapCanvas';
@@ -17,6 +18,7 @@ import { StatusBar } from './components/StatusBar';
 import { ProjectManager } from './components/ProjectManager';
 import { SaveScreen } from './components/SaveScreen';
 import { MapEditor } from './map/MapEditor';
+import { DialogEditor } from './dialog/DialogEditor';
 import { ProjectConfigPanel } from './components/ProjectConfigPanel';
 import {
   saveStateToLocal,
@@ -239,6 +241,9 @@ function reducer(state: AppState, action: AppAction): AppState {
     case 'MAP':
       return { ...state, map: mapReducer(state.map, action.action) };
 
+    case 'DIALOG':
+      return { ...state, dialog: dialogReducer(state.dialog, action.action) };
+
     default:
       return state;
   }
@@ -273,11 +278,17 @@ const MAP_VIEW: Record<string, true> = {
   SET_SHOW_ALL_LEVELS: true,
   LOAD_MAP: true,
 };
+/** Dialog sub-actions that change only selection. */
+const DIALOG_VIEW: Record<string, true> = {
+  SELECT_TREE: true,
+  SELECT_MESSAGE: true,
+};
 
 /** Does this action mutate the document (and so belong in undo history)? */
 function isRecordable(action: AppAction): boolean {
   if (VIEW_ACTIONS[action.type]) return false;
   if (action.type === 'MAP') return !MAP_VIEW[action.action.type];
+  if (action.type === 'DIALOG') return !DIALOG_VIEW[action.action.type];
   return true;
 }
 
@@ -306,12 +317,18 @@ function historyReducer(state: AppState, action: AppAction): AppState {
 
 export function App() {
   const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
-  const [mode, setMode] = useState<'sprite' | 'map' | 'objects' | 'character' | 'config'>(() => {
-    const saved = localStorage.getItem('gamefoo-tools-mode');
-    return saved === 'map' || saved === 'objects' || saved === 'character' || saved === 'config'
-      ? saved
-      : 'sprite';
-  });
+  const [mode, setMode] = useState<'sprite' | 'map' | 'objects' | 'character' | 'dialog' | 'config'>(
+    () => {
+      const saved = localStorage.getItem('gamefoo-tools-mode');
+      return saved === 'map' ||
+        saved === 'objects' ||
+        saved === 'character' ||
+        saved === 'dialog' ||
+        saved === 'config'
+        ? saved
+        : 'sprite';
+    },
+  );
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(() => getProjectId());
   const [showProjects, setShowProjects] = useState(false);
@@ -360,6 +377,11 @@ export function App() {
 
   const mapDispatch = useCallback(
     (a: Parameters<typeof mapReducer>[1]) => dispatch({ type: 'MAP', action: a }),
+    [],
+  );
+
+  const dialogDispatch = useCallback(
+    (a: Parameters<typeof dialogReducer>[1]) => dispatch({ type: 'DIALOG', action: a }),
     [],
   );
 
@@ -676,6 +698,12 @@ export function App() {
           <Icon name="character" size={15} /> Character
         </button>
         <button
+          className={`mode-btn ${mode === 'dialog' ? 'active' : ''}`}
+          onClick={() => setMode('dialog')}
+        >
+          <Icon name="dialog" size={15} /> Dialog Tree
+        </button>
+        <button
           className={`mode-btn ${mode === 'config' ? 'active' : ''}`}
           onClick={() => setMode('config')}
         >
@@ -819,6 +847,16 @@ export function App() {
             state={state}
             dispatch={dispatch}
             imageMap={imageMap}
+            projectId={currentProjectId}
+            saving={saving}
+            onSave={handleSave}
+            onOpenProjects={() => setShowProjects(true)}
+          />
+        ) : mode === 'dialog' ? (
+          <DialogEditor
+            state={state}
+            dispatch={dispatch}
+            dialogDispatch={dialogDispatch}
             projectId={currentProjectId}
             saving={saving}
             onSave={handleSave}

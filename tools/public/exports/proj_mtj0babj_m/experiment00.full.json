@@ -2,8 +2,7 @@
   "meta": {
     "version": "1.0",
     "tool": "gamefoo-tilemap-editor",
-    "projectName": "Experiment00",
-    "exportedAt": "2026-09-05T12:33:14.472Z"
+    "projectName": "Experiment00"
   },
   "images": [
     {
@@ -69,77 +68,77 @@
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_2_4": {
       "x": 32,
       "y": 64,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_2_2": {
       "x": 32,
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_0_1": {
       "x": 0,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_3_1": {
       "x": 48,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_1_1": {
       "x": 16,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_5_1": {
       "x": 80,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "props.png"
+      "image": "grounds.png"
     },
     "sprite_6_1": {
       "x": 96,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "props.png"
+      "image": "grounds.png"
     },
     "sprite_7_1": {
       "x": 112,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "props.png"
+      "image": "grounds.png"
     },
     "sprite_8_1": {
       "x": 128,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "props.png"
+      "image": "grounds.png"
     },
     "sprite_10_0": {
       "x": 160,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_15_1": {
       "x": 240,
@@ -160,168 +159,168 @@
       "y": 64,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_3_2": {
       "x": 48,
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_1_4": {
       "x": 16,
       "y": 64,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_3_4": {
       "x": 48,
       "y": 64,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_0_0": {
       "x": 0,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_1_0": {
       "x": 16,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_2_0": {
       "x": 32,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_3_0": {
       "x": 48,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_4_0": {
-      "x": 72,
-      "y": 8,
+      "x": 64,
+      "y": 0,
       "width": 16,
       "height": 16,
-      "image": "death.png"
+      "image": "grounds.png"
     },
     "sprite_5_0": {
       "x": 80,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "animated_props.png"
+      "image": "grounds.png"
     },
     "sprite_6_0": {
-      "x": 104,
-      "y": 8,
+      "x": 96,
+      "y": 0,
       "width": 16,
       "height": 16,
-      "image": "walk.png"
+      "image": "grounds.png"
     },
     "sprite_9_1": {
       "x": 144,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "animated_props.png"
+      "image": "grounds.png"
     },
     "sprite_10_1": {
       "x": 160,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "animated_props.png"
+      "image": "grounds.png"
     },
     "sprite_0_6": {
       "x": 0,
       "y": 96,
       "width": 16,
-      "height": 32,
-      "image": "animated_props.png"
+      "height": 16,
+      "image": "grounds.png"
     },
     "sprite_1_6": {
       "x": 16,
       "y": 96,
       "width": 16,
-      "height": 32,
-      "image": "animated_props.png"
+      "height": 16,
+      "image": "grounds.png"
     },
     "sprite_2_6": {
       "x": 32,
       "y": 96,
       "width": 16,
-      "height": 32,
-      "image": "animated_props.png"
+      "height": 16,
+      "image": "grounds.png"
     },
     "sprite_3_6": {
       "x": 48,
       "y": 96,
       "width": 16,
-      "height": 32,
-      "image": "animated_props.png"
+      "height": 16,
+      "image": "grounds.png"
     },
     "sprite_2_1": {
       "x": 32,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_0_2": {
       "x": 0,
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_1_2": {
       "x": 16,
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "pickup_items_animated.png"
+      "image": "grounds.png"
     },
     "sprite_3_3": {
       "x": 48,
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_2_3": {
       "x": 32,
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_1_3": {
       "x": 16,
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_11_0": {
       "x": 176,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_12_0": {
       "x": 192,
@@ -349,14 +348,14 @@
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_11_2": {
       "x": 176,
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_12_2": {
       "x": 192,
@@ -377,14 +376,14 @@
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "walls.png"
+      "image": "grounds.png"
     },
     "sprite_0_5": {
       "x": 0,
       "y": 80,
       "width": 16,
       "height": 16,
-      "image": "animated_props.png"
+      "image": "grounds.png"
     },
     "sprite_12_12": {
       "x": 192,
@@ -730,32 +729,32 @@
       "image": "grounds.png"
     },
     "sprite_6_2": {
-      "x": 104,
-      "y": 40,
+      "x": 96,
+      "y": 32,
       "width": 16,
       "height": 16,
-      "image": "walk.png"
+      "image": "grounds.png"
     },
     "sprite_4_2": {
-      "x": 72,
-      "y": 40,
-      "width": 18,
-      "height": 16,
-      "image": "death.png"
-    },
-    "sprite_4_4": {
-      "x": 70,
-      "y": 72,
-      "width": 18,
-      "height": 16,
-      "image": "death.png"
-    },
-    "sprite_6_4": {
-      "x": 104,
-      "y": 72,
+      "x": 64,
+      "y": 32,
       "width": 16,
       "height": 16,
-      "image": "walk.png"
+      "image": "grounds.png"
+    },
+    "sprite_4_4": {
+      "x": 64,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_6_4": {
+      "x": 96,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
     },
     "sprite_12_4": {
       "x": 192,
@@ -767,6 +766,377 @@
     "sprite_12_5": {
       "x": 192,
       "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_0": {
+      "x": 112,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_0": {
+      "x": 128,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_0": {
+      "x": 144,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_4_1": {
+      "x": 64,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_5_2": {
+      "x": 80,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_2": {
+      "x": 112,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_2": {
+      "x": 128,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_2": {
+      "x": 144,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_11_3": {
+      "x": 176,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_10_3": {
+      "x": 160,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_3": {
+      "x": 144,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_3": {
+      "x": 128,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_3": {
+      "x": 112,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_6_3": {
+      "x": 96,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_5_3": {
+      "x": 80,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_4_3": {
+      "x": 64,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_5_4": {
+      "x": 80,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_4": {
+      "x": 112,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_4": {
+      "x": 128,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_4": {
+      "x": 144,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_10_4": {
+      "x": 160,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_11_4": {
+      "x": 176,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_11_5": {
+      "x": 176,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_10_5": {
+      "x": 160,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_5": {
+      "x": 144,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_5": {
+      "x": 128,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_5": {
+      "x": 112,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_6_5": {
+      "x": 96,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_5_5": {
+      "x": 80,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_4_5": {
+      "x": 64,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_3_5": {
+      "x": 48,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_2_5": {
+      "x": 32,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_1_5": {
+      "x": 16,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_4_6": {
+      "x": 64,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_5_6": {
+      "x": 80,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_6_6": {
+      "x": 96,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_6": {
+      "x": 112,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_6": {
+      "x": 128,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_6": {
+      "x": 144,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_10_6": {
+      "x": 160,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_11_6": {
+      "x": 176,
+      "y": 96,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_11_7": {
+      "x": 176,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_10_7": {
+      "x": 160,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_9_7": {
+      "x": 144,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_8_7": {
+      "x": 128,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_7_7": {
+      "x": 112,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_6_7": {
+      "x": 96,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_4_7": {
+      "x": 64,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_5_7": {
+      "x": 80,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_3_7": {
+      "x": 48,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_2_7": {
+      "x": 32,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_1_7": {
+      "x": 16,
+      "y": 112,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_0_7": {
+      "x": 0,
+      "y": 112,
       "width": 16,
       "height": 16,
       "image": "grounds.png"
@@ -798,7 +1168,7 @@
         "sprite_0_0",
         "sprite_2_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_idle_back": {
@@ -806,7 +1176,7 @@
         "sprite_0_4",
         "sprite_2_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_idle_right": {
@@ -814,7 +1184,7 @@
         "sprite_0_2",
         "sprite_2_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_front": {
@@ -824,7 +1194,7 @@
         "sprite_4_0",
         "sprite_6_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_right": {
@@ -834,7 +1204,7 @@
         "sprite_4_2",
         "sprite_6_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_back": {
@@ -844,7 +1214,7 @@
         "sprite_4_4",
         "sprite_6_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_front": {
@@ -853,7 +1223,7 @@
         "sprite_2_0",
         "sprite_4_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_right": {
@@ -862,7 +1232,7 @@
         "sprite_2_2",
         "sprite_4_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_back": {
@@ -871,7 +1241,7 @@
         "sprite_2_4",
         "sprite_4_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "olive": {
@@ -1675,7 +2045,7 @@
       "animations": [],
       "properties": {
         "targetScreen": "0,0",
-        "navigate": "0,0"
+        "spawn": "0,0"
       },
       "category": "",
       "description": "",
@@ -1853,90 +2223,90 @@
   ],
   "spriteMetadata": {
     "sprite_0_3": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 47,
+      "order": 201,
       "level": 0,
       "properties": {}
     },
     "sprite_2_4": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 150,
+      "order": 204,
       "level": 0,
       "properties": {}
     },
     "sprite_2_2": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 146,
+      "order": 180,
       "level": 0,
       "properties": {}
     },
     "sprite_0_1": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 140,
+      "order": 177,
       "level": 0,
       "properties": {}
     },
     "sprite_3_1": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 143,
+      "order": 174,
       "level": 0,
       "properties": {}
     },
     "sprite_1_1": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 141,
+      "order": 176,
       "level": 0,
       "properties": {}
     },
     "sprite_5_1": {
-      "image": "props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 6,
+      "order": 172,
       "level": 0,
       "properties": {}
     },
     "sprite_6_1": {
-      "image": "props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 7,
+      "order": 171,
       "level": 0,
       "properties": {}
     },
     "sprite_7_1": {
-      "image": "props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 8,
+      "order": 170,
       "level": 0,
       "properties": {}
     },
     "sprite_8_1": {
-      "image": "props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 9,
+      "order": 169,
       "level": 0,
       "properties": {}
     },
     "sprite_10_0": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 48,
+      "order": 164,
       "level": 0,
       "properties": {}
     },
@@ -1957,194 +2327,194 @@
       "properties": {}
     },
     "sprite_0_4": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 148,
+      "order": 202,
       "level": 0,
       "properties": {}
     },
     "sprite_3_2": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 147,
+      "order": 181,
       "level": 0,
       "properties": {}
     },
     "sprite_1_4": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 149,
+      "order": 203,
       "level": 0,
       "properties": {}
     },
     "sprite_3_4": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 151,
+      "order": 205,
       "level": 0,
       "properties": {}
     },
     "sprite_0_0": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 136,
+      "order": 154,
       "level": 0,
       "properties": {}
     },
     "sprite_1_0": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 137,
+      "order": 155,
       "level": 0,
       "properties": {}
     },
     "sprite_2_0": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 138,
+      "order": 156,
       "level": 0,
       "properties": {}
     },
     "sprite_3_0": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 139,
+      "order": 157,
       "level": 0,
       "properties": {}
     },
     "sprite_4_0": {
-      "image": "death.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 129,
+      "order": 158,
       "level": 0,
       "properties": {}
     },
     "sprite_5_0": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 24,
+      "order": 159,
       "level": 0,
       "properties": {}
     },
     "sprite_6_0": {
-      "image": "walk.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 118,
+      "order": 160,
       "level": 0,
       "properties": {}
     },
     "sprite_9_1": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 26,
+      "order": 168,
       "level": 0,
       "properties": {}
     },
     "sprite_10_1": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 27,
+      "order": 167,
       "level": 0,
       "properties": {}
     },
     "sprite_0_6": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 28,
+      "order": 226,
       "level": 0,
       "properties": {}
     },
     "sprite_1_6": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 29,
+      "order": 227,
       "level": 0,
       "properties": {}
     },
     "sprite_2_6": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 30,
+      "order": 228,
       "level": 0,
       "properties": {}
     },
     "sprite_3_6": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 31,
+      "order": 229,
       "level": 0,
       "properties": {}
     },
     "sprite_2_1": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 142,
+      "order": 175,
       "level": 0,
       "properties": {}
     },
     "sprite_0_2": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 144,
+      "order": 178,
       "level": 0,
       "properties": {}
     },
     "sprite_1_2": {
-      "image": "pickup_items_animated.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 145,
+      "order": 179,
       "level": 0,
       "properties": {}
     },
     "sprite_3_3": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 44,
+      "order": 197,
       "level": 0,
       "properties": {}
     },
     "sprite_2_3": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 45,
+      "order": 199,
       "level": 0,
       "properties": {}
     },
     "sprite_1_3": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 46,
+      "order": 200,
       "level": 0,
       "properties": {}
     },
     "sprite_11_0": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 49,
+      "order": 165,
       "level": 0,
       "properties": {}
     },
@@ -2154,7 +2524,21 @@
       "group": "",
       "order": 50,
       "level": 0,
-      "properties": {}
+      "properties": {},
+      "collisions": [
+        {
+          "id": "col_mtog3imp_l",
+          "layerId": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": -0.5078125,
+            "y": 0.013020833333333334,
+            "width": 16.666015625,
+            "height": 9.892252604166666
+          }
+        }
+      ]
     },
     "sprite_13_1": {
       "image": "walls.png",
@@ -2173,18 +2557,18 @@
       "properties": {}
     },
     "sprite_10_2": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 53,
+      "order": 188,
       "level": 0,
       "properties": {}
     },
     "sprite_11_2": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 54,
+      "order": 189,
       "level": 0,
       "properties": {}
     },
@@ -2205,18 +2589,18 @@
       "properties": {}
     },
     "sprite_11_1": {
-      "image": "walls.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 57,
+      "order": 166,
       "level": 0,
       "properties": {}
     },
     "sprite_0_5": {
-      "image": "animated_props.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 59,
+      "order": 225,
       "level": 0,
       "properties": {}
     },
@@ -2613,34 +2997,34 @@
       "properties": {}
     },
     "sprite_6_2": {
-      "image": "walk.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 119,
+      "order": 184,
       "level": 0,
       "properties": {}
     },
     "sprite_4_2": {
-      "image": "death.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 132,
+      "order": 182,
       "level": 0,
       "properties": {}
     },
     "sprite_4_4": {
-      "image": "death.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 135,
+      "order": 206,
       "level": 0,
       "properties": {}
     },
     "sprite_6_4": {
-      "image": "walk.png",
+      "image": "grounds.png",
       "tags": [],
       "group": "",
-      "order": 126,
+      "order": 208,
       "level": 0,
       "properties": {}
     },
@@ -2657,6 +3041,430 @@
       "tags": [],
       "group": "",
       "order": 153,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_0": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 161,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_0": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 162,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_0": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 163,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_4_1": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 173,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_5_2": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 183,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_2": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 185,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_2": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 186,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_2": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 187,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_11_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 190,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_10_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 191,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 192,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 193,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 194,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_6_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 195,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_5_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 196,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_4_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 198,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_5_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 207,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 209,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 210,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 211,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_10_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 212,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_11_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 213,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_11_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 214,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_10_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 215,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 216,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 217,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 218,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_6_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 219,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_5_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 220,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_4_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 221,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_3_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 222,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_2_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 223,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_1_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 224,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_4_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 230,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_5_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 231,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_6_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 232,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 233,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 234,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 235,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_10_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 236,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_11_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 237,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_11_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 238,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_10_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 239,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_9_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 240,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_8_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 241,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_7_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 242,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_6_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 243,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_4_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 244,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_5_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 245,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_3_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 246,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_2_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 247,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_1_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 248,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_0_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 249,
       "level": 0,
       "properties": {}
     }

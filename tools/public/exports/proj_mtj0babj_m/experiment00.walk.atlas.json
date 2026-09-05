@@ -5,8 +5,7 @@
     "projectName": "Experiment00",
     "image": "walk.png",
     "imageWidth": 128,
-    "imageHeight": 96,
-    "exportedAt": "2026-09-05T12:33:14.472Z"
+    "imageHeight": 96
   },
   "frames": {
     "sprite_0_0": {
@@ -90,7 +89,7 @@
         "sprite_4_0",
         "sprite_6_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_right": {
@@ -100,7 +99,7 @@
         "sprite_4_2",
         "sprite_6_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_back": {
@@ -110,7 +109,7 @@
         "sprite_4_4",
         "sprite_6_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     }
   }

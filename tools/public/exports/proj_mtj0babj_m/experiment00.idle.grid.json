@@ -5,8 +5,7 @@
     "projectName": "Experiment00",
     "image": "idle.png",
     "imageWidth": 64,
-    "imageHeight": 96,
-    "exportedAt": "2026-09-05T12:33:14.472Z"
+    "imageHeight": 96
   },
   "grid": {
     "frameWidth": 16,
@@ -30,7 +29,7 @@
         5,
         7
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_idle_back": {
@@ -38,7 +37,7 @@
         21,
         23
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_idle_right": {
@@ -46,7 +45,7 @@
         13,
         15
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     }
   }

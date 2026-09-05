@@ -3,6 +3,8 @@ import { INITIAL_MAP_STATE, migrateMapState, sanitizeMap, DEFAULT_LAYER_NAMES } 
 import type { MapAction, MapState } from "./map/types";
 import { makeStateMachine, sanitizeMachine } from "./statemachine/types";
 import type { StateMachineDef, StateNodeDef } from "./statemachine/types";
+import { INITIAL_DIALOG_STATE, sanitizeDialogState } from "./dialog/types";
+import type { DialogAction, DialogState } from "./dialog/types";
 
 /**
  * An image in the shared asset library. The sprite editor cuts sprites
@@ -704,6 +706,8 @@ export interface AppState {
   activeTab: TabType;
   /** Map editor slice — screens, placements, view state. */
   map: MapState;
+  /** Dialog tree editor slice — trees of linked, id-addressable messages. */
+  dialog: DialogState;
   /**
    * Undo stack: past project documents, oldest → newest. Each entry is
    * a full snapshot minus its own history. Persisted with the project
@@ -745,7 +749,9 @@ export type AppAction =
   | { type: "LOAD_PROJECT"; state: AppState }
   | { type: "UNDO" }
   /** All map-editor actions, delegated to mapReducer. */
-  | { type: "MAP"; action: MapAction };
+  | { type: "MAP"; action: MapAction }
+  /** All dialog-editor actions, delegated to dialogReducer. */
+  | { type: "DIALOG"; action: DialogAction };
 
 export const DEFAULT_GRID: GridSettings = {
   enabled: true,
@@ -775,6 +781,7 @@ export const INITIAL_STATE: AppState = {
   pan: { x: 0, y: 0 },
   activeTab: "sprites",
   map: INITIAL_MAP_STATE,
+  dialog: INITIAL_DIALOG_STATE,
   history: [],
 };
 
@@ -918,6 +925,7 @@ export function migrateSpriteState(raw: unknown): AppState {
         objectMachines(objects),
       )
       : { ...INITIAL_MAP_STATE, screens: {} },
+    dialog: sanitizeDialogState(old.dialog),
     history: Array.isArray(old.history)
       ? (old.history as ProjectSnapshot[])
       : [],

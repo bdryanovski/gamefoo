@@ -548,20 +548,34 @@ export function migrateMapState(raw: unknown): MapState {
       x: Number(s.x) || 0,
       y: Number(s.y) || 0,
       defaultSpriteId: s.defaultSpriteId ?? s.defaultAssetId ?? null,
-      placements: (s.placements ?? []).map((p, i) => ({
-        id: (p.id as string) ?? `pl_${key}_${i}`,
-        kind: (p.kind as "sprite" | "machine" | "animation") ?? "sprite",
-        spriteId: p.spriteId as string | undefined,
-        machineId: p.machineId as string | undefined,
-        animationId: p.animationId as string | undefined,
-        stateName: p.stateName as string | undefined,
-        x: Number(p.x) || 0,
-        y: Number(p.y) || 0,
-        level: Number(p.level) || 0,
-        rotation: typeof p.rotation === "number" ? p.rotation : undefined,
-        flipX: p.flipX === true ? true : undefined,
-        flipY: p.flipY === true ? true : undefined,
-      })) as MapPlacement[],
+      placements: (s.placements ?? []).map((p, i) => {
+        const rawProps = p.properties;
+        const properties =
+          rawProps && typeof rawProps === "object" && !Array.isArray(rawProps)
+            ? Object.fromEntries(
+                Object.entries(rawProps as Record<string, unknown>).filter(
+                  ([, v]) => typeof v === "string",
+                ),
+              )
+            : undefined;
+        return {
+          id: (p.id as string) ?? `pl_${key}_${i}`,
+          kind: (p.kind as "sprite" | "machine" | "animation") ?? "sprite",
+          spriteId: p.spriteId as string | undefined,
+          machineId: p.machineId as string | undefined,
+          animationId: p.animationId as string | undefined,
+          stateName: p.stateName as string | undefined,
+          // Per-placement property overrides — must survive load/import,
+          // else placed instances silently revert to the object defaults.
+          ...(properties && Object.keys(properties).length > 0 ? { properties } : {}),
+          x: Number(p.x) || 0,
+          y: Number(p.y) || 0,
+          level: Number(p.level) || 0,
+          rotation: typeof p.rotation === "number" ? p.rotation : undefined,
+          flipX: p.flipX === true ? true : undefined,
+          flipY: p.flipY === true ? true : undefined,
+        };
+      }) as MapPlacement[],
     };
   }
 

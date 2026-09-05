@@ -3,8 +3,7 @@
     "version": "1.0",
     "tool": "gamefoo-object-editor",
     "name": "sign",
-    "category": "",
-    "exportedAt": "2026-09-05T14:27:27.686Z"
+    "category": ""
   },
   "grid": {
     "cols": 1,

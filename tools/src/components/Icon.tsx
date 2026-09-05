@@ -37,6 +37,8 @@ import {
   SquareIcon,
   TriangleIcon,
   SparkleIcon,
+  ChatIcon,
+  CopyIcon,
 } from "@proicons/react";
 
 /**
@@ -49,6 +51,8 @@ const REGISTRY = {
   "map-editor": MapIcon,
   objects: CubeIcon,
   character: PersonIcon,
+  dialog: ChatIcon,
+  copy: CopyIcon,
   save: SaveIcon,
   undo: ArrowUndoIcon,
   "zoom-reset": ScreenSizeIcon,

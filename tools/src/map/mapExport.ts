@@ -23,7 +23,6 @@ export function exportMap(state: AppState) {
       blockSize: m.blockSize,
       screenCols: m.screenCols,
       screenRows: m.screenRows,
-      exportedAt: new Date().toISOString(),
     },
     images: state.images.map((i) => ({
       id: i.id,
