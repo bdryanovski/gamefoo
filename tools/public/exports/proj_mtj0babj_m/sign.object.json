@@ -4,7 +4,7 @@
     "tool": "gamefoo-object-editor",
     "name": "sign",
     "category": "",
-    "exportedAt": "2026-09-03T07:14:51.279Z"
+    "exportedAt": "2026-09-05T06:36:54.845Z"
   },
   "grid": {
     "cols": 1,
@@ -65,8 +65,8 @@
             "kind": "rect",
             "x": 1.2138671875,
             "y": 1.2083333333333333,
-            "width": 13.882486979166666,
-            "height": 14.734375
+            "width": 13.793619791666666,
+            "height": 8.962890625
           }
         }
       ]

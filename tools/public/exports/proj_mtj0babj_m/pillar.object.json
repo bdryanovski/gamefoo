@@ -4,7 +4,7 @@
     "tool": "gamefoo-object-editor",
     "name": "pillar",
     "category": "",
-    "exportedAt": "2026-09-03T07:14:51.279Z"
+    "exportedAt": "2026-09-05T06:36:54.845Z"
   },
   "grid": {
     "cols": 1,
@@ -65,8 +65,8 @@
             "kind": "rect",
             "x": 0.45625,
             "y": 18.46201923076923,
-            "width": 14.164903846153845,
-            "height": 13.180288461538467
+            "width": 14.26826923076923,
+            "height": 11.998557692307696
           }
         }
       ]
