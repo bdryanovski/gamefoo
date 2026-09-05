@@ -14,7 +14,9 @@
     "width": 16,
     "height": 32
   },
-  "properties": {},
+  "properties": {
+    "message": "0"
+  },
   "images": {
     "props.png": {
       "src": "/uploads/1788287738546_props.png",

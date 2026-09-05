@@ -141,6 +141,388 @@
           "meta": {}
         }
       }
+    },
+    "Bookshelf 1": {
+      "id": "dlg_mtoq2vsg_3",
+      "name": "Bookshelf 1",
+      "root": "msg_mtoq2vsg_2",
+      "messages": {
+        "msg_mtoq2vsg_2": {
+          "title": "Pet Giraffe",
+          "segments": [
+            "A tiny stuffed giraffe found",
+            "Soft",
+            "Why do I recognize this ?",
+            "Sweet dreams, potato giraffe ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 1": {
+      "id": "dlg_mtoq723s_7",
+      "name": "Campfire 1",
+      "root": "msg_mtoq723s_6",
+      "messages": {
+        "msg_mtoq723s_6": {
+          "title": "Campfire",
+          "segments": [
+            "Voice: Do you know where you are?",
+            "Voice: Neither do I",
+            "Voice: Maybe that's okay?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Bookshelf 2": {
+      "id": "dlg_mtoq9k8g_b",
+      "name": "Bookshelf 2",
+      "root": "msg_mtoq9k8g_a",
+      "messages": {
+        "msg_mtoq9k8g_a": {
+          "title": "Book: How to find someone?",
+          "segments": [
+            "Look for them",
+            "Look harder ...",
+            "Look somewhere else ...",
+            "They're probably closer than you think "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Empty Chest": {
+      "id": "dlg_mtoqgmst_f",
+      "name": "Empty Chest",
+      "root": "msg_mtoqgmst_e",
+      "messages": {
+        "msg_mtoqgmst_e": {
+          "title": "Chest",
+          "segments": [
+            "Voice: You expected something ?",
+            "Voice: You still do ...",
+            "Voice: Nothing "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 2": {
+      "id": "dlg_mtoqjn5v_j",
+      "name": "Campfire 2",
+      "root": "msg_mtoqjn5v_i",
+      "messages": {
+        "msg_mtoqjn5v_i": {
+          "title": "Campfire",
+          "segments": [
+            "Everything reminds me of her"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Bookshelf 3": {
+      "id": "dlg_mtoql23p_n",
+      "name": "Bookshelf 3",
+      "root": "msg_mtoql23p_m",
+      "messages": {
+        "msg_mtoql23p_m": {
+          "title": "Book: The things I notice",
+          "segments": [
+            "The way you disappear into work...",
+            "The way you pretend you're fine",
+            "The stupid things you send me",
+            "The things you don't say",
+            "The things you think I don't notice ",
+            "I notice.",
+            "End of book"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 3": {
+      "id": "dlg_mtoqnys8_r",
+      "name": "Campfire 3",
+      "root": "msg_mtoqnys8_q",
+      "messages": {
+        "msg_mtoqnys8_q": {
+          "title": "Campfire",
+          "segments": [
+            "Voice: You know ...",
+            "Voice: You don't have to find me",
+            "Voice: I'm always around",
+            "Voice: Always nearby, even when you don't see me",
+            "Voice: But you should probably keep looking ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 4": {
+      "id": "dlg_mtoqwwca_v",
+      "name": "Campfire 4",
+      "root": "msg_mtoqwwca_u",
+      "messages": {
+        "msg_mtoqwwca_u": {
+          "title": "Campfire",
+          "segments": [
+            "You're quite",
+            "I don't know what to say either.",
+            "So I'll just stay here ? "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 5": {
+      "id": "dlg_mtoqzbmc_z",
+      "name": "Campfire 5",
+      "root": "msg_mtoqzbmc_y",
+      "messages": {
+        "msg_mtoqzbmc_y": {
+          "title": "Campfire",
+          "segments": [
+            "I'm thinking about it",
+            "Voice: You should think about me instead...",
+            "I'm fucking trying"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 6": {
+      "id": "dlg_mtor0i4f_13",
+      "name": "Campfire 6",
+      "root": "msg_mtor0i4f_12",
+      "messages": {
+        "msg_mtor0i4f_12": {
+          "title": "Campfire",
+          "segments": [
+            "Voice: You make my brain melt",
+            "You make me want to be a better person",
+            "Just to impress you",
+            "Voice: Are you hitting on me?",
+            "Are you falling for it",
+            "Voice: I am.",
+            "...",
+            "Voice: Kinda hard."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 1": {
+      "id": "dlg_mtor3jbb_17",
+      "name": "Note 1",
+      "root": "msg_mtor3jbb_16",
+      "messages": {
+        "msg_mtor3jbb_16": {
+          "title": "Note",
+          "segments": [
+            "Voice: Miss you a lottle.",
+            "A what?",
+            "Voice: A little but a lot",
+            "That's not a word !",
+            "Voice: It is now."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 2": {
+      "id": "dlg_mtor5nx6_1b",
+      "name": "Note 2",
+      "root": "msg_mtor5nx6_1a",
+      "messages": {
+        "msg_mtor5nx6_1a": {
+          "title": "Note",
+          "segments": [
+            "Sometimes I dream about it",
+            "Voice: Wish it was us?",
+            "Maybe in another dimension?",
+            "Voice: Should've been this one"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 3": {
+      "id": "dlg_mtor83gk_1f",
+      "name": "Note 3",
+      "root": "msg_mtor83gk_1e",
+      "messages": {
+        "msg_mtor83gk_1e": {
+          "title": "Note",
+          "segments": [
+            "Voice: If you ever get lost ... ",
+            "Voice: You know where to find me ...",
+            "You mean ... ?",
+            "Voice: You have my pigeon, Batman !",
+            "Right ... ",
+            "Voice: You know how to get to me ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 7": {
+      "id": "dlg_mtorag3r_1j",
+      "name": "Campfire 7",
+      "root": "msg_mtorag3r_1i",
+      "messages": {
+        "msg_mtorag3r_1i": {
+          "title": "Start",
+          "segments": [
+            "I can't find you",
+            "Voice: You don't have to",
+            "Then where are you",
+            "Voice: Around ",
+            "... you don't see me ?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Book: Everything": {
+      "id": "dlg_mtord2tx_1n",
+      "name": "Book: Everything",
+      "root": "msg_mtord2tx_1m",
+      "messages": {
+        "msg_mtord2tx_1m": {
+          "title": "Book: Everything",
+          "segments": [
+            "First page: Everything reminds me of you",
+            "A stupid picture ...",
+            "A stupid joke ...",
+            "Something you said three weeks ago, an olive, a giraffe, a magnet",
+            "Last page: This is getting ridiculous!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Magnet": {
+      "id": "dlg_mtorg8k9_1r",
+      "name": "Magnet",
+      "root": "msg_mtorg8k9_1q",
+      "messages": {
+        "msg_mtorg8k9_1q": {
+          "title": "Found a magnet",
+          "segments": [
+            "You were supposed to bring this ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Coffee": {
+      "id": "dlg_mtorh2ih_1v",
+      "name": "Coffee",
+      "root": "msg_mtorh2ih_1u",
+      "messages": {
+        "msg_mtorh2ih_1u": {
+          "title": "Found Coffee ",
+          "segments": [
+            "Before everything else"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Tiny Bear": {
+      "id": "dlg_mtorhu8r_1z",
+      "name": "Tiny Bear",
+      "root": "msg_mtorhu8r_1y",
+      "messages": {
+        "msg_mtorhu8r_1y": {
+          "title": "Found Tiny Bear",
+          "segments": [
+            "You found a tiny bear, sweet dreams ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Final": {
+      "id": "dlg_mtorjeem_23",
+      "name": "Final",
+      "root": "msg_mtorjeem_22",
+      "messages": {
+        "msg_mtorjeem_22": {
+          "title": "You already won",
+          "segments": [
+            "Voice: Still here?",
+            "Voice: You know ...",
+            "Voice: You already won",
+            "What did I win ?",
+            "Voice: Me being here",
+            "Don't make it weird!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 4": {
+      "id": "dlg_mtorl72u_27",
+      "name": "Note 4",
+      "root": "msg_mtorl72u_26",
+      "messages": {
+        "msg_mtorl72u_26": {
+          "title": "Note",
+          "segments": [
+            "Do you ever dream about us ?",
+            "Voice: Sometimes",
+            "What happens? ",
+            "Voice: We find each other ...",
+            "That's convenient.",
+            "Voice: We chase each other through the universes ",
+            "Better ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "End": {
+      "id": "dlg_mtorxbq3_2b",
+      "name": "End",
+      "root": "msg_mtorxbq3_2a",
+      "messages": {
+        "msg_mtorxbq3_2a": {
+          "title": "End",
+          "segments": [
+            "There was once a place where nothing grew. Only water, bones, and things nobody came back for. He walked until the rooms began to repeat.",
+            "A word, a joke, an olive, a memory, he kept searching for the things waiting at the end...",
+            "... but there was no door, no answer, no one waiting, only the swamp, only the dead.",
+            "And behind him, a small fire still burning ... He finally understood.",
+            "Nothing had been waiting for him at the end. Everything had been waiting for him along the way. So he stopped searching.",
+            "And listened to the fire. It was the only thing in the dungeon that was still alive."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }
