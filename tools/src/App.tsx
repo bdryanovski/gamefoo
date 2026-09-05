@@ -363,12 +363,8 @@ export function App() {
     [],
   );
 
-  // Latest values captured for the periodic auto-save interval, plus the
-  // last state actually persisted to the server (skip redundant saves).
-  const stateRef = useRef(state);
-  stateRef.current = state;
-  const projectIdRef = useRef(currentProjectId);
-  projectIdRef.current = currentProjectId;
+  // Whether a save is in flight, and the last state actually persisted — the
+  // debounced auto-save reads both to skip redundant writes.
   const savingRef = useRef(saving);
   savingRef.current = saving;
   const lastSavedStateRef = useRef<AppState | null>(null);
@@ -499,6 +495,22 @@ export function App() {
     };
   }, [handleUploadImages]);
 
+  // Persist the project to the server and refresh its standalone reference
+  // files (config + one file per object). Shared by explicit Save and the
+  // debounced auto-save so both keep the exported object files current.
+  const persistProject = useCallback(async (projId: string, s: AppState) => {
+    await saveProject(projId, s);
+    const projBase = s.projectName.replace(/\s+/g, '_').toLowerCase() || 'project';
+    const files: Record<string, unknown> = {
+      [`${projBase}.config.json`]: exportConfig(s),
+    };
+    for (const o of s.objects) {
+      const base = o.name.replace(/\s+/g, '_').toLowerCase() || o.id;
+      files[`${base}.object.json`] = exportObject(s, o);
+    }
+    await exportProjectFiles(projId, files);
+  }, []);
+
   // ── Save project (sprite library + map together) ───────
 
   const handleSave = useCallback(
@@ -510,20 +522,8 @@ export function App() {
           projId = uid('proj');
           setCurrentProjectId(projId);
         }
-        await saveProject(projId, state);
+        await persistProject(projId, state);
         lastSavedStateRef.current = state;
-        // Emit standalone reference files: project config + each object.
-        {
-          const projBase = state.projectName.replace(/\s+/g, '_').toLowerCase() || 'project';
-          const files: Record<string, unknown> = {
-            [`${projBase}.config.json`]: exportConfig(state),
-          };
-          for (const o of state.objects) {
-            const base = o.name.replace(/\s+/g, '_').toLowerCase() || o.id;
-            files[`${base}.object.json`] = exportObject(state, o);
-          }
-          await exportProjectFiles(projId, files);
-        }
         if (mode === 'save') {
           setShowSaveScreen(true);
         } else {
@@ -537,7 +537,7 @@ export function App() {
         setSaving(false);
       }
     },
-    [currentProjectId, state],
+    [currentProjectId, state, persistProject],
   );
 
   // ── QuickSave keyboard shortcut (Ctrl/Cmd+S) ───────────
@@ -552,25 +552,27 @@ export function App() {
     return () => clearTimeout(t);
   }, [quickSavedAt]);
 
-  // ── Server auto-save (every 60s while a project is open) ──
-
+  // ── Debounced server auto-save ─────────────────────────
+  // Persist (and re-export) shortly after edits settle so a refresh never
+  // loses unsaved work. The payload excludes undo history, so it is small
+  // enough to write on every change.
   useEffect(() => {
-    const id = setInterval(() => {
-      const s = stateRef.current;
-      const pid = projectIdRef.current;
-      // Only persist an existing project, when idle and actually changed.
-      if (!pid || savingRef.current || lastSavedStateRef.current === s) return;
+    if (!initialized) return;
+    const pid = currentProjectId;
+    if (!pid || lastSavedStateRef.current === state) return;
+    const timeout = setTimeout(() => {
+      if (savingRef.current) return;
       setSaving(true);
-      saveProject(pid, s)
+      persistProject(pid, state)
         .then(() => {
-          lastSavedStateRef.current = s;
+          lastSavedStateRef.current = state;
           setQuickSavedAt(Date.now());
         })
         .catch((e) => console.error('Auto-save failed:', e))
         .finally(() => setSaving(false));
-    }, 60000);
-    return () => clearInterval(id);
-  }, []);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, [state, initialized, currentProjectId, persistProject]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

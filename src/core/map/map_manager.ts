@@ -2,7 +2,7 @@ import type { DeltaTime } from '@/generic_types';
 import type { RenderContext } from '../renderer/type';
 import AssetManager from './asset_manager';
 import type MapObjectRegistry from './map_object_registry';
-import Screen from './screen';
+import Screen, { type ScreenOverlay } from './screen';
 import type ScreenRegistry from './screen_registry';
 import {
   type ImageResolver,
@@ -182,9 +182,10 @@ export default class MapManager {
   }
 
   /**
-   * Renders the current screen.
+   * Renders the current screen. An optional `overlay` (e.g. the player) is
+   * drawn interleaved at its `level` so higher layers occlude it.
    */
-  public render(ctx: RenderContext): void {
-    this.currentScreen?.render(ctx);
+  public render(ctx: RenderContext, overlay?: ScreenOverlay): void {
+    this.currentScreen?.render(ctx, overlay);
   }
 }

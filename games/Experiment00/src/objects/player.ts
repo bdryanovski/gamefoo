@@ -6,7 +6,6 @@ import {
   MapObject,
   type MapObjectContext,
   type Rect,
-  type RenderContext,
 } from '../../../../src/index';
 
 const SIZE = 16;
@@ -139,18 +138,5 @@ export class Player extends MapObject {
 
     this.play(this.desiredState());
     super.update(deltaTime);
-  }
-
-  override render(ctx: RenderContext): void {
-    if (this.facing === 'left') {
-      // Mirror the right-walk art in place for leftward movement.
-      ctx.save();
-      ctx.translate(this.x * 2 + SIZE, 0);
-      ctx.scale(-1, 1);
-      super.render(ctx);
-      ctx.restore();
-    } else {
-      super.render(ctx);
-    }
   }
 }

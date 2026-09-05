@@ -3,7 +3,7 @@
     "version": "1.0",
     "tool": "gamefoo-statemachine-editor",
     "projectName": "Experiment00",
-    "exportedAt": "2026-09-05T06:36:54.843Z"
+    "exportedAt": "2026-09-05T12:33:14.472Z"
   },
   "machines": {
     "object_0": {
@@ -228,6 +228,24 @@
           "condition": "stop"
         }
       ]
+    },
+    "object_6": {
+      "initial": "top-open",
+      "states": {
+        "top-open": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_11_0"
+          }
+        },
+        "top-close": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "sprite_11_1"
+          }
+        }
+      },
+      "transitions": []
     }
   }
 }

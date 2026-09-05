@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from "react";
-import type { AppState, AppAction, SpriteRegion, AnimationDef } from "../types";
+import type { AppState, AppAction, SpriteRegion, AnimationDef, GameObjectDef } from "../types";
 import { objectMachines } from "../types";
 import type { StateMachineDef } from "../statemachine/types";
 import type { MapAction, MapPlacement } from "./types";
@@ -172,6 +172,86 @@ function MachineThumb({
   );
 }
 
+/**
+ * State + property editor shared by the placement editor (edits one placed
+ * instance) and the palette brush (configures what new placements inherit).
+ * `properties` holds only overrides; blank keys fall back to the object's.
+ */
+function MachineConfigFields({
+  object,
+  stateName,
+  properties,
+  onState,
+  onProperties,
+}: {
+  object: GameObjectDef;
+  stateName?: string;
+  properties?: Record<string, string>;
+  onState: (name: string) => void;
+  onProperties: (props: Record<string, string>) => void;
+}) {
+  const keys = Object.keys(object.properties);
+  return (
+    <>
+      <div className="field-row">
+        <span className="field-label">State:</span>
+        <select
+          className="input input-sm input-full"
+          value={stateName ?? resolveMachineState(object.machine)?.name ?? ""}
+          onChange={(e) => onState(e.target.value)}
+        >
+          {object.machine.states.map((s) => (
+            <option key={s.id} value={s.name}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="section-title" style={{ marginTop: 4 }}>
+        Properties
+      </div>
+      {keys.length === 0 && (
+        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+          No properties on this object. Define them in the Objects tab.
+        </div>
+      )}
+      {keys.map((key) => {
+        const overridden = properties?.[key] !== undefined;
+        const value = overridden ? properties![key]! : object.properties[key]!;
+        return (
+          <div className="field-row" key={key}>
+            <span
+              className="field-label"
+              title={overridden ? "Overridden" : "Inherited from the object"}
+            >
+              {overridden ? "● " : ""}
+              {key}:
+            </span>
+            <input
+              type="text"
+              className="input input-sm input-full"
+              value={value}
+              onChange={(e) => onProperties({ ...(properties ?? {}), [key]: e.target.value })}
+            />
+            <button
+              className="btn btn-sm"
+              title="Reset to object default"
+              disabled={!overridden}
+              onClick={() => {
+                const next = { ...(properties ?? {}) };
+                delete next[key];
+                onProperties(next);
+              }}
+            >
+              ↺
+            </button>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 export function MapPalettePanel({
   state,
   dispatch,
@@ -229,13 +309,29 @@ export function MapPalettePanel({
     : null;
   const selSprite = selDisplay?.spriteId ? spriteById.get(selDisplay.spriteId) : undefined;
 
+  // For a machine placement, the object it instances (1 machine per object) —
+  // its base `properties` seed the per-placement overrides, its `machine`
+  // states drive the state selector.
+  const selMachine =
+    selectedPlacement?.placement.kind === "machine" ? selectedPlacement.placement : null;
+  const selObject = selMachine
+    ? (state.objects.find((o) => o.machine.id === selMachine.machineId) ?? null)
+    : null;
+
+  // The machine currently loaded into the paint brush, and its object — the
+  // palette config editor sets the state + properties new placements inherit.
+  const brushMachine = map.selected?.kind === "machine" ? map.selected : null;
+  const brushObject = brushMachine
+    ? (state.objects.find((o) => o.machine.id === brushMachine.id) ?? null)
+    : null;
+
   const updatePlacement = useCallback(
     (
       updates: Partial<
-        Pick<
-          MapPlacement,
-          "x" | "y" | "rotation" | "flipX" | "flipY"
-        >
+        Pick<MapPlacement, "x" | "y" | "rotation" | "flipX" | "flipY"> & {
+          stateName: string;
+          properties: Record<string, string>;
+        }
       >,
     ) => {
       if (!selectedPlacement) return;
@@ -266,6 +362,140 @@ export function MapPalettePanel({
           />
         </div>
       </div>
+      {/* Selected placement editor */}
+      {selectedPlacement && (
+        <div className="section">
+          <div className="section-title">
+            <span>
+              Placement: {selSprite?.name ?? "?"}
+            </span>
+            <button
+              className="btn btn-sm"
+              onClick={() => mapDispatch({ type: "SELECT_PLACEMENT", id: null })}
+            >
+              Deselect
+            </button>
+          </div>
+
+          <div className="field-row">
+            <span className="field-label">X:</span>
+            <input
+              type="number"
+              className="input input-sm"
+              value={selectedPlacement.placement.x}
+              onChange={(e) =>
+                updatePlacement({ x: Math.max(0, Number(e.target.value) || 0) })
+              }
+            />
+            <span className="field-label">Y:</span>
+            <input
+              type="number"
+              className="input input-sm"
+              value={selectedPlacement.placement.y}
+              onChange={(e) =>
+                updatePlacement({ y: Math.max(0, Number(e.target.value) || 0) })
+              }
+            />
+          </div>
+
+          {selMachine && selObject && (
+            <MachineConfigFields
+              object={selObject}
+              stateName={selMachine.stateName}
+              properties={selMachine.properties}
+              onState={(name) => updatePlacement({ stateName: name })}
+              onProperties={(props) => updatePlacement({ properties: props })}
+            />
+          )}
+
+          <div className="field-row">
+            <span className="field-label">Rot:</span>
+            <input
+              type="number"
+              className="input input-sm"
+              step={15}
+              value={selectedPlacement.placement.rotation ?? 0}
+              onChange={(e) =>
+                updatePlacement({ rotation: Number(e.target.value) || 0 })
+              }
+            />
+            <span className="text-xs text-dim">deg</span>
+            <button
+              className="btn btn-sm"
+              title="Rotate 90° clockwise (R)"
+              onClick={() =>
+                updatePlacement({
+                  rotation: ((selectedPlacement.placement.rotation ?? 0) + 90) % 360,
+                })
+              }
+            >
+              +90°
+            </button>
+            <button
+              className="btn btn-sm"
+              title="Reset rotation"
+              disabled={!selectedPlacement.placement.rotation}
+              onClick={() => updatePlacement({ rotation: 0 })}
+            >
+              ↺
+            </button>
+          </div>
+
+          <div className="field-row">
+            <button
+              className={`btn btn-sm ${selectedPlacement.placement.flipX ? "active" : ""}`}
+              title="Mirror horizontally (X)"
+              onClick={() =>
+                updatePlacement({ flipX: !selectedPlacement.placement.flipX })
+              }
+            >
+              ⇄ Flip X {selectedPlacement.placement.flipX ? "ON" : ""}
+            </button>
+            <button
+              className={`btn btn-sm ${selectedPlacement.placement.flipY ? "active" : ""}`}
+              title="Mirror vertically (Y)"
+              onClick={() =>
+                updatePlacement({ flipY: !selectedPlacement.placement.flipY })
+              }
+            >
+              ⇅ Flip Y {selectedPlacement.placement.flipY ? "ON" : ""}
+            </button>
+          </div>
+
+          <div className="field-row">
+            <button
+              className="btn btn-sm"
+              disabled={
+                !selectedPlacement.placement.rotation &&
+                !selectedPlacement.placement.flipX &&
+                !selectedPlacement.placement.flipY
+              }
+              onClick={() =>
+                updatePlacement({ rotation: 0, flipX: false, flipY: false })
+              }
+            >
+              Reset Transform
+            </button>
+            <button
+              className="btn btn-sm danger"
+              onClick={() =>
+                mapDispatch({
+                  type: "REMOVE_PLACEMENT",
+                  screenKey: selectedPlacement.screenKey,
+                  id: selectedPlacement.placement.id,
+                })
+              }
+            >
+              Delete
+            </button>
+          </div>
+
+          <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+            On screen {selectedPlacement.screenKey} · shortcuts: R rotate, X
+            flip X, Y flip Y · select objects with the Select tool (C)
+          </div>
+        </div>
+      )}
 
       {/* Map settings */}
       <div className="section">
@@ -477,177 +707,6 @@ export function MapPalettePanel({
         </div>
       </div>
 
-      {/* Selected placement editor */}
-      {selectedPlacement && (
-        <div className="section">
-          <div className="section-title">
-            <span>
-              Placement: {selSprite?.name ?? "?"}
-            </span>
-            <button
-              className="btn btn-sm"
-              onClick={() => mapDispatch({ type: "SELECT_PLACEMENT", id: null })}
-            >
-              Deselect
-            </button>
-          </div>
-
-          <div className="field-row">
-            <span className="field-label">X:</span>
-            <input
-              type="number"
-              className="input input-sm"
-              value={selectedPlacement.placement.x}
-              onChange={(e) =>
-                updatePlacement({ x: Math.max(0, Number(e.target.value) || 0) })
-              }
-            />
-            <span className="field-label">Y:</span>
-            <input
-              type="number"
-              className="input input-sm"
-              value={selectedPlacement.placement.y}
-              onChange={(e) =>
-                updatePlacement({ y: Math.max(0, Number(e.target.value) || 0) })
-              }
-            />
-          </div>
-
-          <div className="field-row">
-            <span className="field-label">Rot:</span>
-            <input
-              type="number"
-              className="input input-sm"
-              step={15}
-              value={selectedPlacement.placement.rotation ?? 0}
-              onChange={(e) =>
-                updatePlacement({ rotation: Number(e.target.value) || 0 })
-              }
-            />
-            <span className="text-xs text-dim">deg</span>
-            <button
-              className="btn btn-sm"
-              title="Rotate 90° clockwise (R)"
-              onClick={() =>
-                updatePlacement({
-                  rotation: ((selectedPlacement.placement.rotation ?? 0) + 90) % 360,
-                })
-              }
-            >
-              +90°
-            </button>
-            <button
-              className="btn btn-sm"
-              title="Reset rotation"
-              disabled={!selectedPlacement.placement.rotation}
-              onClick={() => updatePlacement({ rotation: 0 })}
-            >
-              ↺
-            </button>
-          </div>
-
-          <div className="field-row">
-            <button
-              className={`btn btn-sm ${selectedPlacement.placement.flipX ? "active" : ""}`}
-              title="Mirror horizontally (X)"
-              onClick={() =>
-                updatePlacement({ flipX: !selectedPlacement.placement.flipX })
-              }
-            >
-              ⇄ Flip X {selectedPlacement.placement.flipX ? "ON" : ""}
-            </button>
-            <button
-              className={`btn btn-sm ${selectedPlacement.placement.flipY ? "active" : ""}`}
-              title="Mirror vertically (Y)"
-              onClick={() =>
-                updatePlacement({ flipY: !selectedPlacement.placement.flipY })
-              }
-            >
-              ⇅ Flip Y {selectedPlacement.placement.flipY ? "ON" : ""}
-            </button>
-          </div>
-
-          <div className="field-row">
-            <button
-              className="btn btn-sm"
-              disabled={
-                !selectedPlacement.placement.rotation &&
-                !selectedPlacement.placement.flipX &&
-                !selectedPlacement.placement.flipY
-              }
-              onClick={() =>
-                updatePlacement({ rotation: 0, flipX: false, flipY: false })
-              }
-            >
-              Reset Transform
-            </button>
-            <button
-              className="btn btn-sm danger"
-              onClick={() =>
-                mapDispatch({
-                  type: "REMOVE_PLACEMENT",
-                  screenKey: selectedPlacement.screenKey,
-                  id: selectedPlacement.placement.id,
-                })
-              }
-            >
-              Delete
-            </button>
-          </div>
-
-          <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-            On screen {selectedPlacement.screenKey} · shortcuts: R rotate, X
-            flip X, Y flip Y · select with Pick or Move tool
-          </div>
-        </div>
-      )}
-
-      {/* Sprite palette — from the shared library */}
-      <div className="section">
-        <div className="section-title">
-          Sprites ({state.sprites.length}) — from the Sprite Editor library
-        </div>
-        {state.sprites.length === 0 && (
-          <div className="text-xs text-dim" style={{ padding: 4 }}>
-            No sprites yet. Switch to the Sprite Editor, add images and cut
-            sprites — they appear here automatically.
-          </div>
-        )}
-        {groups.map(([group, sprites]) => (
-          <div key={group} style={{ padding: "4px 0" }}>
-            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
-              {group} ({sprites.length})
-            </div>
-            <div className="asset-grid">
-              {sprites.map((s) => (
-                <SpriteThumb
-                  key={s.id}
-                  sprite={s}
-                  imageMap={imageMap}
-                  selected={map.selected?.kind === "sprite" && map.selected.id === s.id}
-                  title={`${s.name} (${s.width}×${s.height})`}
-                  onClick={() =>
-                    mapDispatch({
-                      type: "SELECT_PALETTE",
-                      selection:
-                        map.selected?.kind === "sprite" && map.selected.id === s.id
-                          ? null
-                          : { kind: "sprite", id: s.id },
-                    })
-                  }
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-        {selectedSprite && (
-          <div className="text-xs" style={{ padding: "4px 4px 0" }}>
-            Selected: {selectedSprite.name} ({selectedSprite.width}×
-            {selectedSprite.height}px)
-          </div>
-        )}
-      </div>
-
       {/* Objects palette — animations & state machines */}
       <div className="section">
         <div className="section-title">
@@ -752,7 +811,79 @@ export function MapPalettePanel({
             </div>
           </div>
         )}
+        {!selectedPlacement && brushMachine && brushObject && (
+          <div className="section" style={{ marginTop: 4 }}>
+            <div className="section-title">Placement config — {brushObject.name}</div>
+            <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+              New placements you paint use this state + properties. Tune a placed
+              one later with the Pick/Move tool.
+            </div>
+            <MachineConfigFields
+              object={brushObject}
+              stateName={brushMachine.stateName}
+              properties={brushMachine.properties}
+              onState={(name) =>
+                mapDispatch({
+                  type: "SELECT_PALETTE",
+                  selection: { ...brushMachine, stateName: name },
+                })
+              }
+              onProperties={(props) =>
+                mapDispatch({
+                  type: "SELECT_PALETTE",
+                  selection: { ...brushMachine, properties: props },
+                })
+              }
+            />
+          </div>
+        )}
       </div>
+      {/* Sprite palette — from the shared library */}
+      <div className="section">
+        <div className="section-title">
+          Sprites ({state.sprites.length}) — from the Sprite Editor library
+        </div>
+        {state.sprites.length === 0 && (
+          <div className="text-xs text-dim" style={{ padding: 4 }}>
+            No sprites yet. Switch to the Sprite Editor, add images and cut
+            sprites — they appear here automatically.
+          </div>
+        )}
+        {groups.map(([group, sprites]) => (
+          <div key={group} style={{ padding: "4px 0" }}>
+            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+              {group} ({sprites.length})
+            </div>
+            <div className="asset-grid">
+              {sprites.map((s) => (
+                <SpriteThumb
+                  key={s.id}
+                  sprite={s}
+                  imageMap={imageMap}
+                  selected={map.selected?.kind === "sprite" && map.selected.id === s.id}
+                  title={`${s.name} (${s.width}×${s.height})`}
+                  onClick={() =>
+                    mapDispatch({
+                      type: "SELECT_PALETTE",
+                      selection:
+                        map.selected?.kind === "sprite" && map.selected.id === s.id
+                          ? null
+                          : { kind: "sprite", id: s.id },
+                    })
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+        {selectedSprite && (
+          <div className="text-xs" style={{ padding: "4px 4px 0" }}>
+            Selected: {selectedSprite.name} ({selectedSprite.width}×
+            {selectedSprite.height}px)
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

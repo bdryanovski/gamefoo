@@ -148,6 +148,42 @@ export interface CollisionDefinition {
 }
 
 /**
+ * The object composition grid: `cols`×`rows` cells of `cell` pixels.
+ */
+export interface ObjectGrid {
+  cols: number;
+  rows: number;
+  cell: number;
+}
+
+/**
+ * What a composition cell draws: a static sprite or an animation.
+ */
+export type ObjectCellSource =
+  | { kind: 'sprite'; spriteId: string }
+  | { kind: 'animation'; animationId: string };
+
+/**
+ * One sprite/animation placed at grid `(col, row)` on a composition layer.
+ */
+export interface ObjectCell {
+  col: number;
+  row: number;
+  source: ObjectCellSource;
+  flipX?: boolean;
+  flipY?: boolean;
+}
+
+/**
+ * One z-ordered composition layer of a state (bottom→top).
+ */
+export interface ObjectLayer {
+  name: string;
+  visible: boolean;
+  cells: ObjectCell[];
+}
+
+/**
  * A prefab grouping sprites/animations behind a {@link StateMachineDefinition}.
  */
 export interface GameObjectDefinition {
@@ -157,6 +193,17 @@ export interface GameObjectDefinition {
   animations: string[];
   properties: Record<string, string>;
   machine: StateMachineDefinition;
+  /**
+   * Composition footprint in grid cells (drives cell pixel offsets).
+   */
+  grid?: ObjectGrid;
+  /**
+   * Per-state composition: state id → z-ordered layers (bottom→top). Every
+   * visible cell is drawn at its grid offset, so one state can stack multiple
+   * sprites/animations (e.g. a portal's `base` + `door`). Absent → the
+   * state's single `display` is used.
+   */
+  layersByState?: Record<string, ObjectLayer[]>;
   /**
    * Authored colliders per FSM state id — solidity can change with state.
    */
@@ -193,7 +240,17 @@ export type Placement = Transform & {
 } & (
     | { kind: 'sprite'; spriteId: string }
     | { kind: 'animation'; animationId: string }
-    | { kind: 'machine'; machineId: string; stateName?: string }
+    | {
+        kind: 'machine';
+        machineId: string;
+        stateName?: string;
+        /**
+         * Per-placement overrides merged over the object def's `properties`
+         * (this instance wins). Lets one prefab drive many configured
+         * instances — e.g. a `portal` whose target screen differs per copy.
+         */
+        properties?: Record<string, string>;
+      }
   );
 
 /**
@@ -207,6 +264,16 @@ export interface ScreenData {
    */
   defaultSpriteId?: string | null;
   placements: Placement[];
+}
+
+/**
+ * A named z-layer in draw order: its index is the placement `level` that
+ * targets it. The runtime honors only `visible` — a hidden layer is excluded
+ * entirely (no tiles, colliders, or objects). `name` is authoring metadata.
+ */
+export interface LayerDefinition {
+  name: string;
+  visible: boolean;
 }
 
 /**
@@ -230,6 +297,12 @@ export interface MapData {
    */
   defaultSpriteId?: string | null;
   screens: Record<ScreenName, ScreenData>;
+  /**
+   * Named z-layers in draw order; index === a placement's `level`. When
+   * present, any layer with `visible: false` is skipped at build time.
+   * Absent → every level renders.
+   */
+  layers?: LayerDefinition[];
 }
 
 /**

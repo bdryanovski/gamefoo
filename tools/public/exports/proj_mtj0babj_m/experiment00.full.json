@@ -3,7 +3,7 @@
     "version": "1.0",
     "tool": "gamefoo-tilemap-editor",
     "projectName": "Experiment00",
-    "exportedAt": "2026-09-05T06:36:54.843Z"
+    "exportedAt": "2026-09-05T12:33:14.472Z"
   },
   "images": [
     {
@@ -756,6 +756,20 @@
       "width": 16,
       "height": 16,
       "image": "walk.png"
+    },
+    "sprite_12_4": {
+      "x": 192,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "sprite_12_5": {
+      "x": 192,
+      "y": 80,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
     }
   },
   "animations": {
@@ -1128,8 +1142,8 @@
                 "kind": "rect",
                 "x": 0.45625,
                 "y": 18.46201923076923,
-                "width": 14.26826923076923,
-                "height": 11.998557692307696
+                "width": 14.119711538461537,
+                "height": 5.33894230769231
               }
             }
           ]
@@ -1652,6 +1666,137 @@
         }
       },
       "initial": "Idle"
+    },
+    "portal": {
+      "sprites": [
+        "sprite_11_0",
+        "sprite_11_1"
+      ],
+      "animations": [],
+      "properties": {
+        "targetScreen": "0,0",
+        "navigate": "0,0"
+      },
+      "category": "",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "cell": 16
+      },
+      "collisionLayers": {
+        "solid": {
+          "name": "Solid",
+          "color": "#e05a5a"
+        },
+        "activation": {
+          "name": "Activation",
+          "color": "#4ea3f2"
+        }
+      },
+      "states": {
+        "top-open": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "sprite",
+                    "sprite": "sprite_11_0"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mto18678_5",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "rect",
+                "x": 0.030924479166666668,
+                "y": 0.0003255208333333333,
+                "width": 15.846028645833334,
+                "height": 10.9013671875
+              }
+            },
+            {
+              "id": "col_mto18ojr_6",
+              "layer": "activation",
+              "enabled": true,
+              "shape": {
+                "kind": "rect",
+                "x": 4,
+                "y": 4,
+                "width": 8,
+                "height": 8
+              }
+            }
+          ]
+        },
+        "top-close": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "sprite",
+                    "sprite": "sprite_11_0"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "door",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "sprite",
+                    "sprite": "sprite_11_1"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mto18678_5",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "rect",
+                "x": 0.030924479166666668,
+                "y": 0.0003255208333333333,
+                "width": 15.846028645833334,
+                "height": 10.9013671875
+              }
+            },
+            {
+              "id": "col_mto18ojr_6",
+              "layer": "activation",
+              "enabled": true,
+              "shape": {
+                "kind": "rect",
+                "x": 4,
+                "y": 4,
+                "width": 8,
+                "height": 8
+              }
+            }
+          ]
+        }
+      },
+      "initial": "top-open"
     }
   },
   "collisionLayers": [
@@ -2496,6 +2641,22 @@
       "tags": [],
       "group": "",
       "order": 126,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_12_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 152,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_12_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 153,
       "level": 0,
       "properties": {}
     }

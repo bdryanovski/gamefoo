@@ -31,6 +31,12 @@ export interface MachinePlacement {
   machineId: string;
   /** Which state renders first — defaults to the machine's initial. */
   stateName?: string;
+  /**
+   * Per-placement property overrides, merged over the object def's
+   * `properties` at runtime (this instance wins). Only keys that differ from
+   * the def are stored, so non-overridden keys track edits to the object.
+   */
+  properties?: Record<string, string>;
   x: number;
   y: number;
   level: number;
@@ -66,12 +72,27 @@ export interface MapScreen {
   placements: MapPlacement[];
 }
 
-export type MapToolType = "paint" | "stream" | "erase" | "fill" | "pick" | "move" | "pan";
+export type MapToolType =
+  | "paint"
+  | "stream"
+  | "erase"
+  | "fill"
+  | "pick"
+  | "select"
+  | "move"
+  | "pan";
 
 /** What the paint tool currently places. */
 export type PaletteSelection =
   | { kind: "sprite"; id: string }
-  | { kind: "machine"; id: string }
+  | {
+      kind: "machine";
+      id: string;
+      /** State painted instances spawn in (defaults to the machine's initial). */
+      stateName?: string;
+      /** Property overrides baked into painted instances (merged over the object). */
+      properties?: Record<string, string>;
+    }
   | { kind: "animation"; id: string }
   | null;
 
@@ -153,10 +174,10 @@ export type MapAction =
     screenKey: string;
     id: string;
     updates: Partial<
-      Pick<
-        MapPlacement,
-        "x" | "y" | "level" | "rotation" | "flipX" | "flipY"
-      > & { stateName?: string }
+      Pick<MapPlacement, "x" | "y" | "level" | "rotation" | "flipX" | "flipY"> & {
+        stateName?: string;
+        properties?: Record<string, string>;
+      }
     >;
   }
   | { type: "CLEAR_SCREEN"; x: number; y: number }

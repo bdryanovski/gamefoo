@@ -19,11 +19,12 @@ interface Props {
 }
 
 const MAP_TOOLS: { key: MapToolType; icon: IconName; title: string }[] = [
+  { key: "select", icon: "tool-select", title: "Select (C) — click a placed object to edit its placement, orientation, state & properties" },
   { key: "paint", icon: "tool-paint", title: "Paint (P) — place selected sprite" },
   { key: "stream", icon: "tool-stream", title: "Stream (S) — click to toggle continuous painting; paints wherever the mouse moves" },
   { key: "erase", icon: "tool-erase", title: "Erase (E) — remove placements" },
   { key: "fill", icon: "tool-fill", title: "Fill (F) — set screen default tile" },
-  { key: "pick", icon: "tool-pick", title: "Pick (I) — select sprite under cursor" },
+  { key: "pick", icon: "tool-pick", title: "Pick (I) — sample a sprite/object into the paint brush" },
   { key: "move", icon: "tool-move", title: "Move (M) — drag a placement to reposition it" },
   { key: "pan", icon: "tool-pan", title: "Pan (H) — drag to move view (or Space)" },
 ];
@@ -35,6 +36,7 @@ const KEY_MAP: Record<string, MapToolType> = {
   f: "fill",
   i: "pick",
   m: "move",
+  c: "select",
   h: "pan",
 };
 

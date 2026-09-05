@@ -5,7 +5,7 @@ import type {
   MapPlacement,
   PaletteSelection,
 } from "./types";
-import { screenKey, resolvePlacementDisplay } from "./types";
+import { screenKey, resolvePlacementDisplay, resolveMachineState } from "./types";
 import type { AppState, SpriteRegion } from "../types";
 import { objectMachines } from "../types";
 import { Icon } from "../components/Icon";
@@ -291,6 +291,42 @@ export function MapCanvas({
     /** Draw a placement: animated kinds play live, machines show
      *  their current state; a ▶ badge marks animated objects. */
     const drawPlacement = (p: MapPlacement, alpha = 1) => {
+      // Machine placement: composite every visible cell of its current state
+      // (e.g. a portal's `base` + `door`), each at its grid offset.
+      if (p.kind === "machine") {
+        const obj = state.objects.find((o) => o.machine.id === p.machineId);
+        const st = obj ? resolveMachineState(obj.machine, p.stateName) : null;
+        if (obj && st) {
+          const cell = obj.grid.cell;
+          for (const layer of obj.layersByState[st.id] ?? []) {
+            if (!layer.visible) continue;
+            for (const c of layer.cells) {
+              let spriteId: string | null = null;
+              if (c.source.kind === "sprite") {
+                spriteId = c.source.spriteId;
+              } else {
+                const anim = animById.get(c.source.animationId);
+                const fi = frameIndexOf(c.source.animationId);
+                spriteId = anim ? (anim.frames[fi >= 0 ? fi : 0] ?? null) : null;
+              }
+              drawSprite(spriteId, p.x + c.col * cell, p.y + c.row * cell, alpha, {
+                rotation: p.rotation,
+                flipX: (p.flipX ?? false) !== (c.flipX ?? false),
+                flipY: (p.flipY ?? false) !== (c.flipY ?? false),
+              });
+            }
+          }
+          const w = obj.grid.cols * cell;
+          ctx.fillStyle = "#00ff66";
+          ctx.font = `bold ${Math.max(7, 9 / map.zoom)}px monospace`;
+          ctx.textBaseline = "top";
+          ctx.fillText("▶", p.x + w - 8 / map.zoom, p.y + 1 / map.zoom);
+          ctx.textBaseline = "alphabetic";
+          return;
+        }
+      }
+
+      // Sprite / animation placements (and machines without composition).
       const d = displayOf(p);
       let spriteId = d.spriteId;
       if (d.animationId) {
@@ -302,7 +338,7 @@ export function MapCanvas({
       }
       drawSprite(spriteId, p.x, p.y, alpha, p);
 
-      if (d.animationId || p.kind === "machine") {
+      if (d.animationId) {
         const sprite = spriteId ? spriteById.get(spriteId) : null;
         const w = sprite?.width ?? map.blockSize;
         ctx.fillStyle = "#00ff66";
@@ -630,6 +666,10 @@ export function MapCanvas({
         x,
         y,
         level,
+        ...(sel.stateName ? { stateName: sel.stateName } : {}),
+        ...(sel.properties && Object.keys(sel.properties).length > 0
+          ? { properties: sel.properties }
+          : {}),
       };
     },
     [map.selected, map.blockSize, map.activeLevel],
@@ -678,7 +718,14 @@ export function MapCanvas({
                 ? { kind: "sprite", id: p.spriteId }
                 : p.kind === "animation"
                   ? { kind: "animation", id: p.animationId }
-                  : { kind: "machine", id: p.machineId },
+                  : {
+                      kind: "machine",
+                      id: p.machineId,
+                      ...(p.stateName ? { stateName: p.stateName } : {}),
+                      ...(p.properties && Object.keys(p.properties).length > 0
+                        ? { properties: p.properties }
+                        : {}),
+                    },
           });
           mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
         } else {
@@ -693,6 +740,14 @@ export function MapCanvas({
           }
           mapDispatch({ type: "SELECT_PLACEMENT", id: null });
         }
+        return;
+      }
+
+      // Select: pick the object under the cursor so the palette's "Placement"
+      // panel opens for it. Leaves the paint brush untouched.
+      if (tool === "select") {
+        const p = findTopmostPlacement(key, world.x, world.y);
+        mapDispatch({ type: "SELECT_PLACEMENT", id: p ? p.id : null });
         return;
       }
 

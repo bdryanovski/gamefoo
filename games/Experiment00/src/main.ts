@@ -13,6 +13,7 @@ import {
 import { drawMessages, updateMessages } from './hud';
 import { Campfire, loadCampfireConfig } from './objects/campfire';
 import { Player } from './objects/player';
+import { Portal } from './objects/portal';
 import { DarkChamberScreen } from './screens/dark-chamber';
 import { RoomScreen } from './screens/room';
 
@@ -22,13 +23,16 @@ const SCREEN_W = 320;
 const SCREEN_H = 256;
 const SCALE = 2;
 const PLAYER_SIZE = 16;
+// The player draws on this z-level; layers above it (e.g. the `pillars`
+// layer at level 3) occlude it, so keep it below them.
+const PLAYER_LEVEL = 2;
 
 const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
 
 /**
  * Drives the Experiment00 map with a playable character: WASD/arrows walk the
- * player around, walls of the screen hand off to the neighbouring screen, and
- * `E` interacts with a nearby campfire.
+ * player around, open portals carry the player between screens, and `E`
+ * interacts with a nearby campfire.
  *
  * Objects and screens are wired declaratively: a {@link MapObjectRegistry}
  * maps object names to classes (so the map auto-instantiates a `Campfire`
@@ -50,6 +54,7 @@ class MapGame extends Engine {
     // object. `Campfire` is keyed by its static `type` ("campfire").
     const registry = new MapObjectRegistry();
     registry.register(Campfire);
+    registry.register(Portal);
     await loadCampfireConfig('/project/exports/proj_mtj0babj_m/campfire.object.json');
 
     // Screens: a default class for every room, overridden per coordinate.
@@ -90,7 +95,7 @@ class MapGame extends Engine {
       properties: def.properties,
       x: (SCREEN_W - PLAYER_SIZE) / 2,
       y: (SCREEN_H - PLAYER_SIZE) / 2,
-      level: 5,
+      level: PLAYER_LEVEL,
       startStateId: start ?? def.machine.initialStateId ?? undefined,
     };
     this.player = new Player(context, this.input);
@@ -113,24 +118,26 @@ class MapGame extends Engine {
     return true;
   }
 
-  /** Hands the player to the neighbouring screen when it leaves the edge. */
-  private handleTransitions(): void {
-    const player = this.player;
-    if (!player) return;
-    const maxX = SCREEN_W - PLAYER_SIZE;
-    const maxY = SCREEN_H - PLAYER_SIZE;
-    if (player.x < 0) player.place(this.navigate(this.cx - 1, this.cy) ? maxX - 1 : 0, player.y);
-    else if (player.x > maxX)
-      player.place(this.navigate(this.cx + 1, this.cy) ? 1 : maxX, player.y);
-    if (player.y < 0) player.place(player.x, this.navigate(this.cx, this.cy - 1) ? maxY - 1 : 0);
-    else if (player.y > maxY)
-      player.place(player.x, this.navigate(this.cx, this.cy + 1) ? 1 : maxY);
-  }
-
-  /** Toggles a campfire within the player's reach. */
+  /** Opens a nearby portal (and travels), else toggles a nearby campfire. */
   private interact(): void {
     const player = this.player;
     if (!player) return;
+
+    // Portals: open the nearest one within reach and travel to its target.
+    const portal = this.map?.current
+      ?.objectsByType(Portal)
+      .find((p) => p.overlaps(player.interactionBox()));
+    if (portal) {
+      portal.open();
+      const target = portal.target;
+      if (target && this.navigate(target.x, target.y)) {
+        player.place((SCREEN_W - PLAYER_SIZE) / 2, (SCREEN_H - PLAYER_SIZE) / 2);
+        this.lastSafe = { x: player.x, y: player.y };
+      }
+      return;
+    }
+
+    // Campfires: toggle the nearest within reach.
     const p = player.box();
     const pcx = p.x + p.width / 2;
     const pcy = p.y + p.height / 2;
@@ -157,11 +164,15 @@ class MapGame extends Engine {
     const screen = this.map?.current;
     if (!player || !screen) return;
     player.update(dt, screen.collision);
-    this.handleTransitions();
-    const current = this.map?.current;
-    if (!current) return;
+
+    // Screens no longer hand off at their edges — portals are the only exit,
+    // so keep the player inside the current screen's bounds.
+    const maxX = SCREEN_W - PLAYER_SIZE;
+    const maxY = SCREEN_H - PLAYER_SIZE;
+    player.place(Math.max(0, Math.min(maxX, player.x)), Math.max(0, Math.min(maxY, player.y)));
+
     const foot = player.footPoint();
-    if (current.collision.isWalkable(foot.x, foot.y)) {
+    if (screen.collision.isWalkable(foot.x, foot.y)) {
       this.lastSafe = { x: player.x, y: player.y };
     } else {
       player.place(this.lastSafe.x, this.lastSafe.y);
@@ -174,14 +185,17 @@ class MapGame extends Engine {
 
     ctx.save();
     ctx.scale(SCALE, SCALE);
-    this.map?.render(ctx);
-    this.player?.render(ctx);
+    const player = this.player;
+    this.map?.render(
+      ctx,
+      player ? { level: PLAYER_LEVEL, render: (c) => player.render(c) } : undefined,
+    );
     ctx.restore();
 
     const fires = this.campfires();
     const lit = fires.filter((f) => f.lit).length;
     ctx.drawText(
-      `screen ${this.cx},${this.cy}   WASD move · E interact   campfires ${lit}/${fires.length} lit`,
+      `screen ${this.cx},${this.cy}   WASD move · E use / open portal   campfires ${lit}/${fires.length} lit`,
       8,
       20,
       '#ffffff',

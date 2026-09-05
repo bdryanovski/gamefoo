@@ -9,6 +9,7 @@ import {
   type Clip,
   type CollisionDefinition,
   type Frame,
+  type LayerDefinition,
   type MapData,
   type MapObjectContext,
   type ScreenCoordinate,
@@ -65,6 +66,18 @@ export interface ScreenContext {
 }
 
 /**
+ * A renderable drawn interleaved into a {@link Screen}'s layers at `level`,
+ * for game-owned objects (e.g. the player) that live outside the map data
+ * but must sort against its layers.
+ *
+ * @since 0.5.0
+ */
+export interface ScreenOverlay {
+  level: number;
+  render(ctx: RenderContext): void;
+}
+
+/**
  * Constructor shape a {@link ScreenRegistry} stores.
  *
  * @since 0.5.0
@@ -117,6 +130,11 @@ export default class Screen {
    * Sparse, index === z-level. Holes are skipped when iterating.
    */
   private readonly layers: Layer[] = [];
+  /**
+   * Authored named layers, indexed by z-level. A level whose entry is
+   * `visible: false` is excluded at build time. Absent → all levels visible.
+   */
+  private readonly layerDefs?: LayerDefinition[];
   private active = false;
 
   constructor(context: ScreenContext) {
@@ -127,9 +145,16 @@ export default class Screen {
     this.height = map.screenRows * map.blockSize;
     this.collision = new CollisionMap(map.screenCols, map.screenRows, map.blockSize);
 
-    this.paintFill(data.defaultSpriteId ?? map.defaultSpriteId ?? null, assets, map);
+    this.layerDefs = map.layers;
+    // Levels default to visible unless their authored layer entry hides them.
+    if (this.layerDefs?.[GROUND_LEVEL]?.visible !== false) {
+      this.paintFill(data.defaultSpriteId ?? map.defaultSpriteId ?? null, assets, map);
+    }
 
     for (const placement of data.placements) {
+      if (this.layerDefs?.[placement.level]?.visible === false) {
+        continue;
+      }
       const layer = this.layer(placement.level);
       const transform: Transform = {
         rotation: placement.rotation,
@@ -188,7 +213,9 @@ export default class Screen {
           assets,
           machine,
           def: owner,
-          properties: owner.properties,
+          properties: placement.properties
+            ? { ...owner.properties, ...placement.properties }
+            : owner.properties,
           x: placement.x,
           y: placement.y,
           level: placement.level,
@@ -289,9 +316,19 @@ export default class Screen {
 
   /**
    * Draws every layer back-to-front (tiles then live objects per layer).
+   *
+   * An optional `overlay` (e.g. the game-owned player) is drawn interleaved
+   * at its `level`: after every layer at or below it, and before any layer
+   * above it — so higher layers (a `pillars` layer, say) occlude it.
    */
-  public render(ctx: RenderContext): void {
-    for (const layer of this.layers) {
+  public render(ctx: RenderContext, overlay?: ScreenOverlay): void {
+    let overlayDrawn = false;
+    for (let level = 0; level < this.layers.length; level += 1) {
+      if (overlay && !overlayDrawn && level > overlay.level) {
+        overlay.render(ctx);
+        overlayDrawn = true;
+      }
+      const layer = this.layers[level];
       if (!layer) {
         continue;
       }
@@ -301,6 +338,9 @@ export default class Screen {
       for (const instance of layer.instances) {
         instance.render(ctx);
       }
+    }
+    if (overlay && !overlayDrawn) {
+      overlay.render(ctx);
     }
     this.onRender(ctx);
   }

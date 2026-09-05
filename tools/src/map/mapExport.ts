@@ -58,7 +58,13 @@ export function exportMap(state: AppState) {
             ...(p.kind === "sprite" ? { spriteId: p.spriteId } : {}),
             ...(p.kind === "animation" ? { animationId: p.animationId } : {}),
             ...(p.kind === "machine"
-              ? { machineId: p.machineId, ...(p.stateName ? { stateName: p.stateName } : {}) }
+              ? {
+                  machineId: p.machineId,
+                  ...(p.stateName ? { stateName: p.stateName } : {}),
+                  ...(p.properties && Object.keys(p.properties).length > 0
+                    ? { properties: p.properties }
+                    : {}),
+                }
               : {}),
             x: p.x,
             y: p.y,

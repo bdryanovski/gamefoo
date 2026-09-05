@@ -7,7 +7,9 @@ const PROJECT_ID_KEY = "gamefoo-tools-project-id";
 
 export function saveStateToLocal(state: AppState): void {
   try {
-    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    // The undo `history` is ephemeral session state — persisting it bloats the
+    // payload ~100× (and blows the localStorage quota). Never store it.
+    localStorage.setItem(STATE_KEY, JSON.stringify({ ...state, history: [] }));
   } catch (e) {
     console.warn("localStorage save failed:", e);
   }
@@ -99,7 +101,7 @@ export async function saveProject(
     res = await fetch(`/api/projects/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(state),
+      body: JSON.stringify({ ...state, history: [] }),
     });
   } catch (e) {
     // fetch rejects when the API server is unreachable (proxy refused).

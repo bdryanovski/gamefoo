@@ -22,25 +22,12 @@ export interface CampfireConfig {
   unlitState: string;
   /** Authored colliders per state NAME (both lit and unlit), from the file. */
   collisionsByName: Record<string, CollisionDefinition[]>;
-  /**
-   * Per-state draw offset (object-local px). The editor places each state's
-   * art in a grid cell, but the engine draws every state's display from the
-   * object origin — so we re-apply the authored `(col,row) * cell` offset to
-   * keep a state that lives in a lower cell (e.g. the unlit pit) in place.
-   */
-  cellOffsets: Record<string, { x: number; y: number }>;
 }
 
 // The tool exports every object into its own file; the class is configured
 // from that file rather than hard-coded. Populated by loadCampfireConfig()
 // before the map loads, then read by every spawned Campfire.
 let config: CampfireConfig | null = null;
-
-/** One cell inside a state layer: its grid position within the object. */
-interface ObjectStateCell {
-  col: number;
-  row: number;
-}
 
 /** The shape of `campfire.object.json` we read (only the fields we use). */
 interface CampfireObjectFile {
@@ -49,7 +36,6 @@ interface CampfireObjectFile {
   states: Record<
     string,
     {
-      layers?: Array<{ cells?: ObjectStateCell[] }>;
       collisions?: Array<{ layer: string; enabled?: boolean; shape: CollisionShape }>;
     }
   >;
@@ -70,12 +56,8 @@ export async function loadCampfireConfig(url: string): Promise<CampfireConfig> {
   const litState = file.initial ?? stateNames[0] ?? 'init';
   const unlitState = stateNames.find((name) => name !== litState) ?? litState;
 
-  const cell = file.grid?.cell ?? 16;
-  const cellOffsets: Record<string, { x: number; y: number }> = {};
   const collisionsByName: Record<string, CollisionDefinition[]> = {};
   for (const [name, state] of Object.entries(file.states)) {
-    const first = state.layers?.[0]?.cells?.[0];
-    cellOffsets[name] = first ? { x: first.col * cell, y: first.row * cell } : { x: 0, y: 0 };
     collisionsByName[name] = (state.collisions ?? []).map((c) => ({
       layerId: c.layer,
       enabled: c.enabled,
@@ -83,7 +65,7 @@ export async function loadCampfireConfig(url: string): Promise<CampfireConfig> {
     }));
   }
 
-  config = { litState, unlitState, cellOffsets, collisionsByName };
+  config = { litState, unlitState, collisionsByName };
   return config;
 }
 
@@ -229,20 +211,8 @@ export class Campfire extends MapObject {
   }
 
   override render(ctx: RenderContext): void {
-    // Draw the state display at its authored cell offset. The engine renders
-    // every state from the object origin, so we re-apply the (col,row) offset
-    // — this keeps the shorter "off" sprite pinned to its bottom cell instead
-    // of jumping to the top. The collider is drawn WITHOUT the offset so the
-    // object's footprint never moves.
-    const offset = this.cfg.cellOffsets[this.stateName ?? ''] ?? { x: 0, y: 0 };
-    if (offset.x || offset.y) {
-      ctx.save();
-      ctx.translate(offset.x, offset.y);
-      super.render(ctx); // fire animation while lit, static pit while off
-      ctx.restore();
-    } else {
-      super.render(ctx);
-    }
+    // The base composites every cell of the current state at its grid offset.
+    super.render(ctx);
     // Affordance: outline the interactive collider — warm when lit, cold off.
     const b = this.collisionBox;
     ctx.strokeRect(b.x, b.y, b.w, b.h, this.lit ? '#ffb347' : '#4a4a68');

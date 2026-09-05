@@ -18,6 +18,18 @@ import type {
 import type { DeltaTime } from '@/generic_types';
 
 /**
+ * A resolved draw unit of the current state: a static frame or a live
+ * animation, positioned at a pixel offset from the object origin.
+ */
+interface Part {
+  frame?: Frame;
+  anim?: AnimatedObject;
+  ox: number;
+  oy: number;
+  transform?: Transform;
+}
+
+/**
  * Base class for every placed object driven by a {@link StateMachineDefinition}
  * (chests, torches, switches, enemies).
  *
@@ -93,13 +105,11 @@ export default class MapObject {
 
   private readonly transform?: Transform;
   /**
-   * Active animation for the current state, if it displays one.
+   * Resolved draw parts for the current state — each visible composition cell
+   * as a static frame or a live animation with its pixel offset. Parts stack
+   * bottom→top, so a layered state (e.g. `base` + `door`) renders in full.
    */
-  private anim?: AnimatedObject;
-  /**
-   * Active static frame for the current state, if it displays one.
-   */
-  private staticFrame?: Frame;
+  private parts: Part[] = [];
 
   /**
    * Screen effects attached to this object (glow, particles, …).
@@ -171,7 +181,9 @@ export default class MapObject {
    * Advances the current animation, if any.
    */
   public update(_deltaTime: DeltaTime): void {
-    this.anim?.update(_deltaTime);
+    for (const part of this.parts) {
+      part.anim?.update(_deltaTime);
+    }
     this.shaders.update(_deltaTime);
   }
 
@@ -179,13 +191,15 @@ export default class MapObject {
    * Draws the current state's display.
    */
   public render(ctx: RenderContext): void {
-    if (this.anim) {
-      // keep the animation aligned with the object (custom classes may move it)
-      this.anim.x = this.x;
-      this.anim.y = this.y;
-      this.anim.render(ctx);
-    } else if (this.staticFrame) {
-      drawFrame(ctx, this.staticFrame, this.x, this.y, this.transform);
+    for (const part of this.parts) {
+      if (part.anim) {
+        // keep the animation aligned with the object (custom classes may move it)
+        part.anim.x = this.x + part.ox;
+        part.anim.y = this.y + part.oy;
+        part.anim.render(ctx);
+      } else if (part.frame) {
+        drawFrame(ctx, part.frame, this.x + part.ox, this.y + part.oy, part.transform);
+      }
     }
     this.shaders.render(ctx, this.bounds());
   }
@@ -242,7 +256,11 @@ export default class MapObject {
    * The object's bounding box, used as the region passed to shaders.
    */
   protected bounds(): ShaderRegion {
-    const frame = this.anim?.frame ?? this.staticFrame;
+    const grid = this.def.grid;
+    if (grid) {
+      return { x: this.x, y: this.y, width: grid.cols * grid.cell, height: grid.rows * grid.cell };
+    }
+    const frame = this.parts[0]?.anim?.frame ?? this.parts[0]?.frame;
     const width = frame?.sw ?? 16;
     const height = frame?.sh ?? 16;
     return { x: this.x, y: this.y, width, height };
@@ -290,16 +308,59 @@ export default class MapObject {
    * Resolves a state's `display` into a frame or a fresh animation.
    */
   private applyState(state: StateNodeDefinition): void {
-    this.anim = undefined;
-    this.staticFrame = undefined;
+    this.parts = [];
 
+    const layers = this.def.layersByState?.[state.id];
+    if (layers && layers.length > 0) {
+      const cell = this.def.grid?.cell ?? 16;
+      for (const layer of layers) {
+        if (!layer.visible) {
+          continue;
+        }
+        for (const c of layer.cells) {
+          const ox = c.col * cell;
+          const oy = c.row * cell;
+          const transform: Transform = {
+            rotation: this.transform?.rotation,
+            flipX: (this.transform?.flipX ?? false) !== (c.flipX ?? false),
+            flipY: (this.transform?.flipY ?? false) !== (c.flipY ?? false),
+          };
+          if (c.source.kind === 'sprite') {
+            const frame = this.assets.frame(c.source.spriteId);
+            if (frame) {
+              this.parts.push({ frame, ox, oy, transform });
+            }
+          } else {
+            const clip = this.assets.clip(c.source.animationId);
+            if (clip) {
+              this.parts.push({
+                anim: new AnimatedObject(clip, this.x + ox, this.y + oy, transform),
+                ox,
+                oy,
+              });
+            }
+          }
+        }
+      }
+      return;
+    }
+
+    // Fallback: the state's single representative display (objects with no
+    // authored composition).
     const { display } = state;
     if (display.kind === 'sprite' && display.spriteId) {
-      this.staticFrame = this.assets.frame(display.spriteId);
+      const frame = this.assets.frame(display.spriteId);
+      if (frame) {
+        this.parts.push({ frame, ox: 0, oy: 0, transform: this.transform });
+      }
     } else if (display.kind === 'animation' && display.animationId) {
       const clip = this.assets.clip(display.animationId);
       if (clip) {
-        this.anim = new AnimatedObject(clip, this.x, this.y, this.transform);
+        this.parts.push({
+          anim: new AnimatedObject(clip, this.x, this.y, this.transform),
+          ox: 0,
+          oy: 0,
+        });
       }
     }
   }

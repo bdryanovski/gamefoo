@@ -4,7 +4,7 @@
     "tool": "gamefoo-object-editor",
     "name": "player",
     "category": "character",
-    "exportedAt": "2026-09-05T06:36:54.845Z"
+    "exportedAt": "2026-09-05T12:46:21.584Z"
   },
   "grid": {
     "cols": 1,
@@ -125,7 +125,7 @@
         "sprite_0_0",
         "sprite_2_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_back": {
@@ -135,7 +135,7 @@
         "sprite_4_4",
         "sprite_6_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_front": {
@@ -145,7 +145,7 @@
         "sprite_4_0",
         "sprite_6_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_walk_right": {
@@ -155,7 +155,7 @@
         "sprite_4_2",
         "sprite_6_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_idle_back": {
@@ -163,7 +163,7 @@
         "sprite_0_4",
         "sprite_2_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_front": {
@@ -172,7 +172,7 @@
         "sprite_2_0",
         "sprite_4_0"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_right": {
@@ -181,7 +181,7 @@
         "sprite_2_2",
         "sprite_4_2"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     },
     "p_dead_back": {
@@ -190,7 +190,7 @@
         "sprite_2_4",
         "sprite_4_4"
       ],
-      "duration": 0.2,
+      "duration": 0.15,
       "loop": true
     }
   },
