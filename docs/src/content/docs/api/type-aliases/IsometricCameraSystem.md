@@ -2,7 +2,7 @@
 title: '~~Type Alias: IsometricCameraSystem~~'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 

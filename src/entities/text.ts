@@ -85,7 +85,6 @@ export default abstract class Text extends Entity {
   /**
    * Render the text using the BitmapFont instance.
    * On canvas: uses Path2D glyph rendering.
-   * On terminal: delegates to drawText.
    */
   public override render(ctx: RenderContext): void {
     // Set fill colour for canvas path rendering

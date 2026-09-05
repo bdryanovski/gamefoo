@@ -2,7 +2,7 @@
 title: 'Class: World'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -35,6 +35,8 @@ frame, performs an **O(n^2)** broad-phase + narrow-phase pass via
 
 ## Examples
 
+**Registering colliders**
+
 ```ts
 const world = new World();
 
@@ -48,6 +50,8 @@ const collidable = new Collidable(entity, world, {
 
 entity.attachBehaviour(collidable); // calls world.register internally
 ```
+
+**Running detection manually**
 
 ```ts
 world.detect(); // typically called by Engine.update each frame
@@ -197,7 +201,7 @@ Called automatically by [Collidable.onDetach](Collidable.md#ondetach).
 private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean;
 ```
 
-Defined in: [core/world.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L253)
+Defined in: [core/world.ts:265](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L265)
 
 **`Internal`**
 
@@ -224,10 +228,11 @@ AABB-vs-AABB overlap test.
 private circleVSAAabb(
    circle: Collidable, 
    circleBounds: WorldBounds, 
-   rect: WorldBounds): boolean;
+   rect: WorldBounds
+): boolean;
 ```
 
-Defined in: [core/world.ts:306](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L306)
+Defined in: [core/world.ts:317](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L317)
 
 **`Internal`**
 
@@ -257,10 +262,11 @@ private circleVSCircle(
    a: Collidable, 
    boundsA: WorldBounds, 
    b: Collidable, 
-   boundsB: WorldBounds): boolean;
+   boundsB: WorldBounds
+): boolean;
 ```
 
-Defined in: [core/world.ts:274](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L274)
+Defined in: [core/world.ts:283](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L283)
 
 **`Internal`**
 
@@ -291,10 +297,11 @@ private intersects(
    a: Collidable, 
    boundsA: WorldBounds, 
    b: Collidable, 
-   boundsB: WorldBounds): boolean;
+   boundsB: WorldBounds
+): boolean;
 ```
 
-Defined in: [core/world.ts:221](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L221)
+Defined in: [core/world.ts:233](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L233)
 
 **`Internal`**
 
@@ -327,10 +334,11 @@ private resolveOverlap(
    a: Collidable, 
    boundsA: WorldBounds, 
    b: Collidable, 
-   boundsB: WorldBounds): void;
+   boundsB: WorldBounds
+): void;
 ```
 
-Defined in: [core/world.ts:340](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L340)
+Defined in: [core/world.ts:349](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L349)
 
 **`Internal`**
 
@@ -362,7 +370,7 @@ occurs.
 private tagsOverlap(wants: Set<string>, has: Set<string>): boolean;
 ```
 
-Defined in: [core/world.ts:200](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L200)
+Defined in: [core/world.ts:210](https://github.com/bdryanovski/gamefoo/blob/main/src/core/world.ts#L210)
 
 **`Internal`**
 

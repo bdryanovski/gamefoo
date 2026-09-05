@@ -198,7 +198,7 @@ export default abstract class Node {
    * must implement this method to render sprites, shapes, text, or any
    * other visual representation.
    *
-   * @param ctx - The rendering context (canvas or terminal).
+   * @param ctx - The rendering context .
    *
    * @since 0.5.0
    *

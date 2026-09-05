@@ -2,7 +2,7 @@
 title: 'Class: SpriteRender'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -25,6 +25,8 @@ facing and an optional pixel offset for fine-tuning draw position.
 
 ## Examples
 
+**Attaching and playing an animation**
+
 ```ts
 import { Asset, Sprite, SpriteRender, Player } from "gamefoo";
 
@@ -40,6 +42,8 @@ player.attachBehaviour(sr);
 
 sr.play("idle");
 ```
+
+**Flipping for directional facing**
 
 ```ts
 if (velocity.x < 0) {
@@ -67,7 +71,7 @@ if (velocity.x < 0) {
 new SpriteRender(owner: Entity, sheet: Sprite): SpriteRender;
 ```
 
-Defined in: [core/behaviours/sprite\_render.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L99)
+Defined in: [core/behaviours/sprite\_render.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L103)
 
 Creates a sprite renderer bound to the given entity and sheet.
 
@@ -91,15 +95,15 @@ Creates a sprite renderer bound to the given entity and sheet.
 | Property | Modifier | Type | Default value | Description | Overrides | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
-| <a id="offset"></a> `offset` | `public` | [`Vector2`](../interfaces/Vector2.md) | `{ x: 0, y: 0 }` | Pixel offset applied to the draw position, relative to the entity's origin. | - | - | [core/behaviours/sprite\_render.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L89) |
+| <a id="offset"></a> `offset` | `public` | [`Vector2`](../interfaces/Vector2.md) | `{ x: 0, y: 0 }` | Pixel offset applied to the draw position, relative to the entity's origin. | - | - | [core/behaviours/sprite\_render.ts:93](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L93) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
-| <a id="type"></a> `type` | `readonly` | `"sprite"` | `'sprite'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/sprite\_render.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L50) |
+| <a id="type"></a> `type` | `readonly` | `"sprite"` | `'sprite'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/sprite\_render.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L52) |
 | <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
-| <a id="currentframe"></a> `currentFrame` | `private` | `string` \| `null` | `null` | Name of the currently playing animation, or `null` if stopped. | - | - | [core/behaviours/sprite\_render.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L60) |
-| <a id="currentframeindex"></a> `currentFrameIndex` | `private` | `number` | `0` | Index into the current animation's `frames` array. | - | - | [core/behaviours/sprite\_render.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L67) |
-| <a id="elapsedtime"></a> `elapsedTime` | `private` | `number` | `0` | Seconds accumulated towards the next frame advance. | - | - | [core/behaviours/sprite\_render.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L74) |
-| <a id="flipx"></a> `flipX` | `private` | `boolean` | `false` | Whether the sprite is drawn mirrored horizontally. | - | - | [core/behaviours/sprite\_render.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L81) |
-| <a id="sheet"></a> `sheet` | `private` | [`Sprite`](Sprite.md) | `undefined` | The spritesheet this renderer draws from. | - | - | [core/behaviours/sprite\_render.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L53) |
+| <a id="currentframe"></a> `currentFrame` | `private` | `string` \| `null` | `null` | Name of the currently playing animation, or `null` if stopped. | - | - | [core/behaviours/sprite\_render.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L64) |
+| <a id="currentframeindex"></a> `currentFrameIndex` | `private` | `number` | `0` | Index into the current animation's `frames` array. | - | - | [core/behaviours/sprite\_render.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L71) |
+| <a id="elapsedtime"></a> `elapsedTime` | `private` | `number` | `0` | Seconds accumulated towards the next frame advance. | - | - | [core/behaviours/sprite\_render.ts:78](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L78) |
+| <a id="flipx"></a> `flipX` | `private` | `boolean` | `false` | Whether the sprite is drawn mirrored horizontally. | - | - | [core/behaviours/sprite\_render.ts:85](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L85) |
+| <a id="sheet"></a> `sheet` | `private` | [`Sprite`](Sprite.md) | `undefined` | The spritesheet this renderer draws from. | - | - | [core/behaviours/sprite\_render.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L57) |
 
 ## Accessors
 
@@ -207,7 +211,7 @@ Use this to unregister from external systems or release resources.
 play(animation: string): void;
 ```
 
-Defined in: [core/behaviours/sprite\_render.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L118)
+Defined in: [core/behaviours/sprite\_render.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L122)
 
 Starts (or switches to) the named animation.
 
@@ -268,7 +272,7 @@ draw position.
 setFlipX(flip: boolean): void;
 ```
 
-Defined in: [core/behaviours/sprite\_render.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L146)
+Defined in: [core/behaviours/sprite\_render.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L150)
 
 Enables or disables horizontal flipping.
 
@@ -292,7 +296,7 @@ Useful for mirroring a character sprite when facing left.
 stop(): void;
 ```
 
-Defined in: [core/behaviours/sprite\_render.ts:133](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L133)
+Defined in: [core/behaviours/sprite\_render.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L137)
 
 Stops the current animation and resets playback state.
 
@@ -311,7 +315,7 @@ is called again.
 update(deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/sprite\_render.ts:158](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L158)
+Defined in: [core/behaviours/sprite\_render.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/sprite_render.ts#L162)
 
 Advances the animation clock and moves to the next frame when the
 animation's `duration` has elapsed.

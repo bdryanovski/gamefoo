@@ -49,9 +49,6 @@ describe('exports — classes', () => {
     'SpriteRender',
     'StateMachine',
     'Text',
-    'TerminalInputDriver',
-    'TerminalRender',
-    'TerminalRenderContext',
     'TileLayer',
     'TileMap',
     'TilemapSystem',
@@ -68,7 +65,7 @@ describe('exports — classes', () => {
 });
 
 describe('exports — functions', () => {
-  const fns = ['createBunLoop', 'log'] as const;
+  const fns = ['log'] as const;
 
   for (const name of fns) {
     test(name, () => {

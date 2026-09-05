@@ -2,7 +2,7 @@
 title: 'Class: RAFLoopDriver'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: RAFLoopDriver'
 
 # Class: RAFLoopDriver
 
-Defined in: [core/renderer/loops/loop.ts:75](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L75)
+Defined in: [core/renderer/loops/loop.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L73)
 
 Browser game loop driver using `requestAnimationFrame`.
 
@@ -33,7 +33,7 @@ const engine = new Engine(renderer, {
 
 ## See
 
-[IntervalLoopDriver](IntervalLoopDriver.md) — alternative for terminal / server
+[IntervalLoopDriver](IntervalLoopDriver.md) — alternative for server
 
 ## Implements
 
@@ -56,7 +56,7 @@ new RAFLoopDriver(): RAFLoopDriver;
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="handle"></a> `handle` | `private` | `number` | `0` | The handle returned by `requestAnimationFrame`. | [core/renderer/loops/loop.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L77) |
-| <a id="lasttime"></a> `lastTime` | `private` | `number` | `0` | Timestamp of the previous frame in milliseconds. | [core/renderer/loops/loop.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L80) |
+| <a id="lasttime"></a> `lastTime` | `private` | `number` | `0` | Timestamp of the previous frame in milliseconds. | [core/renderer/loops/loop.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L82) |
 
 ## Methods
 
@@ -66,7 +66,7 @@ new RAFLoopDriver(): RAFLoopDriver;
 start(tick: (dt: number) => void): void;
 ```
 
-Defined in: [core/renderer/loops/loop.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L92)
+Defined in: [core/renderer/loops/loop.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L94)
 
 Starts the `requestAnimationFrame` loop.
 
@@ -99,7 +99,7 @@ delta on initialisation.
 stop(): void;
 ```
 
-Defined in: [core/renderer/loops/loop.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L107)
+Defined in: [core/renderer/loops/loop.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L109)
 
 Cancels the pending `requestAnimationFrame` call.
 

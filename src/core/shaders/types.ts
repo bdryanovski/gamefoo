@@ -5,7 +5,6 @@
  * here is a post-draw effect pass — emissive glow, particles, a full-screen
  * vignette — rather than a GPU/GLSL program. Effects that need pixel access
  * reach the raw context via {@link RenderContext.getCanvas} and become
- * no-ops on non-canvas renderers (e.g. terminal).
  *
  * @category Shaders
  * @since 0.5.0

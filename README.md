@@ -44,9 +44,6 @@ pnpm install
 # Run web demos (dev server with HMR)
 pnpm run dev
 
-# Run terminal demo
-pnpm tsx terminal_demos/basic/index.ts
-
 # Build the library
 pnpm run build
 

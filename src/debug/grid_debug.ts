@@ -203,7 +203,6 @@ export class GridDebugSystem implements SubSystem {
    * Renders all enabled debug overlays.
    *
    * Only functional on canvas-backed `RenderContext` implementations.
-   * No-op on terminal renderers.
    *
    * @param ctx - The active render context.
    *

@@ -127,7 +127,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * Called once per frame to advance this behaviour's logic.
    *
    * Override in subclasses that need per-frame logic. Behaviours that
-   * are purely reactive (collision, health, terminal render) can omit
+   * are purely reactive (collision, health) can omit
    * this — the default is a no-op.
    *
    * @param _deltaTime - Seconds elapsed since the previous frame.

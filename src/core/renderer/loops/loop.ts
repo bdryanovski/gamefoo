@@ -3,7 +3,7 @@
  *
  * The engine delegates frame scheduling to a `LoopDriver` so that the
  * same `Engine` class can run in both browser (`requestAnimationFrame`)
- * and terminal / server (`setInterval` / Bun timer) environments.
+ * and server (`setInterval` / Bun timer) environments.
  *
  * Pass a driver via {@link EngineConfig.loopDriver}:
  *
@@ -11,7 +11,6 @@
  * // Browser (default — no need to pass):
  * const engine = new Engine(renderer);
  *
- * // Terminal:
  * const engine = new Engine(renderer, {
  *   loopDriver: new IntervalLoopDriver(30),
  * });
@@ -20,7 +19,6 @@
  * @since 0.4.0
  *
  * @see {@link RAFLoopDriver}      — browser `requestAnimationFrame` driver
- * @see {@link IntervalLoopDriver} — `setInterval`-based driver for terminals
  */
 export interface LoopDriver {
   /**
@@ -70,7 +68,7 @@ export interface LoopDriver {
  * });
  * ```
  *
- * @see {@link IntervalLoopDriver} — alternative for terminal / server
+ * @see {@link IntervalLoopDriver} — alternative for server
  */
 export class RAFLoopDriver implements LoopDriver {
   /**
@@ -114,27 +112,13 @@ export class RAFLoopDriver implements LoopDriver {
 }
 
 /**
- * Terminal / server game loop driver using `setInterval`.
+ * Server game loop driver using `setInterval`.
  *
  * Runs the game tick at a fixed target frame rate (default **30 FPS**).
- * Suitable for Bun / Node terminal games, headless simulations, and
+ * Suitable forgames, headless simulations, and
  * server-side game logic.
  *
- * For higher-precision frame timing in Bun, see `createBunLoop` in
- * `terminal_loop.ts`.
- *
  * @since 0.4.0
- *
- * @example
- * ```ts
- * import { Engine, IntervalLoopDriver, TerminalRenderContext } from "gamefoo";
- *
- * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
- * const engine   = new Engine(renderer, {
- *   loopDriver: new IntervalLoopDriver(30),
- * });
- * engine.setup();
- * ```
  *
  * @see {@link RAFLoopDriver} — browser alternative
  */

@@ -2,7 +2,7 @@
 title: 'Class: PathFollower'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -36,6 +36,8 @@ Subclasses **may** override:
 
 ## Examples
 
+**Creating a custom behaviour**
+
 ```ts
 import { Behaviour, type Entity } from "gamefoo";
 
@@ -47,6 +49,8 @@ class Gravity extends Behaviour<Entity> {
   }
 }
 ```
+
+**Attaching to an entity**
 
 ```ts
 const entity = new Player("hero", 100, 100, 32, 32);
@@ -71,10 +75,11 @@ new PathFollower(
    owner: DynamicEntity, 
    pathfinder: Pathfinder, 
    grid: Grid, 
-   config?: PathFollowerConfig): PathFollower;
+   config?: PathFollowerConfig
+): PathFollower;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L146)
+Defined in: [core/behaviours/path\_follower.ts:154](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L154)
 
 Creates a new path follower behaviour.
 
@@ -115,19 +120,19 @@ npc.attachBehaviour(pf);
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
-| <a id="type"></a> `type` | `readonly` | `"pathfollower"` | `'pathfollower'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/path\_follower.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L107) |
+| <a id="type"></a> `type` | `readonly` | `"pathfollower"` | `'pathfollower'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/path\_follower.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L109) |
 | <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
-| <a id="_ismoving"></a> `_isMoving` | `private` | `boolean` | `false` | Whether the entity is actively following a path. | - | - | [core/behaviours/path\_follower.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L125) |
-| <a id="arrivalthreshold"></a> `arrivalThreshold` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L113) |
-| <a id="arrivalthresholdsq"></a> `arrivalThresholdSq` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:114](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L114) |
-| <a id="currentindex"></a> `currentIndex` | `private` | `number` | `0` | Index of the current waypoint being approached. | - | - | [core/behaviours/path\_follower.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L122) |
-| <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L110) |
-| <a id="onpathblocked"></a> `onPathBlocked?` | `private` | () => `void` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L116) |
-| <a id="onpathcomplete"></a> `onPathComplete?` | `private` | () => `void` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L115) |
-| <a id="path"></a> `path` | `private` | \{ `col`: `number`; `row`: `number`; \}[] | `[]` | The current computed path (array of grid waypoints). | - | - | [core/behaviours/path\_follower.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L119) |
-| <a id="pathfinder"></a> `pathfinder` | `private` | [`Pathfinder`](Pathfinder.md) | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L109) |
-| <a id="projection"></a> `projection` | `private` | [`IsometricProjection`](IsometricProjection.md) \| `null` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:111](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L111) |
-| <a id="speed"></a> `speed` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:112](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L112) |
+| <a id="_ismoving"></a> `_isMoving` | `private` | `boolean` | `false` | Whether the entity is actively following a path. | - | - | [core/behaviours/path\_follower.ts:133](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L133) |
+| <a id="arrivalthreshold"></a> `arrivalThreshold` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L115) |
+| <a id="arrivalthresholdsq"></a> `arrivalThresholdSq` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L116) |
+| <a id="currentindex"></a> `currentIndex` | `private` | `number` | `0` | Index of the current waypoint being approached. | - | - | [core/behaviours/path\_follower.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L128) |
+| <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:112](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L112) |
+| <a id="onpathblocked"></a> `onPathBlocked?` | `private` | () => `void` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L118) |
+| <a id="onpathcomplete"></a> `onPathComplete?` | `private` | () => `void` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:117](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L117) |
+| <a id="path"></a> `path` | `private` | \{ `col`: `number`; `row`: `number`; \}[] | `[]` | The current computed path (array of grid waypoints). | - | - | [core/behaviours/path\_follower.ts:123](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L123) |
+| <a id="pathfinder"></a> `pathfinder` | `private` | [`Pathfinder`](Pathfinder.md) | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:111](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L111) |
+| <a id="projection"></a> `projection` | `private` | [`IsometricProjection`](IsometricProjection.md) \| `null` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L113) |
+| <a id="speed"></a> `speed` | `private` | `number` | `undefined` | - | - | - | [core/behaviours/path\_follower.ts:114](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L114) |
 
 ## Accessors
 
@@ -142,7 +147,7 @@ get currentPath(): readonly {
 }[];
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:193](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L193)
+Defined in: [core/behaviours/path\_follower.ts:201](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L201)
 
 Returns a copy of the current path waypoints.
 
@@ -177,7 +182,7 @@ Array of `{ col, row }` waypoints, or empty array.
 get isMoving(): boolean;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L175)
+Defined in: [core/behaviours/path\_follower.ts:183](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L183)
 
 Whether the entity is currently following a path.
 
@@ -256,7 +261,7 @@ The owning entity.
 moveTo(goalCol: number, goalRow: number): boolean;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:217](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L217)
+Defined in: [core/behaviours/path\_follower.ts:225](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L225)
 
 Computes a path to the target grid cell and begins following it.
 
@@ -347,7 +352,7 @@ optional render(ctx: RenderContext): void;
 Defined in: [core/behaviour.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L146)
 
 Optional rendering hook invoked after the entity's own
-[Entity.render](Entity.md#render) call.
+[Entity.render](DynamicEntity.md#render) call.
 
 Override this to draw debug shapes, health bars, status effects, etc.
 
@@ -373,7 +378,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 stop(): void;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:250](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L250)
+Defined in: [core/behaviours/path\_follower.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L253)
 
 Cancels the current path and stops the entity.
 
@@ -400,7 +405,7 @@ follower.stop();
 update(deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:263](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L263)
+Defined in: [core/behaviours/path\_follower.ts:266](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L266)
 
 Called every frame. Moves the entity toward the next waypoint.
 
@@ -433,7 +438,7 @@ private getOwnerGridPosition(): {
 };
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L311)
+Defined in: [core/behaviours/path\_follower.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L310)
 
 **`Internal`**
 
@@ -451,8 +456,8 @@ coordinates.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/behaviours/path\_follower.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L311) |
-| `row` | `number` | [core/behaviours/path\_follower.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L311) |
+| `col` | `number` | [core/behaviours/path\_follower.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L310) |
+| `row` | `number` | [core/behaviours/path\_follower.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L310) |
 
 ***
 
@@ -465,7 +470,7 @@ private gridToWorld(col: number, row: number): {
 };
 ```
 
-Defined in: [core/behaviours/path\_follower.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L324)
+Defined in: [core/behaviours/path\_follower.ts:323](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L323)
 
 **`Internal`**
 
@@ -490,5 +495,5 @@ configured projection or orthogonal fallback.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `x` | `number` | [core/behaviours/path\_follower.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L324) |
-| `y` | `number` | [core/behaviours/path\_follower.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L324) |
+| `x` | `number` | [core/behaviours/path\_follower.ts:323](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L323) |
+| `y` | `number` | [core/behaviours/path\_follower.ts:323](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/path_follower.ts#L323) |

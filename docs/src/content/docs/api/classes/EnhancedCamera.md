@@ -2,7 +2,7 @@
 title: 'Class: EnhancedCamera'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -25,6 +25,8 @@ player's position so the viewport stays centred on the action.
 
 ## Examples
 
+**Basic usage inside the engine**
+
 ```ts
 const camera = new Camera(800, 600);
 camera.follow(player.getPosition());
@@ -32,6 +34,8 @@ camera.follow(player.getPosition());
 const view = camera.getViewRect();
 // view → { x: px - 400, y: py - 300, width: 800, height: 600 }
 ```
+
+**Manual camera control**
 
 ```ts
 const camera = new Camera(800, 600);
@@ -55,10 +59,11 @@ console.log(camera.getPosition());    // { x: 0, y: 0 }
 new EnhancedCamera(
    width: number, 
    height: number, 
-   config?: EnhancedCameraConfig): EnhancedCamera;
+   config?: EnhancedCameraConfig
+): EnhancedCamera;
 ```
 
-Defined in: [core/enhanced\_camera.ts:139](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L139)
+Defined in: [core/enhanced\_camera.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L141)
 
 Creates an enhanced camera with the given viewport dimensions and
 optional configuration.
@@ -101,11 +106,11 @@ const camera = new EnhancedCamera(800, 600, {
 | <a id="_maxzoom"></a> `_maxZoom` | `private` | `number` | - | [core/enhanced\_camera.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L113) |
 | <a id="_minzoom"></a> `_minZoom` | `private` | `number` | - | [core/enhanced\_camera.ts:112](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L112) |
 | <a id="_pixelperfect"></a> `_pixelPerfect` | `private` | `boolean` | - | [core/enhanced\_camera.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L115) |
-| <a id="_viewcache"></a> `_viewCache` | `private` | \{ `height`: `number`; `width`: `number`; `x`: `number`; `y`: `number`; \} | Cached view rect to avoid per-call allocation. | [core/enhanced\_camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L118) |
-| `_viewCache.height` | `public` | `number` | - | [core/enhanced\_camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L118) |
-| `_viewCache.width` | `public` | `number` | - | [core/enhanced\_camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L118) |
-| `_viewCache.x` | `public` | `number` | - | [core/enhanced\_camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L118) |
-| `_viewCache.y` | `public` | `number` | - | [core/enhanced\_camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L118) |
+| <a id="_viewcache"></a> `_viewCache` | `private` | \{ `height`: `number`; `width`: `number`; `x`: `number`; `y`: `number`; \} | Cached view rect to avoid per-call allocation. | [core/enhanced\_camera.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L120) |
+| `_viewCache.height` | `public` | `number` | - | [core/enhanced\_camera.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L120) |
+| `_viewCache.width` | `public` | `number` | - | [core/enhanced\_camera.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L120) |
+| `_viewCache.x` | `public` | `number` | - | [core/enhanced\_camera.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L120) |
+| `_viewCache.y` | `public` | `number` | - | [core/enhanced\_camera.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L120) |
 | <a id="_zoom"></a> `_zoom` | `private` | `number` | - | [core/enhanced\_camera.ts:111](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L111) |
 
 ## Accessors
@@ -118,7 +123,7 @@ const camera = new EnhancedCamera(800, 600, {
 get lerpSpeed(): number;
 ```
 
-Defined in: [core/enhanced\_camera.ts:179](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L179)
+Defined in: [core/enhanced\_camera.ts:181](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L181)
 
 Interpolation speed for smooth follow. A value of `0.1` means
 the camera covers 10% of the remaining distance each frame.
@@ -137,7 +142,7 @@ the camera covers 10% of the remaining distance each frame.
 set lerpSpeed(value: number): void;
 ```
 
-Defined in: [core/enhanced\_camera.ts:183](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L183)
+Defined in: [core/enhanced\_camera.ts:185](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L185)
 
 ##### Parameters
 
@@ -159,7 +164,7 @@ Defined in: [core/enhanced\_camera.ts:183](https://github.com/bdryanovski/gamefo
 get zoom(): number;
 ```
 
-Defined in: [core/enhanced\_camera.ts:165](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L165)
+Defined in: [core/enhanced\_camera.ts:167](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L167)
 
 Current zoom level. Setting this value automatically clamps it
 within [[EnhancedCameraConfig.minZoom](../interfaces/EnhancedCameraConfig.md#minzoom),
@@ -190,7 +195,7 @@ console.log(camera.zoom); // 4 (default max)
 set zoom(value: number): void;
 ```
 
-Defined in: [core/enhanced\_camera.ts:169](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L169)
+Defined in: [core/enhanced\_camera.ts:171](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L171)
 
 ##### Parameters
 
@@ -210,7 +215,7 @@ Defined in: [core/enhanced\_camera.ts:169](https://github.com/bdryanovski/gamefo
 follow(target: Vector2): void;
 ```
 
-Defined in: [core/camera.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L68)
+Defined in: [core/camera.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L76)
 
 Centres the camera on a target position.
 
@@ -244,7 +249,7 @@ camera.follow(player.getPosition());
 getPosition(): Vector2;
 ```
 
-Defined in: [core/camera.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L96)
+Defined in: [core/camera.ts:104](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L104)
 
 Returns the current centre position of the camera.
 
@@ -271,7 +276,7 @@ getViewRect(): {
 };
 ```
 
-Defined in: [core/enhanced\_camera.ts:231](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L231)
+Defined in: [core/enhanced\_camera.ts:233](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L233)
 
 Returns the visible viewport rectangle in world-space, adjusted
 for the current zoom level.
@@ -294,10 +299,10 @@ An `{ x, y, width, height }` rectangle in world-space.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `height` | `number` | [core/enhanced\_camera.ts:235](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L235) |
-| `width` | `number` | [core/enhanced\_camera.ts:234](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L234) |
-| `x` | `number` | [core/enhanced\_camera.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L232) |
-| `y` | `number` | [core/enhanced\_camera.ts:233](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L233) |
+| `height` | `number` | [core/enhanced\_camera.ts:237](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L237) |
+| `width` | `number` | [core/enhanced\_camera.ts:236](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L236) |
+| `x` | `number` | [core/enhanced\_camera.ts:234](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L234) |
+| `y` | `number` | [core/enhanced\_camera.ts:235](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L235) |
 
 #### Since
 
@@ -322,7 +327,7 @@ const view = camera.getViewRect();
 moveTo(target: Vector2): void;
 ```
 
-Defined in: [core/camera.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L87)
+Defined in: [core/camera.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L95)
 
 Instantly teleports the camera to a specific position.
 
@@ -358,7 +363,7 @@ camera.moveTo({ x: 500, y: 300 });
 resize(width: number, height: number): void;
 ```
 
-Defined in: [core/camera.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L140)
+Defined in: [core/camera.ts:148](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L148)
 
 Updates the viewport dimensions, e.g. after a window resize.
 
@@ -393,7 +398,7 @@ window.addEventListener("resize", () => {
 screenToWorld(screenX: number, screenY: number): Vector2;
 ```
 
-Defined in: [core/enhanced\_camera.ts:267](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L267)
+Defined in: [core/enhanced\_camera.ts:269](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L269)
 
 Converts a screen-space position (e.g. mouse coordinates on the
 canvas) to world-space coordinates, accounting for camera offset
@@ -433,7 +438,7 @@ canvas.addEventListener("click", (e) => {
 smoothFollow(target: Vector2, deltaTime: number): void;
 ```
 
-Defined in: [core/enhanced\_camera.ts:206](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L206)
+Defined in: [core/enhanced\_camera.ts:208](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L208)
 
 Smoothly moves the camera toward a target position using linear
 interpolation.
@@ -471,7 +476,7 @@ camera.smoothFollow(player.getPosition(), deltaTime);
 worldToScreen(worldX: number, worldY: number): Vector2;
 ```
 
-Defined in: [core/enhanced\_camera.ts:291](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L291)
+Defined in: [core/enhanced\_camera.ts:293](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L293)
 
 Converts a world-space position to screen-space canvas coordinates.
 
@@ -508,7 +513,7 @@ ctx.fillText("!", screen.x, screen.y);
 private clampZoom(value: number): number;
 ```
 
-Defined in: [core/enhanced\_camera.ts:304](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L304)
+Defined in: [core/enhanced\_camera.ts:306](https://github.com/bdryanovski/gamefoo/blob/main/src/core/enhanced_camera.ts#L306)
 
 **`Internal`**
 

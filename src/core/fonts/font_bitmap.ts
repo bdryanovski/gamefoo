@@ -176,9 +176,7 @@ export default class FontBitmap extends BitmapDataRenderer {
   public renderChar(char: string, x: number, y: number, ctx: RenderContext) {
     const canvasCtx = ctx.getCanvas?.();
 
-    // For terminal / non-canvas contexts, delegate to drawText
     if (!canvasCtx) {
-      ctx.drawText(char, x, y);
       return;
     }
 
@@ -213,9 +211,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * ```
    */
   public renderText(text: string, x: number, y: number, ctx: RenderContext) {
-    // For terminal / non-canvas contexts, use drawText directly
     if (!ctx.getCanvas?.()) {
-      ctx.drawText(text, x, y);
       return;
     }
 

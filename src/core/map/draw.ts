@@ -7,7 +7,7 @@ import type { Frame, Transform } from './types';
  *
  * The fast path (no transform) is a single `drawSprite`. Flips use
  * `scale(±1)`; rotation requires the canvas-backed context and is skipped
- * on renderers that cannot rotate (e.g. terminal).
+ * on renderers that cannot rotate .
  *
  * @category Map
  * @since 0.5.0

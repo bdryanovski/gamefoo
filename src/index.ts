@@ -24,8 +24,6 @@ export { HealthKit } from './core/behaviours/healtkit';
 export type { PathFollowerConfig } from './core/behaviours/path_follower';
 export { PathFollower } from './core/behaviours/path_follower';
 export { SpriteRender } from './core/behaviours/sprite_render';
-export type { TerminalGlyph } from './core/behaviours/terminal_render';
-export { TerminalRender } from './core/behaviours/terminal_render';
 export { default as Camera } from './core/camera';
 // ── Consoles (unified) ──────────────────────────────────────────────
 /**
@@ -52,9 +50,6 @@ export type { IsoConfig, IsoLayout, VisibleRange } from './core/grid/isometric_t
 export type { InternalBitmapIconName } from './core/icons/icon_bitmap';
 export { default as IconBitmap } from './core/icons/icon_bitmap';
 export { default as Input } from './core/input';
-// ── Input Drivers ───────────────────────────────────────────────────
-export type { InputDriver } from './core/input/terminal';
-export { TerminalInputDriver } from './core/input/terminal';
 // ── Palettes ────────────────────────────────────────────────────────
 /**
  * @since 0.5.0
@@ -63,11 +58,8 @@ export * from './core/palettes';
 // ── Renderer / Loop ─────────────────────────────────────────────────
 export type { LoopDriver } from './core/renderer/loops/loop';
 export { IntervalLoopDriver, RAFLoopDriver } from './core/renderer/loops/loop';
-export { createBunLoop } from './core/renderer/loops/terminal_loop';
 export * from './core/renderer/resolutions';
-export type { TerminalRenderConfig } from './core/renderer/terminal_renderer';
-export { TerminalRenderContext } from './core/renderer/terminal_renderer';
-export type { RenderContext, TerminalBuffer, TerminalCell } from './core/renderer/type';
+export type { RenderContext } from './core/renderer/type';
 export { WebRenderer } from './core/renderer/web_renderer';
 export type { SpriteFrame } from './core/sprite';
 export { default as Sprite } from './core/sprite';

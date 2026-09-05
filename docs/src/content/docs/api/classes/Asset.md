@@ -2,7 +2,7 @@
 title: 'Class: Asset'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -24,10 +24,14 @@ source resolve instantly.
 
 ## Examples
 
+**Loading an image**
+
 ```ts
 const image = await Asset.load("sprites/hero.png");
 ctx.drawImage(image, 0, 0);
 ```
+
+**Pre-loading multiple assets**
 
 ```ts
 await Promise.all([

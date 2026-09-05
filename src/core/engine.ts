@@ -23,8 +23,7 @@ interface EngineConfig {
    * The colour used to clear the screen at the start of each frame.
    *
    * Accepts any CSS colour string — hex (`#rrggbb`), `rgb()`, `hsl()`,
-   * or named colours. On terminal renderers the colour is converted to the
-   * nearest ANSI truecolour background.
+   * or named colours.
    *
    * @defaultValue `"#000000"`
    */
@@ -35,8 +34,6 @@ interface EngineConfig {
    *
    * - **Browser**: leave unset to use {@link RAFLoopDriver}
    *   (`requestAnimationFrame`).
-   * - **Terminal / Bun**: pass `new IntervalLoopDriver(30)` for a
-   *   `setInterval`-based 30 FPS loop.
    *
    * @defaultValue `new RAFLoopDriver()`
    *
@@ -51,7 +48,6 @@ interface EngineConfig {
  *
  * `Engine` is renderer-agnostic. Pass any {@link RenderContext} —
  * {@link WebRenderer} for browser canvas output, or
- * {@link TerminalRenderContext} for ANSI terminal output.
  *
  * ---
  *
@@ -67,8 +63,6 @@ interface EngineConfig {
  * Engine.render(ctx)                (override hook)
  *   ↓
  * preRender → render → postRender   (all registered subsystems)
- *   ↓
- * ctx.flush()                       (terminal dirty-cell flush; no-op on canvas)
  * ```
  *
  * ---
@@ -86,19 +80,6 @@ interface EngineConfig {
  *
  * engine.setup(() => console.log("Game started!"));
  * ```
- *
- * ### Terminal usage (Bun)
- *
- * ```ts
- * import { Engine, IntervalLoopDriver, TerminalRenderContext } from "gamefoo";
- *
- * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
- * const engine   = new Engine(renderer, {
- *   loopDriver: new IntervalLoopDriver(30),
- * });
- * engine.setup();
- * ```
- *
  * ### Subclassing
  *
  * ```ts
@@ -117,10 +98,9 @@ interface EngineConfig {
  * @since 0.1.0
  *
  * @see {@link WebRenderer}          — canvas adapter
- * @see {@link TerminalRenderContext} — ANSI terminal adapter
  * @see {@link SubSystem}            — subsystem interface
  * @see {@link RAFLoopDriver}        — default browser loop
- * @see {@link IntervalLoopDriver}   — terminal / server loop
+ * @see {@link IntervalLoopDriver}   — server loop
  */
 export default class Engine {
   /**
@@ -211,14 +191,6 @@ export default class Engine {
    * ```ts
    * const renderer = new WebRenderer("game-canvas", 800, 600);
    * const engine   = new Engine(renderer, { backgroundColor: "#1a1a2e" });
-   * ```
-   *
-   * @example Terminal
-   * ```ts
-   * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
-   * const engine   = new Engine(renderer, {
-   *   loopDriver: new IntervalLoopDriver(30),
-   * });
    * ```
    */
   constructor(renderer: RenderContext, config: EngineConfig = {}) {
@@ -320,22 +292,10 @@ export default class Engine {
   /**
    * Updates the engine's logical dimensions.
    *
-   * Call this after a terminal resize event (or canvas resize) to keep
-   * subsystems that depend on `engine.dementions` consistent.
-   *
    * @param width  - New logical width in renderer units.
    * @param height - New logical height in renderer units.
    *
    * @since 0.4.0
-   *
-   * @example
-   * ```ts
-   * process.stdout.on("resize", () => {
-   *   const { cols, rows } = getTerminalSize();
-   *   renderer.resize(cols, rows);
-   *   engine.resize(renderer.width, renderer.height);
-   * });
-   * ```
    */
   public resize(width: number, height: number): void {
     this.width = width;
@@ -371,9 +331,6 @@ export default class Engine {
     this.run('preRender', this.ctx);
     this.run('render', this.ctx);
     this.run('postRender', this.ctx);
-
-    // Flush buffered output (terminal dirty-cell diff; no-op on canvas).
-    this.ctx.flush?.();
   }
 
   /**
