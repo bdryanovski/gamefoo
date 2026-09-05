@@ -32,6 +32,7 @@ The goal is **incremental adoption** that:
    - [ ] Enable type checking in editor
 
 3. **Run checks:**
+
    ```bash
    pnpm run check  # Before every commit
    ```
@@ -63,7 +64,6 @@ The goal is **incremental adoption** that:
 
 2. **Refactor one file at a time:**
    - Pick a file
-   - Run CodeStyle checks: `pnpm tsx scripts/check-codestyle.ts src/core/engine.ts`
    - Fix violations (see "Common Fixes" below)
    - Test thoroughly
    - Commit with message: "refactor(codestyle): apply to engine.ts"
@@ -112,19 +112,15 @@ The goal is **incremental adoption** that:
 ### 1. Line Length Violations
 
 **Problem:**
+
 ```typescript
 const result = someReallyLongFunctionName(argument1, argument2, argument3, argument4, argument5);
 ```
 
 **Fix:**
+
 ```typescript
-const result = someReallyLongFunctionName(
-  argument1,
-  argument2,
-  argument3,
-  argument4,
-  argument5,
-);
+const result = someReallyLongFunctionName(argument1, argument2, argument3, argument4, argument5);
 ```
 
 **Tool:** `pnpm run format` handles this automatically.
@@ -134,6 +130,7 @@ const result = someReallyLongFunctionName(
 ### 2. Function Length Violations
 
 **Problem:**
+
 ```typescript
 function update(entity: Entity, dt: number): void {
   // 100 lines of mixed concerns
@@ -141,6 +138,7 @@ function update(entity: Entity, dt: number): void {
 ```
 
 **Fix:** Extract helpers.
+
 ```typescript
 function update(entity: Entity, dt: number): void {
   if (entity.type === 'player') {
@@ -166,6 +164,7 @@ function updateEnemy(entity: Entity, dt: number): void {
 ### 3. Missing Assertions
 
 **Problem:**
+
 ```typescript
 function calculateDistance(a: Entity, b: Entity): number {
   const dx = a.x - b.x;
@@ -175,6 +174,7 @@ function calculateDistance(a: Entity, b: Entity): number {
 ```
 
 **Fix:** Add preconditions and postconditions.
+
 ```typescript
 function calculateDistance(a: Entity, b: Entity): number {
   // Preconditions.
@@ -200,6 +200,7 @@ function calculateDistance(a: Entity, b: Entity): number {
 ### 4. Compound Conditions
 
 **Problem:**
+
 ```typescript
 if (entity.active && entity.health > 0 && !entity.stunned) {
   // Do work
@@ -207,6 +208,7 @@ if (entity.active && entity.health > 0 && !entity.stunned) {
 ```
 
 **Fix:** Split into nested `if` statements.
+
 ```typescript
 if (entity.active) {
   if (entity.health > 0) {
@@ -228,6 +230,7 @@ if (entity.active) {
 ### 5. Unbounded Loops
 
 **Problem:**
+
 ```typescript
 while (!done) {
   // Could loop forever
@@ -235,6 +238,7 @@ while (!done) {
 ```
 
 **Fix:** Add explicit upper bound.
+
 ```typescript
 const MAX_ITERATIONS = 1000;
 let iterations = 0;
@@ -251,10 +255,11 @@ while (!done) {
 ### 6. Variable Scope Too Wide
 
 **Problem:**
+
 ```typescript
 function process(entities: Entity[]): void {
   let distance = 0; // Lives too long
-  
+
   for (const entity of entities) {
     distance = calculateDistance(entity, player);
     if (distance < 100) {
@@ -265,6 +270,7 @@ function process(entities: Entity[]): void {
 ```
 
 **Fix:** Move declaration closer to use.
+
 ```typescript
 function process(entities: Entity[]): void {
   for (const entity of entities) {
@@ -281,6 +287,7 @@ function process(entities: Entity[]): void {
 ### 7. Unclear Naming
 
 **Problem:**
+
 ```typescript
 const maxHP = 100;
 const spd = 120;
@@ -288,6 +295,7 @@ const dst = calculateDist(a, b);
 ```
 
 **Fix:** Use descriptive names with units.
+
 ```typescript
 const player_health_max = 100;
 const player_speed_px_per_sec = 120;
@@ -299,11 +307,13 @@ const distance_px = calculateDistance(a, b);
 ### 8. Missing Comments
 
 **Problem:**
+
 ```typescript
 const distance_squared = dx * dx + dy * dy;
 ```
 
 **Fix:** Explain **why**.
+
 ```typescript
 // Use squared distance to avoid expensive Math.sqrt in hot path.
 // Benchmark: 2.3ms → 0.8ms for 1000 entities.
@@ -316,7 +326,6 @@ const distance_squared = dx * dx + dy * dy;
 
 Use this checklist when migrating a file:
 
-- [ ] **Run check:** `pnpm tsx scripts/check-codestyle.ts <file>`
 - [ ] **Line length:** All lines ≤ 100 columns
 - [ ] **Function length:** All functions ≤ 70 lines
 - [ ] **Assertions:** Min 2 per function (or function is trivial)
@@ -346,34 +355,8 @@ grep "error(s)" codestyle-report.txt
 echo "$(date): $(grep -c 'error' codestyle-report.txt)" >> progress.log
 ```
 
-### Visualize Progress
-
-Create a simple script to track compliance:
-
-```typescript
-// scripts/track-progress.ts
-import { readdirSync } from 'fs';
-import { execSync } from 'child_process';
-
-const files = readdirSync('src', { recursive: true })
-  .filter(f => f.endsWith('.ts'));
-
-let compliant = 0;
-for (const file of files) {
-  const result = execSync(`pnpm tsx scripts/check-codestyle.ts src/${file}`, { 
-    encoding: 'utf8',
-    stdio: 'pipe'
-  }).catch(() => null);
-  
-  if (result && result.includes('0 error(s)')) {
-    compliant++;
-  }
-}
-
-console.log(`Progress: ${compliant}/${files.length} (${(compliant / files.length * 100).toFixed(1)}%)`);
-```
-
 Run weekly:
+
 ```bash
 pnpm tsx scripts/track-progress.ts
 ```
@@ -384,15 +367,18 @@ pnpm tsx scripts/track-progress.ts
 
 ### "This will take too long"
 
-**Response:** We're not doing a big bang rewrite. New code is CodeStyle from day one. Existing code is refactored opportunistically. Worst case: 6 months to full compliance. Best case: 3 months.
+**Response:** We're not doing a big bang rewrite. New code is CodeStyle from day one. Existing code
+is refactored opportunistically. Worst case: 6 months to full compliance. Best case: 3 months.
 
 ### "Line length limits are arbitrary"
 
-**Response:** 100 columns is a physical constraint — two files side-by-side on a typical screen. The specific number matters less than **consistency**. Pick a limit, enforce it everywhere.
+**Response:** 100 columns is a physical constraint — two files side-by-side on a typical screen. The
+specific number matters less than **consistency**. Pick a limit, enforce it everywhere.
 
 ### "70 lines per function is too short"
 
-**Response:** If a function doesn't fit in 70 lines, it's doing too much. Splitting forces good design: centralized control flow, pure helpers, clear responsibilities.
+**Response:** If a function doesn't fit in 70 lines, it's doing too much. Splitting forces good
+design: centralized control flow, pure helpers, clear responsibilities.
 
 ### "Assertions slow down production"
 
@@ -410,7 +396,8 @@ Or rely on TypeScript's type system (zero runtime cost).
 
 ### "Our existing code works fine"
 
-**Response:** CodeStyle isn't about fixing broken code — it's about making good code **great**. It catches bugs before they ship, makes performance predictable, and makes maintenance a joy.
+**Response:** CodeStyle isn't about fixing broken code — it's about making good code **great**. It
+catches bugs before they ship, makes performance predictable, and makes maintenance a joy.
 
 ---
 
@@ -431,6 +418,7 @@ function update(ents, dt) {
 ```
 
 **Problems:**
+
 - No assertions (what if `ents` is null? what if `dt` is negative?)
 - Abbreviated names (`ents`, `hp`, `vx`)
 - Compound condition (hard to reason about)
@@ -466,12 +454,14 @@ function update_entities(entities: Entity[], delta_time_sec: number): void {
 ```
 
 **Improvements:**
+
 - ✅ Assertions catch invalid inputs
 - ✅ Descriptive names with units
 - ✅ Split conditions for clarity
 - ✅ Explicit bounds on entities
 
-**Result:** Caught 3 bugs during migration (negative delta time, NaN position, unbounded entity growth).
+**Result:** Caught 3 bugs during migration (negative delta time, NaN position, unbounded entity
+growth).
 
 ---
 
@@ -479,11 +469,13 @@ function update_entities(entities: Entity[], delta_time_sec: number): void {
 
 ### Q: Can I do CodeStyle gradually, or is it all-or-nothing?
 
-**A:** Gradual. Start with new code, then hot paths, then opportunistic refactoring. Aim for 100% eventually, but don't block current work.
+**A:** Gradual. Start with new code, then hot paths, then opportunistic refactoring. Aim for 100%
+eventually, but don't block current work.
 
 ### Q: What if a file is too large to refactor all at once?
 
 **A:** Fix violations incrementally:
+
 1. First pass: Line length + formatting
 2. Second pass: Function length (extract helpers)
 3. Third pass: Assertions + bounds
@@ -491,15 +483,18 @@ function update_entities(entities: Entity[], delta_time_sec: number): void {
 
 ### Q: Do demos and tests need to be CodeStyle compliant?
 
-**A:** Tests can be lenient (function length, `any` usage). Demos can be lenient. Core engine code should be strict.
+**A:** Tests can be lenient (function length, `any` usage). Demos can be lenient. Core engine code
+should be strict.
 
 ### Q: What if the team doesn't agree with a specific rule?
 
-**A:** Discuss and decide as a team. CodeStyle is opinionated, but not dogmatic. If you have a good reason to deviate, document it and configure the linter accordingly.
+**A:** Discuss and decide as a team. CodeStyle is opinionated, but not dogmatic. If you have a good
+reason to deviate, document it and configure the linter accordingly.
 
 ### Q: How do I measure ROI on this effort?
 
 **A:** Track:
+
 - **Bugs caught by assertions** (before they reach production)
 - **Time to onboard new devs** (clearer code = faster ramp-up)
 - **PR review time** (consistency = faster reviews)
