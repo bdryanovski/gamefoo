@@ -25,6 +25,8 @@ import { Slime } from './objects/slime';
 import { Sign } from './objects/sign';
 import { DarkChamberScreen } from './screens/dark-chamber';
 import { RoomScreen } from './screens/room';
+import { Ghost } from './objects/ghost';
+import { FlyingSkull } from './objects/flying_skull';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -73,6 +75,8 @@ class MapGame extends Engine {
     registry.register(Bookshelf);
     registry.register(Rat);
     registry.register(Slime);
+    registry.register(FlyingSkull);
+    registry.register(Ghost);
     registry.register(Torch);
 
     // Screens: a default class for every room, overridden per coordinate.
@@ -241,6 +245,13 @@ class MapGame extends Engine {
       }
       for (const slime of this.map.current.objectsByType(Slime)) {
         slime.sense(pbox, this.map.current.collision);
+      }
+
+      for (const flyingskull of this.map.current.objectsByType(FlyingSkull)) {
+        flyingskull.sense(pbox, this.map.current.collision);
+      }
+      for (const ghost of this.map.current.objectsByType(Ghost)) {
+        ghost.sense(pbox, this.map.current.collision);
       }
     }
     this.map?.update(dt);

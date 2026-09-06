@@ -1,0 +1,333 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "flying_skull",
+    "category": "character"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {},
+  "images": {
+    "flying_skull.png": {
+      "src": "/uploads/1788725880791_flying_skull.png",
+      "width": 64,
+      "height": 64
+    }
+  },
+  "frames": {
+    "sprite_0_0": {
+      "image": "flying_skull.png",
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "image": "flying_skull.png",
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "image": "flying_skull.png",
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_0": {
+      "image": "flying_skull.png",
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_1": {
+      "image": "flying_skull.png",
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "image": "flying_skull.png",
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_1": {
+      "image": "flying_skull.png",
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_1": {
+      "image": "flying_skull.png",
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "flying_skull_idle": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0",
+        "sprite_3_0"
+      ],
+      "duration": 0.21,
+      "loop": true
+    },
+    "flying_skull_right": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0",
+        "sprite_3_0"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "flyinf_skull_left": {
+      "frames": [
+        "sprite_0_1",
+        "sprite_1_1",
+        "sprite_2_1",
+        "sprite_3_1"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "vision": {
+      "name": "Vision",
+      "color": "#f2c14e"
+    }
+  },
+  "states": {
+    "Idle": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "flying_skull_idle"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq9bkls_y",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq9bp08_z",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Up": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "flying_skull_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq9bkls_y",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq9bp08_z",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Down": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "flyinf_skull_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq9bkls_y",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq9bp08_z",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Left": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "flyinf_skull_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq9bkls_y",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq9bp08_z",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Right": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "flying_skull_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq9bkls_y",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq9bp08_z",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    }
+  },
+  "initial": "Idle"
+}
