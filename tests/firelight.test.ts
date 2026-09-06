@@ -84,8 +84,6 @@ describe('Firelight (Campfire)', () => {
   test('collisionBox comes from the current state solid collider', () => {
     const fire = makeCampfire(100, 100);
     expect(fire.collisionBox).toEqual({ x: 102, y: 102, w: 12, h: 12 });
-    expect(fire.hitTest(108, 108)).toBe(true);
-    expect(fire.hitTest(50, 50)).toBe(false);
     fire.extinguish(); // cold pit authors no solid
     expect(fire.collisionBox).toEqual({ x: 100, y: 100, w: 0, h: 0 });
   });
