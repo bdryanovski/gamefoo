@@ -18,6 +18,8 @@ import { Campfire, loadCampfireConfig } from './objects/campfire';
 import { Bookshelf } from './objects/bookshelf';
 import { Player } from './objects/player';
 import { Portal } from './objects/portal';
+import { Rat } from './objects/rat';
+import { Slime } from './objects/slime';
 import { Sign } from './objects/sign';
 import { DarkChamberScreen } from './screens/dark-chamber';
 import { RoomScreen } from './screens/room';
@@ -67,6 +69,8 @@ class MapGame extends Engine {
     registry.register(Portal);
     registry.register(Sign);
     registry.register(Bookshelf);
+    registry.register(Rat);
+    registry.register(Slime);
     await loadCampfireConfig('/project/exports/proj_mtj0babj_m/campfire.object.json');
 
     // Screens: a default class for every room, overridden per coordinate.
@@ -210,7 +214,8 @@ class MapGame extends Engine {
       // Modal is up: arrows move the option cursor, E/Enter confirms.
       if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') dialog.moveSelection(-1);
       else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') dialog.moveSelection(1);
-      else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter') dialog.confirm();
+      else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter')
+        dialog.confirm();
       else return;
       e.preventDefault();
       return;
@@ -224,6 +229,18 @@ class MapGame extends Engine {
     this.dialog?.update(dt);
     this.dialogBox.update(dt, this.dialog?.active ?? false);
     if (this.dialog?.active) return;
+
+    // Feed each rat the player's box + collision so its AI can sense/flee,
+    // before the screen advances the live objects (which runs their update).
+    if (this.player && this.map?.current) {
+      const pbox = this.player.box();
+      for (const rat of this.map.current.objectsByType(Rat)) {
+        rat.sense(pbox, this.map.current.collision);
+      }
+      for (const slime of this.map.current.objectsByType(Slime)) {
+        slime.sense(pbox, this.map.current.collision);
+      }
+    }
     this.map?.update(dt);
     updateMessages(dt);
     const player = this.player;

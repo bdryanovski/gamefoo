@@ -60,6 +60,27 @@
       "url": "/uploads/1788351908215_pickup_items_animated.png",
       "width": 64,
       "height": 128
+    },
+    {
+      "id": "img_mtos5q2p_2c",
+      "name": "rat.png",
+      "url": "/uploads/1788636782397_rat.png",
+      "width": 64,
+      "height": 96
+    },
+    {
+      "id": "img_mtosnv6j_2w",
+      "name": "bat.png",
+      "url": "/uploads/1788637628815_bat.png",
+      "width": 64,
+      "height": 96
+    },
+    {
+      "id": "img_mtosnxd9_2x",
+      "name": "slime.png",
+      "url": "/uploads/1788637631657_slime.png",
+      "width": 64,
+      "height": 96
     }
   ],
   "frames": {
@@ -68,7 +89,7 @@
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_2_4": {
       "x": 32,
@@ -82,14 +103,14 @@
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_0_1": {
       "x": 0,
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_3_1": {
       "x": 48,
@@ -103,7 +124,7 @@
       "y": 16,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_5_1": {
       "x": 80,
@@ -187,14 +208,14 @@
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_1_0": {
       "x": 16,
       "y": 0,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_2_0": {
       "x": 32,
@@ -285,14 +306,14 @@
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_1_2": {
       "x": 16,
       "y": 32,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_3_3": {
       "x": 48,
@@ -306,14 +327,14 @@
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "rat.png"
     },
     "sprite_1_3": {
       "x": 16,
       "y": 48,
       "width": 16,
       "height": 16,
-      "image": "grounds.png"
+      "image": "slime.png"
     },
     "sprite_11_0": {
       "x": 176,
@@ -1627,6 +1648,66 @@
       ],
       "duration": 0.15,
       "loop": true
+    },
+    "rat_left": {
+      "frames": [
+        "sprite_1_1",
+        "sprite_0_1",
+        "sprite_0_3",
+        "sprite_1_3",
+        "sprite_2_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "rat_right": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_2_2"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "rat_idle": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "slime_idle": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "slime_right": {
+      "frames": [
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_0_2"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "slime_left": {
+      "frames": [
+        "sprite_0_1",
+        "sprite_1_1",
+        "sprite_0_3",
+        "sprite_1_3",
+        "sprite_0_3"
+      ],
+      "duration": 0.15,
+      "loop": true
     }
   },
   "objects": {
@@ -1637,7 +1718,9 @@
       "animations": [
         "campfire"
       ],
-      "properties": {},
+      "properties": {
+        "message": "0"
+      },
       "category": "",
       "description": "",
       "tags": [],
@@ -2552,7 +2635,9 @@
         "sprite_6_0"
       ],
       "animations": [],
-      "properties": {},
+      "properties": {
+        "message": "0"
+      },
       "category": "",
       "description": "",
       "tags": [],
@@ -2769,6 +2854,476 @@
         }
       },
       "initial": "init"
+    },
+    "rat": {
+      "sprites": [],
+      "animations": [
+        "rat_idle",
+        "rat_right",
+        "rat_left"
+      ],
+      "properties": {},
+      "category": "character",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "cell": 16
+      },
+      "collisionLayers": {
+        "solid": {
+          "name": "Solid",
+          "color": "#e05a5a"
+        },
+        "vision": {
+          "name": "Vision",
+          "color": "#f2c14e"
+        }
+      },
+      "states": {
+        "Idle": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "rat_idle"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtosbhig_2u",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 8
+              }
+            },
+            {
+              "id": "col_mtoslg79_2v",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Up": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "rat_right"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtosbhig_2u",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 8
+              }
+            },
+            {
+              "id": "col_mtoslg79_2v",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Down": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "rat_left"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtosbhig_2u",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 8
+              }
+            },
+            {
+              "id": "col_mtoslg79_2v",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Left": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "rat_left"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtosbhig_2u",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 8
+              }
+            },
+            {
+              "id": "col_mtoslg79_2v",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Right": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "rat_right"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtosbhig_2u",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 8
+              }
+            },
+            {
+              "id": "col_mtoslg79_2v",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        }
+      },
+      "initial": "Idle"
+    },
+    "slime": {
+      "sprites": [],
+      "animations": [
+        "slime_idle",
+        "slime_right",
+        "slime_left"
+      ],
+      "properties": {},
+      "category": "character",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "cell": 16
+      },
+      "collisionLayers": {
+        "solid": {
+          "name": "Solid",
+          "color": "#e05a5a"
+        },
+        "vision": {
+          "name": "Vision",
+          "color": "#f2c14e"
+        }
+      },
+      "states": {
+        "Idle": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "slime_idle"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtost3fj_3e",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 5
+              }
+            },
+            {
+              "id": "col_mtostgiq_3f",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Up": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "slime_right"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtost3fj_3e",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 5
+              }
+            },
+            {
+              "id": "col_mtostgiq_3f",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Down": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "slime_left"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtost3fj_3e",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 5
+              }
+            },
+            {
+              "id": "col_mtostgiq_3f",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Left": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "slime_left"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtost3fj_3e",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 5
+              }
+            },
+            {
+              "id": "col_mtostgiq_3f",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        },
+        "Right": {
+          "layers": [
+            {
+              "name": "base",
+              "cells": [
+                {
+                  "col": 0,
+                  "row": 0,
+                  "source": {
+                    "kind": "animation",
+                    "animation": "slime_right"
+                  }
+                }
+              ]
+            }
+          ],
+          "collisions": [
+            {
+              "id": "col_mtost3fj_3e",
+              "layer": "solid",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 5
+              }
+            },
+            {
+              "id": "col_mtostgiq_3f",
+              "layer": "vision",
+              "enabled": true,
+              "shape": {
+                "kind": "circle",
+                "cx": 8,
+                "cy": 8,
+                "radius": 16
+              }
+            }
+          ]
+        }
+      },
+      "initial": "Idle"
     }
   },
   "collisionLayers": [
@@ -2825,10 +3380,10 @@
   ],
   "spriteMetadata": {
     "sprite_0_3": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 201,
+      "order": 315,
       "level": 0,
       "properties": {}
     },
@@ -2841,18 +3396,18 @@
       "properties": {}
     },
     "sprite_2_2": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 180,
+      "order": 312,
       "level": 0,
       "properties": {}
     },
     "sprite_0_1": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 177,
+      "order": 313,
       "level": 0,
       "properties": {}
     },
@@ -2865,10 +3420,10 @@
       "properties": {}
     },
     "sprite_1_1": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 176,
+      "order": 314,
       "level": 0,
       "properties": {}
     },
@@ -2961,18 +3516,18 @@
       "properties": {}
     },
     "sprite_0_0": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 154,
+      "order": 308,
       "level": 0,
       "properties": {}
     },
     "sprite_1_0": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 155,
+      "order": 309,
       "level": 0,
       "properties": {}
     },
@@ -3073,18 +3628,18 @@
       "properties": {}
     },
     "sprite_0_2": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 178,
+      "order": 310,
       "level": 0,
       "properties": {}
     },
     "sprite_1_2": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 179,
+      "order": 311,
       "level": 0,
       "properties": {}
     },
@@ -3097,18 +3652,18 @@
       "properties": {}
     },
     "sprite_2_3": {
-      "image": "grounds.png",
+      "image": "rat.png",
       "tags": [],
       "group": "",
-      "order": 199,
+      "order": 300,
       "level": 0,
       "properties": {}
     },
     "sprite_1_3": {
-      "image": "grounds.png",
+      "image": "slime.png",
       "tags": [],
       "group": "",
-      "order": 200,
+      "order": 316,
       "level": 0,
       "properties": {}
     },

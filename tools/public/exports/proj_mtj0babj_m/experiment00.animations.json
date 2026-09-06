@@ -147,5 +147,65 @@
     ],
     "duration": 0.15,
     "loop": true
+  },
+  "rat_left": {
+    "frames": [
+      "sprite_1_1",
+      "sprite_0_1",
+      "sprite_0_3",
+      "sprite_1_3",
+      "sprite_2_3"
+    ],
+    "duration": 0.15,
+    "loop": true
+  },
+  "rat_right": {
+    "frames": [
+      "sprite_0_0",
+      "sprite_1_0",
+      "sprite_0_2",
+      "sprite_1_2",
+      "sprite_2_2"
+    ],
+    "duration": 0.15,
+    "loop": true
+  },
+  "rat_idle": {
+    "frames": [
+      "sprite_0_0",
+      "sprite_1_0"
+    ],
+    "duration": 0.15,
+    "loop": true
+  },
+  "slime_idle": {
+    "frames": [
+      "sprite_0_0",
+      "sprite_1_0"
+    ],
+    "duration": 0.2,
+    "loop": true
+  },
+  "slime_right": {
+    "frames": [
+      "sprite_0_2",
+      "sprite_1_2",
+      "sprite_0_2",
+      "sprite_1_2",
+      "sprite_0_2"
+    ],
+    "duration": 0.2,
+    "loop": true
+  },
+  "slime_left": {
+    "frames": [
+      "sprite_0_1",
+      "sprite_1_1",
+      "sprite_0_3",
+      "sprite_1_3",
+      "sprite_0_3"
+    ],
+    "duration": 0.15,
+    "loop": true
   }
 }

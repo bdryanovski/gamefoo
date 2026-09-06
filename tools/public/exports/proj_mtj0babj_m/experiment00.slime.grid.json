@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "slime.png",
+    "imageWidth": 64,
+    "imageHeight": 96
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "sprite_0_0": 0,
+    "sprite_1_0": 1,
+    "sprite_0_2": 8,
+    "sprite_1_2": 9,
+    "sprite_2_2": 10,
+    "sprite_0_1": 4,
+    "sprite_1_1": 5,
+    "sprite_0_3": 12,
+    "sprite_1_3": 13
+  },
+  "animations": {
+    "slime_idle": {
+      "frames": [
+        0,
+        1
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "slime_right": {
+      "frames": [
+        8,
+        9,
+        8,
+        9,
+        8
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "slime_left": {
+      "frames": [
+        4,
+        5,
+        12,
+        13,
+        12
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  }
+}

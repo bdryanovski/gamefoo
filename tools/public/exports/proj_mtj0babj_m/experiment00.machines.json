@@ -287,6 +287,160 @@
         }
       },
       "transitions": []
+    },
+    "rat": {
+      "initial": "Idle",
+      "states": {
+        "Idle": {
+          "display": {
+            "kind": "animation",
+            "animation": "rat_idle"
+          }
+        },
+        "Up": {
+          "display": {
+            "kind": "animation",
+            "animation": "rat_right"
+          }
+        },
+        "Down": {
+          "display": {
+            "kind": "animation",
+            "animation": "rat_left"
+          }
+        },
+        "Left": {
+          "display": {
+            "kind": "animation",
+            "animation": "rat_left"
+          }
+        },
+        "Right": {
+          "display": {
+            "kind": "animation",
+            "animation": "rat_right"
+          }
+        }
+      },
+      "transitions": [
+        {
+          "from": "Idle",
+          "to": "Up",
+          "condition": "move_up"
+        },
+        {
+          "from": "Up",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Down",
+          "condition": "move_down"
+        },
+        {
+          "from": "Down",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Left",
+          "condition": "move_left"
+        },
+        {
+          "from": "Left",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Right",
+          "condition": "move_right"
+        },
+        {
+          "from": "Right",
+          "to": "Idle",
+          "condition": "stop"
+        }
+      ]
+    },
+    "slime": {
+      "initial": "Idle",
+      "states": {
+        "Idle": {
+          "display": {
+            "kind": "animation",
+            "animation": "slime_idle"
+          }
+        },
+        "Up": {
+          "display": {
+            "kind": "animation",
+            "animation": "slime_right"
+          }
+        },
+        "Down": {
+          "display": {
+            "kind": "animation",
+            "animation": "slime_left"
+          }
+        },
+        "Left": {
+          "display": {
+            "kind": "animation",
+            "animation": "slime_left"
+          }
+        },
+        "Right": {
+          "display": {
+            "kind": "animation",
+            "animation": "slime_right"
+          }
+        }
+      },
+      "transitions": [
+        {
+          "from": "Idle",
+          "to": "Up",
+          "condition": "move_up"
+        },
+        {
+          "from": "Up",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Down",
+          "condition": "move_down"
+        },
+        {
+          "from": "Down",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Left",
+          "condition": "move_left"
+        },
+        {
+          "from": "Left",
+          "to": "Idle",
+          "condition": "stop"
+        },
+        {
+          "from": "Idle",
+          "to": "Right",
+          "condition": "move_right"
+        },
+        {
+          "from": "Right",
+          "to": "Idle",
+          "condition": "stop"
+        }
+      ]
     }
   }
 }
