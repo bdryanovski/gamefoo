@@ -22,13 +22,7 @@ Catalog.set(FONT_6x8_METADATA.name, FONT_6x8_METADATA);
 Catalog.set(FONT_8x13_METADATA.name, FONT_8x13_METADATA);
 Catalog.set(FONT_8x8_METADATA.name, FONT_8x8_METADATA);
 
-export type InternalBitmapFontName =
-  | '3x5'
-  | '4x6'
-  | '5x5'
-  | '6x8'
-  | '8x13'
-  | '8x8';
+export type InternalBitmapFontName = '3x5' | '4x6' | '5x5' | '6x8' | '8x13' | '8x8';
 
 /**
  * Pixel-perfect bitmap font renderer.
@@ -90,8 +84,8 @@ export default class FontBitmap extends BitmapDataRenderer {
    *
    * @returns Font metadata object or `null`.
    */
-  get metadata() {
-    return Catalog.get(this.name) || null;
+  public get metadata() {
+    return Catalog.get(this.name) ?? null;
   }
 
   /**
@@ -102,7 +96,9 @@ export default class FontBitmap extends BitmapDataRenderer {
    */
   private buildGlyphPath(char: string): Path2D | null {
     const charData = this.getChar(char);
-    if (!charData) return null;
+    if (!charData) {
+      return null;
+    }
 
     const path = new Path2D();
     const w = this.width - this.spacing;
@@ -144,8 +140,8 @@ export default class FontBitmap extends BitmapDataRenderer {
    * const rows = font.getChar("A");
    * ```
    */
-  getChar(char: string): number[] | null {
-    return this.data[char] || null;
+  public getChar(char: string): number[] | null {
+    return this.data[char] ?? null;
   }
 
   /**
@@ -159,7 +155,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * const w = font.getTextWidth("HI"); // 12 for the 5x5 font
    * ```
    */
-  getTextWidth(text: string): number {
+  public getTextWidth(text: string): number {
     return text.length * this.width;
   }
 
@@ -180,9 +176,7 @@ export default class FontBitmap extends BitmapDataRenderer {
   public renderChar(char: string, x: number, y: number, ctx: RenderContext) {
     const canvasCtx = ctx.getCanvas?.();
 
-    // For terminal / non-canvas contexts, delegate to drawText
     if (!canvasCtx) {
-      ctx.drawText(char, x, y);
       return;
     }
 
@@ -190,7 +184,9 @@ export default class FontBitmap extends BitmapDataRenderer {
     let path = this.glyphPaths.get(char);
     if (path === undefined) {
       const built = this.buildGlyphPath(char);
-      if (!built) return;
+      if (!built) {
+        return;
+      }
       path = built;
       this.glyphPaths.set(char, path);
     }
@@ -214,10 +210,8 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderText("GAME OVER", 100, 50, ctx);
    * ```
    */
-  renderText(text: string, x: number, y: number, ctx: RenderContext) {
-    // For terminal / non-canvas contexts, use drawText directly
+  public renderText(text: string, x: number, y: number, ctx: RenderContext) {
     if (!ctx.getCanvas?.()) {
-      ctx.drawText(text, x, y);
       return;
     }
 

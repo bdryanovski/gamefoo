@@ -47,11 +47,7 @@
 
 import type { Grid } from '../grid/grid';
 import { DIR_4, DIR_8 } from '../grid/grid_constants';
-import type {
-  HeuristicName,
-  PathfinderConfig,
-  PathNode,
-} from './pathfinding_types';
+import type { HeuristicName, PathfinderConfig, PathNode } from './pathfinding_types';
 
 /**
  * Binary min-heap for {@link PathNode} ordered by `f` cost.
@@ -61,17 +57,19 @@ import type {
 class MinHeap {
   private items: PathNode[] = [];
 
-  get size(): number {
+  public get size(): number {
     return this.items.length;
   }
 
-  push(node: PathNode): void {
+  public push(node: PathNode): void {
     this.items.push(node);
     this.bubbleUp(this.items.length - 1);
   }
 
-  pop(): PathNode | undefined {
-    if (this.items.length === 0) return undefined;
+  public pop(): PathNode | undefined {
+    if (this.items.length === 0) {
+      return undefined;
+    }
     const top = this.items[0]!;
     const last = this.items.pop()!;
     if (this.items.length > 0) {
@@ -81,34 +79,36 @@ class MinHeap {
     return top;
   }
 
-  private bubbleUp(i: number): void {
-    while (i > 0) {
-      const parent = (i - 1) >> 1;
-      if (this.items[i]!.f >= this.items[parent]!.f) break;
-      [this.items[i], this.items[parent]] = [
-        this.items[parent]!,
-        this.items[i]!,
-      ];
-      i = parent;
+  private bubbleUp(start: number): void {
+    let index = start;
+    while (index > 0) {
+      const parent = (index - 1) >> 1;
+      if (this.items[index]!.f >= this.items[parent]!.f) {
+        break;
+      }
+      [this.items[index], this.items[parent]] = [this.items[parent]!, this.items[index]!];
+      index = parent;
     }
   }
 
-  private sinkDown(i: number): void {
+  private sinkDown(start: number): void {
     const len = this.items.length;
+    let index = start;
     while (true) {
-      let smallest = i;
-      const left = 2 * i + 1;
-      const right = 2 * i + 2;
-      if (left < len && this.items[left]!.f < this.items[smallest]!.f)
+      let smallest = index;
+      const left = 2 * index + 1;
+      const right = 2 * index + 2;
+      if (left < len && this.items[left]!.f < this.items[smallest]!.f) {
         smallest = left;
-      if (right < len && this.items[right]!.f < this.items[smallest]!.f)
+      }
+      if (right < len && this.items[right]!.f < this.items[smallest]!.f) {
         smallest = right;
-      if (smallest === i) break;
-      [this.items[i], this.items[smallest]] = [
-        this.items[smallest]!,
-        this.items[i]!,
-      ];
-      i = smallest;
+      }
+      if (smallest === index) {
+        break;
+      }
+      [this.items[index], this.items[smallest]] = [this.items[smallest]!, this.items[index]!];
+      index = smallest;
     }
   }
 }
@@ -117,10 +117,7 @@ export class Pathfinder {
   private grid: Grid;
   private allowDiagonal: boolean;
   private diagonalCost: number;
-  private heuristicFn: (
-    a: { col: number; row: number },
-    b: { col: number; row: number },
-  ) => number;
+  private heuristicFn: (a: { col: number; row: number }, b: { col: number; row: number }) => number;
 
   /**
    * Creates a new pathfinder bound to a grid.
@@ -167,22 +164,21 @@ export class Pathfinder {
    * }
    * ```
    */
-  findPath(
+  public findPath(
     startCol: number,
     startRow: number,
     goalCol: number,
     goalRow: number,
-  ): { col: number; row: number }[] | null {
-    if (
-      !this.grid.isInBounds(startCol, startRow)
-      || !this.grid.isInBounds(goalCol, goalRow)
-    ) {
+  ): Array<{ col: number; row: number }> | null {
+    if (!this.grid.isInBounds(startCol, startRow) || !this.grid.isInBounds(goalCol, goalRow)) {
       return null;
     }
 
     const startCell = this.grid.getCell(startCol, startRow);
     const goalCell = this.grid.getCell(goalCol, goalRow);
-    if (!startCell?.walkable || !goalCell?.walkable) return null;
+    if (!startCell?.walkable || !goalCell?.walkable) {
+      return null;
+    }
 
     const cols = this.grid.cols;
     const goal = { col: goalCol, row: goalRow };
@@ -215,32 +211,44 @@ export class Pathfinder {
       }
 
       const idx = current.row * cols + current.col;
-      if (closed[idx]) continue;
+      if (closed[idx]) {
+        continue;
+      }
       closed[idx] = 1;
 
       for (const [dc, dr] of offsets) {
         const nc = current.col + dc;
         const nr = current.row + dr;
 
-        if (!this.grid.isInBounds(nc, nr)) continue;
+        if (!this.grid.isInBounds(nc, nr)) {
+          continue;
+        }
 
         const nIdx = nr * cols + nc;
-        if (closed[nIdx]) continue;
+        if (closed[nIdx]) {
+          continue;
+        }
 
         const neighbor = this.grid.getCell(nc, nr);
-        if (!neighbor || !neighbor.walkable) continue;
+        if (!neighbor || !neighbor.walkable) {
+          continue;
+        }
 
         if (this.allowDiagonal && dc !== 0 && dr !== 0) {
           const adj1 = this.grid.getCell(current.col + dc, current.row);
           const adj2 = this.grid.getCell(current.col, current.row + dr);
-          if (!adj1?.walkable || !adj2?.walkable) continue;
+          if (!adj1?.walkable || !adj2?.walkable) {
+            continue;
+          }
         }
 
         const isDiag = dc !== 0 && dr !== 0;
         const moveCost = isDiag ? this.diagonalCost : 1;
         const tentativeG = current.g + moveCost;
 
-        if (tentativeG >= gScores[nIdx]!) continue;
+        if (tentativeG >= gScores[nIdx]!) {
+          continue;
+        }
 
         gScores[nIdx] = tentativeG;
 
@@ -282,7 +290,7 @@ export class Pathfinder {
    * }
    * ```
    */
-  isReachable(
+  public isReachable(
     startCol: number,
     startRow: number,
     goalCol: number,
@@ -297,8 +305,8 @@ export class Pathfinder {
    *
    * @internal
    */
-  private reconstructPath(node: PathNode): { col: number; row: number }[] {
-    const path: { col: number; row: number }[] = [];
+  private reconstructPath(node: PathNode): Array<{ col: number; row: number }> {
+    const path: Array<{ col: number; row: number }> = [];
     let current: PathNode | null = node;
     while (current) {
       path.push({ col: current.col, row: current.row });
@@ -318,10 +326,7 @@ export class Pathfinder {
    */
   private static getHeuristic(
     name: HeuristicName,
-  ): (
-    a: { col: number; row: number },
-    b: { col: number; row: number },
-  ) => number {
+  ): (a: { col: number; row: number }, b: { col: number; row: number }) => number {
     switch (name) {
       case 'euclidean':
         return (a, b) => {
@@ -330,8 +335,7 @@ export class Pathfinder {
           return Math.sqrt(dx * dx + dy * dy);
         };
       case 'chebyshev':
-        return (a, b) =>
-          Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row));
+        return (a, b) => Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row));
       default:
         return (a, b) => Math.abs(a.col - b.col) + Math.abs(a.row - b.row);
     }

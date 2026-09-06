@@ -60,7 +60,7 @@ export default abstract class Player extends DynamicEntity {
    *
    * @returns The `Control` instance, or `undefined` if not attached.
    */
-  get control(): Control | undefined {
+  public get control(): Control | undefined {
     return this.getBehaviour<Control>('control');
   }
 
@@ -69,7 +69,7 @@ export default abstract class Player extends DynamicEntity {
    *
    * @returns The `HealthKit` instance, or `undefined` if not attached.
    */
-  get healthkit(): HealthKit | undefined {
+  public get healthkit(): HealthKit | undefined {
     return this.getBehaviour<HealthKit>('healthkit');
   }
 
@@ -79,7 +79,7 @@ export default abstract class Player extends DynamicEntity {
    * @inheritDoc
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     this.updateBehaviours(deltaTime);
   }
 }

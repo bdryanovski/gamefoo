@@ -2,7 +2,7 @@
 title: 'Abstract Class: Entity'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,26 +10,28 @@ title: 'Abstract Class: Entity'
 
 # Abstract Class: Entity
 
-Defined in: [entities/entity.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L54)
+Defined in: [entities/entity.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L57)
 
 Abstract base class for every game entity in the GameFoo engine.
 
 `Entity` provides:
 
 - **Identity** — a unique string [id](#id).
-- **Transform** — a 2-D [position](#position) and
-  [size](#size) with convenient `x`/`y` accessors.
+- **Transform** — a 2-D [position](Bitmap.md#position) and
+  [size](Bitmap.md#size) with convenient `x`/`y` accessors.
 - **Behaviour system** — attach, detach, query, and bulk-update
   [Behaviour](Behaviour.md) instances that compose an entity's logic.
 
 Subclasses must implement [Entity.update](#update) and
-[Entity.render](#render).
+[Entity.render](DynamicEntity.md#render).
 
 ## Since
 
 0.1.0
 
 ## Examples
+
+**Subclassing**
 
 ```ts
 import { Entity } from "gamefoo";
@@ -48,6 +50,8 @@ class Wall extends Entity {
 }
 ```
 
+**Attaching behaviours**
+
 ```ts
 const entity = new Wall(0, 0, 100, 20);
 entity.attachBehaviour(new Collidable(entity, world, { ... }));
@@ -62,6 +66,10 @@ if (entity.hasBehaviour("collidable")) {
  - [DynamicEntity](DynamicEntity.md) — extends Entity with velocity / speed
  - [Player](Player.md)        — concrete player entity
  - [Behaviour](Behaviour.md)     — composable logic units
+
+## Extends
+
+- `default`
 
 ## Extended by
 
@@ -78,10 +86,11 @@ new Entity(
    x: number, 
    y: number, 
    width?: number, 
-   height?: number): Entity;
+   height?: number
+): Entity;
 ```
 
-Defined in: [entities/entity.ts:130](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L130)
+Defined in: [entities/entity.ts:104](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L104)
 
 Creates a new entity.
 
@@ -110,15 +119,22 @@ class Crate extends Entity {
 }
 ```
 
+#### Overrides
+
+```ts
+Node.constructor
+```
+
 ## Properties
 
-| Property | Modifier | Type | Default value | Description | Defined in |
-| ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `public` | `string` | `''` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | [entities/entity.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L61) |
-| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the entity's origin (top-left corner). | [entities/entity.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L66) |
-| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the entity in pixels. | [entities/entity.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L71) |
-| <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | Priority-sorted cache of behaviours. Invalidated (`null`) whenever a behaviour is attached or detached. | [entities/entity.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L83) |
-| <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | Internal map from behaviour key (lowercased type) to [Behaviour](Behaviour.md) instance. | [entities/entity.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L77) |
+| Property | Modifier | Type | Default value | Description | Inherited from | Defined in |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="id"></a> `id` | `public` | `string` | `''` | Unique identifier for this entity. Used as the key in [GameObjectRegister](GameObjectRegister.md) and for collision-callback identification. | - | [entities/entity.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L64) |
+| <a id="position"></a> `position` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | `undefined` | World-space position of the node's origin (top-left corner). **Since** 0.5.0 | `Node.position` | [entities/node.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L50) |
+| <a id="size"></a> `size` | `readonly` | [`Demension`](../interfaces/Demension.md) | `undefined` | Bounding dimensions of the node in pixels. **Since** 0.5.0 | `Node.size` | [entities/node.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L57) |
+| <a id="_sortedbehaviors"></a> `_sortedBehaviors` | `private` | [`Behaviour`](Behaviour.md)\<`Entity`\>[] \| `null` | `null` | Priority-sorted cache of behaviours. Invalidated (`null`) whenever a behaviour is attached or detached. | - | [entities/entity.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L76) |
+| <a id="behaviormap"></a> `behaviorMap` | `private` | `Map`\<`string`, [`Behaviour`](Behaviour.md)\<`Entity`\>\> | `undefined` | Internal map from behaviour key (lowercased type) to [Behaviour](Behaviour.md) instance. | - | [entities/entity.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L70) |
+| <a id="shaderstack"></a> `shaderStack` | `private` | [`ShaderStack`](ShaderStack.md) | `undefined` | Screen effects attached to this entity (glow, particles, …). **Since** 0.5.0 | - | [entities/entity.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L83) |
 
 ## Accessors
 
@@ -130,10 +146,13 @@ class Crate extends Entity {
 get x(): number;
 ```
 
-Defined in: [entities/entity.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L89)
+Defined in: [entities/node.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L90)
 
-Horizontal position of the entity (shorthand for
-`position.x`).
+Horizontal position of the node (shorthand for `position.x`).
+
+##### Since
+
+0.5.0
 
 ##### Returns
 
@@ -145,9 +164,13 @@ Horizontal position of the entity (shorthand for
 set x(value: number): void;
 ```
 
-Defined in: [entities/entity.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L94)
+Defined in: [entities/node.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L99)
 
 Sets the horizontal position.
+
+##### Since
+
+0.5.0
 
 ##### Parameters
 
@@ -158,6 +181,10 @@ Sets the horizontal position.
 ##### Returns
 
 `void`
+
+#### Inherited from
+
+[`Bitmap`](Bitmap.md).[`x`](Bitmap.md#x)
 
 ***
 
@@ -169,10 +196,13 @@ Sets the horizontal position.
 get y(): number;
 ```
 
-Defined in: [entities/entity.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L102)
+Defined in: [entities/node.ts:108](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L108)
 
-Vertical position of the entity (shorthand for
-`position.y`).
+Vertical position of the node (shorthand for `position.y`).
+
+##### Since
+
+0.5.0
 
 ##### Returns
 
@@ -184,9 +214,13 @@ Vertical position of the entity (shorthand for
 set y(value: number): void;
 ```
 
-Defined in: [entities/entity.ts:107](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L107)
+Defined in: [entities/node.ts:117](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L117)
 
 Sets the vertical position.
+
+##### Since
+
+0.5.0
 
 ##### Parameters
 
@@ -198,6 +232,10 @@ Sets the vertical position.
 
 `void`
 
+#### Inherited from
+
+[`Bitmap`](Bitmap.md).[`y`](Bitmap.md#y)
+
 ***
 
 ### behaviors
@@ -208,7 +246,7 @@ Sets the vertical position.
 get private behaviors(): Behaviour<Entity>[];
 ```
 
-Defined in: [entities/entity.ts:293](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L293)
+Defined in: [entities/entity.ts:213](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L213)
 
 **`Internal`**
 
@@ -225,10 +263,10 @@ only re-computed when behaviours are added or removed.
 ### attachBehaviour()
 
 ```ts
-attachBehaviour<T>(behavior: T): T;
+attachBehaviour<T extends Behaviour<Entity>>(behavior: T): T;
 ```
 
-Defined in: [entities/entity.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L253)
+Defined in: [entities/entity.ts:171](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L171)
 
 Attaches a behaviour to this entity.
 
@@ -263,13 +301,49 @@ hk.takeDamage(10);
 
 ***
 
+### attachShader()
+
+```ts
+attachShader<T extends Shader>(shader: T): T;
+```
+
+Defined in: [entities/entity.ts:263](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L263)
+
+Attaches a screen shader to this entity and returns it.
+
+Effects render when the subclass calls [Entity.renderShaders](#rendershaders) and
+advance when it calls [Entity.updateShaders](#updateshaders) — mirroring the
+behaviour update/render hooks.
+
+#### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` *extends* [`Shader`](Shader.md) |
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `shader` | `T` | The shader to attach. |
+
+#### Returns
+
+`T`
+
+#### Since
+
+0.5.0
+
+***
+
 ### detachBehaviour()
 
 ```ts
 detachBehaviour(key: string): void;
 ```
 
-Defined in: [entities/entity.ts:275](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L275)
+Defined in: [entities/entity.ts:193](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L193)
 
 Detaches a behaviour by its key and calls
 [onDetach](Behaviour.md#ondetach) if defined.
@@ -292,13 +366,39 @@ entity.detachBehaviour("collidable");
 
 ***
 
+### detachShader()
+
+```ts
+detachShader(type: string): void;
+```
+
+Defined in: [entities/entity.ts:290](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L290)
+
+Detaches the shader with `type`, if present.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `type` | `string` |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+***
+
 ### getBehaviour()
 
 ```ts
-getBehaviour<T>(key: string): T | undefined;
+getBehaviour<T extends Behaviour<Entity>>(key: string): T | undefined;
 ```
 
-Defined in: [entities/entity.ts:202](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L202)
+Defined in: [entities/entity.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L122)
 
 Retrieves a behaviour by its key (case-insensitive).
 
@@ -332,10 +432,10 @@ if (ctrl) ctrl.enabled = false;
 ### getBehavioursByType()
 
 ```ts
-getBehavioursByType<T>(type: (...args: any[]) => T): T[];
+getBehavioursByType<T extends Behaviour<Entity>>(type: (...args: any[]) => T): T[];
 ```
 
-Defined in: [entities/entity.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L219)
+Defined in: [entities/entity.ts:139](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L139)
 
 Returns all attached behaviours that are instances of the given
 class.
@@ -372,15 +472,64 @@ const renderers = entity.getBehavioursByType(SpriteRender);
 getPosition(): Vector2;
 ```
 
-Defined in: [entities/entity.ts:164](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L164)
+Defined in: [entities/node.ts:134](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L134)
 
-Returns a **copy** of the entity's current position.
+Returns the node's current position.
 
 #### Returns
 
 [`Vector2`](../interfaces/Vector2.md)
 
-A new [Vector2](../interfaces/Vector2.md) with the entity's `x` and `y`.
+The internal [Vector2](../interfaces/Vector2.md) reference with `x` and `y`.
+
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+const pos = node.getPosition();
+console.log(`Node at (${pos.x}, ${pos.y})`);
+```
+
+#### Inherited from
+
+```ts
+Node.getPosition
+```
+
+***
+
+### getShader()
+
+```ts
+getShader<T extends Shader>(type: string): T | undefined;
+```
+
+Defined in: [entities/entity.ts:272](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L272)
+
+The attached shader with `type`, or `undefined`.
+
+#### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` *extends* [`Shader`](Shader.md) |
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `type` | `string` |
+
+#### Returns
+
+`T` \| `undefined`
+
+#### Since
+
+0.5.0
 
 ***
 
@@ -390,15 +539,32 @@ A new [Vector2](../interfaces/Vector2.md) with the entity's `x` and `y`.
 getSize(): Demension;
 ```
 
-Defined in: [entities/entity.ts:173](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L173)
+Defined in: [entities/node.ts:151](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L151)
 
-Returns a **copy** of the entity's bounding dimensions.
+Returns the node's bounding dimensions.
 
 #### Returns
 
 [`Demension`](../interfaces/Demension.md)
 
-An object with `width` and `height`.
+The internal [Demension](../interfaces/Demension.md) reference with `width` and `height`.
+
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+const size = node.getSize();
+console.log(`Node is ${size.width}×${size.height} pixels`);
+```
+
+#### Inherited from
+
+```ts
+Node.getSize
+```
 
 ***
 
@@ -408,7 +574,7 @@ An object with `width` and `height`.
 hasBehaviour(key: string): boolean;
 ```
 
-Defined in: [entities/entity.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L232)
+Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
 
 Checks whether a behaviour with the given key is attached.
 
@@ -426,25 +592,73 @@ Checks whether a behaviour with the given key is attached.
 
 ***
 
+### hasShader()
+
+```ts
+hasShader(type: string): boolean;
+```
+
+Defined in: [entities/entity.ts:281](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L281)
+
+Whether a shader with `type` is attached.
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `type` | `string` |
+
+#### Returns
+
+`boolean`
+
+#### Since
+
+0.5.0
+
+***
+
 ### render()
 
 ```ts
 abstract render(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/entity.ts:157](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L157)
+Defined in: [entities/node.ts:212](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L212)
 
-Draws the entity .
+Draws the node to the screen.
+
+Called once per frame after [update](#update). Subclasses
+must implement this method to render sprites, shapes, text, or any
+other visual representation.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The 2-D rendering context. |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context . |
 
 #### Returns
 
 `void`
+
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+render(ctx: RenderContext) {
+  ctx.fillRect(this.x, this.y, this.size.width, this.size.height, "#ff0000");
+}
+```
+
+#### Inherited from
+
+```ts
+Node.render
+```
 
 ***
 
@@ -454,9 +668,13 @@ Draws the entity .
 abstract update(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L150)
+Defined in: [entities/node.ts:192](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L192)
 
-Advances the entity's state by one frame.
+Advances the node's state by one frame.
+
+Called once per frame by the game loop. Subclasses must implement
+this method to update position, animation, AI, or any other
+per-frame logic.
 
 #### Parameters
 
@@ -468,6 +686,25 @@ Advances the entity's state by one frame.
 
 `void`
 
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+update(dt: number) {
+  this.x += this.velocity.x * dt;
+  this.y += this.velocity.y * dt;
+}
+```
+
+#### Inherited from
+
+```ts
+Node.update
+```
+
 ***
 
 ### renderBehaviours()
@@ -476,7 +713,7 @@ Advances the entity's state by one frame.
 protected renderBehaviours(ctx: RenderContext): void;
 ```
 
-Defined in: [entities/entity.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L326)
+Defined in: [entities/entity.ts:244](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L244)
 
 Calls [render(ctx)](Behaviour.md#render) on every enabled
 behaviour that defines a render method, in priority order.
@@ -495,32 +732,69 @@ Typically called from a subclass's `render` implementation.
 
 ***
 
+### renderShaders()
+
+```ts
+protected renderShaders(ctx: RenderContext): void;
+```
+
+Defined in: [entities/entity.ts:314](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L314)
+
+Renders every enabled shader over this entity's bounding box. Call from
+a subclass's `render`, next to [Entity.renderBehaviours](#renderbehaviours).
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `ctx` | [`RenderContext`](../interfaces/RenderContext.md) | The rendering context. |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+***
+
 ### setSize()
 
 ```ts
 protected setSize(width: number, height: number): void;
 ```
 
-Defined in: [entities/entity.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L184)
+Defined in: [entities/node.ts:168](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/node.ts#L168)
 
-Set size of the entity
+Sets the node's bounding dimensions.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `width` | `number` |
-| `height` | `number` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `width` | `number` | New width in pixels. |
+| `height` | `number` | New height in pixels. |
 
 #### Returns
 
 `void`
 
-void
-
 #### Since
 
-0.2.0
+0.5.0
+
+#### Example
+
+```ts
+this.setSize(64, 64); // Resize to 64×64
+```
+
+#### Inherited from
+
+```ts
+Node.setSize
+```
 
 ***
 
@@ -530,7 +804,7 @@ void
 protected updateBehaviours(deltaTime: number): void;
 ```
 
-Defined in: [entities/entity.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L310)
+Defined in: [entities/entity.ts:228](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L228)
 
 Calls [update(deltaTime)](Behaviour.md#update) on every
 enabled behaviour, in priority order.
@@ -546,3 +820,30 @@ Typically called from a subclass's `update` implementation.
 #### Returns
 
 `void`
+
+***
+
+### updateShaders()
+
+```ts
+protected updateShaders(deltaTime: number): void;
+```
+
+Defined in: [entities/entity.ts:302](https://github.com/bdryanovski/gamefoo/blob/main/src/entities/entity.ts#L302)
+
+Advances every enabled shader. Call from a subclass's `update`, next to
+[Entity.updateBehaviours](#updatebehaviours).
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `deltaTime` | `number` | Seconds elapsed since the previous frame. |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0

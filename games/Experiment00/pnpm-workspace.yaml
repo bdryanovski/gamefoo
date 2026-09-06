@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: set this to true or false
+# Allow esbuild (used by Vite) to run its install script, and don't
+# reinstall on every `pnpm run` when the ambient pnpm version differs.
+onlyBuiltDependencies:
+  - esbuild
+verifyDepsBeforeRun: false

@@ -103,8 +103,10 @@ export interface PathFollowerConfig {
 }
 
 export class PathFollower extends Behaviour<DynamicEntity> {
-  /** @inheritdoc */
-  readonly type = 'pathfollower';
+  /**
+   * @inheritdoc
+   */
+  public readonly type = 'pathfollower';
 
   private pathfinder: Pathfinder;
   private grid: Grid;
@@ -115,13 +117,19 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   private onPathComplete?: () => void;
   private onPathBlocked?: () => void;
 
-  /** The current computed path (array of grid waypoints). */
-  private path: { col: number; row: number }[] = [];
+  /**
+   * The current computed path (array of grid waypoints).
+   */
+  private path: Array<{ col: number; row: number }> = [];
 
-  /** Index of the current waypoint being approached. */
+  /**
+   * Index of the current waypoint being approached.
+   */
   private currentIndex = 0;
 
-  /** Whether the entity is actively following a path. */
+  /**
+   * Whether the entity is actively following a path.
+   */
   private _isMoving = false;
 
   /**
@@ -172,7 +180,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * }
    * ```
    */
-  get isMoving(): boolean {
+  public get isMoving(): boolean {
     return this._isMoving;
   }
 
@@ -190,7 +198,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * debugSystem.setDebugPath(follower.currentPath);
    * ```
    */
-  get currentPath(): ReadonlyArray<{ col: number; row: number }> {
+  public get currentPath(): ReadonlyArray<{ col: number; row: number }> {
     return this.path;
   }
 
@@ -214,15 +222,10 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * }
    * ```
    */
-  moveTo(goalCol: number, goalRow: number): boolean {
+  public moveTo(goalCol: number, goalRow: number): boolean {
     const ownerWorld = this.getOwnerGridPosition();
 
-    const result = this.pathfinder.findPath(
-      ownerWorld.col,
-      ownerWorld.row,
-      goalCol,
-      goalRow,
-    );
+    const result = this.pathfinder.findPath(ownerWorld.col, ownerWorld.row, goalCol, goalRow);
 
     if (!result) {
       this.stop();
@@ -247,7 +250,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * follower.stop();
    * ```
    */
-  stop(): void {
+  public stop(): void {
     this._isMoving = false;
     this.path = [];
     this.currentIndex = 0;
@@ -260,12 +263,8 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    *
    * @since 0.4.0
    */
-  override update(deltaTime: number): void {
-    if (
-      !this._isMoving
-      || this.path.length === 0
-      || this.currentIndex >= this.path.length
-    ) {
+  public override update(deltaTime: number): void {
+    if (!this._isMoving || this.path.length === 0 || this.currentIndex >= this.path.length) {
       return;
     }
 

@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "Jar",
+    "category": "",
+    "exportedAt": "2026-09-01T18:27:46.493Z"
+  },
+  "grid": {
+    "cols": 2,
+    "rows": 2,
+    "cell": 32
+  },
+  "size": {
+    "width": 64,
+    "height": 64
+  },
+  "properties": {},
+  "images": {},
+  "frames": {},
+  "animations": {},
+  "layers": [],
+  "collisionLayers": {},
+  "collisions": [],
+  "states": {
+    "ok": {
+      "layers": [],
+      "collisionsOff": []
+    },
+    "broken": {
+      "layers": [],
+      "collisionsOff": []
+    }
+  },
+  "initial": "ok"
+}

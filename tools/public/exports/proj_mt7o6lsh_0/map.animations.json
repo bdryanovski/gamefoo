@@ -1,0 +1,38 @@
+{
+  "anim_0": {
+    "frames": [
+      "torch",
+      "torch_1",
+      "torch_2",
+      "torch_3"
+    ],
+    "duration": 0.15,
+    "loop": true
+  },
+  "fire": {
+    "frames": [
+      "fire",
+      "fire_1",
+      "fire_2",
+      "fire_3"
+    ],
+    "duration": 0.15,
+    "loop": true
+  },
+  "Ork": {
+    "frames": [
+      "ork",
+      "ork_1"
+    ],
+    "duration": 0.15,
+    "loop": true
+  },
+  "Lanter": {
+    "frames": [
+      "lanter",
+      "sprite_10_1"
+    ],
+    "duration": 0.15,
+    "loop": true
+  }
+}

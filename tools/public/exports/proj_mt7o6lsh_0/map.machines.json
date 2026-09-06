@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-statemachine-editor",
+    "projectName": "Map",
+    "exportedAt": "2026-09-01T15:32:22.642Z"
+  },
+  "machines": {
+    "torch": {
+      "initial": "Normal",
+      "states": {
+        "Normal": {
+          "display": {
+            "kind": "animation",
+            "animation": "anim_0"
+          }
+        }
+      },
+      "transitions": []
+    },
+    "Fire": {
+      "initial": null,
+      "states": {},
+      "transitions": []
+    },
+    "Ork": {
+      "initial": null,
+      "states": {},
+      "transitions": []
+    },
+    "Jar": {
+      "initial": "ok",
+      "states": {
+        "ok": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "jar"
+          }
+        },
+        "broken": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "jar_broken"
+          }
+        }
+      },
+      "transitions": [
+        {
+          "from": "ok",
+          "to": "broken",
+          "condition": "kick"
+        }
+      ]
+    },
+    "object_5": {
+      "initial": "init",
+      "states": {
+        "init": {
+          "display": {
+            "kind": "sprite",
+            "sprite": "skeleton"
+          }
+        }
+      },
+      "transitions": []
+    }
+  }
+}

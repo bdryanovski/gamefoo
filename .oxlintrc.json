@@ -1,0 +1,81 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+    ],
+    "no-param-reassign": "error",
+    "no-case-declarations": "error",
+    "no-unreachable": "error",
+    "no-cond-assign": "error",
+    "no-sparse-arrays": "error",
+    "no-async-promise-executor": "error",
+    "no-shadow-restricted-names": "error",
+    "eqeqeq": ["error", "always"],
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-nested-ternary": "error",
+    "no-array-constructor": "error",
+    "no-extend-native": "error",
+    "curly": ["error", "all"],
+    "typescript/no-non-null-assertion": "off",
+    "typescript/no-explicit-any": "off",
+    "no-else-return": "warn",
+    "default-case": "warn",
+    "no-constant-condition": "warn",
+    "prefer-template": "warn",
+    "max-params": ["warn", { "max": 5 }],
+    "max-depth": ["warn", { "max": 4 }],
+    "max-statements": ["warn", { "max": 20 }],
+    "unicorn/catch-error-name": "error",
+    "unicorn/consistent-date-clone": "error",
+    "unicorn/consistent-existence-index-check": "error",
+    "unicorn/consistent-function-scoping": "warn",
+    "unicorn/custom-error-definition": "error",
+    "unicorn/empty-brace-spaces": "error",
+    "unicorn/prefer-keyboard-event-key": "error",
+    "jsdoc/no-blank-blocks": "error",
+    "typescript/array-type": ["warn", { "default": "array-simple" }],
+    "typescript/no-explicit-any": "warn",
+    "typescript/prefer-includes": "error",
+    "typescript/prefer-reduce-type-parameter": "error",
+    "typescript/prefer-ts-expect-error": "error",
+    "typescript/prefer-nullish-coalescing": "error",
+    "typescript/class-literal-property-style": "error",
+    "typescript/explicit-function-return-type": "warn",
+    "typescript/prefer-optional-chain": "warn",
+    "typescript/no-empty-object-type": "warn",
+    "typescript/consistent-type-definitions": "error",
+    "typescript/explicit-member-accessibility": [
+      "error",
+      { "overrides": { "constructors": "no-public" } }
+    ],
+    "typescript/consistent-type-imports": "error",
+    "typescript/consistent-return": "error",
+    "typescript/consistent-indexed-object-style": ["error", "record"],
+    "typescript/no-redundant-type-constituents": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "typescript/no-empty-object-type": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["dist", "docs", "node_modules"]
+}

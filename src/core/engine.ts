@@ -23,8 +23,7 @@ interface EngineConfig {
    * The colour used to clear the screen at the start of each frame.
    *
    * Accepts any CSS colour string — hex (`#rrggbb`), `rgb()`, `hsl()`,
-   * or named colours. On terminal renderers the colour is converted to the
-   * nearest ANSI truecolour background.
+   * or named colours.
    *
    * @defaultValue `"#000000"`
    */
@@ -35,8 +34,6 @@ interface EngineConfig {
    *
    * - **Browser**: leave unset to use {@link RAFLoopDriver}
    *   (`requestAnimationFrame`).
-   * - **Terminal / Bun**: pass `new IntervalLoopDriver(30)` for a
-   *   `setInterval`-based 30 FPS loop.
    *
    * @defaultValue `new RAFLoopDriver()`
    *
@@ -51,7 +48,6 @@ interface EngineConfig {
  *
  * `Engine` is renderer-agnostic. Pass any {@link RenderContext} —
  * {@link WebRenderer} for browser canvas output, or
- * {@link TerminalRenderContext} for ANSI terminal output.
  *
  * ---
  *
@@ -67,8 +63,6 @@ interface EngineConfig {
  * Engine.render(ctx)                (override hook)
  *   ↓
  * preRender → render → postRender   (all registered subsystems)
- *   ↓
- * ctx.flush()                       (terminal dirty-cell flush; no-op on canvas)
  * ```
  *
  * ---
@@ -86,19 +80,6 @@ interface EngineConfig {
  *
  * engine.setup(() => console.log("Game started!"));
  * ```
- *
- * ### Terminal usage (Bun)
- *
- * ```ts
- * import { Engine, IntervalLoopDriver, TerminalRenderContext } from "gamefoo";
- *
- * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
- * const engine   = new Engine(renderer, {
- *   loopDriver: new IntervalLoopDriver(30),
- * });
- * engine.setup();
- * ```
- *
  * ### Subclassing
  *
  * ```ts
@@ -117,10 +98,9 @@ interface EngineConfig {
  * @since 0.1.0
  *
  * @see {@link WebRenderer}          — canvas adapter
- * @see {@link TerminalRenderContext} — ANSI terminal adapter
  * @see {@link SubSystem}            — subsystem interface
  * @see {@link RAFLoopDriver}        — default browser loop
- * @see {@link IntervalLoopDriver}   — terminal / server loop
+ * @see {@link IntervalLoopDriver}   — server loop
  */
 export default class Engine {
   /**
@@ -152,6 +132,13 @@ export default class Engine {
    * Read from the renderer's `height` property at construction time.
    */
   private height: number;
+
+  /**
+   * Curent game enegine game scale
+   *
+   * @since 0.5.0
+   */
+  public readonly gameScale: number;
 
   /**
    * Guards against calling {@link Engine.setup} more than once.
@@ -205,14 +192,6 @@ export default class Engine {
    * const renderer = new WebRenderer("game-canvas", 800, 600);
    * const engine   = new Engine(renderer, { backgroundColor: "#1a1a2e" });
    * ```
-   *
-   * @example Terminal
-   * ```ts
-   * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
-   * const engine   = new Engine(renderer, {
-   *   loopDriver: new IntervalLoopDriver(30),
-   * });
-   * ```
    */
   constructor(renderer: RenderContext, config: EngineConfig = {}) {
     this.ctx = renderer;
@@ -220,6 +199,7 @@ export default class Engine {
     this.width = renderer.width;
     this.height = renderer.height;
     this.loopDriver = config.loopDriver ?? new RAFLoopDriver();
+    this.gameScale = renderer.readGameScale();
   }
 
   /**
@@ -236,11 +216,28 @@ export default class Engine {
    * console.log(`Game area: ${width}×${height}`);
    * ```
    */
-  get dementions(): { width: number; height: number } {
+  public get dementions(): { width: number; height: number } {
     return {
       width: this.width,
       height: this.height,
     };
+  }
+
+  /**
+   * The render context used by this engine.
+   *
+   * Provides access to the underlying renderer for subsystems that need
+   * to query canvas properties or perform custom rendering.
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * const canvas = engine.renderer.getCanvas?.()?.canvas;
+   * ```
+   */
+  public get renderer(): RenderContext {
+    return this.ctx;
   }
 
   /**
@@ -263,9 +260,9 @@ export default class Engine {
    *   .use(new CollisionSystem(world));
    * ```
    */
-  use(subsystem: SubSystem): this {
+  public use(subsystem: SubSystem): this {
     this.subsystems.push(subsystem);
-    this.subsystems.sort((a, b) => (a.order || 100) - (b.order || 100));
+    this.subsystems.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
     subsystem.init?.(this);
     return this;
   }
@@ -281,7 +278,9 @@ export default class Engine {
    */
   private run<K extends keyof SubSystem>(hook: K, ...args: any[]): void {
     for (const subsystem of this.subsystems) {
-      if (subsystem.enabled === false) continue;
+      if (subsystem.enabled === false) {
+        continue;
+      }
       const fun = subsystem[hook];
       if (typeof fun === 'function') {
         // @ts-expect-error
@@ -293,24 +292,12 @@ export default class Engine {
   /**
    * Updates the engine's logical dimensions.
    *
-   * Call this after a terminal resize event (or canvas resize) to keep
-   * subsystems that depend on `engine.dementions` consistent.
-   *
    * @param width  - New logical width in renderer units.
    * @param height - New logical height in renderer units.
    *
    * @since 0.4.0
-   *
-   * @example
-   * ```ts
-   * process.stdout.on("resize", () => {
-   *   const { cols, rows } = getTerminalSize();
-   *   renderer.resize(cols, rows);
-   *   engine.resize(renderer.width, renderer.height);
-   * });
-   * ```
    */
-  resize(width: number, height: number): void {
+  public resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
   }
@@ -327,7 +314,9 @@ export default class Engine {
    * @internal
    */
   private tick(deltaTime: number): void {
-    if (!this.running) return;
+    if (!this.running) {
+      return;
+    }
 
     this.run('preUpdate', deltaTime);
     this.run('update', deltaTime);
@@ -342,9 +331,6 @@ export default class Engine {
     this.run('preRender', this.ctx);
     this.run('render', this.ctx);
     this.run('postRender', this.ctx);
-
-    // Flush buffered output (terminal dirty-cell diff; no-op on canvas).
-    this.ctx.flush?.();
   }
 
   /**
@@ -493,8 +479,8 @@ export default class Engine {
    */
   public destroy() {
     this.pause();
-    for (let i = this.subsystems.length - 1; i >= 0; i--) {
-      this.subsystems[i]?.destroy?.();
+    for (let index = this.subsystems.length - 1; index >= 0; index -= 1) {
+      this.subsystems[index]?.destroy?.();
     }
   }
 }

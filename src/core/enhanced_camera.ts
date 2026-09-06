@@ -114,7 +114,9 @@ export class EnhancedCamera extends Camera {
   private _lerpSpeed: number;
   private _pixelPerfect: boolean;
 
-  /** Cached view rect to avoid per-call allocation. */
+  /**
+   * Cached view rect to avoid per-call allocation.
+   */
   private _viewCache = { x: 0, y: 0, width: 0, height: 0 };
 
   /**
@@ -162,11 +164,11 @@ export class EnhancedCamera extends Camera {
    * console.log(camera.zoom); // 4 (default max)
    * ```
    */
-  get zoom(): number {
+  public get zoom(): number {
     return this._zoom;
   }
 
-  set zoom(value: number) {
+  public set zoom(value: number) {
     this._zoom = this.clampZoom(value);
   }
 
@@ -176,11 +178,11 @@ export class EnhancedCamera extends Camera {
    *
    * @since 0.4.0
    */
-  get lerpSpeed(): number {
+  public get lerpSpeed(): number {
     return this._lerpSpeed;
   }
 
-  set lerpSpeed(value: number) {
+  public set lerpSpeed(value: number) {
     this._lerpSpeed = Math.max(0, Math.min(1, value));
   }
 
@@ -203,7 +205,7 @@ export class EnhancedCamera extends Camera {
    * camera.smoothFollow(player.getPosition(), deltaTime);
    * ```
    */
-  smoothFollow(target: Vector2, deltaTime: number): void {
+  public smoothFollow(target: Vector2, deltaTime: number): void {
     const pos = this.getPosition();
     const t = 1 - (1 - this._lerpSpeed) ** (deltaTime * 60);
     const newX = pos.x + (target.x - pos.x) * t;
@@ -228,7 +230,7 @@ export class EnhancedCamera extends Camera {
    * // Use for viewport culling or coordinate conversion
    * ```
    */
-  override getViewRect(): {
+  public override getViewRect(): {
     x: number;
     y: number;
     width: number;
@@ -264,7 +266,7 @@ export class EnhancedCamera extends Camera {
    * });
    * ```
    */
-  screenToWorld(screenX: number, screenY: number): Vector2 {
+  public screenToWorld(screenX: number, screenY: number): Vector2 {
     const view = this.getViewRect();
     return {
       x: view.x + screenX / this._zoom,
@@ -288,7 +290,7 @@ export class EnhancedCamera extends Camera {
    * ctx.fillText("!", screen.x, screen.y);
    * ```
    */
-  worldToScreen(worldX: number, worldY: number): Vector2 {
+  public worldToScreen(worldX: number, worldY: number): Vector2 {
     const view = this.getViewRect();
     return {
       x: (worldX - view.x) * this._zoom,

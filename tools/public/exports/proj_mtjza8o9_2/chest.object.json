@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "chest",
+    "category": "",
+    "exportedAt": "2026-09-02T10:53:39.570Z"
+  },
+  "grid": {
+    "cols": 2,
+    "rows": 2,
+    "cell": 32
+  },
+  "size": {
+    "width": 64,
+    "height": 64
+  },
+  "properties": {},
+  "images": {},
+  "frames": {},
+  "animations": {},
+  "collisionLayers": {
+    "walls": {
+      "name": "Walls",
+      "color": "#ff0000"
+    },
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    }
+  },
+  "states": {
+    "idle": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": []
+        }
+      ],
+      "collisions": [
+        {
+          "id": "c1",
+          "layer": "walls",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 16,
+            "cy": 16,
+            "radius": 8
+          }
+        }
+      ]
+    },
+    "run": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": []
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtjz9jh3_0",
+          "layer": "walls",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 16,
+            "cy": 16,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtjza36j_1",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 16,
+            "y": 16,
+            "width": 32,
+            "height": 32
+          }
+        }
+      ]
+    }
+  },
+  "initial": "idle"
+}

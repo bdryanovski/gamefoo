@@ -1,6 +1,9 @@
 import type { Behaviour } from '../core/behaviour';
 import type { RenderContext } from '../core/renderer/type';
-import type { Demension, Vector2 } from '../generic_types';
+import Node from './node';
+import type { Shader } from '../core/shaders/shader';
+import { ShaderStack } from '../core/shaders/shader_stack';
+import type { ShaderRegion } from '../core/shaders/types';
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -51,7 +54,7 @@ import type { Demension, Vector2 } from '../generic_types';
  * @see {@link Player}        — concrete player entity
  * @see {@link Behaviour}     — composable logic units
  */
-export default abstract class Entity {
+export default abstract class Entity extends Node {
   /**
    * Unique identifier for this entity.
    *
@@ -59,16 +62,6 @@ export default abstract class Entity {
    * collision-callback identification.
    */
   public id: string = '';
-
-  /**
-   * World-space position of the entity's origin (top-left corner).
-   */
-  protected readonly position: Vector2 = { x: 0, y: 0 };
-
-  /**
-   * Bounding dimensions of the entity in pixels.
-   */
-  protected readonly size: Demension = { width: 0, height: 0 };
 
   /**
    * Internal map from behaviour key (lowercased type) to
@@ -83,30 +76,11 @@ export default abstract class Entity {
   private _sortedBehaviors: Behaviour[] | null = null;
 
   /**
-   * Horizontal position of the entity (shorthand for
-   * `position.x`).
+   * Screen effects attached to this entity (glow, particles, …).
+   *
+   * @since 0.5.0
    */
-  get x(): number {
-    return this.position.x;
-  }
-
-  /** Sets the horizontal position. */
-  set x(value: number) {
-    this.position.x = value;
-  }
-
-  /**
-   * Vertical position of the entity (shorthand for
-   * `position.y`).
-   */
-  get y(): number {
-    return this.position.y;
-  }
-
-  /** Sets the vertical position. */
-  set y(value: number) {
-    this.position.y = value;
-  }
+  private readonly shaderStack = new ShaderStack();
 
   /**
    * Creates a new entity.
@@ -127,63 +101,9 @@ export default abstract class Entity {
    * }
    * ```
    */
-  constructor(
-    id: string,
-    x: number,
-    y: number,
-    width?: number,
-    height?: number,
-  ) {
+  constructor(id: string, x: number, y: number, width?: number, height?: number) {
+    super({ x, y }, { width: width ?? 0, height: height ?? 0 });
     this.id = id;
-    this.position = { x, y };
-
-    if (width && height) {
-      this.size = { width, height };
-    }
-  }
-
-  /**
-   * Advances the entity's state by one frame.
-   *
-   * @param deltaTime - Seconds elapsed since the previous frame.
-   */
-  abstract update(deltaTime: number): void;
-
-  /**
-   * Draws the entity .
-   *
-   * @param ctx - The 2-D rendering context.
-   */
-  abstract render(ctx: RenderContext): void;
-
-  /**
-   * Returns a **copy** of the entity's current position.
-   *
-   * @returns A new {@link Vector2} with the entity's `x` and `y`.
-   */
-  getPosition(): Vector2 {
-    return this.position;
-  }
-
-  /**
-   * Returns a **copy** of the entity's bounding dimensions.
-   *
-   * @returns An object with `width` and `height`.
-   */
-  getSize(): Demension {
-    return this.size;
-  }
-
-  /**
-   * Set size of the entity
-   *
-   * @since 0.2.0
-   *
-   * @return void
-   */
-  protected setSize(width: number, height: number): void {
-    this.size.width = width;
-    this.size.height = height;
   }
 
   /**
@@ -199,7 +119,7 @@ export default abstract class Entity {
    * if (ctrl) ctrl.enabled = false;
    * ```
    */
-  getBehaviour<T extends Behaviour>(key: string): T | undefined {
+  public getBehaviour<T extends Behaviour>(key: string): T | undefined {
     return this.behaviorMap.get(key.toLowerCase()) as T | undefined;
   }
 
@@ -216,9 +136,7 @@ export default abstract class Entity {
    * const renderers = entity.getBehavioursByType(SpriteRender);
    * ```
    */
-  getBehavioursByType<T extends Behaviour>(
-    type: new (...args: any[]) => T,
-  ): T[] {
+  public getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 
@@ -229,7 +147,7 @@ export default abstract class Entity {
    *   (case-insensitive).
    * @returns `true` if the behaviour exists on this entity.
    */
-  hasBehaviour(key: string): boolean {
+  public hasBehaviour(key: string): boolean {
     return this.behaviorMap.has(key.toLowerCase());
   }
 
@@ -250,7 +168,7 @@ export default abstract class Entity {
    * hk.takeDamage(10);
    * ```
    */
-  attachBehaviour<T extends Behaviour>(behavior: T): T {
+  public attachBehaviour<T extends Behaviour>(behavior: T): T {
     this.behaviorMap.set(behavior.key, behavior);
     this._sortedBehaviors = null;
 
@@ -272,9 +190,11 @@ export default abstract class Entity {
    * entity.detachBehaviour("collidable");
    * ```
    */
-  detachBehaviour(key: string): void {
+  public detachBehaviour(key: string): void {
     const behavior = this.behaviorMap.get(key.toLowerCase());
-    if (!behavior) return;
+    if (!behavior) {
+      return;
+    }
 
     if (behavior.onDetach) {
       behavior.onDetach();
@@ -291,11 +211,9 @@ export default abstract class Entity {
    * @internal
    */
   private get behaviors(): Behaviour[] {
-    if (!this._sortedBehaviors) {
-      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort(
-        (a, b) => a.priority - b.priority,
-      );
-    }
+    this._sortedBehaviors ??= Array.from(this.behaviorMap.values()).sort(
+      (a, b) => a.priority - b.priority,
+    );
     return this._sortedBehaviors;
   }
 
@@ -329,5 +247,73 @@ export default abstract class Entity {
         behavior.render(ctx);
       }
     }
+  }
+
+  /**
+   * Attaches a screen shader to this entity and returns it.
+   *
+   * Effects render when the subclass calls {@link Entity.renderShaders} and
+   * advance when it calls {@link Entity.updateShaders} — mirroring the
+   * behaviour update/render hooks.
+   *
+   * @since 0.5.0
+   *
+   * @param shader - The shader to attach.
+   */
+  public attachShader<T extends Shader>(shader: T): T {
+    return this.shaderStack.attach(shader);
+  }
+
+  /**
+   * The attached shader with `type`, or `undefined`.
+   *
+   * @since 0.5.0
+   */
+  public getShader<T extends Shader>(type: string): T | undefined {
+    return this.shaderStack.get<T>(type);
+  }
+
+  /**
+   * Whether a shader with `type` is attached.
+   *
+   * @since 0.5.0
+   */
+  public hasShader(type: string): boolean {
+    return this.shaderStack.has(type);
+  }
+
+  /**
+   * Detaches the shader with `type`, if present.
+   *
+   * @since 0.5.0
+   */
+  public detachShader(type: string): void {
+    this.shaderStack.detach(type);
+  }
+
+  /**
+   * Advances every enabled shader. Call from a subclass's `update`, next to
+   * {@link Entity.updateBehaviours}.
+   *
+   * @since 0.5.0
+   *
+   * @param deltaTime - Seconds elapsed since the previous frame.
+   */
+  protected updateShaders(deltaTime: number): void {
+    this.shaderStack.update(deltaTime);
+  }
+
+  /**
+   * Renders every enabled shader over this entity's bounding box. Call from
+   * a subclass's `render`, next to {@link Entity.renderBehaviours}.
+   *
+   * @since 0.5.0
+   *
+   * @param ctx - The rendering context.
+   */
+  protected renderShaders(ctx: RenderContext): void {
+    const size = this.getSize();
+    const region: ShaderRegion = { x: this.x, y: this.y, width: size.width, height: size.height };
+    this.shaderStack.render(ctx, region);
   }
 }

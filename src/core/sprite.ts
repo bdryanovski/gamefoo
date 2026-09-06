@@ -16,11 +16,17 @@ import Asset from './asset';
  * ```
  */
 interface AnimationDefinition {
-  /** Ordered frame indices into the spritesheet grid. */
-  frames: (string | number)[];
-  /** Time in seconds each frame is displayed before advancing. */
+  /**
+   * Ordered frame indices into the spritesheet grid.
+   */
+  frames: Array<string | number>;
+  /**
+   * Time in seconds each frame is displayed before advancing.
+   */
   duration: number;
-  /** Whether the animation restarts from frame 0 after the last frame. */
+  /**
+   * Whether the animation restarts from frame 0 after the last frame.
+   */
   loop: boolean;
 }
 
@@ -121,26 +127,32 @@ interface GridConfig {
  * @see {@link Asset}        — image loading utility
  */
 export default class Sprite {
-  /** The underlying image element containing the full spritesheet. */
+  /**
+   * The underlying image element containing the full spritesheet.
+   */
   public image: HTMLImageElement;
 
-  /** Width of a single frame cell in pixels. */
-  readonly width: number;
+  /**
+   * Width of a single frame cell in pixels.
+   */
+  public readonly width: number;
 
-  /** Height of a single frame cell in pixels. */
-  readonly height: number;
+  /**
+   * Height of a single frame cell in pixels.
+   */
+  public readonly height: number;
 
   /**
    * Number of frame columns in the spritesheet, computed as
    * `Math.floor(image.width / width)`.
    */
-  readonly columns: number;
+  public readonly columns: number;
 
   /**
    * Number of frame rows in the spritesheet, computed as
    * `Math.floor(image.height / height)`.
    */
-  readonly rows: number;
+  public readonly rows: number;
 
   /**
    * Named animation definitions keyed by animation name.
@@ -189,7 +201,7 @@ export default class Sprite {
       frameHeight: height,
     });
 
-    this.animations = new Map(Object.entries(animations || {}));
+    this.animations = new Map(Object.entries(animations ?? {}));
   }
 
   /**
@@ -222,7 +234,7 @@ export default class Sprite {
    *  });
    *  ```
    */
-  static fromGrid(
+  public static fromGrid(
     image: HTMLImageElement,
     config: GridConfig,
     animations?: Record<string, AnimationDefinition>,
@@ -230,7 +242,7 @@ export default class Sprite {
     const sprite = Object.create(Sprite.prototype) as Sprite;
     sprite.image = image;
     sprite.frames = Sprite.generateGridFrames(image, config);
-    sprite.animations = new Map(Object.entries(animations || {}));
+    sprite.animations = new Map(Object.entries(animations ?? {}));
     return sprite;
   }
 
@@ -263,19 +275,15 @@ export default class Sprite {
       spacingY = 0,
     } = config;
 
-    const cols = Math.floor(
-      (image.width - offsetX + spacingX) / (frameWidth + spacingX),
-    );
-    const rows = Math.floor(
-      (image.height - offsetY + spacingY) / (frameHeight + spacingY),
-    );
+    const cols = Math.floor((image.width - offsetX + spacingX) / (frameWidth + spacingX));
+    const rows = Math.floor((image.height - offsetY + spacingY) / (frameHeight + spacingY));
     const total = config.count ?? cols * rows;
     const frames = new Map<number, SpriteFrame>();
 
-    for (let i = 0; i < total; i++) {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      frames.set(i, {
+    for (let index = 0; index < total; index += 1) {
+      const col = index % cols;
+      const row = Math.floor(index / cols);
+      frames.set(index, {
         x: offsetX + col * (frameWidth + spacingX),
         y: offsetY + row * (frameHeight + spacingY),
         width: frameWidth,
@@ -285,7 +293,7 @@ export default class Sprite {
     return frames;
   }
 
-  static fromAtlas(
+  public static fromAtlas(
     image: HTMLImageElement,
     regions: Record<string, SpriteFrame>,
     animations?: Record<string, AnimationDefinition>,
@@ -293,18 +301,12 @@ export default class Sprite {
     const sprite = Object.create(Sprite.prototype) as Sprite;
     sprite.image = image;
     sprite.frames = new Map(Object.entries(regions));
-    sprite.animations = new Map(Object.entries(animations || {}));
+    sprite.animations = new Map(Object.entries(animations ?? {}));
     return sprite;
   }
 
-  static async fromAseprite(
-    imagePath: string,
-    jsonPath: string,
-  ): Promise<Sprite> {
-    const [image, response] = await Promise.all([
-      Asset.load(imagePath),
-      fetch(jsonPath),
-    ]);
+  public static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
+    const [image, response] = await Promise.all([Asset.load(imagePath), fetch(jsonPath)]);
     const data = await response.json();
 
     const regions: Record<string, SpriteFrame> = {};
@@ -317,14 +319,15 @@ export default class Sprite {
     if (data.meta?.frameTags) {
       for (const tag of data.meta.frameTags) {
         const frameNames: string[] = [];
-        for (let i = tag.from; i <= tag.to; i++) {
-          const key = Object.keys(data.frames)[i];
-          if (key) frameNames.push(key);
+        for (let frameIndex = tag.from; frameIndex <= tag.to; frameIndex += 1) {
+          const key = Object.keys(data.frames)[frameIndex];
+          if (key) {
+            frameNames.push(key);
+          }
         }
         animations[tag.name] = {
           frames: frameNames,
-          duration:
-            ((data.frames[frameNames[0]!] as any)?.duration ?? 100) / 1000,
+          duration: ((data.frames[frameNames[0]!] as any)?.duration ?? 100) / 1000,
           loop: tag.direction !== 'forward_once',
         };
       }
@@ -350,7 +353,7 @@ export default class Sprite {
    * const rect = sprite.getFrameRect(5);
    * ```
    */
-  getFrameRect(frame: number | string): SpriteFrame {
+  public getFrameRect(frame: number | string): SpriteFrame {
     const rect = this.frames.get(frame);
     if (!rect) {
       throw new Error(`Frame "${frame}" not found in sprite`);

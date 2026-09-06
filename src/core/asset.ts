@@ -55,7 +55,7 @@ export default class Asset {
    * }
    * ```
    */
-  static async load(src: string): Promise<HTMLImageElement> {
+  public static async load(src: string): Promise<HTMLImageElement> {
     const cache = Asset.cache.get(src);
 
     if (cache) {
@@ -71,6 +71,8 @@ export default class Asset {
         reject(new Error(`Failed to load image: ${src}`, { cause: _error }));
       };
       image.src = src;
+
+      return image;
     });
   }
 }

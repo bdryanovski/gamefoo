@@ -25,7 +25,9 @@
  * @see {@link SubSystem}  — the subsystem interface
  */
 
-/** Minimal interface required by TilemapSystem to get the camera viewport. */
+/**
+ * Minimal interface required by TilemapSystem to get the camera viewport.
+ */
 interface CameraLike {
   camera: {
     getViewRect(): { x: number; y: number; width: number; height: number };
@@ -38,22 +40,30 @@ import type { RenderContext } from '../renderer/type';
 import type { TileMap } from './tilemap';
 
 export class TilemapSystem implements SubSystem {
-  /** Subsystem identifier. */
-  id = 'tilemap';
+  /**
+   * Subsystem identifier.
+   */
+  public id = 'tilemap';
 
   /**
    * Execution order. `15` places this after camera (10) and before
    * objects (20).
    */
-  order = 15;
+  public order = 15;
 
-  /** The tilemap to render. */
+  /**
+   * The tilemap to render.
+   */
   private tilemap: TileMap;
 
-  /** Cached reference to the camera subsystem, resolved in `init`. */
+  /**
+   * Cached reference to the camera subsystem, resolved in `init`.
+   */
   private cameraSystem: CameraLike | null = null;
 
-  /** Canvas dimensions fallback when no camera is available. */
+  /**
+   * Canvas dimensions fallback when no camera is available.
+   */
   private canvasWidth = 0;
   private canvasHeight = 0;
 
@@ -84,7 +94,7 @@ export class TilemapSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  init(engine: Engine): void {
+  public init(engine: Engine): void {
     const dims = engine.dementions;
     this.canvasWidth = dims.width;
     this.canvasHeight = dims.height;
@@ -110,7 +120,7 @@ export class TilemapSystem implements SubSystem {
    * tmSys.attachCamera(camSys);
    * ```
    */
-  attachCamera(cameraSystem: CameraLike): void {
+  public attachCamera(cameraSystem: CameraLike): void {
     this.cameraSystem = cameraSystem;
   }
 
@@ -122,7 +132,7 @@ export class TilemapSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  render(ctx: RenderContext): void {
+  public render(ctx: RenderContext): void {
     const viewport = this.cameraSystem
       ? this.cameraSystem.camera.getViewRect()
       : { x: 0, y: 0, width: this.canvasWidth, height: this.canvasHeight };

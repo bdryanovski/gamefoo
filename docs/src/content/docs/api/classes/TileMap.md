@@ -2,7 +2,7 @@
 title: 'Class: TileMap'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: TileMap'
 
 # Class: TileMap
 
-Defined in: [core/tilemap/tilemap.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L84)
+Defined in: [core/tilemap/tilemap.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L81)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/tilemap/tilemap.ts:84](https://github.com/bdryanovski/gamefoo/
 new TileMap(config: TileMapConfig): TileMap;
 ```
 
-Defined in: [core/tilemap/tilemap.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L118)
+Defined in: [core/tilemap/tilemap.ts:121](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L121)
 
 Creates a new tilemap.
 
@@ -53,10 +53,10 @@ const tilemap = new TileMap({
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="grid"></a> `grid` | `readonly` | [`Grid`](Grid.md) | The underlying grid storing cell data and walkability. | [core/tilemap/tilemap.ts:86](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L86) |
-| <a id="layers"></a> `layers` | `readonly` | [`TileLayer`](TileLayer.md)[] | Ordered list of tile layers (rendered back-to-front). | [core/tilemap/tilemap.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L89) |
-| <a id="projection"></a> `projection` | `public` | [`IsometricProjection`](IsometricProjection.md) \| `null` | Isometric projection. `null` means orthogonal (top-down) mode. Can be reassigned at runtime to change the isometric angle. | [core/tilemap/tilemap.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L96) |
-| <a id="collisionlayername"></a> `collisionLayerName` | `private` | `string` \| `null` | Name of the collision layer, if any. | [core/tilemap/tilemap.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L99) |
+| <a id="grid"></a> `grid` | `readonly` | [`Grid`](Grid.md) | The underlying grid storing cell data and walkability. | [core/tilemap/tilemap.ts:85](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L85) |
+| <a id="layers"></a> `layers` | `readonly` | [`TileLayer`](TileLayer.md)[] | Ordered list of tile layers (rendered back-to-front). | [core/tilemap/tilemap.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L90) |
+| <a id="projection"></a> `projection` | `public` | [`IsometricProjection`](IsometricProjection.md) \| `null` | Isometric projection. `null` means orthogonal (top-down) mode. Can be reassigned at runtime to change the isometric angle. | [core/tilemap/tilemap.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L97) |
+| <a id="collisionlayername"></a> `collisionLayerName` | `private` | `string` \| `null` | Name of the collision layer, if any. | [core/tilemap/tilemap.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L102) |
 
 ## Methods
 
@@ -66,7 +66,7 @@ const tilemap = new TileMap({
 buildColliders(world: World): Entity[];
 ```
 
-Defined in: [core/tilemap/tilemap.ts:233](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L233)
+Defined in: [core/tilemap/tilemap.ts:231](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L231)
 
 Generates static [Entity](Entity.md) instances with [Collidable](Collidable.md)
 behaviours for all non-walkable tiles in the collision layer.
@@ -108,7 +108,7 @@ engine.use(new ObjectSystem([player, ...walls]));
 getLayer(name: string): TileLayer | undefined;
 ```
 
-Defined in: [core/tilemap/tilemap.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L310)
+Defined in: [core/tilemap/tilemap.ts:316](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L316)
 
 Returns a layer by name, or `undefined` if not found.
 
@@ -145,10 +145,11 @@ if (ground) {
 getTileAtScreen(
    screenX: number, 
    screenY: number, 
-   layerName: string): number;
+   layerName: string
+): number;
 ```
 
-Defined in: [core/tilemap/tilemap.ts:191](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L191)
+Defined in: [core/tilemap/tilemap.ts:185](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L185)
 
 Returns the tile ID at a screen-space position within a named
 layer.
@@ -196,7 +197,7 @@ render(ctx: RenderContext, viewport: {
 }): void;
 ```
 
-Defined in: [core/tilemap/tilemap.ts:143](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L143)
+Defined in: [core/tilemap/tilemap.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap.ts#L146)
 
 Renders all visible layers in order (back-to-front).
 

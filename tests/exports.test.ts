@@ -4,7 +4,7 @@
  * One test per exported name. Fails if a symbol is removed or renamed.
  * Add a new test here whenever a new export is added to src/index.ts.
  */
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import * as Gamefoo from '../src/index';
 
 describe('exports — classes', () => {
@@ -38,13 +38,17 @@ describe('exports — classes', () => {
     'RAFLoopDriver',
     'CameraSystem',
     'CollisionSystem',
+    'Shader',
+    'ShaderStack',
+    'GlowShader',
+    'ParticleShader',
+    'VignetteShader',
+    'ScreenRegistry',
+    'ShaderSystem',
     'Sprite',
     'SpriteRender',
     'StateMachine',
     'Text',
-    'TerminalInputDriver',
-    'TerminalRender',
-    'TerminalRenderContext',
     'TileLayer',
     'TileMap',
     'TilemapSystem',
@@ -61,7 +65,7 @@ describe('exports — classes', () => {
 });
 
 describe('exports — functions', () => {
-  const fns = ['createBunLoop', 'log'] as const;
+  const fns = ['log'] as const;
 
   for (const name of fns) {
     test(name, () => {

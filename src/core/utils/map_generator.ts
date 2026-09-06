@@ -43,11 +43,7 @@
 import { Grid } from '../grid/grid';
 import { TileLayer } from '../tilemap/tile_layer';
 import type { TileSet } from '../tilemap/tileset';
-import type {
-  BiomeRule,
-  GeneratedMapData,
-  MapGeneratorConfig,
-} from './map_generator_types';
+import type { BiomeRule, GeneratedMapData, MapGeneratorConfig } from './map_generator_types';
 import { PerlinNoise } from './perlin_noise';
 
 export class MapGenerator {
@@ -94,7 +90,7 @@ export class MapGenerator {
    * console.log("Elevation at (5,10):", elevation);
    * ```
    */
-  generateNoiseMap(): Float64Array {
+  public generateNoiseMap(): Float64Array {
     const { cols, rows } = this.config;
     const scale = this.config.scale ?? 0.05;
     const octaves = this.config.octaves ?? 4;
@@ -138,12 +134,12 @@ export class MapGenerator {
    * // walkableMap[row][col] is a boolean
    * ```
    */
-  generateTileData(): GeneratedMapData {
+  public generateTileData(): GeneratedMapData {
     const noiseMap = this.generateNoiseMap();
     const { cols, rows, biomes } = this.config;
     const totalCells = cols * rows;
 
-    const data: number[] = new Array(totalCells);
+    const data: number[] = Array.from<number>({ length: totalCells });
     const walkableMap: boolean[][] = [];
 
     for (let row = 0; row < rows; row++) {
@@ -187,7 +183,7 @@ export class MapGenerator {
    * });
    * ```
    */
-  buildLayer(
+  public buildLayer(
     tileSet: TileSet,
     layerName: string,
     cellWidth = 64,

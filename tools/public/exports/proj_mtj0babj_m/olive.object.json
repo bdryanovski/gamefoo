@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "olive",
+    "category": ""
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {
+    "id": "0"
+  },
+  "images": {
+    "pickup_items_animated.png": {
+      "src": "/uploads/1788351908215_pickup_items_animated.png",
+      "width": 64,
+      "height": 128
+    }
+  },
+  "frames": {
+    "sprite_0_0": {
+      "image": "pickup_items_animated.png",
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "image": "pickup_items_animated.png",
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "image": "pickup_items_animated.png",
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_0": {
+      "image": "pickup_items_animated.png",
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "olive": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0",
+        "sprite_3_0"
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "pickup": {
+      "name": "Pickup",
+      "color": "#ffd54f"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "olive"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtopb3tn_22",
+          "layer": "pickup",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

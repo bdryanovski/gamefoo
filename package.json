@@ -1,8 +1,9 @@
 {
   "name": "@dryanovski/gamefoo",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A lightweight 2D game engine with behavior-based component system",
   "license": "MIT",
+  "source": "./src/index.ts",
   "files": [
     "dist",
     "src",
@@ -10,7 +11,6 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "source": "./src/index.ts",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -31,25 +31,27 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "bun --watch web_demos/server.ts",
-    "build": "rm -rf dist && bunx tsc -p tsconfig.build.json",
+    "dev": "pnpm vite web_demos --config web_demos/vite.config.ts",
+    "build": "rm -rf dist && pnpm tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "lint": "bunx biome check src/",
-    "lint:fix": "bunx biome check --write --unsafe src/",
-    "format": "bunx biome format --write src/",
-    "check": "bun run typecheck && bun run lint",
-    "check:staged": "bunx lint-staged",
-    "prepublishOnly": "bun run check && bun run build",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint --fix src",
+    "format": "oxfmt src",
+    "format:check": "oxfmt --check src",
+    "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",
+    "check:staged": "pnpm lint-staged",
+    "prepublishOnly": "pnpm run check && pnpm run build",
     "prepare": "husky",
-    "docs:generate": "typedoc && bun scripts/fix-api-frontmatter.ts && bun scripts/collect-docs.ts",
-    "docs:build": "bun run docs:generate && bunx astro build --root ./docs",
-    "docs:collect": "bun scripts/collect-docs.ts",
-    "docs:dev": "bun run docs:generate && bunx astro dev --root ./docs",
-    "docs:preview": "bunx astro preview --root ./docs",
-    "docs:watch": "chokidar 'src/**/*.ts' -c 'bun run docs:generate' --initial",
-    "test": "bun test tests/",
-    "test:publish": "bun run --cwd publish-test sanity"
+    "docs:generate": "typedoc && pnpm tsx scripts/fix-api-frontmatter.ts && pnpm tsx scripts/collect-docs.ts",
+    "docs:build": "pnpm run docs:generate && pnpm astro build --root ./docs",
+    "docs:collect": "pnpm tsx scripts/collect-docs.ts",
+    "docs:dev": "pnpm run docs:generate && pnpm astro dev --root ./docs",
+    "docs:preview": "pnpm astro preview --root ./docs",
+    "docs:watch": "chokidar 'src/**/*.ts' -c 'pnpm run docs:generate' --initial",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:publish": "pnpm run --filter publish-test sanity"
   },
   "dependencies": {
     "@microsoft/tsdoc": "^0.16.0",
@@ -60,15 +62,27 @@
     "typedoc-plugin-markdown": "^4.10.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.4",
-    "@types/bun": "latest",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@vitest/ui": "^3.0.0",
+    "express": "^4.21.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.4.0"
+    "lint-staged": "^16.4.0",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
+    "oxlint-tsgolint": "^7.0.2001",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "biome check --write --no-errors-on-unmatched",
-      "biome check --no-errors-on-unmatched"
+      "oxfmt",
+      "oxlint --fix"
     ]
-  }
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm"
 }

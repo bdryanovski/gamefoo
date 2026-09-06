@@ -59,7 +59,7 @@ export default class World {
    *
    * @param collider - The collidable behaviour to register.
    */
-  register(collider: Collidable): void {
+  public register(collider: Collidable): void {
     this.colliders.add(collider);
   }
 
@@ -70,7 +70,7 @@ export default class World {
    *
    * @param collider - The collidable behaviour to remove.
    */
-  unregister(collider: Collidable): void {
+  public unregister(collider: Collidable): void {
     this.colliders.delete(collider);
   }
 
@@ -92,7 +92,7 @@ export default class World {
    * }
    * ```
    */
-  getColliders(): ReadonlySet<Collidable> {
+  public getColliders(): ReadonlySet<Collidable> {
     return this.colliders;
   }
 
@@ -111,7 +111,7 @@ export default class World {
    *
    * @since 0.1.0
    */
-  detect(): void {
+  public detect(): void {
     /**
      * Note: this naive O(n^2) approach is fine for small numbers of colliders
      * (e.g. <100) but will degrade rapidly as that grows. For larger games,
@@ -140,20 +140,28 @@ export default class World {
      *   - Providing warnings or profiling tools when performance degrades due to too many colliders
      *   - etc.
      */
-    if (this.colliders.size === 0) return;
+    if (this.colliders.size === 0) {
+      return;
+    }
 
     const list = Array.from(this.colliders);
     const len = list.length;
 
-    for (let i = 0; i < len; i++) {
-      const obj = list[i];
-      if (!obj?.enabled) continue;
+    for (let outerIndex = 0; outerIndex < len; outerIndex += 1) {
+      const obj = list[outerIndex];
+      if (!obj?.enabled) {
+        continue;
+      }
 
-      for (let j = i + 1; j < len; j++) {
-        const other = list[j];
-        if (!other?.enabled) continue;
+      for (let innerIndex = outerIndex + 1; innerIndex < len; innerIndex += 1) {
+        const other = list[innerIndex];
+        if (!other?.enabled) {
+          continue;
+        }
 
-        if (obj.layer !== other.layer) continue;
+        if (obj.layer !== other.layer) {
+          continue;
+        }
 
         const objWantOther = this.tagsOverlap(obj.collidesWith, other.tags);
         const otherWantObj = this.tagsOverlap(other.collidesWith, obj.tags);
@@ -161,7 +169,9 @@ export default class World {
         const boundsObj = obj.getWorldBounds();
         const boundsOther = other.getWorldBounds();
 
-        if (!this.intersects(obj, boundsObj, other, boundsOther)) continue;
+        if (!this.intersects(obj, boundsObj, other, boundsOther)) {
+          continue;
+        }
 
         if (obj.solid && other.solid) {
           this.resolveOverlap(obj, boundsObj, other, boundsOther);
@@ -199,7 +209,9 @@ export default class World {
    */
   private tagsOverlap(wants: Set<string>, has: Set<string>): boolean {
     for (const tag of wants) {
-      if (has.has(tag)) return true;
+      if (has.has(tag)) {
+        return true;
+      }
     }
     return false;
   }
@@ -252,10 +264,7 @@ export default class World {
    */
   private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
     return (
-      a.x < b.x + b.width
-      && a.x + a.width > b.x
-      && a.y < b.y + b.height
-      && a.y + a.height > b.y
+      a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
     );
   }
 
@@ -277,7 +286,9 @@ export default class World {
     b: Collidable,
     boundsB: WorldBounds,
   ): boolean {
-    if (a.shape.type !== 'circle' || b.shape.type !== 'circle') return false;
+    if (a.shape.type !== 'circle' || b.shape.type !== 'circle') {
+      return false;
+    }
 
     const cx1 = boundsA.x + a.shape.radius;
     const cy1 = boundsA.y + a.shape.radius;
@@ -303,12 +314,10 @@ export default class World {
    *
    * @internal
    */
-  private circleVSAAabb(
-    circle: Collidable,
-    circleBounds: WorldBounds,
-    rect: WorldBounds,
-  ): boolean {
-    if (circle.shape.type !== 'circle') return false;
+  private circleVSAAabb(circle: Collidable, circleBounds: WorldBounds, rect: WorldBounds): boolean {
+    if (circle.shape.type !== 'circle') {
+      return false;
+    }
 
     const cx = circleBounds.x + circle.shape.radius;
     const cy = circleBounds.y + circle.shape.radius;

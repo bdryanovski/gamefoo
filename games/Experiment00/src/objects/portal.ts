@@ -1,0 +1,114 @@
+import { MapObject, type Rect, type RenderContext } from '../../../../src/index';
+
+/**
+ * Parse a `"x,y"` property into a coordinate, or `null` when absent or
+ * malformed. Whitespace around each number is tolerated.
+ */
+function parseCoord(raw: string | undefined): { x: number; y: number } | null {
+  if (!raw) return null;
+  const parts = raw.split(',');
+  if (parts.length !== 2) return null;
+  const x = Number(parts[0]!.trim());
+  const y = Number(parts[1]!.trim());
+  return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
+}
+
+/**
+ * Custom class bound to the "portal" object — the only way to travel between
+ * placement, three things authored in the map editor:
+ *
+ * - **state** — its state machine spawns in a state whose name marks it open
+ *   or closed (`top-open`/`top-close`, `portal-open`/`portal-close`, …). Only
+ *   an *open* portal transports the player; a closed one is inert.
+ * - **`targetScreen` property** — the destination screen coordinate as
+ *   `"x,y"` (e.g. `"1,3"`). Set it on the placement (or the object default)
+ *   in the editor's placement panel.
+ * - **`spawn` property** — which cell to drop the player on the destination
+ *   screen, as grid `"col,row"`. `"0,0"` (the default) means "unset — use
+ *   the screen centre".
+ *
+ * The portal defines its reach with an `activation` collider on its current
+ * state (authored in the object editor; its footprint is used when none is).
+ * Pressing **E** next to a portal {@link Portal.open | opens} it and the game
+ * navigates to `targetScreen`.
+ *
+ * The class owns its state (open/closed) and reports target/overlap;
+ * {@link MapGame} performs the actual screen navigation.
+ */
+export class Portal extends MapObject {
+  public static override readonly type = 'portal';
+
+  /** Current state's authored NAME (e.g. `top-open`), not its id. */
+  private get stateName(): string | undefined {
+    return this.machine.states.find((s) => s.id === this.state)?.name;
+  }
+
+  /**
+   * Open when the current state's name marks it open. Matched by convention
+   * (name contains `open`) so it works regardless of the exact scheme —
+   * `top-open`, `portal-open`, `open`, … — while `*-close` stays shut.
+   */
+  public get isOpen(): boolean {
+    return (this.stateName ?? '').toLowerCase().includes('open');
+  }
+
+  /**
+   * Destination screen parsed from the `targetScreen` property (`"x,y"`), or
+   * `null` when unset/malformed.
+   */
+  public get target(): { x: number; y: number } | null {
+    return parseCoord(this.properties.targetScreen);
+  }
+
+  /**
+   * Player spawn cell on the destination screen, as grid **column/row**
+   * (the screen's tile coordinate system, e.g. a 20×16 grid of 16px blocks).
+   * Parsed from the `spawn` property (`"col,row"`). `null` when unset,
+   * malformed, or `"0,0"` — the sentinel meaning "no explicit cell, drop the
+   * player at the screen centre". The game converts cells to pixels.
+   */
+  public get spawn(): { col: number; row: number } | null {
+    const point = parseCoord(this.properties.spawn);
+    if (!point || (point.x === 0 && point.y === 0)) {
+      return null;
+    }
+    return { col: point.x, row: point.y };
+  }
+
+  /**
+   * World-space AABB of the current state's `activation` collider, or the
+   * object's footprint when none is authored.
+   */
+  public activationBox(): Rect {
+    const activation = this.worldColliders().find((c) => c.layer === 'activation');
+    return activation ? activation.bounds : this.bounds();
+  }
+
+  /** True when `box` overlaps this portal's activation zone. */
+  public overlaps(box: Rect): boolean {
+    const a = this.activationBox();
+    return (
+      box.x < a.x + a.width &&
+      box.x + box.width > a.x &&
+      box.y < a.y + a.height &&
+      box.y + box.height > a.y
+    );
+  }
+
+  /**
+   * Transitions the portal to its open state, matched by the `open` name
+   * convention (`top-open`, `portal-open`, …). Idempotent — returns `true`
+   * only when the state actually changed.
+   */
+  public open(): boolean {
+    if (this.isOpen) {
+      return false;
+    }
+    const openState = this.machine.states.find((s) => s.name.toLowerCase().includes('open'));
+    return openState ? this.play(openState.name) : false;
+  }
+
+  public override render(ctx: RenderContext): void {
+    super.render(ctx);
+  }
+}

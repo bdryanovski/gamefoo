@@ -30,16 +30,24 @@ import type { Vector2 } from '../generic_types';
  * @see {@link Engine} — owns and drives the camera each frame
  */
 export default class Camera {
-  /** Current X coordinate of the camera centre. */
+  /**
+   * Current X coordinate of the camera centre.
+   */
   private x: number = 0;
 
-  /** Current Y coordinate of the camera centre. */
+  /**
+   * Current Y coordinate of the camera centre.
+   */
   private y: number = 0;
 
-  /** Viewport width in pixels. */
+  /**
+   * Viewport width in pixels.
+   */
   private width: number;
 
-  /** Viewport height in pixels. */
+  /**
+   * Viewport height in pixels.
+   */
   private height: number;
 
   /**
@@ -65,7 +73,7 @@ export default class Camera {
    * camera.follow(player.getPosition());
    * ```
    */
-  follow(target: Vector2): void {
+  public follow(target: Vector2): void {
     this.x = target.x;
     this.y = target.y;
   }
@@ -84,7 +92,7 @@ export default class Camera {
    * camera.moveTo({ x: 500, y: 300 });
    * ```
    */
-  moveTo(target: Vector2): void {
+  public moveTo(target: Vector2): void {
     this.follow(target);
   }
 
@@ -93,7 +101,7 @@ export default class Camera {
    *
    * @returns A new {@link Vector2} copy of the camera centre.
    */
-  getPosition(): Vector2 {
+  public getPosition(): Vector2 {
     return { x: this.x, y: this.y };
   }
 
@@ -115,7 +123,7 @@ export default class Camera {
    * }
    * ```
    */
-  getViewRect(): { x: number; y: number; width: number; height: number } {
+  public getViewRect(): { x: number; y: number; width: number; height: number } {
     return {
       x: this.x - this.width / 2,
       y: this.y - this.height / 2,
@@ -137,7 +145,7 @@ export default class Camera {
    * });
    * ```
    */
-  resize(width: number, height: number): void {
+  public resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
   }

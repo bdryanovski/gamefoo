@@ -1,111 +1,95 @@
 ---
-description: Use Bun instead of Node.js, npm, pnpm, or vite.
-globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
+description: Use pnpm and standard Node.js tooling for this project.
+globs: '*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json'
 alwaysApply: false
 ---
 
-Default to using Bun instead of Node.js.
+Default to using pnpm as the package manager and standard Node.js tooling.
 
-- Use `bun <file>` instead of `node <file>` or `ts-node <file>`
-- Use `bun test` instead of `jest` or `vitest`
-- Use `bun build <file.html|file.ts|file.css>` instead of `webpack` or `esbuild`
-- Use `bun install` instead of `npm install` or `yarn install` or `pnpm install`
-- Use `bun run <script>` instead of `npm run <script>` or `yarn run <script>` or `pnpm run <script>`
-- Use `bunx <package> <command>` instead of `npx <package> <command>`
-- Bun automatically loads .env, so don't use dotenv.
+## Package Management
 
-## APIs
+- Use `pnpm install` instead of `npm install`, `yarn install`, or `bun install`
+- Use `pnpm add <package>` to add dependencies
+- Use `pnpm add -D <package>` to add dev dependencies
+- Use `pnpm run <script>` to run scripts
+- Use `pnpm <package>` instead of `npx <package>` for one-off commands
 
-- `Bun.serve()` supports WebSockets, HTTPS, and routes. Don't use `express`.
-- `bun:sqlite` for SQLite. Don't use `better-sqlite3`.
-- `Bun.redis` for Redis. Don't use `ioredis`.
-- `Bun.sql` for Postgres. Don't use `pg` or `postgres.js`.
-- `WebSocket` is built-in. Don't use `ws`.
-- Prefer `Bun.file` over `node:fs`'s readFile/writeFile
-- Bun.$`ls` instead of execa.
+## Running TypeScript
+
+- Use `pnpm tsx <file>` to execute TypeScript files directly (replaces `ts-node` and `bun`)
+- Use `pnpm tsc` for type checking and building
 
 ## Testing
 
-Use `bun test` to run tests.
+Use `vitest` for testing.
 
-```ts#index.test.ts
-import { test, expect } from "bun:test";
+```ts
+import { describe, it, expect } from 'vitest';
 
-test("hello world", () => {
-  expect(1).toBe(1);
+describe('my test suite', () => {
+  it('should pass', () => {
+    expect(1).toBe(1);
+  });
 });
 ```
 
-## Frontend
-
-Use HTML imports with `Bun.serve()`. Don't use `vite`. HTML imports fully support React, CSS, Tailwind.
-
-Server:
-
-```ts#index.ts
-import index from "./index.html"
-
-Bun.serve({
-  routes: {
-    "/": index,
-    "/api/users/:id": {
-      GET: (req) => {
-        return new Response(JSON.stringify({ id: req.params.id }));
-      },
-    },
-  },
-  // optional websocket support
-  websocket: {
-    open: (ws) => {
-      ws.send("Hello, world!");
-    },
-    message: (ws, message) => {
-      ws.send(message);
-    },
-    close: (ws) => {
-      // handle close
-    }
-  },
-  development: {
-    hmr: true,
-    console: true,
-  }
-})
-```
-
-HTML files can import .tsx, .jsx or .js files directly and Bun's bundler will transpile & bundle automatically. `<link>` tags can point to stylesheets and Bun's CSS bundler will bundle.
-
-```html#index.html
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-    <script type="module" src="./frontend.tsx"></script>
-  </body>
-</html>
-```
-
-With the following `frontend.tsx`:
-
-```tsx#frontend.tsx
-import React from "react";
-import { createRoot } from "react-dom/client";
-
-// import .css files directly and it works
-import './index.css';
-
-const root = createRoot(document.body);
-
-export default function Frontend() {
-  return <h1>Hello, world!</h1>;
-}
-
-root.render(<Frontend />);
-```
-
-Then, run index.ts
+Run tests:
 
 ```sh
-bun --hot ./index.ts
+pnpm test        # Run once
+pnpm test:watch  # Watch mode
 ```
 
-For more information, read the Bun API docs in `node_modules/bun-types/docs/**.mdx`.
+## Development Server
+
+For web demos, use Vite:
+
+```sh
+pnpm vite web_demos --config web_demos/vite.config.ts
+```
+
+For custom servers, use Express:
+
+```ts
+import express from 'express';
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
+```
+
+## Building
+
+- Use `pnpm tsc` for TypeScript compilation
+- Use `vite build` for bundling web applications
+- Use `typedoc` for documentation generation
+
+## Environment Variables
+
+Use `dotenv` for loading environment variables:
+
+```ts
+import 'dotenv/config';
+
+const port = process.env.PORT || 3000;
+```
+
+## APIs
+
+- Use `node:fs` for file system operations
+- Use `ws` for WebSocket servers
+- Use `better-sqlite3` for SQLite
+
+## Best Practices
+
+- Always use TypeScript for type safety
+- Use `tsx` for running TypeScript files in development
+- Use `vitest` for fast, modern testing
+- Use `vite` for fast development and building
+- Use `pnpm` for efficient package management

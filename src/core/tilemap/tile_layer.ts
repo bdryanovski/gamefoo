@@ -36,31 +36,49 @@ import type { TileLayerConfig } from './tilemap_types';
 import type { TileSet } from './tileset';
 
 export class TileLayer {
-  /** Human-readable name of this layer. */
-  readonly name: string;
+  /**
+   * Human-readable name of this layer.
+   */
+  public readonly name: string;
 
-  /** Number of tile columns. */
-  readonly cols: number;
+  /**
+   * Number of tile columns.
+   */
+  public readonly cols: number;
 
-  /** Number of tile rows. */
-  readonly rows: number;
+  /**
+   * Number of tile rows.
+   */
+  public readonly rows: number;
 
-  /** The tileset used to resolve tile IDs to sprite frames. */
-  tileSet: TileSet;
+  /**
+   * The tileset used to resolve tile IDs to sprite frames.
+   */
+  public tileSet: TileSet;
 
-  /** Whether this layer is rendered. */
-  visible: boolean;
+  /**
+   * Whether this layer is rendered.
+   */
+  public visible: boolean;
 
-  /** Layer opacity in `[0, 1]`. */
-  opacity: number;
+  /**
+   * Layer opacity in `[0, 1]`.
+   */
+  public opacity: number;
 
-  /** Horizontal pixel offset (parallax). */
-  offsetX: number;
+  /**
+   * Horizontal pixel offset (parallax).
+   */
+  public offsetX: number;
 
-  /** Vertical pixel offset (parallax). */
-  offsetY: number;
+  /**
+   * Vertical pixel offset (parallax).
+   */
+  public offsetY: number;
 
-  /** Flat row-major tile data. `-1` means empty. */
+  /**
+   * Flat row-major tile data. `-1` means empty.
+   */
   private data: number[];
 
   /**
@@ -110,8 +128,10 @@ export class TileLayer {
    * }
    * ```
    */
-  getTile(col: number, row: number): number {
-    if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) return -1;
+  public getTile(col: number, row: number): number {
+    if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) {
+      return -1;
+    }
     return this.data[row * this.cols + col] ?? -1;
   }
 
@@ -132,8 +152,10 @@ export class TileLayer {
    * layer.setTile(5, 4, -1); // clear tile
    * ```
    */
-  setTile(col: number, row: number, tileId: number): void {
-    if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) return;
+  public setTile(col: number, row: number, tileId: number): void {
+    if (col < 0 || col >= this.cols || row < 0 || row >= this.rows) {
+      return;
+    }
     this.data[row * this.cols + col] = tileId;
   }
 
@@ -165,18 +187,24 @@ export class TileLayer {
   private withOpacity(ctx: RenderContext, fn: () => void): void {
     const canvasCtx = ctx.getCanvas?.() ?? null;
     const prevAlpha = canvasCtx?.globalAlpha ?? 1;
-    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = this.opacity;
+    if (canvasCtx && this.opacity < 1) {
+      canvasCtx.globalAlpha = this.opacity;
+    }
     fn();
-    if (canvasCtx && this.opacity < 1) canvasCtx.globalAlpha = prevAlpha;
+    if (canvasCtx && this.opacity < 1) {
+      canvasCtx.globalAlpha = prevAlpha;
+    }
   }
 
-  renderOrthogonal(
+  public renderOrthogonal(
     ctx: RenderContext,
     cellWidth: number,
     cellHeight: number,
     viewport: { x: number; y: number; width: number; height: number },
   ): void {
-    if (!this.visible) return;
+    if (!this.visible) {
+      return;
+    }
 
     const startCol = Math.max(0, Math.floor(viewport.x / cellWidth) - 1);
     const startRow = Math.max(0, Math.floor(viewport.y / cellHeight) - 1);
@@ -199,10 +227,14 @@ export class TileLayer {
         const rowOffset = row * dataCols;
         for (let col = startCol; col <= endCol; col++) {
           const tileId = this.data[rowOffset + col] ?? -1;
-          if (tileId < 0) continue;
+          if (tileId < 0) {
+            continue;
+          }
 
           const frame = this.tileSet.getFrame(tileId);
-          if (!frame) continue;
+          if (!frame) {
+            continue;
+          }
 
           ctx.drawSprite?.(
             img,
@@ -240,14 +272,16 @@ export class TileLayer {
    * layer.renderIsometric(ctx, projection, camera.getViewRect(), 32, 32);
    * ```
    */
-  renderIsometric(
+  public renderIsometric(
     ctx: RenderContext,
     projection: IsometricProjection,
     viewport: { x: number; y: number; width: number; height: number },
     gridCols: number,
     gridRows: number,
   ): void {
-    if (!this.visible) return;
+    if (!this.visible) {
+      return;
+    }
 
     const range = projection.getVisibleRange(
       viewport.x,
@@ -268,10 +302,14 @@ export class TileLayer {
       for (let row = range.minRow; row <= range.maxRow; row++) {
         for (let col = range.minCol; col <= range.maxCol; col++) {
           const tileId = this.data[row * this.cols + col] ?? -1;
-          if (tileId < 0) continue;
+          if (tileId < 0) {
+            continue;
+          }
 
           const frame = this.tileSet.getFrame(tileId);
-          if (!frame) continue;
+          if (!frame) {
+            continue;
+          }
 
           const pos = projection.gridToScreenFast(col, row);
 

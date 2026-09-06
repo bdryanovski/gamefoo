@@ -54,8 +54,8 @@ export default class IconBitmap extends BitmapDataRenderer {
    *
    * @returns Icon metadata object or `null`.
    */
-  get metadata() {
-    return Catalog.get(this.name) || null;
+  public get metadata() {
+    return Catalog.get(this.name) ?? null;
   }
 
   /**
@@ -69,14 +69,14 @@ export default class IconBitmap extends BitmapDataRenderer {
    * const rows = icon.getIconBitmask("heart");
    * ```
    */
-  getIconBitmask(icon: string): number[] | null {
-    return this.data[icon] || null;
+  public getIconBitmask(icon: string): number[] | null {
+    return this.data[icon] ?? null;
   }
 
   /**
    * Returns the width of a single icon cell.
    */
-  getTextWidth(): number {
+  public getTextWidth(): number {
     return this.width;
   }
 
@@ -97,14 +97,16 @@ export default class IconBitmap extends BitmapDataRenderer {
    * icon.renderIcon("heart", 20, 40, ctx);
    * ```
    */
-  renderIcon(icon: string, x: number, y: number, ctx: RenderContext) {
+  public renderIcon(icon: string, x: number, y: number, ctx: RenderContext) {
     const charData = this.getIconBitmask(icon);
     if (charData === null) {
       return;
     }
     // Icon rendering is pixel-by-pixel; only meaningful on canvas contexts
     const canvasCtx = ctx.getCanvas?.();
-    if (!canvasCtx) return;
+    if (!canvasCtx) {
+      return;
+    }
     for (let row = 0; row < charData.length; row++) {
       const bits = charData[row]!;
       for (let col = 0; col < this.width - this.spacing; col++) {

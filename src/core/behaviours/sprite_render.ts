@@ -46,10 +46,14 @@ import type Sprite from '../sprite';
  * @see {@link Behaviour} — abstract base class
  */
 export class SpriteRender extends Behaviour<Entity> {
-  /** @inheritDoc */
-  readonly type = 'sprite';
+  /**
+   * @inheritDoc
+   */
+  public readonly type = 'sprite';
 
-  /** The spritesheet this renderer draws from. */
+  /**
+   * The spritesheet this renderer draws from.
+   */
   private sheet: Sprite;
 
   /**
@@ -115,7 +119,7 @@ export class SpriteRender extends Behaviour<Entity> {
    * spriteRender.play("run");
    * ```
    */
-  play(animation: string): void {
+  public play(animation: string): void {
     if (this.currentFrame === animation) {
       return;
     }
@@ -130,7 +134,7 @@ export class SpriteRender extends Behaviour<Entity> {
    * After calling `stop`, nothing is drawn until {@link SpriteRender.play}
    * is called again.
    */
-  stop(): void {
+  public stop(): void {
     this.currentFrame = null;
     this.currentFrameIndex = 0;
     this.elapsedTime = 0;
@@ -143,7 +147,7 @@ export class SpriteRender extends Behaviour<Entity> {
    *
    * @param flip - `true` to mirror horizontally, `false` for normal.
    */
-  setFlipX(flip: boolean): void {
+  public setFlipX(flip: boolean): void {
     this.flipX = flip;
   }
 
@@ -155,7 +159,7 @@ export class SpriteRender extends Behaviour<Entity> {
    *
    * @param deltaTime - Seconds elapsed since the previous frame.
    */
-  override update(deltaTime: number): void {
+  public override update(deltaTime: number): void {
     if (!this.currentFrame) {
       return;
     }
@@ -163,9 +167,7 @@ export class SpriteRender extends Behaviour<Entity> {
     const animation = this.sheet.animations.get(this.currentFrame);
 
     if (!animation) {
-      console.warn(
-        `Animation "${this.currentFrame}" not found in sprite sheet.`,
-      );
+      console.warn(`Animation "${this.currentFrame}" not found in sprite sheet.`);
       return;
     }
 
@@ -176,9 +178,7 @@ export class SpriteRender extends Behaviour<Entity> {
       this.currentFrameIndex++;
 
       if (this.currentFrameIndex >= animation.frames.length) {
-        this.currentFrameIndex = animation.loop
-          ? 0
-          : animation.frames.length - 1;
+        this.currentFrameIndex = animation.loop ? 0 : animation.frames.length - 1;
       }
     }
   }
@@ -192,7 +192,7 @@ export class SpriteRender extends Behaviour<Entity> {
    *
    * @param ctx - The canvas 2-D rendering context.
    */
-  override render(ctx: RenderContext): void {
+  public override render(ctx: RenderContext): void {
     if (!this.currentFrame) {
       return;
     }

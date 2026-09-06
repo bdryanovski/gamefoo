@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "portal",
+    "category": ""
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {
+    "targetScreen": "0,0",
+    "spawn": "0,0"
+  },
+  "images": {
+    "walls.png": {
+      "src": "/uploads/1788287758186_walls.png",
+      "width": 224,
+      "height": 256
+    }
+  },
+  "frames": {
+    "sprite_11_0": {
+      "image": "walls.png",
+      "x": 176,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_11_1": {
+      "image": "walls.png",
+      "x": 176,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {},
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
+    }
+  },
+  "states": {
+    "top-open": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_11_0"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mto18678_5",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.030924479166666668,
+            "y": 0.0003255208333333333,
+            "width": 15.846028645833334,
+            "height": 10.9013671875
+          }
+        },
+        {
+          "id": "col_mto18ojr_6",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 4,
+            "y": 4,
+            "width": 8,
+            "height": 8
+          }
+        }
+      ]
+    },
+    "top-close": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_11_0"
+              }
+            }
+          ]
+        },
+        {
+          "name": "door",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_11_1"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mto18678_5",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.030924479166666668,
+            "y": 0.0003255208333333333,
+            "width": 15.846028645833334,
+            "height": 10.9013671875
+          }
+        },
+        {
+          "id": "col_mto18ojr_6",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 4,
+            "y": 4,
+            "width": 8,
+            "height": 8
+          }
+        }
+      ]
+    }
+  },
+  "initial": "top-open"
+}

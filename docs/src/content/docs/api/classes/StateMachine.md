@@ -2,7 +2,7 @@
 title: 'Class: StateMachine<S>'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -24,6 +24,8 @@ every transition.
 
 ## Examples
 
+**Basic usage with a string enum**
+
 ```ts
 enum Phase { Menu = "menu", Playing = "playing", GameOver = "gameover" }
 
@@ -39,6 +41,8 @@ fsm.transition(Phase.Playing);   // false — already there
 fsm.transition(Phase.GameOver);  // true, logs "Game over!"
 fsm.previous;                    // Phase.Playing
 ```
+
+**Unsubscribing a hook**
 
 ```ts
 const unsub = fsm.onEnter(Phase.Playing, () => startMusic());
@@ -131,7 +135,7 @@ or `null` if no transition has occurred yet.
 destroy(): void;
 ```
 
-Defined in: [core/state\_machine.ts:164](https://github.com/bdryanovski/gamefoo/blob/main/src/core/state_machine.ts#L164)
+Defined in: [core/state\_machine.ts:170](https://github.com/bdryanovski/gamefoo/blob/main/src/core/state_machine.ts#L170)
 
 Removes all registered hooks. Call this when the state machine is
 no longer needed to avoid stale references.
@@ -200,7 +204,7 @@ if (fsm.isAny(Phase.Playing, Phase.Paused)) {
 onEnter(state: S, fn: () => void): () => void;
 ```
 
-Defined in: [core/state\_machine.ts:131](https://github.com/bdryanovski/gamefoo/blob/main/src/core/state_machine.ts#L131)
+Defined in: [core/state\_machine.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/state_machine.ts#L137)
 
 Registers a callback that fires whenever the machine enters `state`.
 
@@ -215,13 +219,7 @@ Registers a callback that fires whenever the machine enters `state`.
 
 An unsubscribe function that removes this hook.
 
-```ts
-(): void;
-```
-
-##### Returns
-
-`void`
+() => `void`
 
 ***
 
@@ -231,7 +229,7 @@ An unsubscribe function that removes this hook.
 onExit(state: S, fn: () => void): () => void;
 ```
 
-Defined in: [core/state\_machine.ts:149](https://github.com/bdryanovski/gamefoo/blob/main/src/core/state_machine.ts#L149)
+Defined in: [core/state\_machine.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/state_machine.ts#L155)
 
 Registers a callback that fires whenever the machine exits `state`.
 
@@ -246,13 +244,7 @@ Registers a callback that fires whenever the machine exits `state`.
 
 An unsubscribe function that removes this hook.
 
-```ts
-(): void;
-```
-
-##### Returns
-
-`void`
+() => `void`
 
 ***
 

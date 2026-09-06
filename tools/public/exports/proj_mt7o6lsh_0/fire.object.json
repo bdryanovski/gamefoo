@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "fire",
+    "category": "",
+    "exportedAt": "2026-09-01T18:27:46.493Z"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 2,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 32
+  },
+  "properties": {},
+  "images": {
+    "animated_props.png": {
+      "src": "/uploads/1787645706113_animated_props.png",
+      "width": 176,
+      "height": 128
+    }
+  },
+  "frames": {
+    "fire": {
+      "image": "animated_props.png",
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "fire_1": {
+      "image": "animated_props.png",
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "fire_2": {
+      "image": "animated_props.png",
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "fire_3": {
+      "image": "animated_props.png",
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    }
+  },
+  "animations": {
+    "fire": {
+      "frames": [
+        "fire",
+        "fire_1",
+        "fire_2",
+        "fire_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "layers": [
+    {
+      "name": "base",
+      "cells": [
+        {
+          "col": 0,
+          "row": 0,
+          "source": {
+            "kind": "animation",
+            "animation": "fire"
+          }
+        }
+      ]
+    }
+  ],
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    }
+  },
+  "collisions": [
+    {
+      "id": "col_mtitxhdv_6",
+      "layer": "solid",
+      "enabled": true,
+      "shape": {
+        "kind": "rect",
+        "x": 0,
+        "y": 19.169711538461538,
+        "width": 16.392307692307693,
+        "height": 12.830288461538462
+      }
+    }
+  ],
+  "states": {
+    "init": {
+      "layers": [
+        "base"
+      ],
+      "collisionsOff": []
+    }
+  },
+  "initial": "init"
+}

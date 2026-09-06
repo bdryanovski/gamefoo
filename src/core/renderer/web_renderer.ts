@@ -9,16 +9,21 @@ import type { RenderContext } from './type';
  *
  * ### Scaling
  *
- * When `gameScale > 1` (e.g. `4` for a 200×75 pixel-art game displayed
- * at 800×300):
+ * The `gameScale` parameter controls how large the game appears on screen:
+ *
+ * - `gameScale = 1`: 1:1 pixel mapping. A 200×75 game displays at 200×75 CSS pixels.
+ * - `gameScale = 2`: 2× scale. A 200×75 game displays at 400×150 CSS pixels.
+ * - `gameScale = 4`: 4× scale. A 200×75 game displays at 800×300 CSS pixels.
+ *
+ * Internally:
  *
  * - The canvas **backing buffer** is sized to `width × gameScale` ×
  *   `height × gameScale` so there is a physical pixel for each logical
  *   pixel in the up-scaled view.
+ * - The canvas **CSS size** is also set to `width × gameScale` ×
+ *   `height × gameScale` so the game appears at the scaled size.
  * - `ctx.scale(gameScale, gameScale)` is applied once at construction so
  *   all subsequent draw calls use logical (`width × height`) coordinates.
- * - CSS is set to `width × height` so the browser displays the canvas at
- *   its intended logical size.
  * - `imageSmoothingEnabled` is disabled globally to preserve crisp
  *   pixel-art edges.
  *
@@ -42,11 +47,17 @@ import type { RenderContext } from './type';
  * ```
  *
  * @see {@link RenderContext}         — the interface this class implements
- * @see {@link TerminalRenderContext} — ANSI terminal alternative
  */
 export class WebRenderer implements RenderContext {
-  /** The underlying canvas 2-D rendering context. */
+  /**
+   * The underlying canvas 2-D rendering context.
+   */
   private ctx: CanvasRenderingContext2D;
+
+  /**
+   * The underlying canvas element.
+   */
+  private canvas: HTMLCanvasElement;
 
   /**
    * The logical width — coordinates supplied to draw calls should stay
@@ -54,7 +65,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  readonly width: number;
+  public width: number;
 
   /**
    * The logical height — coordinates supplied to draw calls should stay
@@ -62,14 +73,23 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  readonly height: number;
+  public height: number;
 
   /**
    * The pixel scale factor applied to the canvas backing buffer.
    * Stored so that `clear()` can reset the full buffer regardless of
    * accumulated transforms.
    */
-  private readonly gameScale: number;
+  public gameScale: number;
+
+  /**
+   * Return the actual game scale
+   *
+   * @since 0.5.0
+   */
+  public readGameScale(): number {
+    return this.gameScale;
+  }
 
   /**
    * Creates a new `WebRenderer` and configures the target canvas.
@@ -98,25 +118,26 @@ export class WebRenderer implements RenderContext {
    * const renderer = new WebRenderer("game", 200, 75, 4);
    * ```
    */
-  constructor(
-    canvasId: string,
-    width: number,
-    height: number,
-    gameScale: number = 1,
-  ) {
+  // oxlint-disable-next-line max-statements
+  constructor(canvasId: string, width: number, height: number, gameScale: number = 1) {
     this.width = width;
     this.height = height;
     this.gameScale = gameScale;
 
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    if (!canvas) {
+      throw new Error(`WebRenderer: no canvas element found with id "${canvasId}"`);
+    }
+    this.canvas = canvas;
 
     // Size the backing buffer to hold `gameScale` physical pixels per logical pixel.
     canvas.width = width * gameScale;
     canvas.height = height * gameScale;
 
-    // Display at logical size (browser scales CSS pixels → device pixels separately).
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    // Display at scaled size so the game appears larger on screen.
+    // A 200×75 game with gameScale=4 displays as 800×300 CSS pixels.
+    canvas.style.width = `${width * gameScale}px`;
+    canvas.style.height = `${height * gameScale}px`;
 
     // Prevent the browser compositor from blurring the canvas when it is
     // displayed at a non-native resolution.
@@ -126,9 +147,7 @@ export class WebRenderer implements RenderContext {
 
     const context = canvas.getContext('2d');
     if (!context) {
-      throw new Error(
-        `WebRenderer: failed to get 2D context for canvas "${canvasId}"`,
-      );
+      throw new Error(`WebRenderer: failed to get 2D context for canvas "${canvasId}"`);
     }
     this.ctx = context;
 
@@ -138,6 +157,59 @@ export class WebRenderer implements RenderContext {
     // Apply the permanent game-world → buffer-pixel transform.
     if (gameScale !== 1) {
       this.ctx.scale(gameScale, gameScale);
+    }
+  }
+
+  /**
+   * Resizes the canvas to new dimensions while preserving the scale factor.
+   *
+   * This method updates both the backing buffer size and the CSS display size.
+   * After calling resize, you should also call `engine.resize(width, height)`
+   * to keep the engine's dimensions in sync.
+   *
+   * @param width  - New logical width in game-world pixels.
+   * @param height - New logical height in game-world pixels.
+   * @param scale  - Optional new scale factor. If not provided, keeps current scale.
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * // Change to Game Boy resolution
+   * renderer.resize(160, 144);
+   * engine.resize(160, 144);
+   *
+   * // Change resolution and scale
+   * renderer.resize(256, 240, 3);
+   * engine.resize(256, 240);
+   * ```
+   */
+  public resize(width: number, height: number, scale?: number): void {
+    this.width = width;
+    this.height = height;
+    if (scale !== undefined) {
+      this.gameScale = scale;
+    }
+
+    const s = this.gameScale;
+
+    // Reset transform before resizing
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    // Update backing buffer size
+    this.canvas.width = width * s;
+    this.canvas.height = height * s;
+
+    // Update CSS display size
+    this.canvas.style.width = `${width * s}px`;
+    this.canvas.style.height = `${height * s}px`;
+
+    // Re-apply settings that get reset when canvas size changes
+    this.ctx.imageSmoothingEnabled = false;
+
+    // Re-apply scale transform
+    if (s !== 1) {
+      this.ctx.scale(s, s);
     }
   }
 
@@ -153,7 +225,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  save() {
+  public save(): void {
     this.ctx.save();
   }
 
@@ -162,7 +234,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  restore() {
+  public restore(): void {
     this.ctx.restore();
     // imageSmoothingEnabled is restored automatically from the saved state.
     // Explicitly re-disable it to guard against any external ctx.save/restore
@@ -178,7 +250,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  translate(x: number, y: number) {
+  public translate(x: number, y: number): void {
     this.ctx.translate(x, y);
   }
 
@@ -194,7 +266,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  scale(x: number, y: number) {
+  public scale(x: number, y: number): void {
     this.ctx.scale(x, y);
   }
 
@@ -209,25 +281,35 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  clear(color = '#000000') {
+  public clear(color = '#000000'): void {
     // Reset transform to identity to clear the whole buffer, then restore.
     this.ctx.save();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.ctx.clearRect(
-      0,
-      0,
-      this.width * this.gameScale,
-      this.height * this.gameScale,
-    );
+    this.ctx.clearRect(0, 0, this.width * this.gameScale, this.height * this.gameScale);
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(
-      0,
-      0,
-      this.width * this.gameScale,
-      this.height * this.gameScale,
-    );
+    this.ctx.fillRect(0, 0, this.width * this.gameScale, this.height * this.gameScale);
     this.ctx.restore();
     this.ctx.imageSmoothingEnabled = false;
+  }
+
+  /**
+   * Fills the current path or a provided Path2D.
+   *
+   * Mirrors the Canvas 2D `fill()` API.
+   *
+   * @param path - Optional Path2D to fill. If omitted, fills the current path.
+   * @param fillRule - Optional fill rule: "nonzero" (default) or "evenodd".
+   *
+   * @since 0.5.0
+   */
+  public fill(path?: Path2D, fillRule?: CanvasFillRule): void {
+    if (path === undefined) {
+      this.ctx.fill();
+    } else if (fillRule !== undefined) {
+      this.ctx.fill(path, fillRule);
+    } else {
+      this.ctx.fill(path);
+    }
   }
 
   /**
@@ -241,7 +323,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  fillRect(x: number, y: number, w: number, h: number, color: string) {
+  public fillRect(x: number, y: number, w: number, h: number, color: string): void {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(x, y, w, h);
   }
@@ -257,7 +339,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  strokeRect(x: number, y: number, w: number, h: number, color: string) {
+  public strokeRect(x: number, y: number, w: number, h: number, color: string): void {
     this.ctx.strokeStyle = color;
     this.ctx.strokeRect(x, y, w, h);
   }
@@ -277,13 +359,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawText(
-    text: string,
-    x: number,
-    y: number,
-    color = '#ffffff',
-    _bgColor?: string,
-  ) {
+  public drawText(text: string, x: number, y: number, color = '#ffffff', _bgColor?: string): void {
     this.ctx.fillStyle = color;
     this.ctx.fillText(text, x, y);
   }
@@ -300,7 +376,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawChar(char: string, x: number, y: number, color = '#ffffff') {
+  public drawChar(char: string, x: number, y: number, color = '#ffffff'): void {
     this.drawText(char, x, y, color);
   }
 
@@ -321,7 +397,8 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawSprite(
+  // oxlint-disable-next-line max-params
+  public drawSprite(
     source: HTMLImageElement,
     sx: number,
     sy: number,
@@ -331,7 +408,7 @@ export class WebRenderer implements RenderContext {
     dy: number,
     dw: number,
     dh: number,
-  ) {
+  ): void {
     this.ctx.drawImage(source, sx, sy, sw, sh, dx, dy, dw, dh);
   }
 
@@ -346,7 +423,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawLine(x1: number, y1: number, x2: number, y2: number, color: string) {
+  public drawLine(x1: number, y1: number, x2: number, y2: number, color: string): void {
     this.ctx.strokeStyle = color;
     this.ctx.beginPath();
     this.ctx.moveTo(x1, y1);
@@ -365,13 +442,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  drawCircle(
-    x: number,
-    y: number,
-    radius: number,
-    color: string,
-    fill = false,
-  ) {
+  public drawCircle(x: number, y: number, radius: number, color: string, fill = false): void {
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, Math.PI * 2);
     if (fill) {
@@ -381,15 +452,6 @@ export class WebRenderer implements RenderContext {
       this.ctx.strokeStyle = color;
       this.ctx.stroke();
     }
-  }
-
-  /**
-   * No-op — canvas rendering is immediate-mode and requires no explicit flush.
-   *
-   * @since 0.4.0
-   */
-  flush() {
-    /* no-op — canvas is immediate mode */
   }
 
   /**
@@ -413,7 +475,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  getCanvas(): CanvasRenderingContext2D {
+  public getCanvas(): CanvasRenderingContext2D {
     return this.ctx;
   }
 }
