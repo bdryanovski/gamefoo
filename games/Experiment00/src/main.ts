@@ -30,7 +30,7 @@ import { RoomScreen } from './screens/room';
 // 320×256 screen, up-scaled ×2 for display (640×512).
 const SCREEN_W = 320;
 const SCREEN_H = 256;
-const SCALE = 2;
+const SCALE = 3;
 const PLAYER_SIZE = 16;
 // Screen tile size (px). Portal `spawn` cells are authored in grid col/row
 // and converted to pixels with this.
@@ -63,7 +63,7 @@ class MapGame extends Engine {
   private dialog?: DialogRunner;
   private readonly dialogBox = new DialogBox();
 
-  async load() {
+  public async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
     const registry = new MapObjectRegistry();
@@ -293,6 +293,6 @@ class MapGame extends Engine {
 }
 
 const game = new MapGame(renderer, { backgroundColor: '#12121c' });
-game.setup(() => {
-  void game.load();
+game.setup(async () => {
+  await void game.load();
 });

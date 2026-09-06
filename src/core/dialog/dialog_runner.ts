@@ -87,21 +87,21 @@ export class DialogRunner {
 
   private findTreeByMessage(messageId: string): DialogTreeData | null {
     for (const t of Object.values(this.doc.trees)) {
-      if (t.messages[messageId]) return t;
+      if (t.messages[messageId]) {return t;}
     }
     return null;
   }
 
   private resolveTree(ref: string): DialogTreeData | null {
     const trees = this.doc.trees;
-    if (Object.prototype.hasOwnProperty.call(trees, ref)) return trees[ref]!;
+    if (Object.prototype.hasOwnProperty.call(trees, ref)) {return trees[ref]!;}
     for (const t of Object.values(trees)) {
-      if (t.id === ref || t.name === ref) return t;
+      if (t.id === ref || t.name === ref) {return t;}
     }
     const idx = Number(ref);
     if (Number.isInteger(idx) && idx >= 0) {
       const list = Object.values(trees);
-      if (idx < list.length) return list[idx]!;
+      if (idx < list.length) {return list[idx]!;}
     }
     return null;
   }
@@ -114,7 +114,7 @@ export class DialogRunner {
   }
 
   private get message(): DialogMessageData | null {
-    if (!this.tree || !this.messageId) return null;
+    if (!this.tree || !this.messageId) {return null;}
     return this.tree.messages[this.messageId] ?? null;
   }
 
@@ -133,8 +133,8 @@ export class DialogRunner {
    * segment is shown and the options are selectable.
    */
   get phase(): DialogPhase {
-    if (this.revealed < this.segmentText.length) return 'typing';
-    if (!this.atLastSegment) return 'ready';
+    if (this.revealed < this.segmentText.length) {return 'typing';}
+    if (!this.atLastSegment) {return 'ready';}
     return 'choosing';
   }
 
@@ -169,7 +169,7 @@ export class DialogRunner {
    */
   get choices(): DialogChoice[] {
     const options = this.message?.options ?? [];
-    if (options.length === 0) return [{ label: this.closeLabel, target: null }];
+    if (options.length === 0) {return [{ label: this.closeLabel, target: null }];}
     return options.map((o) => ({ label: o.label, target: o.target }));
   }
 
@@ -180,7 +180,7 @@ export class DialogRunner {
 
   /** Advance the typewriter by `dt` seconds. No-op when inactive. */
   update(dt: number): void {
-    if (!this.running) return;
+    if (!this.running) {return;}
     const length = this.segmentText.length;
     if (this.revealed < length) {
       this.revealed = Math.min(length, this.revealed + this.cps * dt);
@@ -189,7 +189,7 @@ export class DialogRunner {
 
   /** Move the option selection (wraps). Only effective while `choosing`. */
   moveSelection(delta: number): void {
-    if (!this.running || this.phase !== 'choosing') return;
+    if (!this.running || this.phase !== 'choosing') {return;}
     const count = this.choices.length;
     this.selected = (((this.selected + delta) % count) + count) % count;
   }
@@ -202,7 +202,7 @@ export class DialogRunner {
    *   the dialog when the target is `null` or missing).
    */
   confirm(): void {
-    if (!this.running) return;
+    if (!this.running) {return;}
     const phase = this.phase;
     if (phase === 'typing') {
       this.revealed = this.segmentText.length;
@@ -214,7 +214,7 @@ export class DialogRunner {
       return;
     }
     const choice = this.choices[this.selected];
-    if (!choice || choice.target == null || !this.tree?.messages[choice.target]) {
+    if (choice?.target == null || !this.tree?.messages[choice.target]) {
       this.close();
       return;
     }

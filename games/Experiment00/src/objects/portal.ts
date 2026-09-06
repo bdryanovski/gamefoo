@@ -36,7 +36,7 @@ function parseCoord(raw: string | undefined): { x: number; y: number } | null {
  * {@link MapGame} performs the actual screen navigation.
  */
 export class Portal extends MapObject {
-  static override readonly type = 'portal';
+  public static override readonly type = 'portal';
 
   /** Current state's authored NAME (e.g. `top-open`), not its id. */
   private get stateName(): string | undefined {
@@ -48,7 +48,7 @@ export class Portal extends MapObject {
    * (name contains `open`) so it works regardless of the exact scheme —
    * `top-open`, `portal-open`, `open`, … — while `*-close` stays shut.
    */
-  get isOpen(): boolean {
+  public get isOpen(): boolean {
     return (this.stateName ?? '').toLowerCase().includes('open');
   }
 
@@ -56,7 +56,7 @@ export class Portal extends MapObject {
    * Destination screen parsed from the `targetScreen` property (`"x,y"`), or
    * `null` when unset/malformed.
    */
-  get target(): { x: number; y: number } | null {
+  public get target(): { x: number; y: number } | null {
     return parseCoord(this.properties.targetScreen);
   }
 
@@ -67,9 +67,11 @@ export class Portal extends MapObject {
    * malformed, or `"0,0"` — the sentinel meaning "no explicit cell, drop the
    * player at the screen centre". The game converts cells to pixels.
    */
-  get spawn(): { col: number; row: number } | null {
+  public get spawn(): { col: number; row: number } | null {
     const point = parseCoord(this.properties.spawn);
-    if (!point || (point.x === 0 && point.y === 0)) return null;
+    if (!point || (point.x === 0 && point.y === 0)) {
+      return null;
+    }
     return { col: point.x, row: point.y };
   }
 
@@ -77,13 +79,13 @@ export class Portal extends MapObject {
    * World-space AABB of the current state's `activation` collider, or the
    * object's footprint when none is authored.
    */
-  activationBox(): Rect {
+  public activationBox(): Rect {
     const activation = this.worldColliders().find((c) => c.layer === 'activation');
     return activation ? activation.bounds : this.bounds();
   }
 
   /** True when `box` overlaps this portal's activation zone. */
-  overlaps(box: Rect): boolean {
+  public overlaps(box: Rect): boolean {
     const a = this.activationBox();
     return (
       box.x < a.x + a.width &&
@@ -98,16 +100,15 @@ export class Portal extends MapObject {
    * convention (`top-open`, `portal-open`, …). Idempotent — returns `true`
    * only when the state actually changed.
    */
-  open(): boolean {
-    if (this.isOpen) return false;
+  public open(): boolean {
+    if (this.isOpen) {
+      return false;
+    }
     const openState = this.machine.states.find((s) => s.name.toLowerCase().includes('open'));
     return openState ? this.play(openState.name) : false;
   }
 
-  override render(ctx: RenderContext): void {
+  public override render(ctx: RenderContext): void {
     super.render(ctx);
-    // Affordance: outline the activation zone — green when open, dim when shut.
-    const a = this.activationBox();
-    ctx.strokeRect(a.x, a.y, a.width, a.height, this.isOpen ? '#66ff99' : '#555577');
   }
 }

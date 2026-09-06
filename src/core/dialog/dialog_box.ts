@@ -94,14 +94,14 @@ export class DialogBox {
   update(dt: number, active: boolean): void {
     const target = active ? 1 : 0;
     const step = this.slideSpeed * dt;
-    if (this.reveal < target) this.reveal = Math.min(target, this.reveal + step);
-    else if (this.reveal > target) this.reveal = Math.max(target, this.reveal - step);
+    if (this.reveal < target) {this.reveal = Math.min(target, this.reveal + step);}
+    else if (this.reveal > target) {this.reveal = Math.max(target, this.reveal - step);}
     this.blink = (this.blink + dt) % 1;
   }
 
   /** Draws nothing while fully hidden and the runner is closed. */
   render(ctx: RenderContext, runner: DialogRunner): void {
-    if (this.reveal <= 0.001 && !runner.active) return;
+    if (this.reveal <= 0.001 && !runner.active) {return;}
 
     const surfaceW = ctx.width;
     const surfaceH = ctx.height;
@@ -180,12 +180,12 @@ export class DialogBox {
       ctx.drawText(hint, x + panelW - pad - measure(hint), footerTop, this.theme.hint);
     }
 
-    if (raw) raw.restore();
+    if (raw) {raw.restore();}
   }
 
   private caption(runner: DialogRunner): string {
     const portrait = runner.meta.portrait;
-    if (portrait) return runner.title ? `${portrait} — ${runner.title}` : portrait;
+    if (portrait) {return runner.title ? `${portrait} — ${runner.title}` : portrait;}
     return runner.title;
   }
 }
@@ -208,6 +208,6 @@ function wrapText(text: string, maxWidth: number, measure: (s: string) => number
       line = trial;
     }
   }
-  if (line) lines.push(line);
+  if (line) {lines.push(line);}
   return lines.join('\n');
 }
