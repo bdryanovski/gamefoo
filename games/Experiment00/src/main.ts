@@ -1,3 +1,4 @@
+// oxlint-disable max-statements curly
 import {
   DialogBox,
   type DialogDocument,
@@ -14,7 +15,8 @@ import {
   WebRenderer,
 } from '../../../src/index';
 import { drawMessages, updateMessages } from './hud';
-import { Campfire, loadCampfireConfig } from './objects/campfire';
+import { Campfire } from './objects/campfire';
+import { Torch } from './objects/torch';
 import { Bookshelf } from './objects/bookshelf';
 import { Player } from './objects/player';
 import { Portal } from './objects/portal';
@@ -71,7 +73,7 @@ class MapGame extends Engine {
     registry.register(Bookshelf);
     registry.register(Rat);
     registry.register(Slime);
-    await loadCampfireConfig('/project/exports/proj_mtj0babj_m/campfire.object.json');
+    registry.register(Torch);
 
     // Screens: a default class for every room, overridden per coordinate.
     const screens = new ScreenRegistry();
@@ -223,7 +225,7 @@ class MapGame extends Engine {
     if (e.key === 'e' || e.key === 'E' || e.key === ' ') this.interact();
   }
 
-  override update(dt: number) {
+  public override update(dt: number): void {
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
     this.dialog?.update(dt);
@@ -262,7 +264,7 @@ class MapGame extends Engine {
     }
   }
 
-  override render(ctx: RenderContext) {
+  public override render(ctx: RenderContext): void {
     const raw = ctx.getCanvas?.();
     if (raw) raw.imageSmoothingEnabled = false;
 
