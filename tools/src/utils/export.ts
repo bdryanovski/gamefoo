@@ -1,4 +1,4 @@
-import type { AppState, LibraryImage, SpriteRegion, AnimationDef, GameObjectDef, CollisionVolume, CollisionLayerDef } from "../types";
+import type { AppState, ProjectSnapshot, LibraryImage, SpriteRegion, AnimationDef, GameObjectDef, CollisionVolume, CollisionLayerDef } from "../types";
 import type { ObjectExport } from "../objects/objectExport";
 import { exportObject } from "../objects/objectExport";
 
@@ -313,9 +313,19 @@ export function exportConfig(state: AppState) {
   };
 }
 
-/** Save project state for later reload. */
+/**
+ * The persisted/exported project document: everything **except** the undo
+ * `history`, which is runtime-only in-memory state and never written to disk
+ * (persisting it bloats the file ~100× — one full snapshot per undo step).
+ */
+export function projectDocument(state: AppState): ProjectSnapshot {
+  const { history: _history, ...doc } = state;
+  return doc;
+}
+
+/** Save project state for later reload (undo history excluded). */
 export function exportProject(state: AppState): string {
-  return JSON.stringify(state, null, 2);
+  return JSON.stringify(projectDocument(state), null, 2);
 }
 
 export function downloadJSON(data: unknown, filename: string): void {

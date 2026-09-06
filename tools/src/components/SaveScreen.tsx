@@ -9,6 +9,7 @@ import {
   exportAnimations,
   exportConfig,
   spritesOfImage,
+  projectDocument,
 } from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
 import { exportStateMachines } from "../statemachine/smExport";
@@ -114,7 +115,7 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
     list.push({
       filename: `${baseName}.project.json`,
       label: "Project File (re-import into editor)",
-      data: state,
+      data: projectDocument(state),
     });
 
     setFiles(list);

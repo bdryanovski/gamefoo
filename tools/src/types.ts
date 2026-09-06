@@ -926,9 +926,9 @@ export function migrateSpriteState(raw: unknown): AppState {
       )
       : { ...INITIAL_MAP_STATE, screens: {} },
     dialog: sanitizeDialogState(old.dialog),
-    history: Array.isArray(old.history)
-      ? (old.history as ProjectSnapshot[])
-      : [],
+    // Undo history is runtime-only: never restored from a loaded/imported
+    // project. It rebuilds in memory as you edit.
+    history: [],
   } satisfies AppState;
 
   delete (state as unknown as Record<string, unknown>).imageData;
