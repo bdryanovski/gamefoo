@@ -42,28 +42,12 @@ export interface Vector2 {
 }
 
 /**
- * An object representin 2D demensions of anything
- *
- * @category Types
- * @since 0.2.0
- *
- * @example Basic set
- * ```ts
- * const Size: Demension = { width: 32, height: 32 };
- * ```
- */
-export interface Demension {
-  width: number;
-  height: number;
-}
-
-/**
  * Discriminated union describing the shape of a collision volume.
  *
  * The `type` field acts as the discriminant:
  *
- * | `type`     | Extra fields               | Description                    |
- * | ---------- | -------------------------- | ------------------------------ |
+ * | `type`     | Extra fields                 | Description                    |
+ * | ---------- | ---------------------------- | ------------------------------ |
  * | `"aabb"`   | `width`, `height`, `offset?` | Axis-aligned bounding box      |
  * | `"circle"` | `radius`, `offset?`          | Circle centred on the entity   |
  *
@@ -170,6 +154,8 @@ export interface CollisionInfo {
  * @category Types
  * @since 0.1.0
  *
+ * @deprecated Use {@link Box} shorter property names same thing.
+ *
  * @see {@link World} — consumes these bounds during the detection pass
  */
 export interface WorldBounds {
@@ -192,13 +178,20 @@ export interface WorldBounds {
 }
 
 /**
- * Alias for {@link Demension} with correct spelling.
+ * An object representin 2D demensions of anything
  *
- * @deprecated Use `Dimension` instead of `Demension`.
+ * @example Basic set
+ * ```ts
+ * const Size: Demension = { width: 32, height: 32 };
+ * ```
+ *
  * @category Types
  * @since 0.4.0
  */
-export type Dimension = Demension;
+export interface Dimension {
+  width: number;
+  height: number;
+}
 
 /**
  * The amount of time between renders
@@ -213,11 +206,26 @@ export type DeltaTime = number;
  *
  * @example
  *
- *   - #ffffff
- *   - #000000
- *   - #000
- *   - #f4f4f4
- *
+ * ```ts
+ *   var color: HexColor = '#f4f4f4'
+ * ```
+ * @category Types
  * @since 0.5.0
  */
 export type HexColor = string;
+
+/**
+ * Box
+ *
+ * Type for holding boxes on the screen by definining position using x,y and demensions
+ * with h, w
+ *
+ * @category Types
+ * @since 0.5.0
+ */
+export interface Box {
+  x: number;
+  y: number;
+  h: number;
+  w: number;
+}

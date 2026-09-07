@@ -42,6 +42,12 @@ import type { Collidable } from './behaviours/collidable';
  * world.detect(); // typically called by Engine.update each frame
  * ```
  *
+ * @deprecated In favor of Map - still early on but this most likely will
+ * be removed from the core and maybe extracted as standalone extenstion or
+ * something else. There are cleaver concepts that may help you build a
+ * interactable playground from this - don't depend on it the API will change
+ * for sure
+ *
  * @see {@link Collidable} — the behaviour that plugs into this world
  * @see {@link Engine}     — calls {@link World.detect} every frame
  */

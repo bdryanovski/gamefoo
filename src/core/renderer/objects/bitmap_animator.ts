@@ -26,7 +26,7 @@
 
 import type { RenderContext } from '../type';
 import Node from '../../../entities/node';
-import type { Demension, Vector2 } from '@/generic_types';
+import type { Dimension, Vector2 } from '@/generic_types';
 import type { Bitmap } from './bitmap';
 
 type BitmapAnimatorData = Record<string, Bitmap[]>;
@@ -71,7 +71,7 @@ export class BitmapAnimator extends Node {
    */
   constructor(
     position: Vector2,
-    size: Demension,
+    size: Dimension,
     animations: BitmapAnimatorData = {},
     duration = 0.1,
   ) {

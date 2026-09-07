@@ -1,4 +1,4 @@
-import type { Demension } from '@/generic_types';
+import type { Dimension } from '@/generic_types';
 import Node from '../../../entities/node';
 import type { BitmapData } from './bitmap_types';
 
@@ -12,7 +12,7 @@ export class Bitmap extends Node {
   constructor(
     id: string,
     data: BitmapData,
-    demension: Demension = { width: 1, height: 1 }, // A dot.
+    demension: Dimension = { width: 1, height: 1 }, // A dot.
   ) {
     super({ x: 0, y: 0 }, demension);
 

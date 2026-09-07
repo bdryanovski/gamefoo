@@ -169,10 +169,6 @@ export type {
   ColliderShape,
   CollisionInfo,
   /**
-   * @deprecated Use {@link Dimension} instead (correct spelling).
-   */
-  Demension,
-  /**
    * @since 0.4.0
    */
   Dimension,

@@ -1,5 +1,5 @@
 import type { RenderContext } from '@/core/renderer/type';
-import type { Demension, Vector2 } from '@/generic_types';
+import type { Dimension, Vector2 } from '@/generic_types';
 
 /**
  * Abstract base class for all renderable objects in the GameFoo engine.
@@ -54,7 +54,7 @@ export default abstract class Node {
    *
    * @since 0.5.0
    */
-  protected readonly size: Demension = { width: 0, height: 0 };
+  protected readonly size: Dimension = { width: 0, height: 0 };
 
   /**
    * Creates a new Node.
@@ -73,7 +73,7 @@ export default abstract class Node {
    * super({ x: 100, y: 200 }, { width: 32, height: 32 });
    * ```
    */
-  constructor(position: Vector2, size?: Demension) {
+  constructor(position: Vector2, size?: Dimension) {
     if (position) {
       this.position = position;
     }
@@ -138,7 +138,7 @@ export default abstract class Node {
   /**
    * Returns the node's bounding dimensions.
    *
-   * @returns The internal {@link Demension} reference with `width` and `height`.
+   * @returns The internal {@link Dimension} reference with `width` and `height`.
    *
    * @since 0.5.0
    *
@@ -148,7 +148,7 @@ export default abstract class Node {
    * console.log(`Node is ${size.width}×${size.height} pixels`);
    * ```
    */
-  public getSize(): Demension {
+  public getSize(): Dimension {
     return this.size;
   }
 
