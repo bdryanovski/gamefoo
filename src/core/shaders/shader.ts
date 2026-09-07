@@ -34,12 +34,12 @@ export abstract class Shader {
   /**
    * Unique key used by {@link ShaderStack.get} / {@link ShaderStack.detach}.
    */
-  public abstract readonly type: string;
+  abstract readonly type: string;
 
   /**
    * When `false`, the stack skips this shader's update and render.
    */
-  public enabled: boolean;
+  enabled: boolean;
 
   /**
    * @param config - Base options (currently just `enabled`). Subclasses
@@ -56,7 +56,7 @@ export abstract class Shader {
    *
    * @param _deltaTime - Seconds since the previous frame.
    */
-  public update(_deltaTime: DeltaTime): void {}
+  update(_deltaTime: DeltaTime): void {}
 
   /**
    * Draws the effect for `region`.
@@ -67,7 +67,7 @@ export abstract class Shader {
    * @param ctx    - The active render context.
    * @param region - The area to affect (object box or full screen).
    */
-  public abstract render(ctx: RenderContext, region: ShaderRegion): void;
+  abstract render(ctx: RenderContext, region: ShaderRegion): void;
 
   /**
    * The raw `CanvasRenderingContext2D`, or `null` on non-canvas renderers.

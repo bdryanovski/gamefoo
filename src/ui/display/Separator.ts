@@ -100,11 +100,11 @@ export default class Separator extends UIWidget {
   /**
    * Orientation
    */
-  public get orientation(): 'horizontal' | 'vertical' {
+  get orientation(): 'horizontal' | 'vertical' {
     return this._orientation;
   }
 
-  public set orientation(value: 'horizontal' | 'vertical') {
+  set orientation(value: 'horizontal' | 'vertical') {
     if (this._orientation !== value) {
       this._orientation = value;
       this.updateSize();
@@ -115,11 +115,11 @@ export default class Separator extends UIWidget {
   /**
    * Line thickness
    */
-  public get thickness(): number {
+  get thickness(): number {
     return this._thickness;
   }
 
-  public set thickness(value: number) {
+  set thickness(value: number) {
     if (this._thickness !== value) {
       this._thickness = value;
       this.updateSize();
@@ -130,22 +130,22 @@ export default class Separator extends UIWidget {
   /**
    * Custom color
    */
-  public get color(): string | null {
+  get color(): string | null {
     return this._color;
   }
 
-  public set color(value: string | null) {
+  set color(value: string | null) {
     this._color = value;
   }
 
   /**
    * Length
    */
-  public get length(): number {
+  get length(): number {
     return this._length;
   }
 
-  public set length(value: number) {
+  set length(value: number) {
     if (this._length !== value) {
       this._length = value;
       this.updateSize();
@@ -182,7 +182,7 @@ export default class Separator extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     if (this._orientation === 'horizontal') {
       // If length not set, try to use parent width
       let width = this._length;

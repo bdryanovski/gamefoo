@@ -67,20 +67,20 @@ export default class MapObject {
   /**
    * Registry key. Override in subclasses; falls back to the object name.
    */
-  public static readonly type?: string;
+  static readonly type?: string;
 
   /**
    * Pixel X within the screen.
    */
-  public x: number;
+  x: number;
   /**
    * Pixel Y within the screen.
    */
-  public y: number;
+  y: number;
   /**
    * Z-layer this object lives on.
    */
-  public readonly level: number;
+  readonly level: number;
 
   /**
    * The object prefab (name, sprites, animations, meta).
@@ -143,7 +143,7 @@ export default class MapObject {
   /**
    * The current state's id.
    */
-  public get state(): string {
+  get state(): string {
     return this.fsm.current;
   }
 
@@ -153,7 +153,7 @@ export default class MapObject {
    *
    * @returns `true` if a transition was taken.
    */
-  public interact(condition: string): boolean {
+  interact(condition: string): boolean {
     const current = this.fsm.current;
     const edge = this.machine.transitions.find(
       (t) => t.fromStateId === current && t.condition === condition,
@@ -167,12 +167,12 @@ export default class MapObject {
   /**
    * Called once when the object's screen becomes active.
    */
-  public onSpawn(): void {}
+  onSpawn(): void {}
 
   /**
    * Called once when the object's screen is left; disposes the FSM.
    */
-  public onDespawn(): void {
+  onDespawn(): void {
     this.shaders.clear();
     this.fsm.destroy();
   }
@@ -180,7 +180,7 @@ export default class MapObject {
   /**
    * Advances the current animation, if any.
    */
-  public update(_deltaTime: DeltaTime): void {
+  update(_deltaTime: DeltaTime): void {
     for (const part of this.parts) {
       part.anim?.update(_deltaTime);
     }
@@ -190,7 +190,7 @@ export default class MapObject {
   /**
    * Draws the current state's display.
    */
-  public render(ctx: RenderContext): void {
+  render(ctx: RenderContext): void {
     for (const part of this.parts) {
       if (part.anim) {
         // keep the animation aligned with the object (custom classes may move it)
@@ -207,28 +207,28 @@ export default class MapObject {
   /**
    * Attaches a screen shader to this object; returns it for configuration.
    */
-  public attachShader<T extends Shader>(shader: T): T {
+  attachShader<T extends Shader>(shader: T): T {
     return this.shaders.attach(shader);
   }
 
   /**
    * The attached shader with `type`, or `undefined`.
    */
-  public getShader<T extends Shader>(type: string): T | undefined {
+  getShader<T extends Shader>(type: string): T | undefined {
     return this.shaders.get<T>(type);
   }
 
   /**
    * Whether a shader with `type` is attached.
    */
-  public hasShader(type: string): boolean {
+  hasShader(type: string): boolean {
     return this.shaders.has(type);
   }
 
   /**
    * Detaches the shader with `type`, if present.
    */
-  public detachShader(type: string): void {
+  detachShader(type: string): void {
     this.shaders.detach(type);
   }
 
@@ -239,7 +239,7 @@ export default class MapObject {
    * {@link CollisionMap} can block movement or resolve interactions. Empty
    * when the current state authors none (e.g. an unlit, non-solid campfire).
    */
-  public worldColliders(): WorldCollider[] {
+  worldColliders(): WorldCollider[] {
     const defs = this.def.collisionsByState?.[this.state] ?? [];
     const out: WorldCollider[] = [];
     const grid = this.def.grid;

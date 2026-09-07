@@ -157,7 +157,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public setRoot(root: UIWidget | null): void {
+  setRoot(root: UIWidget | null): void {
     this._root = root;
   }
 
@@ -166,7 +166,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public getRoot(): UIWidget | null {
+  getRoot(): UIWidget | null {
     return this._root;
   }
 
@@ -182,7 +182,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public captureInput(widget: UIWidget): void {
+  captureInput(widget: UIWidget): void {
     this._capturedWidget = widget;
   }
 
@@ -191,7 +191,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public releaseCapture(): void {
+  releaseCapture(): void {
     this._capturedWidget = null;
   }
 
@@ -200,7 +200,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public getCapturedWidget(): UIWidget | null {
+  getCapturedWidget(): UIWidget | null {
     return this._capturedWidget;
   }
 
@@ -216,7 +216,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public processInput(): boolean {
+  processInput(): boolean {
     if (!this._root) {
       return false;
     }
@@ -569,7 +569,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public reset(): void {
+  reset(): void {
     this._lastMouseX = 0;
     this._lastMouseY = 0;
     this._capturedWidget = null;
@@ -582,7 +582,7 @@ export default class InputRouter {
    *
    * @since 0.5.0
    */
-  public destroy(): void {
+  destroy(): void {
     this.reset();
     this._root = null;
   }

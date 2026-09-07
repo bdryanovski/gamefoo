@@ -70,31 +70,31 @@ class WallEntity extends Entity {
   /**
    * Walls are static — no update logic.
    */
-  public update(_dt: number): void {}
+  update(_dt: number): void {}
 
   /**
    * Walls are invisible — collision only, tiles draw them.
    */
-  public render(_ctx: RenderContext): void {}
+  render(_ctx: RenderContext): void {}
 }
 
 export class TileMap {
   /**
    * The underlying grid storing cell data and walkability.
    */
-  public readonly grid: Grid;
+  readonly grid: Grid;
 
   /**
    * Ordered list of tile layers (rendered back-to-front).
    */
-  public readonly layers: TileLayer[];
+  readonly layers: TileLayer[];
 
   /**
    * Isometric projection. `null` means orthogonal (top-down) mode.
    *
    * Can be reassigned at runtime to change the isometric angle.
    */
-  public projection: IsometricProjection | null;
+  projection: IsometricProjection | null;
 
   /**
    * Name of the collision layer, if any.
@@ -143,7 +143,7 @@ export class TileMap {
    * tilemap.render(ctx, camera.getViewRect());
    * ```
    */
-  public render(
+  render(
     ctx: RenderContext,
     viewport: { x: number; y: number; width: number; height: number },
   ): void {
@@ -182,7 +182,7 @@ export class TileMap {
    * }
    * ```
    */
-  public getTileAtScreen(screenX: number, screenY: number, layerName: string): number {
+  getTileAtScreen(screenX: number, screenY: number, layerName: string): number {
     const layer = this.layers.find((l) => l.name === layerName);
     if (!layer) {
       return -1;
@@ -228,7 +228,7 @@ export class TileMap {
    * engine.use(new ObjectSystem([player, ...walls]));
    * ```
    */
-  public buildColliders(world: World): Entity[] {
+  buildColliders(world: World): Entity[] {
     if (!this.collisionLayerName) {
       return [];
     }
@@ -313,7 +313,7 @@ export class TileMap {
    * }
    * ```
    */
-  public getLayer(name: string): TileLayer | undefined {
+  getLayer(name: string): TileLayer | undefined {
     return this.layers.find((l) => l.name === name);
   }
 }

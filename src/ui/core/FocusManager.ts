@@ -104,7 +104,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public get config(): Readonly<Required<FocusConfig>> {
+  get config(): Readonly<Required<FocusConfig>> {
     return this._config;
   }
 
@@ -115,7 +115,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public setConfig(config: FocusConfig): void {
+  setConfig(config: FocusConfig): void {
     this._config = { ...this._config, ...config };
   }
 
@@ -130,7 +130,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public setRoot(root: UIWidget | null): void {
+  setRoot(root: UIWidget | null): void {
     this._root = root;
   }
 
@@ -139,7 +139,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public getRoot(): UIWidget | null {
+  getRoot(): UIWidget | null {
     return this._root;
   }
 
@@ -168,7 +168,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public pushTrap(widget: UIWidget): void {
+  pushTrap(widget: UIWidget): void {
     this._trapStack.push(widget);
     // Focus first focusable in the trapped area
     const focusable = this.getFocusableWidgets();
@@ -184,7 +184,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public popTrap(): UIWidget | undefined {
+  popTrap(): UIWidget | undefined {
     return this._trapStack.pop();
   }
 
@@ -193,7 +193,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public clearTraps(): void {
+  clearTraps(): void {
     this._trapStack = [];
   }
 
@@ -202,7 +202,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public isTrapping(): boolean {
+  isTrapping(): boolean {
     return this._trapStack.length > 0;
   }
 
@@ -218,7 +218,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public getFocusableWidgets(root?: UIWidget): UIWidget[] {
+  getFocusableWidgets(root?: UIWidget): UIWidget[] {
     const effectiveRoot = root ?? this.getEffectiveRoot();
     if (!effectiveRoot) {
       return [];
@@ -259,7 +259,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public focusNext(): boolean {
+  focusNext(): boolean {
     if (!this._config.tabNavigation) {
       return false;
     }
@@ -301,7 +301,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public focusPrevious(): boolean {
+  focusPrevious(): boolean {
     if (!this._config.tabNavigation) {
       return false;
     }
@@ -348,7 +348,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public focusDirection(direction: NavigationDirection): boolean {
+  focusDirection(direction: NavigationDirection): boolean {
     if (!this._config.arrowNavigation) {
       return false;
     }
@@ -536,7 +536,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public focus(widget: UIWidget): boolean {
+  focus(widget: UIWidget): boolean {
     if (!widget.focusable || !widget.enabled || !widget.visible) {
       return false;
     }
@@ -551,7 +551,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public focusFirst(): boolean {
+  focusFirst(): boolean {
     const focusable = this.getFocusableWidgets();
     if (focusable.length > 0) {
       this._stateManager.setFocus(focusable[0]!);
@@ -567,7 +567,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public focusLast(): boolean {
+  focusLast(): boolean {
     const focusable = this.getFocusableWidgets();
     if (focusable.length > 0) {
       this._stateManager.setFocus(focusable[focusable.length - 1]!);
@@ -585,7 +585,7 @@ export default class FocusManager {
    *
    * @since 0.5.0
    */
-  public destroy(): void {
+  destroy(): void {
     this._root = null;
     this._trapStack = [];
   }

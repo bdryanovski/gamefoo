@@ -71,7 +71,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * }
    * ```
    */
-  public abstract readonly type: string;
+  abstract readonly type: string;
 
   /**
    * Execution priority — lower numbers run first.
@@ -81,7 +81,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @defaultValue `1`
    */
-  public priority: number = 1;
+  priority: number = 1;
 
   /**
    * Whether this behaviour is currently active.
@@ -91,7 +91,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @defaultValue `true`
    */
-  public enabled: boolean = true;
+  enabled: boolean = true;
 
   /**
    * Derived look-up key, equal to {@link Behaviour.type} in lowercase.
@@ -99,7 +99,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * Used internally by the entity's behaviour map so that look-ups are
    * case-insensitive.
    */
-  public get key(): string {
+  get key(): string {
     return this.type.toLowerCase();
   }
 
@@ -119,7 +119,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @since 0.4.0
    */
-  public getOwner(): T {
+  getOwner(): T {
     return this.owner;
   }
 
@@ -133,7 +133,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * @param _deltaTime - Seconds elapsed since the previous frame.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public update(_deltaTime: number): void {}
+  update(_deltaTime: number): void {}
 
   /**
    * Optional rendering hook invoked after the entity's own
@@ -143,7 +143,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @param ctx - The rendering context.
    */
-  public render?(ctx: RenderContext): void;
+  render?(ctx: RenderContext): void;
 
   /**
    * Lifecycle hook called immediately after the behaviour is attached
@@ -152,7 +152,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * Use this for one-time setup such as registering with the
    * collision {@link World}.
    */
-  public onAttach?(): void;
+  onAttach?(): void;
 
   /**
    * Lifecycle hook called when the behaviour is removed from an entity
@@ -160,5 +160,5 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * Use this to unregister from external systems or release resources.
    */
-  public onDetach?(): void;
+  onDetach?(): void;
 }

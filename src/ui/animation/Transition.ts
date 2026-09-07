@@ -158,14 +158,14 @@ export default class Transition {
   /**
    * Current state
    */
-  public get state(): TransitionState {
+  get state(): TransitionState {
     return this._state;
   }
 
   /**
    * Progress (0 to 1)
    */
-  public get progress(): number {
+  get progress(): number {
     if (this._state === 'idle') {
       return 0;
     }
@@ -180,7 +180,7 @@ export default class Transition {
   /**
    * Whether transition is active
    */
-  public get isRunning(): boolean {
+  get isRunning(): boolean {
     return this._state === 'running';
   }
 
@@ -198,7 +198,7 @@ export default class Transition {
    *
    * @since 0.5.0
    */
-  public animate(target: UIWidget, property: string, startValue: number, endValue: number): this {
+  animate(target: UIWidget, property: string, startValue: number, endValue: number): this {
     this._target = target;
     this._property = property;
     this._startValue = startValue;
@@ -219,7 +219,7 @@ export default class Transition {
    *
    * @since 0.5.0
    */
-  public update(deltaTime: number): void {
+  update(deltaTime: number): void {
     if (this._state !== 'running') {
       return;
     }
@@ -267,7 +267,7 @@ export default class Transition {
    *
    * @since 0.5.0
    */
-  public stop(complete: boolean = false): void {
+  stop(complete: boolean = false): void {
     if (complete && this._target) {
       this.applyValue(this._endValue);
     }
@@ -279,7 +279,7 @@ export default class Transition {
    *
    * @since 0.5.0
    */
-  public reset(): void {
+  reset(): void {
     this._elapsed = 0;
     this._state = 'idle';
   }

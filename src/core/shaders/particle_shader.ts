@@ -74,7 +74,7 @@ const EMPTY: ShaderRegion = { x: 0, y: 0, width: 0, height: 0 };
  * ```
  */
 export class ParticleShader extends Shader {
-  public readonly type = 'particles';
+  readonly type = 'particles';
 
   private readonly color: string;
   private readonly rate: number;
@@ -116,7 +116,7 @@ export class ParticleShader extends Shader {
     });
   }
 
-  public override update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     if (this.emit.width > 0) {
       this.pending += this.rate * deltaTime;
       while (this.pending >= 1 && this.particles.length < this.max) {
@@ -139,7 +139,7 @@ export class ParticleShader extends Shader {
     this.particles.length = write;
   }
 
-  public render(ctx: RenderContext, region: ShaderRegion): void {
+  render(ctx: RenderContext, region: ShaderRegion): void {
     this.emit = region;
     const raw = this.raw(ctx);
     if (!raw) {

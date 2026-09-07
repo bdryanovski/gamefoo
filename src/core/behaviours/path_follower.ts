@@ -106,7 +106,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
   /**
    * @inheritdoc
    */
-  public readonly type = 'pathfollower';
+  readonly type = 'pathfollower';
 
   private pathfinder: Pathfinder;
   private grid: Grid;
@@ -180,7 +180,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * }
    * ```
    */
-  public get isMoving(): boolean {
+  get isMoving(): boolean {
     return this._isMoving;
   }
 
@@ -198,7 +198,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * debugSystem.setDebugPath(follower.currentPath);
    * ```
    */
-  public get currentPath(): ReadonlyArray<{ col: number; row: number }> {
+  get currentPath(): ReadonlyArray<{ col: number; row: number }> {
     return this.path;
   }
 
@@ -222,7 +222,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * }
    * ```
    */
-  public moveTo(goalCol: number, goalRow: number): boolean {
+  moveTo(goalCol: number, goalRow: number): boolean {
     const ownerWorld = this.getOwnerGridPosition();
 
     const result = this.pathfinder.findPath(ownerWorld.col, ownerWorld.row, goalCol, goalRow);
@@ -250,7 +250,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    * follower.stop();
    * ```
    */
-  public stop(): void {
+  stop(): void {
     this._isMoving = false;
     this.path = [];
     this.currentIndex = 0;
@@ -263,7 +263,7 @@ export class PathFollower extends Behaviour<DynamicEntity> {
    *
    * @since 0.4.0
    */
-  public override update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     if (!this._isMoving || this.path.length === 0 || this.currentIndex >= this.path.length) {
       return;
     }

@@ -10,8 +10,8 @@ import type { SubSystem } from './types';
  * @category SubSystems
  */
 export class CollisionSystem implements SubSystem {
-  public id = 'collision';
-  public order = 30;
+  id = 'collision';
+  order = 30;
 
   private world: World;
 
@@ -57,11 +57,11 @@ export class CollisionSystem implements SubSystem {
    * entity.attachBehaviour(new Collidable(entity, world, { ... }));
    * ```
    */
-  public getWorld(): World {
+  getWorld(): World {
     return this.world;
   }
 
-  public update() {
+  update() {
     this.world.detect();
   }
 }

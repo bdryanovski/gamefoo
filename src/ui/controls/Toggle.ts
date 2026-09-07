@@ -143,11 +143,11 @@ export default class Toggle extends UIWidget {
   /**
    * Label text
    */
-  public get label(): string {
+  get label(): string {
     return this._label;
   }
 
-  public set label(value: string) {
+  set label(value: string) {
     if (this._label !== value) {
       this._label = value;
       this.markLayoutDirty();
@@ -157,11 +157,11 @@ export default class Toggle extends UIWidget {
   /**
    * Toggle value
    */
-  public get value(): boolean {
+  get value(): boolean {
     return this._value;
   }
 
-  public set value(val: boolean) {
+  set value(val: boolean) {
     if (this._value !== val) {
       this._value = val;
       if (this._onChange) {
@@ -173,11 +173,11 @@ export default class Toggle extends UIWidget {
   /**
    * Change callback
    */
-  public get onChange(): ((value: boolean) => void) | null {
+  get onChange(): ((value: boolean) => void) | null {
     return this._onChange;
   }
 
-  public set onChange(value: ((value: boolean) => void) | null) {
+  set onChange(value: ((value: boolean) => void) | null) {
     this._onChange = value;
   }
 
@@ -190,7 +190,7 @@ export default class Toggle extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     let labelWidth = 0;
     let labelHeight = 0;
 
@@ -245,7 +245,7 @@ export default class Toggle extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override handleEvent(event: UIInputEvent): boolean {
+  override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -276,7 +276,7 @@ export default class Toggle extends UIWidget {
    *
    * @since 0.5.0
    */
-  public toggle(): void {
+  toggle(): void {
     this.value = !this._value;
   }
 
@@ -286,7 +286,7 @@ export default class Toggle extends UIWidget {
    *
    * @since 0.5.0
    */
-  public activate(): void {
+  activate(): void {
     this.toggle();
   }
 

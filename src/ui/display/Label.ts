@@ -130,11 +130,11 @@ export default class Label extends UIWidget {
   /**
    * Text content
    */
-  public get text(): string {
+  get text(): string {
     return this._text;
   }
 
-  public set text(value: string) {
+  set text(value: string) {
     if (this._text !== value) {
       this._text = value;
       this.markLayoutDirty();
@@ -144,11 +144,11 @@ export default class Label extends UIWidget {
   /**
    * Text alignment
    */
-  public get align(): HorizontalAlign {
+  get align(): HorizontalAlign {
     return this._align;
   }
 
-  public set align(value: HorizontalAlign) {
+  set align(value: HorizontalAlign) {
     if (this._align !== value) {
       this._align = value;
     }
@@ -157,44 +157,44 @@ export default class Label extends UIWidget {
   /**
    * Custom color
    */
-  public get color(): string | null {
+  get color(): string | null {
     return this._color;
   }
 
-  public set color(value: string | null) {
+  set color(value: string | null) {
     this._color = value;
   }
 
   /**
    * Muted style
    */
-  public get muted(): boolean {
+  get muted(): boolean {
     return this._muted;
   }
 
-  public set muted(value: boolean) {
+  set muted(value: boolean) {
     this._muted = value;
   }
 
   /**
    * Accent style
    */
-  public get accent(): boolean {
+  get accent(): boolean {
     return this._accent;
   }
 
-  public set accent(value: boolean) {
+  set accent(value: boolean) {
     this._accent = value;
   }
 
   /**
    * Font size key
    */
-  public get fontSize(): 'small' | 'default' | 'large' {
+  get fontSize(): 'small' | 'default' | 'large' {
     return this._fontSize;
   }
 
-  public set fontSize(value: 'small' | 'default' | 'large') {
+  set fontSize(value: 'small' | 'default' | 'large') {
     if (this._fontSize !== value) {
       this._fontSize = value;
       this.markLayoutDirty();
@@ -210,7 +210,7 @@ export default class Label extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     try {
       const theme = this.getTheme();
       const font = theme.fonts[this._fontSize];

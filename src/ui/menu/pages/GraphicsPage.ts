@@ -198,7 +198,7 @@ export default class GraphicsPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public setScale(value: number): void {
+  setScale(value: number): void {
     this._scaleSlider.value = value;
   }
 
@@ -209,7 +209,7 @@ export default class GraphicsPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public setResolution(resolution: ScreenResolution): void {
+  setResolution(resolution: ScreenResolution): void {
     const idx = this._findResolutionIndex(resolution);
     this._resolutionDropdown.selectedIndex = idx;
   }
@@ -219,7 +219,7 @@ export default class GraphicsPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public get resolution(): ResolutionOption | null {
+  get resolution(): ResolutionOption | null {
     return this._resolutions[this._resolutionDropdown.selectedIndex] ?? null;
   }
 }

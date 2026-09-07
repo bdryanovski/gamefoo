@@ -183,7 +183,7 @@ export default class DebugPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public setMonitorSystem(monitor: MonitorSystem): void {
+  setMonitorSystem(monitor: MonitorSystem): void {
     this._monitorSystem = monitor;
     this.syncFromMonitor();
   }
@@ -195,7 +195,7 @@ export default class DebugPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public get monitorSystem(): MonitorSystem | null {
+  get monitorSystem(): MonitorSystem | null {
     return this._monitorSystem;
   }
 
@@ -204,7 +204,7 @@ export default class DebugPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public syncFromMonitor(): void {
+  syncFromMonitor(): void {
     if (!this._monitorSystem) {
       return;
     }
@@ -263,7 +263,7 @@ export default class DebugPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public updateStats(): void {
+  updateStats(): void {
     if (this._monitorSystem) {
       this._statsLabel.text = `FPS: ${this._monitorSystem.currentFps.toFixed(0)}`;
     }
@@ -274,7 +274,7 @@ export default class DebugPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public override onShow(): void {
+  override onShow(): void {
     this.updateStats();
   }
 
@@ -283,7 +283,7 @@ export default class DebugPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public override refresh(): void {
+  override refresh(): void {
     this.syncFromMonitor();
     this.updateStats();
   }

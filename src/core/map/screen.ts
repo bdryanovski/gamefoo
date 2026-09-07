@@ -107,24 +107,24 @@ export default class Screen {
   /**
    * Stable `"x,y"` identifier.
    */
-  public readonly name: ScreenName;
+  readonly name: ScreenName;
   /**
    * Grid coordinate `[x, y]`.
    */
-  public readonly coordinate: ScreenCoordinate;
+  readonly coordinate: ScreenCoordinate;
   /**
    * Screen width in pixels (`screenCols * blockSize`).
    */
-  public readonly width: number;
+  readonly width: number;
   /**
    * Screen height in pixels (`screenRows * blockSize`).
    */
-  public readonly height: number;
+  readonly height: number;
 
   /**
    * Precomputed collision world for this screen (solids + ground + objects).
    */
-  public readonly collision: CollisionMap;
+  readonly collision: CollisionMap;
 
   /**
    * Sparse, index === z-level. Holes are skipped when iterating.
@@ -246,7 +246,7 @@ export default class Screen {
   /**
    * Instantiates every live object and fires their spawn hooks.
    */
-  public activate(): void {
+  activate(): void {
     if (this.active) {
       return;
     }
@@ -276,7 +276,7 @@ export default class Screen {
   /**
    * Disposes every live object (spawn/despawn is idempotent).
    */
-  public deactivate(): void {
+  deactivate(): void {
     if (!this.active) {
       return;
     }
@@ -299,7 +299,7 @@ export default class Screen {
   /**
    * Advances every live object (no-op while inactive).
    */
-  public update(deltaTime: DeltaTime): void {
+  update(deltaTime: DeltaTime): void {
     if (!this.active) {
       return;
     }
@@ -321,7 +321,7 @@ export default class Screen {
    * at its `level`: after every layer at or below it, and before any layer
    * above it — so higher layers (a `pillars` layer, say) occlude it.
    */
-  public render(ctx: RenderContext, overlay?: ScreenOverlay): void {
+  render(ctx: RenderContext, overlay?: ScreenOverlay): void {
     let overlayDrawn = false;
     for (let level = 0; level < this.layers.length; level += 1) {
       if (overlay && !overlayDrawn && level > overlay.level) {
@@ -379,7 +379,7 @@ export default class Screen {
   /**
    * Live {@link MapObject}s on the active screen (empty while inactive).
    */
-  public get objects(): MapObject[] {
+  get objects(): MapObject[] {
     const out: MapObject[] = [];
     for (const layer of this.layers) {
       if (!layer) {
@@ -397,7 +397,7 @@ export default class Screen {
   /**
    * Live objects that are instances of `type`.
    */
-  public objectsByType<T extends MapObject>(type: new (...args: never[]) => T): T[] {
+  objectsByType<T extends MapObject>(type: new (...args: never[]) => T): T[] {
     return this.objects.filter((o): o is T => o instanceof type);
   }
 

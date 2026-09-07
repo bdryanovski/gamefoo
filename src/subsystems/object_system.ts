@@ -28,9 +28,9 @@ export interface ObjectSystemConfig {
  * @category SubSystems
  */
 export class ObjectSystem implements SubSystem {
-  public id = 'objects';
+  id = 'objects';
 
-  public order = 20;
+  order = 20;
 
   private objects: GameObjectRegister = new GameObjectRegister();
 
@@ -49,11 +49,11 @@ export class ObjectSystem implements SubSystem {
     }
   }
 
-  public update(deltaTime: number) {
+  update(deltaTime: number) {
     this.objects.updateAll(deltaTime);
   }
 
-  public render(ctx: RenderContext) {
+  render(ctx: RenderContext) {
     if (this._depthSort) {
       this.objects.sort((a, b) => a.y - b.y);
     }

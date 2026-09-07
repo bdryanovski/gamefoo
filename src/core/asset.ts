@@ -55,7 +55,7 @@ export default class Asset {
    * }
    * ```
    */
-  public static async load(src: string): Promise<HTMLImageElement> {
+  static async load(src: string): Promise<HTMLImageElement> {
     const cache = Asset.cache.get(src);
 
     if (cache) {

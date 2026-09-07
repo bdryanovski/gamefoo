@@ -134,7 +134,7 @@ export default class AudioPage extends MenuPage {
    *
    * @since 0.5.0
    */
-  public override refresh(): void {
+  override refresh(): void {
     if (this._config.masterVolume !== undefined) {
       this._masterSlider.value = this._config.masterVolume;
     }

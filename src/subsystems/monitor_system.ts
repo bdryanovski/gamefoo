@@ -95,12 +95,12 @@ const font = new FontBitmap('5x5');
  * @since 0.2.0
  */
 export class MonitorSystem implements SubSystem {
-  public id = 'monitor';
+  id = 'monitor';
   /**
    * Order 90 ensures grid renders BEFORE menu system (order 95)
    */
-  public order = 90;
-  public enabled = true;
+  order = 90;
+  enabled = true;
 
   private fps: number = 0;
   private timer: number = 0;
@@ -111,11 +111,11 @@ export class MonitorSystem implements SubSystem {
   /**
    * X position of the overlay in pixels. @defaultValue `8`
    */
-  public x: number = 8;
+  x: number = 8;
   /**
    * Y position of the overlay in pixels. @defaultValue `8`
    */
-  public y: number = 8;
+  y: number = 8;
 
   /**
    * Show FPS graph
@@ -167,11 +167,11 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get showFps(): boolean {
+  get showFps(): boolean {
     return this._showFps;
   }
 
-  public set showFps(value: boolean) {
+  set showFps(value: boolean) {
     this._showFps = value;
   }
 
@@ -180,11 +180,11 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get showGraph(): boolean {
+  get showGraph(): boolean {
     return this._showGraph;
   }
 
-  public set showGraph(value: boolean) {
+  set showGraph(value: boolean) {
     this._showGraph = value;
   }
 
@@ -193,11 +193,11 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get showMemory(): boolean {
+  get showMemory(): boolean {
     return this._showMemory;
   }
 
-  public set showMemory(value: boolean) {
+  set showMemory(value: boolean) {
     this._showMemory = value;
   }
 
@@ -206,11 +206,11 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get showGrid(): boolean {
+  get showGrid(): boolean {
     return this._showGrid;
   }
 
-  public set showGrid(value: boolean) {
+  set showGrid(value: boolean) {
     this._showGrid = value;
   }
 
@@ -220,11 +220,11 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get gridSize(): GridSize {
+  get gridSize(): GridSize {
     return this._gridSize;
   }
 
-  public set gridSize(value: GridSize) {
+  set gridSize(value: GridSize) {
     this._gridSize = value;
     // If setting a numeric grid size, enable grid
     if (value !== 'none') {
@@ -238,11 +238,11 @@ export class MonitorSystem implements SubSystem {
    * @defaultValue '#333333'
    * @since 0.5.0
    */
-  public get gridColor(): string {
+  get gridColor(): string {
     return this._gridColor;
   }
 
-  public set gridColor(value: string) {
+  set gridColor(value: string) {
     this._gridColor = value;
   }
 
@@ -251,7 +251,7 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get currentFps(): number {
+  get currentFps(): number {
     return this.fps;
   }
 
@@ -260,7 +260,7 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get currentMemory(): number {
+  get currentMemory(): number {
     return this.memory;
   }
 
@@ -275,11 +275,11 @@ export class MonitorSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public init(engine: Engine): void {
+  init(engine: Engine): void {
     this._engine = engine;
   }
 
-  public update(deltaTime: number): void {
+  update(deltaTime: number): void {
     this.frameCount++;
     this.timer += deltaTime;
 
@@ -299,7 +299,7 @@ export class MonitorSystem implements SubSystem {
     }
   }
 
-  public render(ctx: RenderContext): void {
+  render(ctx: RenderContext): void {
     // Draw grid first (behind everything)
     if (this._showGrid && this._gridSize !== 'none') {
       this.renderGrid(ctx);

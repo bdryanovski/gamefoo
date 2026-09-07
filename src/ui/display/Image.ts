@@ -120,7 +120,7 @@ export default class Image extends UIWidget {
   /**
    * Image source
    */
-  public get source(): HTMLImageElement | string | null {
+  get source(): HTMLImageElement | string | null {
     return this._source;
   }
 
@@ -131,7 +131,7 @@ export default class Image extends UIWidget {
    *
    * @since 0.5.0
    */
-  public setSource(value: HTMLImageElement | string | null): void {
+  setSource(value: HTMLImageElement | string | null): void {
     this._source = value;
     this._loaded = false;
 
@@ -172,11 +172,11 @@ export default class Image extends UIWidget {
   /**
    * Image width
    */
-  public get imageWidth(): number {
+  get imageWidth(): number {
     return this._imageWidth;
   }
 
-  public set imageWidth(value: number) {
+  set imageWidth(value: number) {
     if (this._imageWidth !== value) {
       this._imageWidth = value;
       this.markLayoutDirty();
@@ -186,11 +186,11 @@ export default class Image extends UIWidget {
   /**
    * Image height
    */
-  public get imageHeight(): number {
+  get imageHeight(): number {
     return this._imageHeight;
   }
 
-  public set imageHeight(value: number) {
+  set imageHeight(value: number) {
     if (this._imageHeight !== value) {
       this._imageHeight = value;
       this.markLayoutDirty();
@@ -200,22 +200,22 @@ export default class Image extends UIWidget {
   /**
    * Preserve aspect ratio
    */
-  public get preserveAspect(): boolean {
+  get preserveAspect(): boolean {
     return this._preserveAspect;
   }
 
-  public set preserveAspect(value: boolean) {
+  set preserveAspect(value: boolean) {
     this._preserveAspect = value;
   }
 
   /**
    * Scale factor
    */
-  public get scale(): number {
+  get scale(): number {
     return this._scale;
   }
 
-  public set scale(value: number) {
+  set scale(value: number) {
     if (this._scale !== value) {
       this._scale = value;
       this.markLayoutDirty();
@@ -225,7 +225,7 @@ export default class Image extends UIWidget {
   /**
    * Whether the image is loaded
    */
-  public get loaded(): boolean {
+  get loaded(): boolean {
     return this._loaded;
   }
 
@@ -238,7 +238,7 @@ export default class Image extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     return {
       width: Math.max(
         this._width,

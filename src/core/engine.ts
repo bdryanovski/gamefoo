@@ -138,7 +138,7 @@ export default class Engine {
    *
    * @since 0.5.0
    */
-  public readonly gameScale: number;
+  readonly gameScale: number;
 
   /**
    * Guards against calling {@link Engine.setup} more than once.
@@ -216,7 +216,7 @@ export default class Engine {
    * console.log(`Game area: ${width}×${height}`);
    * ```
    */
-  public get dementions(): { width: number; height: number } {
+  get dementions(): { width: number; height: number } {
     return {
       width: this.width,
       height: this.height,
@@ -236,7 +236,7 @@ export default class Engine {
    * const canvas = engine.renderer.getCanvas?.()?.canvas;
    * ```
    */
-  public get renderer(): RenderContext {
+  get renderer(): RenderContext {
     return this.ctx;
   }
 
@@ -260,7 +260,7 @@ export default class Engine {
    *   .use(new CollisionSystem(world));
    * ```
    */
-  public use(subsystem: SubSystem): this {
+  use(subsystem: SubSystem): this {
     this.subsystems.push(subsystem);
     this.subsystems.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
     subsystem.init?.(this);
@@ -297,7 +297,7 @@ export default class Engine {
    *
    * @since 0.4.0
    */
-  public resize(width: number, height: number): void {
+  resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
   }
@@ -362,7 +362,7 @@ export default class Engine {
    * });
    * ```
    */
-  public async setup(setupFn?: () => void) {
+  async setup(setupFn?: () => void) {
     if (this._initialized) {
       console.warn('Engine is already initialized.');
       return;
@@ -401,7 +401,7 @@ export default class Engine {
    * }
    * ```
    */
-  public update(_deltaTime: number) {}
+  update(_deltaTime: number) {}
 
   /**
    * Override hook called once per frame **after** `clearScrean()` and
@@ -423,7 +423,7 @@ export default class Engine {
    * }
    * ```
    */
-  public render(_ctx: RenderContext) {}
+  render(_ctx: RenderContext) {}
 
   /**
    * Pauses the frame loop.
@@ -440,7 +440,7 @@ export default class Engine {
    * });
    * ```
    */
-  public pause() {
+  pause() {
     this.running = false;
     this.loopDriver.stop();
   }
@@ -459,7 +459,7 @@ export default class Engine {
    * engine.clearScrean();
    * ```
    */
-  public clearScrean() {
+  clearScrean() {
     this.ctx.clear(this.cnf.backgroundColor ?? '#000000');
   }
 
@@ -477,7 +477,7 @@ export default class Engine {
    * engine.destroy();
    * ```
    */
-  public destroy() {
+  destroy() {
     this.pause();
     for (let index = this.subsystems.length - 1; index >= 0; index -= 1) {
       this.subsystems[index]?.destroy?.();

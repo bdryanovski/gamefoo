@@ -94,11 +94,11 @@ export default class Panel extends Container {
   /**
    * Title text
    */
-  public get title(): string {
+  get title(): string {
     return this._title;
   }
 
-  public set title(value: string) {
+  set title(value: string) {
     if (this._title !== value) {
       this._title = value;
       if (value && this._titleHeight === 0) {
@@ -111,22 +111,22 @@ export default class Panel extends Container {
   /**
    * Show border
    */
-  public get showBorder(): boolean {
+  get showBorder(): boolean {
     return this._showBorder;
   }
 
-  public set showBorder(value: boolean) {
+  set showBorder(value: boolean) {
     this._showBorder = value;
   }
 
   /**
    * Title height
    */
-  public get titleHeight(): number {
+  get titleHeight(): number {
     return this._titleHeight;
   }
 
-  public set titleHeight(value: number) {
+  set titleHeight(value: number) {
     if (this._titleHeight !== value) {
       this._titleHeight = value;
       this.markLayoutDirty();
@@ -142,7 +142,7 @@ export default class Panel extends Container {
    *
    * @since 0.5.0
    */
-  public override layout(): void {
+  override layout(): void {
     // Adjust effective padding for title bar
     const originalPaddingTop = this._padding.top;
     if (this._title && this._titleHeight > 0) {

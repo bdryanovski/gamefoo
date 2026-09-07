@@ -47,19 +47,19 @@ export class TileSet {
   /**
    * The sprite sheet containing all tile frames.
    */
-  public readonly sprite: Sprite;
+  readonly sprite: Sprite;
 
   /**
    * First global tile ID for this tileset. Tile IDs in layer data
    * that fall in `[firstGid, firstGid + frameCount)` belong to this
    * set.
    */
-  public readonly firstGid: number;
+  readonly firstGid: number;
 
   /**
    * Per-tile custom properties indexed by **local** tile index.
    */
-  public readonly properties: Map<number, Record<string, unknown>>;
+  readonly properties: Map<number, Record<string, unknown>>;
 
   /**
    * Creates a new tileset from the given config.
@@ -106,7 +106,7 @@ export class TileSet {
    * }
    * ```
    */
-  public getFrame(tileId: number): SpriteFrame | undefined {
+  getFrame(tileId: number): SpriteFrame | undefined {
     const localId = tileId - this.firstGid;
     if (localId < 0) {
       return undefined;
@@ -133,7 +133,7 @@ export class TileSet {
    * }
    * ```
    */
-  public containsTile(tileId: number): boolean {
+  containsTile(tileId: number): boolean {
     return this.getFrame(tileId) !== undefined;
   }
 
@@ -153,7 +153,7 @@ export class TileSet {
    * }
    * ```
    */
-  public getProperties(localIndex: number): Record<string, unknown> | undefined {
+  getProperties(localIndex: number): Record<string, unknown> | undefined {
     return this.properties.get(localIndex);
   }
 }

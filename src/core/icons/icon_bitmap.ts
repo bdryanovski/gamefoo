@@ -54,7 +54,7 @@ export default class IconBitmap extends BitmapDataRenderer {
    *
    * @returns Icon metadata object or `null`.
    */
-  public get metadata() {
+  get metadata() {
     return Catalog.get(this.name) ?? null;
   }
 
@@ -69,14 +69,14 @@ export default class IconBitmap extends BitmapDataRenderer {
    * const rows = icon.getIconBitmask("heart");
    * ```
    */
-  public getIconBitmask(icon: string): number[] | null {
+  getIconBitmask(icon: string): number[] | null {
     return this.data[icon] ?? null;
   }
 
   /**
    * Returns the width of a single icon cell.
    */
-  public getTextWidth(): number {
+  getTextWidth(): number {
     return this.width;
   }
 
@@ -97,7 +97,7 @@ export default class IconBitmap extends BitmapDataRenderer {
    * icon.renderIcon("heart", 20, 40, ctx);
    * ```
    */
-  public renderIcon(icon: string, x: number, y: number, ctx: RenderContext) {
+  renderIcon(icon: string, x: number, y: number, ctx: RenderContext) {
     const charData = this.getIconBitmask(icon);
     if (charData === null) {
       return;

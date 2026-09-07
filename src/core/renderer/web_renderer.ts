@@ -65,7 +65,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public width: number;
+  width: number;
 
   /**
    * The logical height — coordinates supplied to draw calls should stay
@@ -73,21 +73,21 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public height: number;
+  height: number;
 
   /**
    * The pixel scale factor applied to the canvas backing buffer.
    * Stored so that `clear()` can reset the full buffer regardless of
    * accumulated transforms.
    */
-  public gameScale: number;
+  gameScale: number;
 
   /**
    * Return the actual game scale
    *
    * @since 0.5.0
    */
-  public readGameScale(): number {
+  readGameScale(): number {
     return this.gameScale;
   }
 
@@ -184,7 +184,7 @@ export class WebRenderer implements RenderContext {
    * engine.resize(256, 240);
    * ```
    */
-  public resize(width: number, height: number, scale?: number): void {
+  resize(width: number, height: number, scale?: number): void {
     this.width = width;
     this.height = height;
     if (scale !== undefined) {
@@ -225,7 +225,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public save(): void {
+  save(): void {
     this.ctx.save();
   }
 
@@ -234,7 +234,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public restore(): void {
+  restore(): void {
     this.ctx.restore();
     // imageSmoothingEnabled is restored automatically from the saved state.
     // Explicitly re-disable it to guard against any external ctx.save/restore
@@ -250,7 +250,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public translate(x: number, y: number): void {
+  translate(x: number, y: number): void {
     this.ctx.translate(x, y);
   }
 
@@ -266,7 +266,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public scale(x: number, y: number): void {
+  scale(x: number, y: number): void {
     this.ctx.scale(x, y);
   }
 
@@ -281,7 +281,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public clear(color = '#000000'): void {
+  clear(color = '#000000'): void {
     // Reset transform to identity to clear the whole buffer, then restore.
     this.ctx.save();
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -302,7 +302,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.5.0
    */
-  public fill(path?: Path2D, fillRule?: CanvasFillRule): void {
+  fill(path?: Path2D, fillRule?: CanvasFillRule): void {
     if (path === undefined) {
       this.ctx.fill();
     } else if (fillRule !== undefined) {
@@ -323,7 +323,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public fillRect(x: number, y: number, w: number, h: number, color: string): void {
+  fillRect(x: number, y: number, w: number, h: number, color: string): void {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(x, y, w, h);
   }
@@ -339,7 +339,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public strokeRect(x: number, y: number, w: number, h: number, color: string): void {
+  strokeRect(x: number, y: number, w: number, h: number, color: string): void {
     this.ctx.strokeStyle = color;
     this.ctx.strokeRect(x, y, w, h);
   }
@@ -359,7 +359,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public drawText(text: string, x: number, y: number, color = '#ffffff', _bgColor?: string): void {
+  drawText(text: string, x: number, y: number, color = '#ffffff', _bgColor?: string): void {
     this.ctx.fillStyle = color;
     this.ctx.fillText(text, x, y);
   }
@@ -376,7 +376,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public drawChar(char: string, x: number, y: number, color = '#ffffff'): void {
+  drawChar(char: string, x: number, y: number, color = '#ffffff'): void {
     this.drawText(char, x, y, color);
   }
 
@@ -398,7 +398,7 @@ export class WebRenderer implements RenderContext {
    * @since 0.4.0
    */
   // oxlint-disable-next-line max-params
-  public drawSprite(
+  drawSprite(
     source: HTMLImageElement,
     sx: number,
     sy: number,
@@ -423,7 +423,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public drawLine(x1: number, y1: number, x2: number, y2: number, color: string): void {
+  drawLine(x1: number, y1: number, x2: number, y2: number, color: string): void {
     this.ctx.strokeStyle = color;
     this.ctx.beginPath();
     this.ctx.moveTo(x1, y1);
@@ -442,7 +442,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public drawCircle(x: number, y: number, radius: number, color: string, fill = false): void {
+  drawCircle(x: number, y: number, radius: number, color: string, fill = false): void {
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, Math.PI * 2);
     if (fill) {
@@ -475,7 +475,7 @@ export class WebRenderer implements RenderContext {
    *
    * @since 0.4.0
    */
-  public getCanvas(): CanvasRenderingContext2D {
+  getCanvas(): CanvasRenderingContext2D {
     return this.ctx;
   }
 }

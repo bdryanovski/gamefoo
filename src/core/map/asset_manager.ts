@@ -72,7 +72,7 @@ export default class AssetManager {
    *   the raw `url` field. Use it to redirect editor paths
    *   (`/uploads/x.png`) to wherever the game actually serves them.
    */
-  public async load(project: MapProject, resolve: ImageResolver = (i) => i.url): Promise<void> {
+  async load(project: MapProject, resolve: ImageResolver = (i) => i.url): Promise<void> {
     await Promise.all(
       project.images.map(async (def) => {
         this.images.set(def.id, await Asset.load(resolve(def)));
@@ -130,56 +130,56 @@ export default class AssetManager {
   /**
    * Draw-ready frame for a sprite id, or `undefined` if unknown.
    */
-  public frame(id: string): Frame | undefined {
+  frame(id: string): Frame | undefined {
     return this.framesById.get(id);
   }
 
   /**
    * Resolved animation clip for an animation id.
    */
-  public clip(id: string): Clip | undefined {
+  clip(id: string): Clip | undefined {
     return this.clipsById.get(id);
   }
 
   /**
    * State machine definition for a machine id.
    */
-  public machine(id: string): StateMachineDefinition | undefined {
+  machine(id: string): StateMachineDefinition | undefined {
     return this.machinesById.get(id);
   }
 
   /**
    * Object prefab for an object id.
    */
-  public object(id: string): GameObjectDefinition | undefined {
+  object(id: string): GameObjectDefinition | undefined {
     return this.objectsById.get(id);
   }
 
   /**
    * Object prefab that owns the machine with `machineId`.
    */
-  public objectByMachine(machineId: string): GameObjectDefinition | undefined {
+  objectByMachine(machineId: string): GameObjectDefinition | undefined {
     return this.objectsByMachineId.get(machineId);
   }
 
   /**
    * Object prefab with the given `name`, or `undefined`.
    */
-  public objectByName(name: string): GameObjectDefinition | undefined {
+  objectByName(name: string): GameObjectDefinition | undefined {
     return this.objectsByName.get(name);
   }
 
   /**
    * Authored colliders for a sprite id, or `undefined` if it has none.
    */
-  public spriteCollisions(id: string): CollisionDefinition[] | undefined {
+  spriteCollisions(id: string): CollisionDefinition[] | undefined {
     return this.spriteCollisionsById.get(id);
   }
 
   /**
    * Loaded image element for an image id.
    */
-  public image(id: string): HTMLImageElement | undefined {
+  image(id: string): HTMLImageElement | undefined {
     return this.images.get(id);
   }
 }

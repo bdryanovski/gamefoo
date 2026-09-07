@@ -84,7 +84,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    *
    * @returns Font metadata object or `null`.
    */
-  public get metadata() {
+  get metadata() {
     return Catalog.get(this.name) ?? null;
   }
 
@@ -117,7 +117,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * Pre-builds `Path2D` objects for a set of characters, storing them in the `glyphPaths`
    * cache.
    */
-  public prebuildGlyphs(chars: string[] = []): void {
+  prebuildGlyphs(chars: string[] = []): void {
     for (const char of chars) {
       if (!this.glyphPaths.has(char)) {
         const built = this.buildGlyphPath(char);
@@ -140,7 +140,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * const rows = font.getChar("A");
    * ```
    */
-  public getChar(char: string): number[] | null {
+  getChar(char: string): number[] | null {
     return this.data[char] ?? null;
   }
 
@@ -155,7 +155,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * const w = font.getTextWidth("HI"); // 12 for the 5x5 font
    * ```
    */
-  public getTextWidth(text: string): number {
+  getTextWidth(text: string): number {
     return text.length * this.width;
   }
 
@@ -173,7 +173,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderChar("G", 20, 40, ctx);
    * ```
    */
-  public renderChar(char: string, x: number, y: number, ctx: RenderContext) {
+  renderChar(char: string, x: number, y: number, ctx: RenderContext) {
     const canvasCtx = ctx.getCanvas?.();
 
     if (!canvasCtx) {
@@ -210,7 +210,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderText("GAME OVER", 100, 50, ctx);
    * ```
    */
-  public renderText(text: string, x: number, y: number, ctx: RenderContext) {
+  renderText(text: string, x: number, y: number, ctx: RenderContext) {
     if (!ctx.getCanvas?.()) {
       return;
     }

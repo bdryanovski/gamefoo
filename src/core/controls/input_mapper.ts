@@ -209,7 +209,7 @@ export class InputMapper {
    * if (mapper.isAction('JUMP')) player.jump();
    * ```
    */
-  public isAction(action: InputAction | string): boolean {
+  isAction(action: InputAction | string): boolean {
     const binding = this.getBinding(action);
     if (!binding) {
       return false;
@@ -240,7 +240,7 @@ export class InputMapper {
    * }
    * ```
    */
-  public isActionPressed(action: InputAction | string): boolean {
+  isActionPressed(action: InputAction | string): boolean {
     const binding = this.getBinding(action);
     if (!binding) {
       return false;
@@ -276,7 +276,7 @@ export class InputMapper {
    * player.y += dir.y * speed * deltaTime;
    * ```
    */
-  public getDirection(): { x: number; y: number } {
+  getDirection(): { x: number; y: number } {
     let x = 0;
     let y = 0;
 
@@ -337,7 +337,7 @@ export class InputMapper {
    * }
    * ```
    */
-  public getRawDirection(): { x: -1 | 0 | 1; y: -1 | 0 | 1 } {
+  getRawDirection(): { x: -1 | 0 | 1; y: -1 | 0 | 1 } {
     let x: -1 | 0 | 1 = 0;
     let y: -1 | 0 | 1 = 0;
 
@@ -363,7 +363,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public hasDirectionInput(): boolean {
+  hasDirectionInput(): boolean {
     return (
       this.isAction('UP') ||
       this.isAction('DOWN') ||
@@ -382,7 +382,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public withScheme(scheme: ControlScheme): InputMapper {
+  withScheme(scheme: ControlScheme): InputMapper {
     return new InputMapper(this.input, scheme, this.options);
   }
 
@@ -409,7 +409,7 @@ export class InputMapper {
    * });
    * ```
    */
-  public withOverrides(overrides: SchemeOverrides): InputMapper {
+  withOverrides(overrides: SchemeOverrides): InputMapper {
     const newScheme = extendScheme(this.scheme, overrides);
     return new InputMapper(this.input, newScheme, this.options);
   }
@@ -431,7 +431,7 @@ export class InputMapper {
    * const custom = mapper.rebind('PRIMARY', ['space']);
    * ```
    */
-  public rebind(action: InputAction, keys: string[]): InputMapper {
+  rebind(action: InputAction, keys: string[]): InputMapper {
     return this.withOverrides({
       actions: { [action]: { keys } },
     });
@@ -444,7 +444,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public getScheme(): ControlScheme {
+  getScheme(): ControlScheme {
     return this.scheme;
   }
 
@@ -455,7 +455,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public getDeadzone(): number {
+  getDeadzone(): number {
     return this.options.deadzone;
   }
 
@@ -466,7 +466,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public setDeadzone(value: number): void {
+  setDeadzone(value: number): void {
     this.options.deadzone = Math.max(0, Math.min(1, value));
   }
 
@@ -477,7 +477,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public getGamepadIndex(): number {
+  getGamepadIndex(): number {
     return this.options.gamepadIndex;
   }
 
@@ -488,7 +488,7 @@ export class InputMapper {
    *
    * @since 0.5.0
    */
-  public setGamepadIndex(index: number): void {
+  setGamepadIndex(index: number): void {
     this.options.gamepadIndex = Math.max(0, Math.min(3, index));
   }
 }

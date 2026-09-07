@@ -43,13 +43,13 @@ export class TilemapSystem implements SubSystem {
   /**
    * Subsystem identifier.
    */
-  public id = 'tilemap';
+  id = 'tilemap';
 
   /**
    * Execution order. `15` places this after camera (10) and before
    * objects (20).
    */
-  public order = 15;
+  order = 15;
 
   /**
    * The tilemap to render.
@@ -94,7 +94,7 @@ export class TilemapSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  public init(engine: Engine): void {
+  init(engine: Engine): void {
     const dims = engine.dementions;
     this.canvasWidth = dims.width;
     this.canvasHeight = dims.height;
@@ -120,7 +120,7 @@ export class TilemapSystem implements SubSystem {
    * tmSys.attachCamera(camSys);
    * ```
    */
-  public attachCamera(cameraSystem: CameraLike): void {
+  attachCamera(cameraSystem: CameraLike): void {
     this.cameraSystem = cameraSystem;
   }
 
@@ -132,7 +132,7 @@ export class TilemapSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  public render(ctx: RenderContext): void {
+  render(ctx: RenderContext): void {
     const viewport = this.cameraSystem
       ? this.cameraSystem.camera.getViewRect()
       : { x: 0, y: 0, width: this.canvasWidth, height: this.canvasHeight };

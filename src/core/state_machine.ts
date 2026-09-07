@@ -57,7 +57,7 @@ export default class StateMachine<S> {
   /**
    * The current state.
    */
-  public get current(): S {
+  get current(): S {
     return this._current;
   }
 
@@ -65,14 +65,14 @@ export default class StateMachine<S> {
    * The state that was active before the most recent transition,
    * or `null` if no transition has occurred yet.
    */
-  public get previous(): S | null {
+  get previous(): S | null {
     return this._previous;
   }
 
   /**
    * Returns `true` if the current state is exactly `state`.
    */
-  public is(state: S): boolean {
+  is(state: S): boolean {
     return this._current === state;
   }
 
@@ -86,7 +86,7 @@ export default class StateMachine<S> {
    * }
    * ```
    */
-  public isAny(...states: S[]): boolean {
+  isAny(...states: S[]): boolean {
     return states.includes(this._current);
   }
 
@@ -100,7 +100,7 @@ export default class StateMachine<S> {
    * @param next - The state to transition to.
    * @returns `true` if the transition occurred, `false` if suppressed.
    */
-  public transition(next: S): boolean {
+  transition(next: S): boolean {
     if (this._current === next) {
       return false;
     }
@@ -134,7 +134,7 @@ export default class StateMachine<S> {
    * @param fn    - The callback to invoke on entry.
    * @returns An unsubscribe function that removes this hook.
    */
-  public onEnter(state: S, fn: () => void): () => void {
+  onEnter(state: S, fn: () => void): () => void {
     if (!this.enterHooks.has(state)) {
       this.enterHooks.set(state, new Set());
     }
@@ -152,7 +152,7 @@ export default class StateMachine<S> {
    * @param fn    - The callback to invoke on exit.
    * @returns An unsubscribe function that removes this hook.
    */
-  public onExit(state: S, fn: () => void): () => void {
+  onExit(state: S, fn: () => void): () => void {
     if (!this.exitHooks.has(state)) {
       this.exitHooks.set(state, new Set());
     }
@@ -167,7 +167,7 @@ export default class StateMachine<S> {
    * Removes all registered hooks. Call this when the state machine is
    * no longer needed to avoid stale references.
    */
-  public destroy(): void {
+  destroy(): void {
     this.enterHooks.clear();
     this.exitHooks.clear();
   }

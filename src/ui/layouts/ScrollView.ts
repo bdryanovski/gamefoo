@@ -143,11 +143,11 @@ export default class ScrollView extends Container {
   /**
    * Current scroll position X
    */
-  public get scrollX(): number {
+  get scrollX(): number {
     return this._scrollX;
   }
 
-  public set scrollX(value: number) {
+  set scrollX(value: number) {
     const max = this.maxScrollX;
     this._scrollX = Math.max(0, Math.min(max, value));
     this.markLayoutDirty();
@@ -156,11 +156,11 @@ export default class ScrollView extends Container {
   /**
    * Current scroll position Y
    */
-  public get scrollY(): number {
+  get scrollY(): number {
     return this._scrollY;
   }
 
-  public set scrollY(value: number) {
+  set scrollY(value: number) {
     const max = this.maxScrollY;
     this._scrollY = Math.max(0, Math.min(max, value));
     this.markLayoutDirty();
@@ -169,7 +169,7 @@ export default class ScrollView extends Container {
   /**
    * Maximum scroll X
    */
-  public get maxScrollX(): number {
+  get maxScrollX(): number {
     if (!this._content) {
       return 0;
     }
@@ -184,7 +184,7 @@ export default class ScrollView extends Container {
   /**
    * Maximum scroll Y
    */
-  public get maxScrollY(): number {
+  get maxScrollY(): number {
     if (!this._content) {
       return 0;
     }
@@ -199,11 +199,11 @@ export default class ScrollView extends Container {
   /**
    * Scroll speed
    */
-  public get scrollSpeed(): number {
+  get scrollSpeed(): number {
     return this._scrollSpeed;
   }
 
-  public set scrollSpeed(value: number) {
+  set scrollSpeed(value: number) {
     this._scrollSpeed = value;
   }
 
@@ -218,7 +218,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public setContent(content: UIWidget | null): void {
+  setContent(content: UIWidget | null): void {
     if (this._content) {
       this.removeChild(this._content);
     }
@@ -236,7 +236,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public getContent(): UIWidget | null {
+  getContent(): UIWidget | null {
     return this._content;
   }
 
@@ -252,7 +252,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public scrollBy(dx: number, dy: number): void {
+  scrollBy(dx: number, dy: number): void {
     if (this._horizontalScroll) {
       this.scrollX += dx;
     }
@@ -269,7 +269,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public scrollTo(x: number, y: number): void {
+  scrollTo(x: number, y: number): void {
     this.scrollX = x;
     this.scrollY = y;
   }
@@ -281,7 +281,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public scrollToWidget(widget: UIWidget): void {
+  scrollToWidget(widget: UIWidget): void {
     const viewWidth = this._width - this._padding.left - this._padding.right;
     const viewHeight = this._height - this._padding.top - this._padding.bottom;
 
@@ -321,7 +321,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public override handleEvent(event: UIInputEvent): boolean {
+  override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -426,7 +426,7 @@ export default class ScrollView extends Container {
    *
    * @since 0.5.0
    */
-  public override layout(): void {
+  override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;

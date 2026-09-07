@@ -38,7 +38,7 @@ export class HealthKit extends Behaviour<Entity> {
   /**
    * @inheritDoc
    */
-  public readonly type = 'healthkit';
+  readonly type = 'healthkit';
 
   /**
    * Current health points.
@@ -74,7 +74,7 @@ export class HealthKit extends Behaviour<Entity> {
    * healthkit.takeDamage(30);
    * ```
    */
-  public takeDamage(amount: number): void {
+  takeDamage(amount: number): void {
     this.health = Math.max(0, this.health - amount);
   }
 
@@ -89,7 +89,7 @@ export class HealthKit extends Behaviour<Entity> {
    * healthkit.heal(50);
    * ```
    */
-  public heal(amount: number): void {
+  heal(amount: number): void {
     this.health = Math.min(this.maxHP, this.health + amount);
   }
 
@@ -98,7 +98,7 @@ export class HealthKit extends Behaviour<Entity> {
    *
    * @returns Current HP.
    */
-  public getHealth(): number {
+  getHealth(): number {
     return this.health;
   }
 
@@ -107,7 +107,7 @@ export class HealthKit extends Behaviour<Entity> {
    *
    * @returns Maximum HP.
    */
-  public getMaxHealth(): number {
+  getMaxHealth(): number {
     return this.maxHP;
   }
 
@@ -123,7 +123,7 @@ export class HealthKit extends Behaviour<Entity> {
    * healthkit.setMaxHealth(150);
    * ```
    */
-  public setMaxHealth(value: number): void {
+  setMaxHealth(value: number): void {
     this.maxHP = value;
     if (this.health > this.maxHP) {
       this.health = this.maxHP;
@@ -142,7 +142,7 @@ export class HealthKit extends Behaviour<Entity> {
    * }
    * ```
    */
-  public isDead(): boolean {
+  isDead(): boolean {
     return this.health <= 0;
   }
 
@@ -159,7 +159,7 @@ export class HealthKit extends Behaviour<Entity> {
    * ctx.fillRect(x, y, barWidth, 8);
    * ```
    */
-  public getHealthPercent(): number {
+  getHealthPercent(): number {
     return this.maxHP > 0 ? this.health / this.maxHP : 0;
   }
 }

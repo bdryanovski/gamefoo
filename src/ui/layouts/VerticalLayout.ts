@@ -102,11 +102,11 @@ export default class VerticalLayout extends Container {
   /**
    * Space between children
    */
-  public get spacing(): number {
+  get spacing(): number {
     return this._spacing;
   }
 
-  public set spacing(value: number) {
+  set spacing(value: number) {
     if (this._spacing !== value) {
       this._spacing = value;
       this.markLayoutDirty();
@@ -116,11 +116,11 @@ export default class VerticalLayout extends Container {
   /**
    * Horizontal alignment
    */
-  public get align(): HorizontalAlign {
+  get align(): HorizontalAlign {
     return this._align;
   }
 
-  public set align(value: HorizontalAlign) {
+  set align(value: HorizontalAlign) {
     if (this._align !== value) {
       this._align = value;
       this.markLayoutDirty();
@@ -130,11 +130,11 @@ export default class VerticalLayout extends Container {
   /**
    * Fill width mode
    */
-  public get fillWidth(): boolean {
+  get fillWidth(): boolean {
     return this._fillWidth;
   }
 
-  public set fillWidth(value: boolean) {
+  set fillWidth(value: boolean) {
     if (this._fillWidth !== value) {
       this._fillWidth = value;
       this.markLayoutDirty();
@@ -150,7 +150,7 @@ export default class VerticalLayout extends Container {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     let totalHeight = this._padding.top + this._padding.bottom;
     let maxWidth = 0;
 
@@ -180,7 +180,7 @@ export default class VerticalLayout extends Container {
    *
    * @since 0.5.0
    */
-  public override layout(): void {
+  override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;

@@ -87,7 +87,7 @@ export default abstract class Node {
    *
    * @since 0.5.0
    */
-  public get x(): number {
+  get x(): number {
     return this.position.x;
   }
 
@@ -96,7 +96,7 @@ export default abstract class Node {
    *
    * @since 0.5.0
    */
-  public set x(value: number) {
+  set x(value: number) {
     this.position.x = value;
   }
 
@@ -105,7 +105,7 @@ export default abstract class Node {
    *
    * @since 0.5.0
    */
-  public get y(): number {
+  get y(): number {
     return this.position.y;
   }
 
@@ -114,7 +114,7 @@ export default abstract class Node {
    *
    * @since 0.5.0
    */
-  public set y(value: number) {
+  set y(value: number) {
     this.position.y = value;
   }
 
@@ -131,7 +131,7 @@ export default abstract class Node {
    * console.log(`Node at (${pos.x}, ${pos.y})`);
    * ```
    */
-  public getPosition(): Vector2 {
+  getPosition(): Vector2 {
     return this.position;
   }
 
@@ -148,7 +148,7 @@ export default abstract class Node {
    * console.log(`Node is ${size.width}×${size.height} pixels`);
    * ```
    */
-  public getSize(): Dimension {
+  getSize(): Dimension {
     return this.size;
   }
 
@@ -189,7 +189,7 @@ export default abstract class Node {
    * }
    * ```
    */
-  public abstract update(deltaTime: number): void;
+  abstract update(deltaTime: number): void;
 
   /**
    * Draws the node to the screen.
@@ -209,5 +209,5 @@ export default abstract class Node {
    * }
    * ```
    */
-  public abstract render(ctx: RenderContext): void;
+  abstract render(ctx: RenderContext): void;
 }

@@ -105,7 +105,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public getFocused(): UIWidget | null {
+  getFocused(): UIWidget | null {
     return this._focused;
   }
 
@@ -116,7 +116,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public setFocus(widget: UIWidget | null): void {
+  setFocus(widget: UIWidget | null): void {
     if (widget === this._focused) {
       return;
     }
@@ -140,7 +140,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public isFocused(widget: UIWidget): boolean {
+  isFocused(widget: UIWidget): boolean {
     return this._focused === widget;
   }
 
@@ -149,7 +149,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public clearFocus(): void {
+  clearFocus(): void {
     this.setFocus(null);
   }
 
@@ -164,7 +164,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public getHovered(): UIWidget | null {
+  getHovered(): UIWidget | null {
     return this._hovered;
   }
 
@@ -175,7 +175,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public setHover(widget: UIWidget | null): void {
+  setHover(widget: UIWidget | null): void {
     if (widget === this._hovered) {
       return;
     }
@@ -194,7 +194,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public isHovered(widget: UIWidget): boolean {
+  isHovered(widget: UIWidget): boolean {
     return this._hovered === widget;
   }
 
@@ -203,7 +203,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public clearHover(): void {
+  clearHover(): void {
     this.setHover(null);
   }
 
@@ -218,7 +218,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public getPressed(): UIWidget | null {
+  getPressed(): UIWidget | null {
     return this._pressed;
   }
 
@@ -229,7 +229,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public setPressed(widget: UIWidget | null): void {
+  setPressed(widget: UIWidget | null): void {
     if (widget === this._pressed) {
       return;
     }
@@ -253,7 +253,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public isPressed(widget: UIWidget): boolean {
+  isPressed(widget: UIWidget): boolean {
     return this._pressed === widget;
   }
 
@@ -262,7 +262,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public clearPressed(): void {
+  clearPressed(): void {
     this.setPressed(null);
   }
 
@@ -278,7 +278,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public getState(widget: UIWidget): WidgetState {
+  getState(widget: UIWidget): WidgetState {
     return {
       focused: this._focused === widget,
       hovered: this._hovered === widget,
@@ -291,7 +291,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public resetAll(): void {
+  resetAll(): void {
     this.clearFocus();
     this.clearHover();
     this.clearPressed();
@@ -309,7 +309,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public addListener(listener: StateChangeListener): () => void {
+  addListener(listener: StateChangeListener): () => void {
     this._listeners.push(listener);
     return () => {
       const index = this._listeners.indexOf(listener);
@@ -326,7 +326,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public removeListener(listener: StateChangeListener): void {
+  removeListener(listener: StateChangeListener): void {
     const index = this._listeners.indexOf(listener);
     if (index !== -1) {
       this._listeners.splice(index, 1);
@@ -358,7 +358,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public onWidgetDestroyed(widget: UIWidget): void {
+  onWidgetDestroyed(widget: UIWidget): void {
     if (this._focused === widget) {
       this.clearFocus();
     }
@@ -375,7 +375,7 @@ export default class UIStateManager {
    *
    * @since 0.5.0
    */
-  public destroy(): void {
+  destroy(): void {
     this.resetAll();
     this._listeners = [];
   }

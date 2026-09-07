@@ -3,7 +3,7 @@ import Node from '../../../entities/node';
 import type { BitmapData } from './bitmap_types';
 
 export class Bitmap extends Node {
-  public readonly id: string;
+  readonly id: string;
 
   private readonly data: BitmapData;
 
@@ -31,11 +31,11 @@ export class Bitmap extends Node {
     }
   }
 
-  public render() {
+  render() {
     return this.path;
   }
 
-  public update() {
+  update() {
     /**
      * Bitmap are design to be static
      */

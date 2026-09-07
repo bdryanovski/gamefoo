@@ -169,7 +169,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override update(deltaTime: number): void {
+  override update(deltaTime: number): void {
     super.update(deltaTime);
 
     // Close dropdown if we lost focus
@@ -187,11 +187,11 @@ export default class Dropdown extends UIWidget {
   /**
    * Dropdown items
    */
-  public get items(): DropdownItem[] {
+  get items(): DropdownItem[] {
     return this._items;
   }
 
-  public set items(value: DropdownItem[]) {
+  set items(value: DropdownItem[]) {
     this._items = value;
     if (this._selectedIndex >= value.length) {
       this._selectedIndex = -1;
@@ -202,11 +202,11 @@ export default class Dropdown extends UIWidget {
   /**
    * Selected index
    */
-  public get selectedIndex(): number {
+  get selectedIndex(): number {
     return this._selectedIndex;
   }
 
-  public set selectedIndex(value: number) {
+  set selectedIndex(value: number) {
     if (value >= -1 && value < this._items.length && this._selectedIndex !== value) {
       this._selectedIndex = value;
       this._highlightedIndex = value;
@@ -219,14 +219,14 @@ export default class Dropdown extends UIWidget {
   /**
    * Selected item
    */
-  public get selectedItem(): DropdownItem | null {
+  get selectedItem(): DropdownItem | null {
     return this._selectedIndex >= 0 ? (this._items[this._selectedIndex] ?? null) : null;
   }
 
   /**
    * Whether expanded
    */
-  public get expanded(): boolean {
+  get expanded(): boolean {
     return this._expanded;
   }
 
@@ -237,7 +237,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override wantsCaptureNavigation(): boolean {
+  override wantsCaptureNavigation(): boolean {
     return this._expanded;
   }
 
@@ -294,7 +294,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public open(): void {
+  open(): void {
     this._expanded = true;
     this._highlightedIndex = this._selectedIndex >= 0 ? this._selectedIndex : 0;
     // Reset scroll to show highlighted item
@@ -307,7 +307,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public close(): void {
+  close(): void {
     this._expanded = false;
     this._scrollOffset = 0;
   }
@@ -317,7 +317,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public toggle(): void {
+  toggle(): void {
     if (this._expanded) {
       this.close();
     } else {
@@ -333,7 +333,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public activate(): void {
+  activate(): void {
     if (this._expanded) {
       this.selectHighlighted();
     } else {
@@ -348,7 +348,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public handleNavigation(direction: 'up' | 'down'): void {
+  handleNavigation(direction: 'up' | 'down'): void {
     if (!this._expanded) {
       return;
     }
@@ -383,7 +383,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public cancel(): void {
+  cancel(): void {
     if (this._expanded) {
       this.close();
     }
@@ -394,7 +394,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public selectHighlighted(): void {
+  selectHighlighted(): void {
     if (this._highlightedIndex >= 0 && this._highlightedIndex < this._items.length) {
       const item = this._items[this._highlightedIndex];
       if (item && !item.disabled) {
@@ -413,7 +413,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     try {
       const theme = this.getTheme();
       const font = theme.fonts.default;
@@ -452,7 +452,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override handleEvent(event: UIInputEvent): boolean {
+  override handleEvent(event: UIInputEvent): boolean {
     if (!this._visible || !this._enabled) {
       return false;
     }
@@ -630,7 +630,7 @@ export default class Dropdown extends UIWidget {
    *
    * @since 0.5.0
    */
-  public override renderOverlay(ctx: RenderContext): void {
+  override renderOverlay(ctx: RenderContext): void {
     if (!this._visible || !this._expanded) {
       return;
     }

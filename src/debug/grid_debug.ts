@@ -58,12 +58,12 @@ export class GridDebugSystem implements SubSystem {
   /**
    * Subsystem identifier.
    */
-  public id = 'grid-debug';
+  id = 'grid-debug';
 
   /**
    * Execution order. `90` renders on top of most subsystems.
    */
-  public order = 90;
+  order = 90;
 
   private grid: Grid;
   private projection: IsometricProjection | null;
@@ -146,7 +146,7 @@ export class GridDebugSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  public init(engine: Engine): void {
+  init(engine: Engine): void {
     const dims = engine.dementions;
     this.canvasHeight = dims.height;
 
@@ -172,7 +172,7 @@ export class GridDebugSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  public setViewport(x: number, y: number, w: number, h: number): void {
+  setViewport(x: number, y: number, w: number, h: number): void {
     this.viewX = x;
     this.viewY = y;
     this.viewW = w;
@@ -195,7 +195,7 @@ export class GridDebugSystem implements SubSystem {
    * if (path) debugSystem.setDebugPath(path);
    * ```
    */
-  public setDebugPath(path: Array<{ col: number; row: number }>): void {
+  setDebugPath(path: Array<{ col: number; row: number }>): void {
     this.debugPath = path;
   }
 
@@ -208,7 +208,7 @@ export class GridDebugSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  public render(ctx: RenderContext): void {
+  render(ctx: RenderContext): void {
     // GridDebugSystem only supports canvas rendering
     const canvasCtx = ctx.getCanvas?.();
     if (!canvasCtx) {
@@ -239,7 +239,7 @@ export class GridDebugSystem implements SubSystem {
    *
    * @since 0.4.0
    */
-  public destroy(): void {
+  destroy(): void {
     if (this.canvas) {
       this.canvas.removeEventListener('mousemove', this.handleMouseMove);
       this.canvas.removeEventListener('mouseleave', this.handleMouseLeave);

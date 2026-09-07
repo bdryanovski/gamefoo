@@ -81,11 +81,11 @@ export default class StackLayout extends Container {
   /**
    * Horizontal alignment
    */
-  public get horizontalAlign(): HorizontalAlign {
+  get horizontalAlign(): HorizontalAlign {
     return this._horizontalAlign;
   }
 
-  public set horizontalAlign(value: HorizontalAlign) {
+  set horizontalAlign(value: HorizontalAlign) {
     if (this._horizontalAlign !== value) {
       this._horizontalAlign = value;
       this.markLayoutDirty();
@@ -95,11 +95,11 @@ export default class StackLayout extends Container {
   /**
    * Vertical alignment
    */
-  public get verticalAlign(): VerticalAlign {
+  get verticalAlign(): VerticalAlign {
     return this._verticalAlign;
   }
 
-  public set verticalAlign(value: VerticalAlign) {
+  set verticalAlign(value: VerticalAlign) {
     if (this._verticalAlign !== value) {
       this._verticalAlign = value;
       this.markLayoutDirty();
@@ -115,7 +115,7 @@ export default class StackLayout extends Container {
    *
    * @since 0.5.0
    */
-  public override getPreferredSize(): UISize {
+  override getPreferredSize(): UISize {
     let maxWidth = 0;
     let maxHeight = 0;
 
@@ -143,7 +143,7 @@ export default class StackLayout extends Container {
    *
    * @since 0.5.0
    */
-  public override layout(): void {
+  override layout(): void {
     // Calculate absolute position
     if (this._parent) {
       this._absoluteX = this._parent.absoluteX + this._x;

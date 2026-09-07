@@ -130,29 +130,29 @@ export default class Sprite {
   /**
    * The underlying image element containing the full spritesheet.
    */
-  public image: HTMLImageElement;
+  image: HTMLImageElement;
 
   /**
    * Width of a single frame cell in pixels.
    */
-  public readonly width: number;
+  readonly width: number;
 
   /**
    * Height of a single frame cell in pixels.
    */
-  public readonly height: number;
+  readonly height: number;
 
   /**
    * Number of frame columns in the spritesheet, computed as
    * `Math.floor(image.width / width)`.
    */
-  public readonly columns: number;
+  readonly columns: number;
 
   /**
    * Number of frame rows in the spritesheet, computed as
    * `Math.floor(image.height / height)`.
    */
-  public readonly rows: number;
+  readonly rows: number;
 
   /**
    * Named animation definitions keyed by animation name.
@@ -160,12 +160,12 @@ export default class Sprite {
    * Populated from the optional `animations` parameter passed to the
    * constructor.
    */
-  public animations: Map<string, AnimationDefinition>;
+  animations: Map<string, AnimationDefinition>;
 
   /**
    * @since 0.2.0
    */
-  public frames: Map<number | string, SpriteFrame>;
+  frames: Map<number | string, SpriteFrame>;
 
   /**
    * Creates a new spritesheet descriptor.
@@ -234,7 +234,7 @@ export default class Sprite {
    *  });
    *  ```
    */
-  public static fromGrid(
+  static fromGrid(
     image: HTMLImageElement,
     config: GridConfig,
     animations?: Record<string, AnimationDefinition>,
@@ -293,7 +293,7 @@ export default class Sprite {
     return frames;
   }
 
-  public static fromAtlas(
+  static fromAtlas(
     image: HTMLImageElement,
     regions: Record<string, SpriteFrame>,
     animations?: Record<string, AnimationDefinition>,
@@ -305,7 +305,7 @@ export default class Sprite {
     return sprite;
   }
 
-  public static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
+  static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
     const [image, response] = await Promise.all([Asset.load(imagePath), fetch(jsonPath)]);
     const data = await response.json();
 
@@ -353,7 +353,7 @@ export default class Sprite {
    * const rect = sprite.getFrameRect(5);
    * ```
    */
-  public getFrameRect(frame: number | string): SpriteFrame {
+  getFrameRect(frame: number | string): SpriteFrame {
     const rect = this.frames.get(frame);
     if (!rect) {
       throw new Error(`Frame "${frame}" not found in sprite`);

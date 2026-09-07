@@ -27,14 +27,14 @@ import type { SubSystem } from './types';
  * ```
  */
 export class ShaderSystem implements SubSystem {
-  public readonly id = 'shaders';
+  readonly id = 'shaders';
 
   /**
    * Runs late so effects composite over the finished frame.
    */
-  public readonly order = 900;
+  readonly order = 900;
 
-  public enabled = true;
+  enabled = true;
 
   private readonly stack = new ShaderStack();
   private width = 0;
@@ -43,7 +43,7 @@ export class ShaderSystem implements SubSystem {
   /**
    * Captures the screen dimensions to size the full-screen region.
    */
-  public init(engine: Engine): void {
+  init(engine: Engine): void {
     const { width, height } = engine.dementions;
     this.width = width;
     this.height = height;
@@ -52,29 +52,29 @@ export class ShaderSystem implements SubSystem {
   /**
    * Adds a screen shader and returns it for fluent configuration.
    */
-  public add<T extends Shader>(shader: T): T {
+  add<T extends Shader>(shader: T): T {
     return this.stack.attach(shader);
   }
 
   /**
    * The attached shader with `type`, or `undefined`.
    */
-  public get<T extends Shader>(type: string): T | undefined {
+  get<T extends Shader>(type: string): T | undefined {
     return this.stack.get<T>(type);
   }
 
   /**
    * Removes the shader with `type`, if present.
    */
-  public remove(type: string): void {
+  remove(type: string): void {
     this.stack.detach(type);
   }
 
-  public update(deltaTime: DeltaTime): void {
+  update(deltaTime: DeltaTime): void {
     this.stack.update(deltaTime);
   }
 
-  public postRender(ctx: RenderContext): void {
+  postRender(ctx: RenderContext): void {
     this.stack.render(ctx, { x: 0, y: 0, width: this.width, height: this.height });
   }
 }

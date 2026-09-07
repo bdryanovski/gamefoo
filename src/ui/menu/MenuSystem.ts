@@ -120,17 +120,17 @@ export default class MenuSystem implements SubSystem {
   /**
    * Subsystem identifier
    */
-  public readonly id = 'menu';
+  readonly id = 'menu';
 
   /**
    * Execution order (after UI system)
    */
-  public readonly order = 95;
+  readonly order = 95;
 
   /**
    * Whether the subsystem is enabled
    */
-  public enabled: boolean = true;
+  enabled: boolean = true;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Configuration
@@ -282,35 +282,35 @@ export default class MenuSystem implements SubSystem {
   /**
    * Whether menu is visible
    */
-  public get visible(): boolean {
+  get visible(): boolean {
     return this._visible;
   }
 
   /**
    * Menu width
    */
-  public get width(): number {
+  get width(): number {
     return this._width;
   }
 
   /**
    * Menu height
    */
-  public get height(): number {
+  get height(): number {
     return this._height;
   }
 
   /**
    * Number of registered pages
    */
-  public get pageCount(): number {
+  get pageCount(): number {
     return this._pages.size;
   }
 
   /**
    * Active page ID
    */
-  public get activePageId(): string | null {
+  get activePageId(): string | null {
     const activePage = this._tabs.activePage;
     return activePage?.id ?? null;
   }
@@ -324,7 +324,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public show(): void {
+  show(): void {
     this._visible = true;
     this._uiSystem.show();
 
@@ -341,7 +341,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public hide(): void {
+  hide(): void {
     // Notify active page
     const activePage = this._tabs.activePage;
     if (activePage) {
@@ -360,7 +360,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public toggle(): boolean {
+  toggle(): boolean {
     if (this._visible) {
       this.hide();
     } else {
@@ -380,7 +380,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public registerPage(page: IMenuPage): void {
+  registerPage(page: IMenuPage): void {
     if (this._pages.has(page.id)) {
       console.warn(`Menu page "${page.id}" already registered, replacing...`);
     }
@@ -402,7 +402,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public unregisterPage(id: string): void {
+  unregisterPage(id: string): void {
     const page = this._pages.get(id);
     if (!page) {
       return;
@@ -424,7 +424,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public getPage(id: string): IMenuPage | null {
+  getPage(id: string): IMenuPage | null {
     return this._pages.get(id) ?? null;
   }
 
@@ -436,7 +436,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public switchToPage(id: string): boolean {
+  switchToPage(id: string): boolean {
     const oldPage = this._tabs.activePage;
     if (oldPage) {
       const page = this._pages.get(oldPage.id);
@@ -460,7 +460,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public previousTab(): boolean {
+  previousTab(): boolean {
     const currentIndex = this._tabs.activeIndex;
     if (currentIndex > 0) {
       const oldPage = this._tabs.activePage;
@@ -486,7 +486,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public nextTab(): boolean {
+  nextTab(): boolean {
     const currentIndex = this._tabs.activeIndex;
     if (currentIndex < this._tabs.pageCount - 1) {
       const oldPage = this._tabs.activePage;
@@ -516,7 +516,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public setOverlayColor(color: string): void {
+  setOverlayColor(color: string): void {
     this._overlayColor = color;
   }
 
@@ -527,7 +527,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get overlayColor(): string {
+  get overlayColor(): string {
     return this._overlayColor;
   }
 
@@ -543,7 +543,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public centerOnScreen(screenWidth: number, screenHeight: number): void {
+  centerOnScreen(screenWidth: number, screenHeight: number): void {
     this._panel.x = Math.floor((screenWidth - this._width) / 2);
     this._panel.y = Math.floor((screenHeight - this._height) / 2);
     this._panel.markLayoutDirty();
@@ -557,7 +557,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public setPosition(x: number, y: number): void {
+  setPosition(x: number, y: number): void {
     this._panel.x = x;
     this._panel.y = y;
     this._panel.markLayoutDirty();
@@ -583,7 +583,7 @@ export default class MenuSystem implements SubSystem {
    * menuSystem.resize(160, 144);
    * ```
    */
-  public resize(screenWidth: number, screenHeight: number, margin: number = 8): void {
+  resize(screenWidth: number, screenHeight: number, margin: number = 8): void {
     // Store new screen dimensions
     this._screenWidth = screenWidth;
     this._screenHeight = screenHeight;
@@ -627,7 +627,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public get screenDimensions(): { width: number; height: number } {
+  get screenDimensions(): { width: number; height: number } {
     return { width: this._screenWidth, height: this._screenHeight };
   }
 
@@ -642,7 +642,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public setTheme(theme: UITheme): void {
+  setTheme(theme: UITheme): void {
     this._theme = theme;
     this._uiSystem.setTheme(theme);
   }
@@ -660,7 +660,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public init(engine: Engine): void {
+  init(engine: Engine): void {
     this._engine = engine;
 
     // Initialize internal UI system (it will create Input and InputMapper)
@@ -685,7 +685,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public preUpdate(deltaTime: number): void {
+  preUpdate(deltaTime: number): void {
     // Let UISystem update input first
     this._uiSystem.preUpdate(deltaTime);
 
@@ -735,7 +735,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public update(deltaTime: number): void {
+  update(deltaTime: number): void {
     if (this._visible) {
       this._uiSystem.update(deltaTime);
     }
@@ -748,7 +748,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public render(ctx: RenderContext): void {
+  render(ctx: RenderContext): void {
     if (this._visible) {
       // Draw dithered overlay to darken the background
       this.renderOverlay(ctx);
@@ -802,7 +802,7 @@ export default class MenuSystem implements SubSystem {
    *
    * @since 0.5.0
    */
-  public destroy(): void {
+  destroy(): void {
     this._uiSystem.destroy();
     this._pages.clear();
     this._engine = null;

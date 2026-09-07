@@ -73,7 +73,7 @@ export default class Camera {
    * camera.follow(player.getPosition());
    * ```
    */
-  public follow(target: Vector2): void {
+  follow(target: Vector2): void {
     this.x = target.x;
     this.y = target.y;
   }
@@ -92,7 +92,7 @@ export default class Camera {
    * camera.moveTo({ x: 500, y: 300 });
    * ```
    */
-  public moveTo(target: Vector2): void {
+  moveTo(target: Vector2): void {
     this.follow(target);
   }
 
@@ -101,7 +101,7 @@ export default class Camera {
    *
    * @returns A new {@link Vector2} copy of the camera centre.
    */
-  public getPosition(): Vector2 {
+  getPosition(): Vector2 {
     return { x: this.x, y: this.y };
   }
 
@@ -123,7 +123,7 @@ export default class Camera {
    * }
    * ```
    */
-  public getViewRect(): { x: number; y: number; width: number; height: number } {
+  getViewRect(): { x: number; y: number; width: number; height: number } {
     return {
       x: this.x - this.width / 2,
       y: this.y - this.height / 2,
@@ -145,7 +145,7 @@ export default class Camera {
    * });
    * ```
    */
-  public resize(width: number, height: number): void {
+  resize(width: number, height: number): void {
     this.width = width;
     this.height = height;
   }
