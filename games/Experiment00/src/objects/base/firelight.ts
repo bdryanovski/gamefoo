@@ -54,7 +54,7 @@ export abstract class Firelight extends MapObject {
   }
 
   /** Attach the flame's glow + ember effects, matched to the lit state. */
-  public override onSpawn(): void {
+  override onSpawn(): void {
     const fx = this.effects();
     this.attachShader(new GlowShader(fx.glow));
     this.attachShader(new ParticleShader(fx.particles));
@@ -84,7 +84,7 @@ export abstract class Firelight extends MapObject {
   }
 
   /** Whether the light is currently burning. */
-  public get lit(): boolean {
+  get lit(): boolean {
     return this.state === this.litStateId;
   }
 
@@ -93,19 +93,19 @@ export abstract class Firelight extends MapObject {
    *
    * @returns `true` if the state actually changed.
    */
-  public toggle(): boolean {
+  toggle(): boolean {
     const changed = this.transition(this.lit ? this.unlitStateId : this.litStateId);
     this.syncEffects();
     return changed;
   }
 
   /** Force the light out (idempotent). Used by screen classes for variants. */
-  public extinguish(): boolean {
+  extinguish(): boolean {
     return this.lit ? this.toggle() : false;
   }
 
   /** Force the light on (idempotent). Used by screen classes for variants. */
-  public ignite(): boolean {
+  ignite(): boolean {
     return this.lit ? false : this.toggle();
   }
 
@@ -115,7 +115,7 @@ export abstract class Firelight extends MapObject {
   }
 
   /** World-space AABB of the current state's `solid` collider (if any). */
-  public get collisionBox(): Box {
+  get collisionBox(): Box {
     const solid = this.stateColliders().find((c) => c.layerId === 'solid' && c.enabled !== false);
     if (!solid) {
       return { x: this.x, y: this.y, w: 0, h: 0 };
@@ -124,7 +124,7 @@ export abstract class Firelight extends MapObject {
     return { x: b.x, y: b.y, w: b.width, h: b.height };
   }
 
-  public override render(ctx: RenderContext): void {
+  override render(ctx: RenderContext): void {
     // The base composites every cell of the current state at its grid offset.
     super.render(ctx);
   }

@@ -65,7 +65,7 @@ class MapGame extends Engine {
   private dialog?: DialogRunner;
   private readonly dialogBox = new DialogBox();
 
-  public async load(): Promise<void> {
+  async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
     const registry = new MapObjectRegistry();
@@ -229,7 +229,7 @@ class MapGame extends Engine {
     if (e.key === 'e' || e.key === 'E' || e.key === ' ') this.interact();
   }
 
-  public override update(dt: number): void {
+  override update(dt: number): void {
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
     this.dialog?.update(dt);
@@ -275,7 +275,7 @@ class MapGame extends Engine {
     }
   }
 
-  public override render(ctx: RenderContext): void {
+  override render(ctx: RenderContext): void {
     const raw = ctx.getCanvas?.();
     if (raw) raw.imageSmoothingEnabled = false;
 

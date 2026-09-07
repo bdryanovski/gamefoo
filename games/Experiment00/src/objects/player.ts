@@ -58,7 +58,7 @@ export class Player extends MapObject {
   }
 
   /** A slightly enlarged box used to reach nearby interactables. */
-  interactionBox(): Rect {
+  private interactionBox(): Rect {
     const reach = 6;
     return {
       x: this.x - reach,

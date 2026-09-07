@@ -12,5 +12,5 @@ import { Firelight } from './base/firelight';
  * give a room its own variant — e.g. a chamber whose fires start dead.
  */
 export class Campfire extends Firelight {
-  static override readonly type = 'campfire';
+  public static override readonly type = 'campfire';
 }

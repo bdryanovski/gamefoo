@@ -36,7 +36,7 @@ function parseCoord(raw: string | undefined): { x: number; y: number } | null {
  * {@link MapGame} performs the actual screen navigation.
  */
 export class Portal extends MapObject {
-  public static override readonly type = 'portal';
+  static override readonly type = 'portal';
 
   /** Current state's authored NAME (e.g. `top-open`), not its id. */
   private get stateName(): string | undefined {
@@ -48,7 +48,7 @@ export class Portal extends MapObject {
    * (name contains `open`) so it works regardless of the exact scheme —
    * `top-open`, `portal-open`, `open`, … — while `*-close` stays shut.
    */
-  public get isOpen(): boolean {
+  get isOpen(): boolean {
     return (this.stateName ?? '').toLowerCase().includes('open');
   }
 
@@ -56,7 +56,7 @@ export class Portal extends MapObject {
    * Destination screen parsed from the `targetScreen` property (`"x,y"`), or
    * `null` when unset/malformed.
    */
-  public get target(): { x: number; y: number } | null {
+  get target(): { x: number; y: number } | null {
     return parseCoord(this.properties.targetScreen);
   }
 
@@ -67,7 +67,7 @@ export class Portal extends MapObject {
    * malformed, or `"0,0"` — the sentinel meaning "no explicit cell, drop the
    * player at the screen centre". The game converts cells to pixels.
    */
-  public get spawn(): { col: number; row: number } | null {
+  get spawn(): { col: number; row: number } | null {
     const point = parseCoord(this.properties.spawn);
     if (!point || (point.x === 0 && point.y === 0)) {
       return null;
@@ -79,13 +79,13 @@ export class Portal extends MapObject {
    * World-space AABB of the current state's `activation` collider, or the
    * object's footprint when none is authored.
    */
-  public activationBox(): Rect {
+  activationBox(): Rect {
     const activation = this.worldColliders().find((c) => c.layer === 'activation');
     return activation ? activation.bounds : this.bounds();
   }
 
   /** True when `box` overlaps this portal's activation zone. */
-  public overlaps(box: Rect): boolean {
+  overlaps(box: Rect): boolean {
     const a = this.activationBox();
     return (
       box.x < a.x + a.width &&
@@ -100,7 +100,7 @@ export class Portal extends MapObject {
    * convention (`top-open`, `portal-open`, …). Idempotent — returns `true`
    * only when the state actually changed.
    */
-  public open(): boolean {
+  open(): boolean {
     if (this.isOpen) {
       return false;
     }
@@ -108,7 +108,7 @@ export class Portal extends MapObject {
     return openState ? this.play(openState.name) : false;
   }
 
-  public override render(ctx: RenderContext): void {
+  override render(ctx: RenderContext): void {
     super.render(ctx);
   }
 }

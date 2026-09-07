@@ -16,5 +16,5 @@ import { ExploreAI } from './ai/explore_ai';
  * state machine is switched to match the heading so the animation follows.
  */
 export class Ghost extends ExploreAI {
-  public static override readonly type = 'ghost';
+  static override readonly type = 'ghost';
 }

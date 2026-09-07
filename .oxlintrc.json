@@ -62,7 +62,7 @@
     "typescript/consistent-type-definitions": "error",
     "typescript/explicit-member-accessibility": [
       "error",
-      { "overrides": { "constructors": "no-public" } }
+      { "overrides": { "constructors": "no-public" }, "accessability": "no-public" }
     ],
     "typescript/consistent-type-imports": "error",
     "typescript/consistent-return": "error",

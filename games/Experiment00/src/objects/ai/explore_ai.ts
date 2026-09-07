@@ -20,7 +20,7 @@ const DEFAULT_VISION = 24; // px radius fallback when none is authored
 type Facing = 'up' | 'down' | 'left' | 'right';
 
 export class ExploreAI extends MapObject {
-  public static override readonly type: string;
+  static override readonly type: string;
 
   /** The `vision` collider shape (object-local), used for player detection. */
   private readonly vision: CollisionShape | null;
@@ -56,13 +56,13 @@ export class ExploreAI extends MapObject {
    * Provide this frame's perception: the player's world box (or `null` when
    * off-screen) and the screen's collision world for movement.
    */
-  public sense(target: Rect | null, collision: CollisionMap): void {
+  sense(target: Rect | null, collision: CollisionMap): void {
     this.target = target;
     this.collision = collision;
   }
 
   /** The rat's world-space collision/footprint box. */
-  public box(): Rect {
+  box(): Rect {
     return { x: this.x, y: this.y, width: SIZE, height: SIZE };
   }
 
@@ -85,7 +85,7 @@ export class ExploreAI extends MapObject {
   }
 
   /** True when the sensed player overlaps the vision zone. */
-  public get fleeing(): boolean {
+  get fleeing(): boolean {
     if (!this.target) {
       return false;
     }
@@ -96,7 +96,7 @@ export class ExploreAI extends MapObject {
     );
   }
 
-  public override update(deltaTime: DeltaTime): void {
+  override update(deltaTime: DeltaTime): void {
     this.think(deltaTime);
     super.update(deltaTime);
   }
