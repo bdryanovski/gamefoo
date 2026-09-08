@@ -236,11 +236,12 @@ export class DialogRunner {
       return;
     }
     const choice = this.choices[this.selected];
-    if (choice?.target === null || !this.tree?.messages[choice.target]) {
+    const target = choice?.target ?? null;
+    if (target === null || !this.tree?.messages[target]) {
       this.close();
       return;
     }
-    this.goto(choice.target);
+    this.goto(target);
   }
 
   /** End the dialog and reset all state. */

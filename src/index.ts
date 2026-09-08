@@ -35,6 +35,30 @@ export * from './core/consoles';
  * @since 0.5.0
  */
 export * from './core/controls';
+// ── Audio ───────────────────────────────────────────────────────────
+/**
+ * @since 0.5.0
+ */
+export { AudioLibrary } from './core/audio/audio_library';
+export { AudioSystem } from './core/audio/audio_system';
+export { SoundHandle } from './core/audio/sound_handle';
+export { SoundSequence } from './core/audio/sound_sequence';
+export type {
+  AmbientPlayOptions,
+  AudioContextLike,
+  AudioDecoder,
+  AudioLoadOptions,
+  AudioProject,
+  AudioSystemOptions,
+  DistanceConfig,
+  FadeStopOptions,
+  PlaySoundOptions,
+  PositionTarget,
+  SequenceStepOptions,
+  SoundDefinition,
+  SoundResolver,
+  SoundSequenceDefinition,
+} from './core/audio/types';
 export { default as Engine } from './core/engine';
 export type { EnhancedCameraConfig } from './core/enhanced_camera';
 export { EnhancedCamera } from './core/enhanced_camera';

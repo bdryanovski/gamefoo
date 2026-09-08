@@ -10,6 +10,8 @@ import * as Gamefoo from '../src/index';
 describe('exports — classes', () => {
   const classes = [
     'Asset',
+    'AudioLibrary',
+    'AudioSystem',
     'Behaviour',
     'Camera',
     'Collidable',
@@ -45,6 +47,8 @@ describe('exports — classes', () => {
     'VignetteShader',
     'ScreenRegistry',
     'ShaderSystem',
+    'SoundHandle',
+    'SoundSequence',
     'Sprite',
     'SpriteRender',
     'StateMachine',
