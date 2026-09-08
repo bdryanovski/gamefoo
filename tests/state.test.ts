@@ -10,9 +10,9 @@
 import { describe, expect, test, vi } from 'vitest';
 import { LocalStorageBackend } from '../src/core/state/local_storage_backend';
 import { MemoryBackend } from '../src/core/state/memory_backend';
-import type { StorageLike } from '../src/core/state/local_storage_backend';
+import type { StorageLike } from '../src/core/state/storage';
 import { StateStore } from '../src/core/state/state_store';
-import type { StateChange } from '../src/core/state/types';
+import type { StateChange, StateData } from '../src/core/state/types';
 
 /** A Map-backed StorageLike for exercising LocalStorageBackend in Node. */
 function fakeStorage(seed: Record<string, string> = {}): StorageLike & { map: Map<string, string> } {
@@ -45,6 +45,14 @@ describe('StateStore — reads & writes', () => {
     expect(store.get('inv.1')).toBe('shield');
     store.set('inv.0', 'axe');
     expect(store.get('inv')).toEqual(['axe', 'shield']);
+  });
+
+  test('a numeric key on a fresh path builds an object map, not a sparse array', () => {
+    const store = new StateStore();
+    store.set('olives.3', true);
+    store.set('olives.30', true);
+    expect(store.get('olives')).toEqual({ '3': true, '30': true });
+    expect(Array.isArray(store.get('olives'))).toBe(false);
   });
 
   test('update reads-modifies-writes', () => {
@@ -228,13 +236,15 @@ describe('StateStore — persistence', () => {
   });
 
   test('constructor hydrates from a backend that already has data', () => {
-    const backend = new MemoryBackend({ coins: 10 });
+    const backend = new MemoryBackend();
+    backend.save({ coins: 10 });
     const store = new StateStore({ backend, initial: { coins: 0 } });
     expect(store.get('coins')).toBe(10);
   });
 
   test('hydrate:false ignores stored data and uses the seed', () => {
-    const backend = new MemoryBackend({ coins: 10 });
+    const backend = new MemoryBackend();
+    backend.save({ coins: 10 });
     const store = new StateStore({ backend, initial: { coins: 0 }, hydrate: false });
     expect(store.get('coins')).toBe(0);
   });
@@ -260,6 +270,20 @@ describe('StateStore — persistence', () => {
 
     const bad = fakeStorage({ save: '{not json' });
     expect(new LocalStorageBackend('save', bad).load()).toBeNull();
+  });
+
+  test('MemoryBackend and LocalStorageBackend are interchangeable via the same (key, storage?) shape', () => {
+    const key = 'save:slot1';
+    const state: StateData = { doors: { gate1: { open: true } }, coins: 3 };
+
+    // Same construction call drives either backend; a store round-trips both.
+    for (const backend of [new MemoryBackend(key), new LocalStorageBackend(key, fakeStorage())]) {
+      const store = new StateStore({ backend, autoSave: true });
+      store.load(state);
+      expect(new StateStore({ backend }).snapshot()).toEqual(state);
+      backend.clear();
+      expect(backend.load()).toBeNull();
+    }
   });
 });
 

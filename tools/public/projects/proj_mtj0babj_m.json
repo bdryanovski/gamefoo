@@ -39506,7 +39506,7 @@
       "kind": "machine",
       "id": "sm_mtq9aeo7_v"
     },
-    "selectedPlacementId": "1788294746798_rl0d41",
+    "selectedPlacementId": "1788632030839_prn1r3",
     "layers": [
       {
         "name": "base",
@@ -39526,11 +39526,11 @@
       }
     ],
     "activeLevel": 2,
-    "activeTool": "paint",
-    "zoom": 0.7434070938697106,
+    "activeTool": "select",
+    "zoom": 8,
     "pan": {
-      "x": -296.0107663018632,
-      "y": 382.1305579391458
+      "x": -8183.217174706977,
+      "y": -2700.4805279310526
     }
   },
   "dialog": {
@@ -40094,5 +40094,5 @@
     "selectedMessageId": "msg_mtorg8k9_1q"
   },
   "history": [],
-  "lastModified": "2026-09-08T08:02:31.931Z"
+  "lastModified": "2026-09-08T10:49:11.053Z"
 }

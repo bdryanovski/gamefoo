@@ -66,9 +66,11 @@ export type {
 export { StateStore } from './core/state/state_store';
 export type { ScopeHost } from './core/state/state_store';
 export { ScopedState } from './core/state/scoped_state';
+export { StorageBackend } from './core/state/storage_backend';
 export { MemoryBackend } from './core/state/memory_backend';
 export { LocalStorageBackend } from './core/state/local_storage_backend';
-export type { StorageLike } from './core/state/local_storage_backend';
+export { MemoryStorage } from './core/state/storage';
+export type { StorageLike } from './core/state/storage';
 export type {
   StateBackend,
   StateChange,

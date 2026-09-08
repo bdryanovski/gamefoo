@@ -6,6 +6,7 @@ import {
   DialogRunner,
   Engine,
   Input,
+  LocalStorageBackend,
   MapManager,
   type MapObjectContext,
   MapObjectRegistry,
@@ -13,10 +14,13 @@ import {
   ScreenRegistry,
   ShaderSystem,
   type SoundHandle,
+  StateStore,
   VignetteShader,
   WebRenderer,
+  MemoryBackend,
 } from '../../../src/index';
-import { drawMessages, updateMessages } from './hud';
+import { drawMessages, showMessage, updateMessages } from './hud';
+import { Olive } from './objects/olive';
 import { Campfire } from './objects/campfire';
 import { Torch } from './objects/torch';
 import { Bookshelf } from './objects/bookshelf';
@@ -101,6 +105,15 @@ class MapGame extends Engine {
   private stepTimer: number = AUDIO.stepInterval;
   /** Looping campfire emitter per lit fire on the active screen. */
   private readonly fireVoices = new Map<Campfire, SoundHandle>();
+  /**
+   * Persistent save state (localStorage-backed, saved on every change). Holds
+   * durable world facts such as which olives have been picked up, so they do
+   * not reappear on screen re-entry or reload.
+   */
+  private readonly save = new StateStore({
+    backend: new MemoryBackend('experiment00:save'),
+    autoSave: true,
+  });
 
   async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
@@ -113,8 +126,10 @@ class MapGame extends Engine {
     registry.register(Rat);
     registry.register(Slime);
     registry.register(FlyingSkull);
-    registry.register(Ghost);
     registry.register(Torch);
+    registry.register(Olive);
+    // Olives read/write their collected flag from the shared save store.
+    Olive.useState(this.save.scope('olives'));
 
     // Screens: a default class for every room, overridden per coordinate.
     const screens = new ScreenRegistry();
@@ -384,6 +399,27 @@ class MapGame extends Engine {
 
     // Keep the looping campfire emitters in sync with the lit fires on-screen.
     this.syncCampfires();
+
+    // Collect any olive the player is standing on.
+    this.pickupOlives();
+  }
+
+  /**
+   * Picks up every olive whose `pickup` collider the player overlaps: records
+   * it (so it stays gone across screens/reloads), shows a toast, and — for an
+   * olive with a `message` property — opens its dialog and stops for the frame
+   * (the modal freezes the world).
+   */
+  private pickupOlives(): void {
+    const player = this.player;
+    const screen = this.map?.current;
+    if (!player || !screen) return;
+    for (const object of screen.collision.owners(player.box(), 'pickup', player)) {
+      if (!(object instanceof Olive) || !object.collect()) continue;
+      showMessage('You picked an olive', 1.2);
+      const ref = object.dialogRef;
+      if (ref && this.dialog?.start(ref)) break;
+    }
   }
 
   override render(ctx: RenderContext): void {

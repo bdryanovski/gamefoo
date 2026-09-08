@@ -1,45 +1,12 @@
 /**
- * `localStorage`-style {@link StateBackend}: serialises the snapshot to JSON
- * under one key. The storage object is injectable, so the same backend runs
- * against the browser's `localStorage`, `sessionStorage`, or an in-memory
- * fake in Node tests.
+ * `localStorage`-style {@link StateBackend}: a {@link StorageBackend} over the
+ * ambient `localStorage` (or any injected {@link StorageLike}). It persists to
+ * Web Storage, so state survives a page reload.
  *
- * A corrupt or non-JSON stored value is treated as "nothing stored"
- * ({@link LocalStorageBackend.load} returns `null`) rather than throwing, so
- * a botched save can never wedge the game at startup.
+ * Interchangeable with {@link MemoryBackend} — same `(key, storage?)`
+ * constructor and `load` / `save` / `clear` methods — so a game can switch
+ * between them by changing only the class name.
  *
- * @category State
- * @since 0.5.0
- *
- * @see {@link StateStore}
- * @see {@link MemoryBackend}
- */
-
-import type { StateBackend, StateData } from './types';
-
-/**
- * The structural slice of the Web Storage API this backend needs. The real
- * `localStorage`/`sessionStorage` satisfy it; tests inject a fake.
- *
- * @category State
- * @since 0.5.0
- */
-export interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-}
-
-/** Resolves the ambient `localStorage`, or throws when none exists. */
-function ambientStorage(): StorageLike {
-  const scope = globalThis as { localStorage?: StorageLike };
-  if (scope.localStorage === undefined) {
-    throw new Error('LocalStorageBackend: no ambient localStorage; pass a StorageLike explicitly.');
-  }
-  return scope.localStorage;
-}
-
-/**
  * @category State
  * @since 0.5.0
  *
@@ -53,43 +20,35 @@ function ambientStorage(): StorageLike {
  *
  * @example Node / tests (injected storage)
  * ```ts
- * const map = new Map<string, string>();
- * const fake: StorageLike = {
- *   getItem: (k) => map.get(k) ?? null,
- *   setItem: (k, v) => void map.set(k, v),
- *   removeItem: (k) => void map.delete(k),
- * };
- * const backend = new LocalStorageBackend('save', fake);
+ * const backend = new LocalStorageBackend('save', new MemoryStorage());
  * ```
+ *
+ * @see {@link MemoryBackend}
+ * @see {@link StorageBackend}
  */
-export class LocalStorageBackend implements StateBackend {
+
+import type { StorageLike } from './storage';
+import { StorageBackend } from './storage_backend';
+
+/** Resolves the ambient `localStorage`, or throws when none exists. */
+function ambientLocalStorage(): StorageLike {
+  const scope = globalThis as { localStorage?: StorageLike };
+  if (scope.localStorage === undefined) {
+    throw new Error('LocalStorageBackend: no ambient localStorage; pass a StorageLike explicitly.');
+  }
+  return scope.localStorage;
+}
+
+/**
+ * @category State
+ * @since 0.5.0
+ */
+export class LocalStorageBackend extends StorageBackend {
   /**
    * @param key     - Storage key the snapshot is written under.
-   * @param storage - Storage implementation; defaults to the ambient
-   *   `localStorage`.
+   * @param storage - Web Storage to use; defaults to the ambient `localStorage`.
    */
-  constructor(
-    private readonly key: string,
-    private readonly storage: StorageLike = ambientStorage(),
-  ) {}
-
-  load(): StateData | null {
-    const raw = this.storage.getItem(this.key);
-    if (raw === null) {
-      return null;
-    }
-    try {
-      return JSON.parse(raw) as StateData;
-    } catch {
-      return null;
-    }
-  }
-
-  save(data: StateData): void {
-    this.storage.setItem(this.key, JSON.stringify(data));
-  }
-
-  clear(): void {
-    this.storage.removeItem(this.key);
+  constructor(key = 'state', storage: StorageLike = ambientLocalStorage()) {
+    super(key, storage);
   }
 }

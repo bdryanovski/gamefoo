@@ -4,9 +4,9 @@
  * testing, and cheap value equality.
  *
  * Segments are `.`-separated (`"doors.gate1.open"`). A numeric segment
- * indexes into an array when the parent is one; intermediate containers are
- * created as arrays when the next segment is a non-negative integer, else as
- * objects.
+ * indexes into an array only when the parent already is one; missing
+ * intermediate containers are always created as objects, so a map keyed by
+ * numeric-string ids stays an object rather than a sparse array.
  *
  * @category State
  * @since 0.5.0
@@ -78,10 +78,13 @@ export function setIn(root: StateData, segments: string[], value: StateValue): v
   let node: StateData | StateValue[] = root;
   for (let index = 0; index < segments.length - 1; index += 1) {
     const segment = segments[index]!;
-    const nextSegment = segments[index + 1]!;
     let child = getChild(node, segment);
     if (child === null || typeof child !== 'object') {
-      child = /^\d+$/.test(nextSegment) ? [] : {};
+      // Missing intermediates are always objects; a numeric segment only
+      // indexes an array when the parent already is one. This keeps maps
+      // keyed by numeric-string ids (e.g. `olives.3`) as objects, not sparse
+      // arrays. Whole arrays are written wholesale via `set(path, [...])`.
+      child = {};
       setChild(node, segment, child);
     }
     node = child as StateData | StateValue[];
