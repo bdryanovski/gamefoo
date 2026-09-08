@@ -59,6 +59,25 @@ export type {
   SoundResolver,
   SoundSequenceDefinition,
 } from './core/audio/types';
+// ── State ───────────────────────────────────────────────────────────
+/**
+ * @since 0.5.0
+ */
+export { StateStore } from './core/state/state_store';
+export type { ScopeHost } from './core/state/state_store';
+export { ScopedState } from './core/state/scoped_state';
+export { MemoryBackend } from './core/state/memory_backend';
+export { LocalStorageBackend } from './core/state/local_storage_backend';
+export type { StorageLike } from './core/state/local_storage_backend';
+export type {
+  StateBackend,
+  StateChange,
+  StateData,
+  StateListener,
+  StateStoreOptions,
+  StateValue,
+  SubscribeOptions,
+} from './core/state/types';
 export { default as Engine } from './core/engine';
 export type { EnhancedCameraConfig } from './core/enhanced_camera';
 export { EnhancedCamera } from './core/enhanced_camera';

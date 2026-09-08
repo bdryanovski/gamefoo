@@ -57,6 +57,11 @@ export class Player extends MapObject {
     return { x: this.x, y: this.y, width: SIZE, height: SIZE };
   }
 
+  /** Whether the player moved on the last update — drives footstep audio. */
+  isWalking(): boolean {
+    return this.moving;
+  }
+
   /** A slightly enlarged box used to reach nearby interactables. */
   private interactionBox(): Rect {
     const reach = 6;

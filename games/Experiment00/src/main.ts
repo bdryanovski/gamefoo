@@ -1,5 +1,6 @@
 // oxlint-disable max-statements curly
 import {
+  AudioSystem,
   DialogBox,
   type DialogDocument,
   DialogRunner,
@@ -11,6 +12,7 @@ import {
   type RenderContext,
   ScreenRegistry,
   ShaderSystem,
+  type SoundHandle,
   VignetteShader,
   WebRenderer,
 } from '../../../src/index';
@@ -41,6 +43,36 @@ const BLOCK_SIZE = 16;
 // layer at level 3) occlude it, so keep it below them.
 const PLAYER_LEVEL = 2;
 
+/**
+ * Audio wiring for the demo, kept declarative so it is easy to tune:
+ *
+ * - `backgroundByScreen` maps a screen coordinate (`"cx,cy"`) to an ambient
+ *   bed id; every other screen falls back to `defaultBackground`.
+ * - `footstepSequence` is cycled one step per `stepInterval` seconds while the
+ *   player walks, so a footfall rhythm emerges from movement.
+ * - `campfireSound` is a looping, distance-attenuated emitter attached to each
+ *   lit campfire (swells as the player approaches, silent far away).
+ *
+ * Ids reference `assets/audio/experiment00.audio.project.json`.
+ */
+const AUDIO = {
+  projectUrl: '/assets/audio/experiment00.audio.project.json',
+  ambientFade: 1.2,
+  defaultBackground: 'bg_sewers',
+  backgroundByScreen: {
+    '0,3': 'bg_cave',
+  } as Record<string, string>,
+  footstepSequence: 'seq_footsteps',
+  stepInterval: 0.32,
+  stepVolume: 0.6,
+  campfireSound: 'campfire_loop',
+  campfireVolume: 1,
+} as const;
+
+/** Prefixes the audio base path and percent-encodes each path segment. */
+const resolveAudio = (file: string): string =>
+  '/assets/audio/' + file.split('/').map(encodeURIComponent).join('/');
+
 const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
 
 /**
@@ -64,6 +96,11 @@ class MapGame extends Engine {
   private lastSafe = { x: 0, y: 0 };
   private dialog?: DialogRunner;
   private readonly dialogBox = new DialogBox();
+  private audio?: AudioSystem;
+  /** Seconds since the last footfall; starts "ready" so walking steps at once. */
+  private stepTimer: number = AUDIO.stepInterval;
+  /** Looping campfire emitter per lit fire on the active screen. */
+  private readonly fireVoices = new Map<Campfire, SoundHandle>();
 
   async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
@@ -109,6 +146,17 @@ class MapGame extends Engine {
     shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
     this.use(shaders);
 
+    // Audio: load the sound/sequence catalog and expose it as a subsystem.
+    // File paths are resolved under assets/audio and percent-encoded (names
+    // contain spaces). The listener follows the player so campfire emitters
+    // attenuate with distance.
+    const audio = new AudioSystem();
+    const audioProject = await fetch(AUDIO.projectUrl).then((r) => r.json());
+    await audio.load(audioProject, { resolve: (d) => resolveAudio(d.file) });
+    this.audio = audio;
+    this.use(audio);
+    audio.setListener(() => this.listenerPoint());
+
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
     this.navigate(0, 3);
@@ -149,7 +197,48 @@ class MapGame extends Engine {
     this.cx = x;
     this.cy = y;
     if (this.player) this.map.current?.collision.addOccupant(this.player);
+    this.updateBackground();
     return true;
+  }
+
+  /** Point (screen px) the world is heard from — the player's centre. */
+  private listenerPoint(): { x: number; y: number } {
+    const p = this.player;
+    if (!p) return { x: 0, y: 0 };
+    return { x: p.x + PLAYER_SIZE / 2, y: p.y + PLAYER_SIZE / 2 };
+  }
+
+  /** Crossfades to the ambient bed configured for the current screen. */
+  private updateBackground(): void {
+    const id = AUDIO.backgroundByScreen[`${this.cx},${this.cy}`] ?? AUDIO.defaultBackground;
+    this.audio?.playAmbient(id, { fadeIn: AUDIO.ambientFade, fadeOut: AUDIO.ambientFade });
+  }
+
+  /**
+   * Reconciles the looping campfire emitters with the lit fires on-screen:
+   * starts a distance-attenuated, fire-following voice for each newly lit
+   * campfire and fades out any that went cold or left with the screen.
+   */
+  private syncCampfires(): void {
+    const audio = this.audio;
+    if (!audio) return;
+    const lit = new Set(this.campfires().filter((f) => f.lit));
+    for (const [fire, handle] of this.fireVoices) {
+      if (lit.has(fire)) continue;
+      handle.stop({ fadeOut: 0.3 });
+      this.fireVoices.delete(fire);
+    }
+    for (const fire of lit) {
+      if (this.fireVoices.has(fire)) continue;
+      const handle = audio.playSound(AUDIO.campfireSound, {
+        volume: AUDIO.campfireVolume,
+        follow: () => {
+          const b = fire.collisionBox;
+          return { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+        },
+      });
+      if (handle) this.fireVoices.set(fire, handle);
+    }
   }
 
   /** Opens a nearby portal (and travels), else toggles a nearby campfire. */
@@ -163,6 +252,7 @@ class MapGame extends Engine {
       .find((p) => p.overlaps(player.interactionBox()));
     if (portal) {
       portal.open();
+      this.audio?.playSound('portal_open', { volume: 0.7 });
       const target = portal.target;
       if (target && this.navigate(target.x, target.y)) {
         // Author-set spawn cell (grid col/row) → pixels, clamped so the player
@@ -215,6 +305,8 @@ class MapGame extends Engine {
   }
 
   private onKey(e: KeyboardEvent): void {
+    // Any key is a user gesture — resume the (autoplay-suspended) audio context.
+    void this.audio?.unlock();
     const dialog = this.dialog;
     if (dialog?.active) {
       // Modal is up: arrows move the option cursor, E/Enter confirms.
@@ -273,6 +365,25 @@ class MapGame extends Engine {
     } else {
       player.place(this.lastSafe.x, this.lastSafe.y);
     }
+
+    // Footsteps: cycle the configured sequence one step per interval while the
+    // player walks; reset the timer when idle so the next stride steps at once.
+    if (player.isWalking()) {
+      this.stepTimer += dt;
+      if (this.stepTimer >= AUDIO.stepInterval) {
+        this.audio?.playSequenceStep(AUDIO.footstepSequence, {
+          tracker: 'player',
+          volume: AUDIO.stepVolume,
+          rate: 0.94 + Math.random() * 0.12,
+        });
+        this.stepTimer = 0;
+      }
+    } else {
+      this.stepTimer = AUDIO.stepInterval;
+    }
+
+    // Keep the looping campfire emitters in sync with the lit fires on-screen.
+    this.syncCampfires();
   }
 
   override render(ctx: RenderContext): void {
