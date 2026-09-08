@@ -15,7 +15,8 @@
     "height": 16
   },
   "properties": {
-    "id": "0"
+    "id": "0",
+    "message": "0"
   },
   "images": {
     "pickup_items_animated.png": {

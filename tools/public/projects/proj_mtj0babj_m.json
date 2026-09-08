@@ -9001,7 +9001,8 @@
         ]
       },
       "properties": {
-        "id": "0"
+        "id": "0",
+        "message": "0"
       },
       "meta": {
         "description": "",
@@ -10640,7 +10641,7 @@
     "spr_mtq9a6nq_t"
   ],
   "selectedAnimationId": "anim_mtq99wc9_q",
-  "selectedObjectId": "obj_mtq9aeo7_w",
+  "selectedObjectId": "obj_mtopalkk_1z",
   "activeTool": "grid-pick",
   "zoom": 4.548198592642332,
   "pan": {
@@ -15915,7 +15916,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "1"
+              "id": "1",
+              "message": "msg_mtslnnkc_2"
             },
             "x": 96,
             "y": 96,
@@ -17614,7 +17616,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "3"
+              "id": "3",
+              "message": "msg_mtslu14k_c"
             },
             "x": 48,
             "y": 144,
@@ -17625,7 +17628,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "2"
+              "id": "2",
+              "message": "msg_mtsltedy_8"
             },
             "x": 64,
             "y": 144,
@@ -20027,7 +20031,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "4"
+              "id": "4",
+              "message": "msg_mtslurso_g"
             },
             "x": 48,
             "y": 192,
@@ -20038,7 +20043,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "5"
+              "id": "5",
+              "message": "msg_mtslw708_o"
             },
             "x": 64,
             "y": 192,
@@ -20049,7 +20055,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "6"
+              "id": "6",
+              "message": "msg_mtslwv7g_s"
             },
             "x": 64,
             "y": 208,
@@ -22555,7 +22562,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "16"
+              "id": "16",
+              "message": "msg_mtsm72mp_24"
             },
             "x": 112,
             "y": 160,
@@ -22566,7 +22574,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "15"
+              "id": "15",
+              "message": "msg_mtsmwmks_30"
             },
             "x": 112,
             "y": 176,
@@ -24679,7 +24688,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "14"
+              "id": "14",
+              "message": "msg_mtsmvb26_2w"
             },
             "x": 256,
             "y": 112,
@@ -24690,7 +24700,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "13"
+              "id": "13",
+              "message": "msg_mtsmy7qb_34"
             },
             "x": 256,
             "y": 128,
@@ -24815,6 +24826,26 @@
             "x": 208,
             "y": 48,
             "level": 2
+          },
+          {
+            "id": "1788869129383_6umdlf",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0e49b_t",
+            "x": 64,
+            "y": 144,
+            "level": 2
+          },
+          {
+            "id": "1788869138810_h1q5fr",
+            "kind": "machine",
+            "machineId": "sm_mtopalkk_1y",
+            "x": 80,
+            "y": 144,
+            "level": 2,
+            "properties": {
+              "id": "100",
+              "message": "msg_mtslxg4h_w"
+            }
           }
         ]
       },
@@ -26488,7 +26519,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "10"
+              "id": "10",
+              "message": "msg_mtslz735_14"
             },
             "x": 160,
             "y": 128,
@@ -26499,7 +26531,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "11"
+              "id": "11",
+              "message": "msg_mtsm2u10_1k"
             },
             "x": 160,
             "y": 112,
@@ -26510,7 +26543,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "12"
+              "id": "12",
+              "message": "msg_mtsm1tu1_1g"
             },
             "x": 144,
             "y": 112,
@@ -26521,7 +26555,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "9"
+              "id": "9",
+              "message": "msg_mtsm07e4_18"
             },
             "x": 144,
             "y": 128,
@@ -28467,7 +28502,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "17"
+              "id": "17",
+              "message": "msg_mtsmtd69_2o"
             },
             "x": 144,
             "y": 64,
@@ -28478,7 +28514,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "18                              "
+              "id": "18                              ",
+              "message": "msg_mtsmu4ya_2s"
             },
             "x": 160,
             "y": 64,
@@ -29448,6 +29485,18 @@
             "x": 192,
             "y": 112,
             "level": 0
+          },
+          {
+            "id": "1788869214486_u59ws0",
+            "kind": "machine",
+            "machineId": "sm_mtopalkk_1y",
+            "x": 256,
+            "y": 128,
+            "level": 2,
+            "properties": {
+              "id": "101",
+              "message": "msg_mtsly62r_10"
+            }
           }
         ]
       },
@@ -30230,7 +30279,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "8"
+              "id": "8",
+              "message": "msg_mtsm4vly_1w"
             },
             "x": 160,
             "y": 128,
@@ -30241,7 +30291,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "7"
+              "id": "7",
+              "message": "msg_mtsm3ihl_1o"
             },
             "x": 144,
             "y": 128,
@@ -32358,7 +32409,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "21"
+              "id": "21",
+              "message": "msg_mtsn0uer_3c"
             },
             "x": 96,
             "y": 176,
@@ -32369,7 +32421,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "19"
+              "id": "19",
+              "message": "msg_mtsn1xxf_3g"
             },
             "x": 96,
             "y": 160,
@@ -32380,7 +32433,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "20"
+              "id": "20",
+              "message": "msg_mtsmzasg_38"
             },
             "x": 112,
             "y": 160,
@@ -35109,7 +35163,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "23"
+              "id": "23",
+              "message": "msg_mtsn5lha_3s"
             },
             "x": 208,
             "y": 208,
@@ -35120,7 +35175,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "24"
+              "id": "24",
+              "message": "msg_mtsn4ael_3o"
             },
             "x": 224,
             "y": 208,
@@ -35131,7 +35187,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "25"
+              "id": "25",
+              "message": "msg_mtsn304e_3k"
             },
             "x": 224,
             "y": 192,
@@ -37631,7 +37688,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "28"
+              "id": "28",
+              "message": "msg_mtsm8ho8_2c"
             },
             "x": 256,
             "y": 48,
@@ -37642,7 +37700,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "26"
+              "id": "26",
+              "message": "msg_mtsm458w_1s"
             },
             "x": 240,
             "y": 48,
@@ -37653,7 +37712,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "27"
+              "id": "27",
+              "message": "msg_mtsm96o9_2g"
             },
             "x": 256,
             "y": 64,
@@ -37664,7 +37724,8 @@
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
             "properties": {
-              "id": "30"
+              "id": "30",
+              "message": "msg_mtsm7vqw_28"
             },
             "x": 96,
             "y": 208,
@@ -39498,15 +39559,27 @@
             "x": 64,
             "y": 224,
             "level": 2
+          },
+          {
+            "id": "1788869526794_axgyr9",
+            "kind": "machine",
+            "machineId": "sm_mtopalkk_1y",
+            "x": 192,
+            "y": 112,
+            "level": 2,
+            "properties": {
+              "id": "103",
+              "message": "msg_mtsma4mm_2k"
+            }
           }
         ]
       }
     },
     "selected": {
       "kind": "machine",
-      "id": "sm_mtq9aeo7_v"
+      "id": "sm_mtopalkk_1y"
     },
-    "selectedPlacementId": "1788632030839_prn1r3",
+    "selectedPlacementId": "1788632080948_yrdm14",
     "layers": [
       {
         "name": "base",
@@ -39527,10 +39600,10 @@
     ],
     "activeLevel": 2,
     "activeTool": "select",
-    "zoom": 8,
+    "zoom": 1.3002236534724605,
     "pan": {
-      "x": -8183.217174706977,
-      "y": -2700.4805279310526
+      "x": -2534.6686273259224,
+      "y": 176.35461378625996
     }
   },
   "dialog": {
@@ -40088,11 +40161,590 @@
             "meta": []
           }
         ]
+      },
+      {
+        "id": "dlg_mtslnnkc_3",
+        "name": "Olive 1",
+        "rootId": "msg_mtslnnkc_2",
+        "messages": [
+          {
+            "id": "msg_mtslnnkc_2",
+            "title": "Olive",
+            "segments": [
+              "An olive.",
+              "You have no idea why you’re collecting these."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsltedy_9",
+        "name": "Olive 2",
+        "rootId": "msg_mtsltedy_8",
+        "messages": [
+          {
+            "id": "msg_mtsltedy_8",
+            "title": "Olive",
+            "segments": [
+              "Another one.",
+              "This is starting to feel deliberate."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslu14k_d",
+        "name": "Olive 3",
+        "rootId": "msg_mtslu14k_c",
+        "messages": [
+          {
+            "id": "msg_mtslu14k_c",
+            "title": "Olive",
+            "segments": [
+              "Three olives.",
+              "Apparently this is how a bond begins."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslurso_h",
+        "name": "Olive 4",
+        "rootId": "msg_mtslurso_g",
+        "messages": [
+          {
+            "id": "msg_mtslurso_g",
+            "title": "Olive",
+            "segments": [
+              "You remember her saying she liked that you liked olives.",
+              "You remember thinking that was a ridiculous thing to remember."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslvnee_l",
+        "name": "Olive 5",
+        "rootId": "msg_mtslvnee_k",
+        "messages": [
+          {
+            "id": "msg_mtslvnee_k",
+            "title": "Olive",
+            "segments": [
+              "At some point, you stopped asking why."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslw708_p",
+        "name": "Olive 6",
+        "rootId": "msg_mtslw708_o",
+        "messages": [
+          {
+            "id": "msg_mtslw708_o",
+            "title": "Olive",
+            "segments": [
+              "She once said thirty was a reasonable amount.",
+              "You don’t remember what she was talking about."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslwv7g_t",
+        "name": "Olive 7",
+        "rootId": "msg_mtslwv7g_s",
+        "messages": [
+          {
+            "id": "msg_mtslwv7g_s",
+            "title": "Olive",
+            "segments": [
+              "You find yourself counting them.",
+              "You don’t remember when you started."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslxg4h_x",
+        "name": "Olive next to skeleton ",
+        "rootId": "msg_mtslxg4h_w",
+        "messages": [
+          {
+            "id": "msg_mtslxg4h_w",
+            "title": "Olive",
+            "segments": [
+              "An olive sits beside an old skeleton.",
+              "Neither of them seems particularly concerned about being here."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsly62r_11",
+        "name": "Olive - almost mist",
+        "rootId": "msg_mtsly62r_10",
+        "messages": [
+          {
+            "id": "msg_mtsly62r_10",
+            "title": "Olive",
+            "segments": [
+              "You almost leave this one behind.",
+              "Then you think about how she always noticed the small things."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtslz735_15",
+        "name": "Olive - 10 of them",
+        "rootId": "msg_mtslz735_14",
+        "messages": [
+          {
+            "id": "msg_mtslz735_14",
+            "title": "Olive",
+            "segments": [
+              "A completely unreasonable amount of olives."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm07e4_19",
+        "name": "Olive - reminder",
+        "rootId": "msg_mtsm07e4_18",
+        "messages": [
+          {
+            "id": "msg_mtsm07e4_18",
+            "title": "Olive",
+            "segments": [
+              "She liked when you told her about ordinary things.",
+              "What you ate. What annoyed you. What happened that day."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm1066_1d",
+        "name": "Olive - in the middle of the room",
+        "rootId": "msg_mtsm1066_1c",
+        "messages": [
+          {
+            "id": "msg_mtsm1066_1c",
+            "title": "Olive",
+            "segments": [
+              "An olive in the middle of an empty room.",
+              "You expected someone to be here."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm1tu1_1h",
+        "name": "Olive - to remember",
+        "rootId": "msg_mtsm1tu1_1g",
+        "messages": [
+          {
+            "id": "msg_mtsm1tu1_1g",
+            "title": "Olive",
+            "segments": [
+              "You remember her saying that everything reminded her of you.",
+              "You didn’t understand how dangerous that sentence would become.",
+              "... look an olive"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm2u10_1l",
+        "name": "Olive - warm ",
+        "rootId": "msg_mtsm2u10_1k",
+        "messages": [
+          {
+            "id": "msg_mtsm2u10_1k",
+            "title": "Olive",
+            "segments": [
+              "The olive is warm.",
+              "You don’t remember it being warm."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm3ihl_1p",
+        "name": "Olive - ghost",
+        "rootId": "msg_mtsm3ihl_1o",
+        "messages": [
+          {
+            "id": "msg_mtsm3ihl_1o",
+            "title": "Olive",
+            "segments": [
+              "For a moment, you think you hear her laugh.",
+              "There is nobody here.",
+              "... oh except the rat ... Sorry Mickey!"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm458w_1t",
+        "name": "Olive - 20",
+        "rootId": "msg_mtsm458w_1s",
+        "messages": [
+          {
+            "id": "msg_mtsm458w_1s",
+            "title": "Start",
+            "segments": [
+              "Twenty olives.",
+              "You have crossed the point where this is a joke."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm4vly_1x",
+        "name": "Olive - get lost",
+        "rootId": "msg_mtsm4vly_1w",
+        "messages": [
+          {
+            "id": "msg_mtsm4vly_1w",
+            "title": "Olive ",
+            "segments": [
+              "She once told you that if you got lost, you knew where to find her.",
+              "You wonder if that works both ways.",
+              "How olives works ?"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm5w3s_21",
+        "name": "Olive - empty room door",
+        "rootId": "msg_mtsm5w3s_20",
+        "messages": [
+          {
+            "id": "msg_mtsm5w3s_20",
+            "title": "Olive",
+            "segments": [
+              "You find an olive beside a door that leads nowhere.",
+              "Some things were never meant to open."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm72mp_25",
+        "name": "Olive - want to stop",
+        "rootId": "msg_mtsm72mp_24",
+        "messages": [
+          {
+            "id": "msg_mtsm72mp_24",
+            "title": "Olive",
+            "segments": [
+              "You suddenly don’t want to find them.",
+              "What happen when all of them are found ?"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm7vqw_29",
+        "name": "Olive - hope ",
+        "rootId": "msg_mtsm7vqw_28",
+        "messages": [
+          {
+            "id": "msg_mtsm7vqw_28",
+            "title": "Olive",
+            "segments": [
+              "You pick up the olive.",
+              "For a second, the dungeon feels less empty."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm8ho8_2d",
+        "name": "Olive - not about them",
+        "rootId": "msg_mtsm8ho8_2c",
+        "messages": [
+          {
+            "id": "msg_mtsm8ho8_2c",
+            "title": "Olive ",
+            "segments": [
+              "You finally understand why you kept looking.",
+              "It was never about the olives."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsm96o9_2h",
+        "name": "Olive - the last one is close",
+        "rootId": "msg_mtsm96o9_2g",
+        "messages": [
+          {
+            "id": "msg_mtsm96o9_2g",
+            "title": "Olive",
+            "segments": [
+              "Where is the last one ?",
+              "You already know where it is right ?"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsma4mm_2l",
+        "name": "Olive - last one",
+        "rootId": "msg_mtsma4mm_2k",
+        "messages": [
+          {
+            "id": "msg_mtsma4mm_2k",
+            "title": "Olive",
+            "segments": [
+              "The last olive is waiting beside the fire.",
+              "You pick it up.",
+              "Nothing happens.",
+              "And somehow, that hurts more than if something had."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsmtd69_2p",
+        "name": "Olive - part of her",
+        "rootId": "msg_mtsmtd69_2o",
+        "messages": [
+          {
+            "id": "msg_mtsmtd69_2o",
+            "title": "Olive",
+            "segments": [
+              "Now even an olive feels like a piece of her."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsmu4ya_2t",
+        "name": "Olive - small one",
+        "rootId": "msg_mtsmu4ya_2s",
+        "messages": [
+          {
+            "id": "msg_mtsmu4ya_2s",
+            "title": "Olive",
+            "segments": [
+              "You wonder how something so small can carry so much."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsmvb26_2x",
+        "name": "Olive - holding",
+        "rootId": "msg_mtsmvb26_2w",
+        "messages": [
+          {
+            "id": "msg_mtsmvb26_2w",
+            "title": "Olive",
+            "segments": [
+              "You close your hand around the olive.",
+              "For a moment, it almost feels like holding onto her."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsmwmks_31",
+        "name": "Olive - memmory",
+        "rootId": "msg_mtsmwmks_30",
+        "messages": [
+          {
+            "id": "msg_mtsmwmks_30",
+            "title": "Olive",
+            "segments": [
+              "She once told you that everything could become a memory.",
+              "You didn’t believe her.",
+              "Now you collect olives - you are that kind of person now!"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsmy7qb_35",
+        "name": "Olive - small one",
+        "rootId": "msg_mtsmy7qb_34",
+        "messages": [
+          {
+            "id": "msg_mtsmy7qb_34",
+            "title": "Olive ",
+            "segments": [
+              "The olive is small enough to disappear in your palm.",
+              "Somehow, you don’t want to let it go."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsmzasg_39",
+        "name": "Olive - not a treasure ",
+        "rootId": "msg_mtsmzasg_38",
+        "messages": [
+          {
+            "id": "msg_mtsmzasg_38",
+            "title": "Olive",
+            "segments": [
+              "You look around the room.",
+              "For the first time, you aren’t searching for treasure."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsn0uer_3d",
+        "name": "Olive and the love",
+        "rootId": "msg_mtsn0uer_3c",
+        "messages": [
+          {
+            "id": "msg_mtsn0uer_3c",
+            "title": "Olive ",
+            "segments": [
+              "Maybe love is remembering things that should have been forgettable."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsn1xxf_3h",
+        "name": "Olive - too much ?",
+        "rootId": "msg_mtsn1xxf_3g",
+        "messages": [
+          {
+            "id": "msg_mtsn1xxf_3g",
+            "title": "Olive",
+            "segments": [
+              "You wonder if she would still call thirty olives unreasonable.",
+              "You suspect she would."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsn304e_3l",
+        "name": "Olive - tease",
+        "rootId": "msg_mtsn304e_3k",
+        "messages": [
+          {
+            "id": "msg_mtsn304e_3k",
+            "title": "Olive",
+            "segments": [
+              "You remember her teasing you about olives.",
+              "You remember smiling."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsn4ael_3p",
+        "name": "Olive - pick up",
+        "rootId": "msg_mtsn4ael_3o",
+        "messages": [
+          {
+            "id": "msg_mtsn4ael_3o",
+            "title": "Olive",
+            "segments": [
+              "You pick up the olive carefully.",
+              "For some reason, it feels like something that belongs to her."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
+      },
+      {
+        "id": "dlg_mtsn5lha_3t",
+        "name": "Olive - remember",
+        "rootId": "msg_mtsn5lha_3s",
+        "messages": [
+          {
+            "id": "msg_mtsn5lha_3s",
+            "title": "Olive",
+            "segments": [
+              "You smile before you remember why.",
+              "Then you remember."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
       }
     ],
-    "selectedTreeId": "dlg_mtorg8k9_1r",
-    "selectedMessageId": "msg_mtorg8k9_1q"
+    "selectedTreeId": "dlg_mtsm458w_1t",
+    "selectedMessageId": "msg_mtsm458w_1s"
   },
   "history": [],
-  "lastModified": "2026-09-08T10:49:11.053Z"
+  "lastModified": "2026-09-08T12:31:40.347Z"
 }
