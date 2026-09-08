@@ -493,7 +493,9 @@ describe('AudioSystem — sequences', () => {
     expect(system.sequenceIndex('seq_footsteps')).toBe(1);
     expect(system.sequenceIndex('seq_footsteps', 'enemy_a')).toBe(2);
     expect(system.playSequenceStep('seq_footsteps')?.soundId).toBe('sfx_step_2'); // shared continues
-    expect(system.playSequenceStep('seq_footsteps', { tracker: 'enemy_a' })?.soundId).toBe('sfx_step_3');
+    expect(system.playSequenceStep('seq_footsteps', { tracker: 'enemy_a' })?.soundId).toBe(
+      'sfx_step_3',
+    );
   });
 
   test('nextSequenceStep — peeks without advancing', async () => {
@@ -648,5 +650,56 @@ describe('AudioSystem — master volume & lifecycle', () => {
     system.destroy();
     await flush();
     expect(context.sources).toHaveLength(0); // spawn was cancelled
+  });
+});
+
+describe('SoundHandle — onEnded', () => {
+  test('fires once when a one-shot finishes', async () => {
+    const { context, system } = await setup();
+    const handle = system.playSound('sfx_scream')!;
+    const ended = vi.fn();
+    handle.onEnded(ended);
+    await flush(); // voice spawns
+    expect(ended).not.toHaveBeenCalled();
+    context.sources.at(-1)!.onended?.(); // source reaches its end
+    expect(ended).toHaveBeenCalledTimes(1);
+    expect(handle.ended).toBe(true);
+  });
+
+  test('fires immediately when the sound has already ended', async () => {
+    const { context, system } = await setup();
+    const handle = system.playSound('sfx_scream')!;
+    await flush();
+    context.sources.at(-1)!.onended?.();
+    const late = vi.fn();
+    handle.onEnded(late);
+    expect(late).toHaveBeenCalledTimes(1);
+  });
+
+  test('stopping a sound fires onEnded', async () => {
+    const { system } = await setup();
+    const handle = system.playSound('sfx_scream')!;
+    await flush();
+    const ended = vi.fn();
+    handle.onEnded(ended);
+    handle.stop();
+    expect(ended).toHaveBeenCalledTimes(1);
+  });
+
+  test('fires when a sound fails to load, so callers are not stranded', async () => {
+    const warn = spyWarnings();
+    const context = new FakeAudioContext();
+    const decoder = vi.fn(async (url: string) => {
+      if (url.includes('scream')) throw new Error('decode failed');
+      return { url } as AudioBuffer;
+    });
+    const system = new AudioSystem({ context: context as unknown as AudioContextLike });
+    await system.load(makeProject(), { decoder });
+    const handle = system.playSound('sfx_scream')!;
+    const ended = vi.fn();
+    handle.onEnded(ended);
+    await flush();
+    expect(ended).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
   });
 });

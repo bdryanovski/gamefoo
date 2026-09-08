@@ -4,6 +4,7 @@
  */
 import { describe, expect, test } from 'vitest';
 import { Portal } from '../games/Experiment00/src/objects/portal';
+import { StateStore } from '../src/core/state/state_store';
 import type AssetManager from '../src/core/map/asset_manager';
 import type { GameObjectDefinition, MapObjectContext } from '../src/core/map/types';
 
@@ -124,5 +125,57 @@ describe('Portal', () => {
     expect(p.isOpen).toBe(true);
     expect(p.state).toBe('st_open');
     expect(p.open()).toBe(false); // already open
+  });
+});
+
+function makeDoor(store: StateStore, opts: { id?: string } = {}): Portal {
+  Portal.useState(store.scope('doors'));
+  const def = portalDef(true);
+  const ctx: MapObjectContext = {
+    assets,
+    machine: def.machine,
+    def,
+    properties: {},
+    x: 0,
+    y: 0,
+    level: 0,
+    startStateId: 'st_open', // authored open — onSpawn must force it closed
+    id: opts.id ?? 'door_1',
+  };
+  const portal = new Portal(ctx);
+  portal.onSpawn();
+  return portal;
+}
+
+describe('Portal — door (sound-gated, persistent)', () => {
+  test('a door starts closed even when authored open', () => {
+    expect(makeDoor(new StateStore()).isOpen).toBe(false);
+  });
+
+  test('open() opens the door and remembers it', () => {
+    const store = new StateStore();
+    const door = makeDoor(store, { id: 'd1' });
+    expect(door.isOpen).toBe(false);
+    expect(door.open()).toBe(true);
+    expect(door.isOpen).toBe(true);
+    expect(store.get('doors.d1')).toBe(true);
+  });
+
+  test('a remembered-open door re-spawns open (silently, no sound needed)', () => {
+    const store = new StateStore();
+    makeDoor(store, { id: 'd1' }).open();
+    expect(makeDoor(store, { id: 'd1' }).isOpen).toBe(true);
+  });
+
+  test('beginOpening flags the opening state; open() clears it', () => {
+    const door = makeDoor(new StateStore(), { id: 'd1' });
+    door.beginOpening();
+    expect(door.isOpening).toBe(true);
+    door.open();
+    expect(door.isOpening).toBe(false);
+    expect(door.isOpen).toBe(true);
+    // Opening an already-open door does not re-arm the flag.
+    door.beginOpening();
+    expect(door.isOpening).toBe(false);
   });
 });

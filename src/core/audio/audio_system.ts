@@ -526,6 +526,7 @@ export class AudioSystem implements SubSystem {
     try {
       const buffer = await this.library.buffer(definition.id);
       if (handle.cancelled) {
+        handle.markEnded();
         return;
       }
       if (ambient !== null) {
@@ -538,6 +539,7 @@ export class AudioSystem implements SubSystem {
       if (ambient !== null && this.ambientSoundId === definition.id) {
         this.clearAmbient();
       }
+      handle.markEnded();
     } finally {
       this.pendingPlays.delete(handle);
     }
@@ -572,6 +574,7 @@ export class AudioSystem implements SubSystem {
       initialGain: coreVolume * factor,
       distance,
       follow,
+      onEnded: () => handle.markEnded(),
     };
     const voice = new AudioVoice(context, masterGain, spawn);
     handle.bind(voice);

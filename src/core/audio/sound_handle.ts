@@ -30,6 +30,8 @@ import type { FadeStopOptions } from './types';
 export class SoundHandle {
   private voice: AudioVoice | null = null;
   private _cancelled: boolean = false;
+  private _ended: boolean = false;
+  private endedListeners: Array<() => void> = [];
 
   /**
    * @param soundId - The id that was requested (kept even if decoding
@@ -53,6 +55,50 @@ export class SoundHandle {
    */
   get playing(): boolean {
     return this.voice?.active ?? false;
+  }
+
+  /**
+   * Whether playback has finished (natural end, stop, or a failed load).
+   */
+  get ended(): boolean {
+    return this._ended;
+  }
+
+  /**
+   * Registers a callback fired exactly once when the sound finishes —
+   * whether it plays to the end, is stopped, or never loads. Fires
+   * immediately when the sound has already ended. Ideal for sequencing an
+   * action after a cue (a door that opens once its sound completes).
+   *
+   * Never fires for a looping sound until it is stopped.
+   *
+   * @example
+   * ```ts
+   * audio.playSound("door_open")?.onEnded(() => door.open());
+   * ```
+   */
+  onEnded(listener: () => void): void {
+    if (this._ended) {
+      listener();
+      return;
+    }
+    this.endedListeners.push(listener);
+  }
+
+  /**
+   * Marks playback finished and fires the `onEnded` listeners once.
+   *
+   * @internal
+   */
+  markEnded(): void {
+    if (this._ended) {
+      return;
+    }
+    this._ended = true;
+    const listeners = this.endedListeners.splice(0);
+    for (const listener of listeners) {
+      listener();
+    }
   }
 
   /**

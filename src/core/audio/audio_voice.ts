@@ -65,6 +65,11 @@ export interface VoiceSpawnOptions {
    * Live position re-read every frame.
    */
   follow?: PositionTarget;
+  /**
+   * Fired once when the voice ends — natural end, stop, or fade-out —
+   * routed through {@link SoundHandle} so callers can react to completion.
+   */
+  onEnded?: () => void;
 }
 
 /**
@@ -93,6 +98,7 @@ export class AudioVoice {
    * Sound id this voice plays (debug / handle bookkeeping).
    */
   readonly soundId: string;
+  private readonly onEnded: (() => void) | undefined;
 
   /**
    * Wires the Web Audio graph (`source → gain → destination`), applies the
@@ -103,6 +109,7 @@ export class AudioVoice {
     this.baseVolume = spawn.baseVolume;
     this.distance = spawn.distance;
     this.follow = spawn.follow;
+    this.onEnded = spawn.onEnded;
     this.source = context.createBufferSource();
     this.gainNode = context.createGain();
     this.source.buffer = spawn.buffer;
@@ -226,5 +233,6 @@ export class AudioVoice {
     this.source.onended = null;
     this.source.disconnect();
     this.gainNode.disconnect();
+    this.onEnded?.();
   }
 }

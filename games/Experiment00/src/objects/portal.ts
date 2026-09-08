@@ -1,4 +1,4 @@
-import { MapObject, type Rect, type RenderContext } from '../../../../src/index';
+import { MapObject, type Rect, type RenderContext, type ScopedState } from '../../../../src/index';
 
 /**
  * Parse a `"x,y"` property into a coordinate, or `null` when absent or
@@ -38,6 +38,17 @@ function parseCoord(raw: string | undefined): { x: number; y: number } | null {
 export class Portal extends MapObject {
   static override readonly type = 'portal';
 
+  /** Shared "which doors are open" state, scoped to `"doors"`. */
+  private static store: ScopedState | null = null;
+
+  /** Binds the opened-doors state every instance reads and writes. */
+  static useState(store: ScopedState | null): void {
+    Portal.store = store;
+  }
+
+  /** True while the open sound is playing, before the door actually opens. */
+  private opening = false;
+
   /** Current state's authored NAME (e.g. `top-open`), not its id. */
   private get stateName(): string | undefined {
     return this.machine.states.find((s) => s.id === this.state)?.name;
@@ -50,6 +61,32 @@ export class Portal extends MapObject {
    */
   get isOpen(): boolean {
     return (this.stateName ?? '').toLowerCase().includes('open');
+  }
+
+  /** Whether the open sound is playing and the door is about to open. */
+  get isOpening(): boolean {
+    return this.opening;
+  }
+
+  /** Marks the door as opening — call when its open sound starts. */
+  beginOpening(): void {
+    if (!this.isOpen) {
+      this.opening = true;
+    }
+  }
+
+  /** The authored state name marked `open`/`close` (by convention). */
+  private stateNamed(marker: string): string | undefined {
+    return this.machine.states.find((s) => s.name.toLowerCase().includes(marker))?.name;
+  }
+
+  override onSpawn(): void {
+    // All doors start closed; a door remembered open is restored silently.
+    const opened = this.id !== '' && Portal.store?.get<boolean>(this.id) === true;
+    const target = this.stateNamed(opened ? 'open' : 'close');
+    if (target) {
+      this.play(target);
+    }
   }
 
   /**
@@ -96,16 +133,24 @@ export class Portal extends MapObject {
   }
 
   /**
-   * Transitions the portal to its open state, matched by the `open` name
-   * convention (`top-open`, `portal-open`, …). Idempotent — returns `true`
-   * only when the state actually changed.
+   * Opens the door for good: swaps to the open state and remembers it, so it
+   * re-spawns open (silently) and never needs its sound again. Returns `true`
+   * only when it actually changed from closed to open.
    */
   open(): boolean {
+    this.opening = false;
     if (this.isOpen) {
       return false;
     }
-    const openState = this.machine.states.find((s) => s.name.toLowerCase().includes('open'));
-    return openState ? this.play(openState.name) : false;
+    const openState = this.stateNamed('open');
+    if (openState === undefined) {
+      return false;
+    }
+    this.play(openState);
+    if (this.id !== '') {
+      Portal.store?.set(this.id, true);
+    }
+    return true;
   }
 
   override render(ctx: RenderContext): void {

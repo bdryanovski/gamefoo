@@ -139,6 +139,8 @@ class MapGame extends Engine {
     registry.register(Chest);
     // Chests remember they are open in the shared save store.
     Chest.useState(this.save.scope('chests'));
+    // Doors (portals) remember they have been opened.
+    Portal.useState(this.save.scope('doors'));
     // Movable secret shelves remember they have slid open.
     Bookshelf.useState(this.save.scope('shelves'));
 
@@ -272,26 +274,33 @@ class MapGame extends Engine {
     const player = this.player;
     if (!player) return;
 
-    // Portals: open the nearest one within reach and travel to its target.
+    // Doors (portals): a closed door plays its open sound and opens when the
+    // sound finishes (once, then remembered). An already-open door travels.
     const portal = this.map?.current
       ?.objectsByType(Portal)
       .find((p) => p.overlaps(player.interactionBox()));
     if (portal) {
-      portal.open();
-      this.audio?.playSound('portal_open', { volume: 0.7 });
-      const target = portal.target;
-      if (target && this.navigate(target.x, target.y)) {
-        // Author-set spawn cell (grid col/row) → pixels, clamped so the player
-        // stays on-screen; falls back to centre when the portal sets none.
-        const spawn = portal.spawn;
-        const px = spawn
-          ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
-          : (SCREEN_W - PLAYER_SIZE) / 2;
-        const py = spawn
-          ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
-          : (SCREEN_H - PLAYER_SIZE) / 2;
-        player.place(px, py);
-        this.lastSafe = { x: player.x, y: player.y };
+      if (portal.isOpen) {
+        const target = portal.target;
+        if (target && this.navigate(target.x, target.y)) {
+          // Author-set spawn cell (grid col/row) → pixels, clamped so the
+          // player stays on-screen; falls back to centre when unset.
+          const spawn = portal.spawn;
+          const px = spawn
+            ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
+            : (SCREEN_W - PLAYER_SIZE) / 2;
+          const py = spawn
+            ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
+            : (SCREEN_H - PLAYER_SIZE) / 2;
+          player.place(px, py);
+          this.lastSafe = { x: player.x, y: player.y };
+        }
+      } else if (!portal.isOpening) {
+        // Closed door: play the open sound; it opens once the sound finishes.
+        portal.beginOpening();
+        const handle = this.audio?.playSound('portal_open', { volume: 0.7 });
+        if (handle) handle.onEnded(() => portal.open());
+        else portal.open();
       }
       return;
     }
