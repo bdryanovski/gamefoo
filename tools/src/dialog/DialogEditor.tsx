@@ -182,6 +182,46 @@ function DialogTreeNode({ node, rootId, selectedId, onSelect }: TreeNodeProps) {
   );
 }
 
+/**
+ * Compact message card — the message title, an option-count chip, and its
+ * id with a copy button. Shared by the "Unlinked" list and search results;
+ * search results also show which tree the message lives in.
+ */
+function MessageCard({
+  message,
+  selectedId,
+  onSelect,
+  treeName,
+}: {
+  message: DialogMessage;
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  treeName?: string;
+}) {
+  return (
+    <div
+      className={`dialog-card ${message.id === selectedId ? 'active' : ''}`}
+      onClick={() => onSelect(message.id)}
+      title={message.title}
+    >
+      <div className="dialog-card__main">
+        <Icon name="dialog" size={11} />
+        <span className="dialog-card__title">{message.title || '(untitled)'}</span>
+        {treeName && <span className="text-dim text-xs">· {treeName}</span>}
+        {message.options.length > 0 && (
+          <span className="dialog-chip" title="options">
+            ⋔{message.options.length}
+          </span>
+        )}
+      </div>
+      <div className="dialog-card__id">
+        <code className="dialog-card__id-value">{message.id}</code>
+        <CopyId id={message.id} compact />
+      </div>
+    </div>
+  );
+}
+
 export function DialogEditor({
   state,
   dispatch,
@@ -192,6 +232,7 @@ export function DialogEditor({
   onOpenProjects,
 }: Props) {
   const [tab, setTab] = useState<DialogTabType>('inspector');
+  const [query, setQuery] = useState('');
   const dialog = state.dialog;
 
   const tree = useMemo(
@@ -211,6 +252,21 @@ export function DialogEditor({
     () => (tree ? tree.messages.filter((m) => !reachable.has(m.id)) : []),
     [tree, reachable],
   );
+  // Search spans every tree: a message id (e.g. copied from an object's
+  // `message` property) rarely tells you which tree holds it.
+  const globalMatches = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (q === '') return [];
+    const out: { tree: DialogTree; message: DialogMessage }[] = [];
+    for (const t of dialog.trees) {
+      for (const m of t.messages) {
+        if (m.id.toLowerCase().includes(q) || m.title.toLowerCase().includes(q)) {
+          out.push({ tree: t, message: m });
+        }
+      }
+    }
+    return out;
+  }, [dialog.trees, query]);
 
   // Commit a whole message field; segments/options/meta edits build the next
   // array locally then hand it off through one UPDATE_MESSAGE.
@@ -264,85 +320,104 @@ export function DialogEditor({
       <div className="main-area">
         {/* ── Sidebar: trees + message tree ─────────────── */}
         <div className="dialog-sidebar">
-          <div className="row-between">
-            <div className="section-title">Dialogs</div>
-            <button
-              className="btn btn-sm"
-              title="New dialog tree"
-              onClick={() => dialogDispatch({ type: 'ADD_TREE' })}
-            >
-              <Icon name="add" size={12} /> Tree
-            </button>
-          </div>
+          <input
+            className="input input-full dialog-search"
+            type="search"
+            placeholder="Search all messages by id or title"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
 
-          <div className="col gap-sm">
-            {dialog.trees.length === 0 && (
-              <div className="text-dim text-xs p-4">No dialog trees yet.</div>
-            )}
-            {dialog.trees.map((t) => (
-              <div
-                key={t.id}
-                className={`dialog-tree-item ${t.id === dialog.selectedTreeId ? 'active' : ''}`}
-                onClick={() => dialogDispatch({ type: 'SELECT_TREE', id: t.id })}
-              >
-                <Icon name="dialog" size={12} />
-                <span className="dialog-tree-item__name">{t.name}</span>
-                <span className="text-dim text-xs">{t.messages.length}</span>
-              </div>
-            ))}
-          </div>
-
-          {tree && (
+          {query.trim() ? (
+            <div className="dialog-tree">
+              <div className="section-title">Results ({globalMatches.length})</div>
+              {globalMatches.length === 0 ? (
+                <div className="text-dim text-xs p-4">No messages match “{query.trim()}”.</div>
+              ) : (
+                globalMatches.map(({ tree: t, message: m }) => (
+                  <MessageCard
+                    key={`${t.id}:${m.id}`}
+                    message={m}
+                    treeName={t.name}
+                    selectedId={dialog.selectedMessageId}
+                    onSelect={() => {
+                      dialogDispatch({ type: 'SELECT_TREE', id: t.id });
+                      dialogDispatch({ type: 'SELECT_MESSAGE', id: m.id });
+                      setQuery('');
+                    }}
+                  />
+                ))
+              )}
+            </div>
+          ) : (
             <>
-              <div className="row-between mt-4">
-                <div className="section-title">Messages</div>
+              <div className="row-between">
+                <div className="section-title">Dialogs</div>
                 <button
                   className="btn btn-sm"
-                  title="Add message to this tree"
-                  onClick={() => dialogDispatch({ type: 'ADD_MESSAGE' })}
+                  title="New dialog tree"
+                  onClick={() => dialogDispatch({ type: 'ADD_TREE' })}
                 >
-                  <Icon name="add" size={12} /> Msg
+                  <Icon name="add" size={12} /> Tree
                 </button>
               </div>
 
-              <div className="dialog-tree">
-                {root && (
-                  <DialogTreeNode
-                    node={root}
-                    rootId={tree.rootId}
-                    selectedId={dialog.selectedMessageId}
-                    onSelect={(id) => dialogDispatch({ type: 'SELECT_MESSAGE', id })}
-                  />
+              <div className="col gap-sm">
+                {dialog.trees.length === 0 && (
+                  <div className="text-dim text-xs p-4">No dialog trees yet.</div>
                 )}
-
-                {orphans.length > 0 && (
-                  <div className="dialog-orphans">
-                    <div className="dialog-orphans__label">Unlinked</div>
-                    {orphans.map((m) => (
-                      <div
-                        key={m.id}
-                        className={`dialog-card ${m.id === dialog.selectedMessageId ? 'active' : ''}`}
-                        onClick={() => dialogDispatch({ type: 'SELECT_MESSAGE', id: m.id })}
-                        title={m.title}
-                      >
-                        <div className="dialog-card__main">
-                          <Icon name="dialog" size={11} />
-                          <span className="dialog-card__title">{m.title || '(untitled)'}</span>
-                          {m.options.length > 0 && (
-                            <span className="dialog-chip" title="options">
-                              ⋔{m.options.length}
-                            </span>
-                          )}
-                        </div>
-                        <div className="dialog-card__id">
-                          <code className="dialog-card__id-value">{m.id}</code>
-                          <CopyId id={m.id} compact />
-                        </div>
-                      </div>
-                    ))}
+                {dialog.trees.map((t) => (
+                  <div
+                    key={t.id}
+                    className={`dialog-tree-item ${t.id === dialog.selectedTreeId ? 'active' : ''}`}
+                    onClick={() => dialogDispatch({ type: 'SELECT_TREE', id: t.id })}
+                  >
+                    <Icon name="dialog" size={12} />
+                    <span className="dialog-tree-item__name">{t.name}</span>
+                    <span className="text-dim text-xs">{t.messages.length}</span>
                   </div>
-                )}
+                ))}
               </div>
+
+              {tree && (
+                <>
+                  <div className="row-between mt-4">
+                    <div className="section-title">Messages</div>
+                    <button
+                      className="btn btn-sm"
+                      title="Add message to this tree"
+                      onClick={() => dialogDispatch({ type: 'ADD_MESSAGE' })}
+                    >
+                      <Icon name="add" size={12} /> Msg
+                    </button>
+                  </div>
+
+                  <div className="dialog-tree">
+                    {root && (
+                      <DialogTreeNode
+                        node={root}
+                        rootId={tree.rootId}
+                        selectedId={dialog.selectedMessageId}
+                        onSelect={(id) => dialogDispatch({ type: 'SELECT_MESSAGE', id })}
+                      />
+                    )}
+
+                    {orphans.length > 0 && (
+                      <div className="dialog-orphans">
+                        <div className="dialog-orphans__label">Unlinked</div>
+                        {orphans.map((m) => (
+                          <MessageCard
+                            key={m.id}
+                            message={m}
+                            selectedId={dialog.selectedMessageId}
+                            onSelect={(id) => dialogDispatch({ type: 'SELECT_MESSAGE', id })}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

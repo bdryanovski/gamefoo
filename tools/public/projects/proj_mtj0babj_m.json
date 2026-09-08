@@ -24839,13 +24839,13 @@
             "id": "1788869138810_h1q5fr",
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
-            "x": 80,
-            "y": 144,
-            "level": 2,
             "properties": {
               "id": "100",
               "message": "msg_mtslxg4h_w"
-            }
+            },
+            "x": 80,
+            "y": 144,
+            "level": 2
           }
         ]
       },
@@ -29490,13 +29490,13 @@
             "id": "1788869214486_u59ws0",
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
-            "x": 256,
-            "y": 128,
-            "level": 2,
             "properties": {
               "id": "101",
               "message": "msg_mtsly62r_10"
-            }
+            },
+            "x": 256,
+            "y": 128,
+            "level": 2
           }
         ]
       },
@@ -39564,22 +39564,1029 @@
             "id": "1788869526794_axgyr9",
             "kind": "machine",
             "machineId": "sm_mtopalkk_1y",
-            "x": 192,
-            "y": 112,
-            "level": 2,
             "properties": {
               "id": "103",
               "message": "msg_mtsma4mm_2k"
-            }
+            },
+            "x": 192,
+            "y": 112,
+            "level": 2
+          }
+        ]
+      },
+      "-1,7": {
+        "x": -1,
+        "y": 7,
+        "defaultSpriteId": "spr_mtj0ia4t_25",
+        "placements": [
+          {
+            "id": "1788871702676_gbhg6i",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0ia4t_25",
+            "x": 112,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1788871703242_7pqzf0",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0ia4t_25",
+            "x": 112,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1788871703765_y4lw2m",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0ia4t_25",
+            "x": 112,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1788871764542_pib7pu",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 192,
+            "y": 0,
+            "level": 0
+          },
+          {
+            "id": "1788871767512_1c9za6",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 176,
+            "y": 0,
+            "level": 0
+          },
+          {
+            "id": "1788871768357_jvd975",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 160,
+            "y": 0,
+            "level": 0
+          },
+          {
+            "id": "1788871768942_2ye691",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 144,
+            "y": 0,
+            "level": 0
+          },
+          {
+            "id": "1788871770030_we4fp1",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 128,
+            "y": 0,
+            "level": 0
+          },
+          {
+            "id": "1788871778077_oxdosa",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 128,
+            "y": 240,
+            "level": 0
+          },
+          {
+            "id": "1788871778727_tvbeov",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 144,
+            "y": 240,
+            "level": 0
+          },
+          {
+            "id": "1788871779419_217jsl",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 160,
+            "y": 240,
+            "level": 0
+          },
+          {
+            "id": "1788871779983_r8qzaz",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 176,
+            "y": 240,
+            "level": 0
+          },
+          {
+            "id": "1788871781325_ambp9m",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i3pv_1v",
+            "x": 192,
+            "y": 240,
+            "level": 0
+          },
+          {
+            "id": "1788871800728_upvioj",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1788871801975_r7bhdz",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1788871802825_ye4vki",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1788871803517_rwdxbm",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 176,
+            "level": 1
+          },
+          {
+            "id": "1788871804276_k7p7ky",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 160,
+            "level": 1
+          },
+          {
+            "id": "1788871805460_vbu5sn",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 144,
+            "level": 1
+          },
+          {
+            "id": "1788871806093_5pgmqk",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 128,
+            "level": 1
+          },
+          {
+            "id": "1788871806805_9zoy9k",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 112,
+            "level": 1
+          },
+          {
+            "id": "1788871807519_5voqvx",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 96,
+            "level": 1
+          },
+          {
+            "id": "1788871808198_d17x5v",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 80,
+            "level": 1
+          },
+          {
+            "id": "1788871808887_uhq72r",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 64,
+            "level": 1
+          },
+          {
+            "id": "1788871809514_thlasb",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 48,
+            "level": 1
+          },
+          {
+            "id": "1788871810165_e6bo07",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 32,
+            "level": 1
+          },
+          {
+            "id": "1788871810783_7p4yeg",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 208,
+            "y": 16,
+            "level": 1
+          },
+          {
+            "id": "1788871817728_c6vpjj",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 16,
+            "level": 1
+          },
+          {
+            "id": "1788871818508_f7j05t",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 32,
+            "level": 1
+          },
+          {
+            "id": "1788871819208_22f0py",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 48,
+            "level": 1
+          },
+          {
+            "id": "1788871819910_hx7n1q",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 64,
+            "level": 1
+          },
+          {
+            "id": "1788871820659_qfz8tf",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 80,
+            "level": 1
+          },
+          {
+            "id": "1788871821293_mddiur",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 96,
+            "level": 1
+          },
+          {
+            "id": "1788871821944_fchezg",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 112,
+            "level": 1
+          },
+          {
+            "id": "1788871822635_g8rmob",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 128,
+            "level": 1
+          },
+          {
+            "id": "1788871823234_2fojvf",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 144,
+            "level": 1
+          },
+          {
+            "id": "1788871823845_7fw8ce",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 160,
+            "level": 1
+          },
+          {
+            "id": "1788871824442_q5pab1",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 176,
+            "level": 1
+          },
+          {
+            "id": "1788871824984_somhhe",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1788871825536_5ychyo",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1788871826130_tt4ymm",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 112,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1788871831252_4nbjgs",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i1a2_1t",
+            "x": 128,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871832009_dhvvgp",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i1a2_1t",
+            "x": 144,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871832593_jshjbc",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i1a2_1t",
+            "x": 160,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871833128_9vvdfe",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i1a2_1t",
+            "x": 176,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871833812_0cmpe2",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i1a2_1t",
+            "x": 192,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871837276_hm7qxy",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 128,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871838015_u4jw0p",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 144,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871838600_xosp6x",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 160,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871839334_l8u3y8",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 176,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871840028_pvx6zt",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 192,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871844500_z6a6n4",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i571_1y",
+            "x": 112,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871848401_6jq48u",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i94r_24",
+            "x": 112,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871853117_lya45v",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i7sq_22",
+            "x": 208,
+            "y": 240,
+            "level": 1
+          },
+          {
+            "id": "1788871855851_ugtung",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0hzl8_1q",
+            "x": 208,
+            "y": 0,
+            "level": 1
+          },
+          {
+            "id": "1788871880808_66kvwb",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1788871881692_azpwv7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1788871882376_wqe596",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1788871883677_lvtert",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1788871884564_w8urro",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1788871885391_hxxsuo",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1788871886108_11csjj",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1788871886825_7d5oyc",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1788871887883_4dppqy",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1788871888954_u0zk7y",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1788871889684_36yoof",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1788871890485_tle6uv",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1788871891185_ntirrg",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1788871891920_msqdpy",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1788871892653_guroga",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1788871893483_o4y8v5",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 176,
+            "level": 0
+          },
+          {
+            "id": "1788871894133_kljggz",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 176,
+            "level": 0
+          },
+          {
+            "id": "1788871894966_axyvgu",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 176,
+            "level": 0
+          },
+          {
+            "id": "1788871895766_xik4pc",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 176,
+            "level": 0
+          },
+          {
+            "id": "1788871896541_o4pi52",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 176,
+            "level": 0
+          },
+          {
+            "id": "1788871983630_gpvugl",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 160,
+            "level": 0
+          },
+          {
+            "id": "1788871984307_f1zbvq",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 160,
+            "level": 0
+          },
+          {
+            "id": "1788871985057_aufdze",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 160,
+            "level": 0
+          },
+          {
+            "id": "1788871986274_5qc5kp",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 160,
+            "level": 0
+          },
+          {
+            "id": "1788871987232_dga5ra",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 160,
+            "level": 0
+          },
+          {
+            "id": "1788871988083_5341je",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 144,
+            "level": 0
+          },
+          {
+            "id": "1788871988644_40h2rz",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 144,
+            "level": 0
+          },
+          {
+            "id": "1788871989543_am5fyf",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 144,
+            "level": 0
+          },
+          {
+            "id": "1788871990144_3gl2wo",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 144,
+            "level": 0
+          },
+          {
+            "id": "1788871990985_iwh1dh",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 128,
+            "level": 0
+          },
+          {
+            "id": "1788871993099_dlbucz",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 144,
+            "level": 0
+          },
+          {
+            "id": "1788871993832_e0pv1m",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 128,
+            "level": 0
+          },
+          {
+            "id": "1788871994432_h3v5kl",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 128,
+            "level": 0
+          },
+          {
+            "id": "1788871995149_l53hn8",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 128,
+            "level": 0
+          },
+          {
+            "id": "1788871995942_tx5k2s",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 128,
+            "level": 0
+          },
+          {
+            "id": "1788871996718_aeayn8",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 112,
+            "level": 0
+          },
+          {
+            "id": "1788871997334_am65m7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 112,
+            "level": 0
+          },
+          {
+            "id": "1788871997951_2cwdkw",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 112,
+            "level": 0
+          },
+          {
+            "id": "1788871998528_p4htb7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 112,
+            "level": 0
+          },
+          {
+            "id": "1788871999344_15snfx",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 112,
+            "level": 0
+          },
+          {
+            "id": "1788872000210_9fvfpo",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 96,
+            "level": 0
+          },
+          {
+            "id": "1788872000991_yeilx7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 96,
+            "level": 0
+          },
+          {
+            "id": "1788872001910_3mepzi",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 96,
+            "level": 0
+          },
+          {
+            "id": "1788872002624_vpfkrl",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 96,
+            "level": 0
+          },
+          {
+            "id": "1788872003891_ln5bpw",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 96,
+            "level": 0
+          },
+          {
+            "id": "1788872004682_5s3vog",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 80,
+            "level": 0
+          },
+          {
+            "id": "1788872005326_gcsmgs",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 80,
+            "level": 0
+          },
+          {
+            "id": "1788872005943_p1vioo",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 80,
+            "level": 0
+          },
+          {
+            "id": "1788872006619_kawfnx",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 80,
+            "level": 0
+          },
+          {
+            "id": "1788872007335_t11vwz",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 64,
+            "level": 0
+          },
+          {
+            "id": "1788872008036_owfhi7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 64,
+            "level": 0
+          },
+          {
+            "id": "1788872008686_jxd9h1",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 64,
+            "level": 0
+          },
+          {
+            "id": "1788872009479_n42j9s",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 64,
+            "level": 0
+          },
+          {
+            "id": "1788872010182_78hsh1",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 64,
+            "level": 0
+          },
+          {
+            "id": "1788872011250_hyoj97",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 80,
+            "level": 0
+          },
+          {
+            "id": "1788872012199_sg9jy7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 48,
+            "level": 0
+          },
+          {
+            "id": "1788872012850_aq3zbz",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 48,
+            "level": 0
+          },
+          {
+            "id": "1788872013467_9zfc6q",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 48,
+            "level": 0
+          },
+          {
+            "id": "1788872014035_g4u9e8",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 48,
+            "level": 0
+          },
+          {
+            "id": "1788872014776_4nd4ah",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 48,
+            "level": 0
+          },
+          {
+            "id": "1788872015467_m0wgjf",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 32,
+            "level": 0
+          },
+          {
+            "id": "1788872016011_qc5unq",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 32,
+            "level": 0
+          },
+          {
+            "id": "1788872016643_fasitl",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 32,
+            "level": 0
+          },
+          {
+            "id": "1788872017308_9zxnqz",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 32,
+            "level": 0
+          },
+          {
+            "id": "1788872018360_a1m25z",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 32,
+            "level": 0
+          },
+          {
+            "id": "1788872019074_vo4n14",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 192,
+            "y": 16,
+            "level": 0
+          },
+          {
+            "id": "1788872019641_nnebi7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 176,
+            "y": 16,
+            "level": 0
+          },
+          {
+            "id": "1788872020395_3v0ci7",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 160,
+            "y": 16,
+            "level": 0
+          },
+          {
+            "id": "1788872021067_ha4h2z",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 144,
+            "y": 16,
+            "level": 0
+          },
+          {
+            "id": "1788872022917_swg138",
+            "kind": "sprite",
+            "spriteId": "spr_mtoi0uo7_29",
+            "x": 128,
+            "y": 16,
+            "level": 0
           }
         ]
       }
     },
     "selected": {
-      "kind": "machine",
-      "id": "sm_mtopalkk_1y"
+      "kind": "sprite",
+      "id": "spr_mtoi0vlz_2b"
     },
-    "selectedPlacementId": "1788632080948_yrdm14",
+    "selectedPlacementId": null,
     "layers": [
       {
         "name": "base",
@@ -39598,12 +40605,12 @@
         "visible": true
       }
     ],
-    "activeLevel": 2,
-    "activeTool": "select",
-    "zoom": 1.3002236534724605,
+    "activeLevel": 0,
+    "activeTool": "paint",
+    "zoom": 2.274099296321167,
     "pan": {
-      "x": -2534.6686273259224,
-      "y": 176.35461378625996
+      "x": -4875.192727121957,
+      "y": 1250.4254467285057
     }
   },
   "dialog": {
@@ -40742,9 +41749,9 @@
         ]
       }
     ],
-    "selectedTreeId": "dlg_mtsm458w_1t",
-    "selectedMessageId": "msg_mtsm458w_1s"
+    "selectedTreeId": "dlg_mtoqzbmc_z",
+    "selectedMessageId": "msg_mtoqzbmc_y"
   },
   "history": [],
-  "lastModified": "2026-09-08T12:31:40.347Z"
+  "lastModified": "2026-09-08T13:05:29.465Z"
 }

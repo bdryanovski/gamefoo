@@ -1444,6 +1444,14 @@ code {
   padding: 4px 2px;
 }
 
+.dialog-search {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 0 4px;
+  background: var(--bg);
+}
+
 /* ── Node-link cards + connector lines ── */
 
 .dialog-tree-node {
