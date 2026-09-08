@@ -1053,6 +1053,111 @@
           "meta": {}
         }
       }
+    },
+    "Goblin": {
+      "id": "dlg_mtssvmlb_1i",
+      "name": "Goblin",
+      "root": "msg_mtssvmlb_1h",
+      "messages": {
+        "msg_mtssvmlb_1h": {
+          "title": "Goblin",
+          "segments": [
+            "You came all this way for her.",
+            "Don’t bother lying.",
+            "I’ve seen that look before.",
+            "You remember the little things, don’t you? The things nobody else would remember.",
+            "The stupid jokes. The strange names. The things she liked because you liked them.",
+            "That’s how you know it was real. Goblin: looks toward the empty throne room.",
+            "Not because it lasted.",
+            "Because you still remember.",
+            "That’s the cruel part. You can lose someone... and keep everything they left inside you.",
+            "So tell me. What exactly are you hoping to find at the end of this place? Her?",
+            "Or the version of you that existed when she was here?",
+            "But you can’t go back. You can only remember. I suppose that’s why I built this place.",
+            "A kingdom full of things that stayed. ",
+            "People are much harder to keep."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Skeleton": {
+      "id": "dlg_mtst4xec_1m",
+      "name": "Skeleton",
+      "root": "msg_mtst4xec_1l",
+      "messages": {
+        "msg_mtst4xec_1l": {
+          "title": "Skeleton",
+          "segments": [
+            "Oh. You.",
+            "I was hoping you wouldn’t come this far.",
+            "Not because you’re dangerous. You just look like the sort of person who is going to ask questions.",
+            "You: What are you doing here?",
+            "That’s a very good question.",
+            "Unfortunately, I’ve been trying to remember the answer for quite some time.",
+            "I think I was looking for something.",
+            "Or someone.",
+            "At some point I stopped being sure which one. (Looking around ...)",
+            "Then again, perhaps I was only looking for a way out. I don’t remember that either."
+          ],
+          "options": [
+            {
+              "label": "What were you looking for",
+              "target": "msg_mtstmjf9_1q"
+            },
+            {
+              "label": "Someone",
+              "target": "msg_mtstq1t9_1u"
+            },
+            {
+              "label": "Why are you still here?",
+              "target": "msg_mtstt9g9_1y"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtstmjf9_1q": {
+          "title": "What were you looking for",
+          "segments": [
+            "I told you. Something.",
+            "Very useful, I know.",
+            "I remember walking for a long time. There were doors, rooms, corridors…",
+            "Every time I found something, I thought it was the thing I had come for.",
+            "You: And was it?",
+            "No. Usually it was a chair. Or a rusty sword. Once I walked three rooms because I thought I smelled bread. It was a rat.",
+            "I don’t even remember what I was hoping to find anymore. That’s the part that bothers me. Not that I failed. That I can’t remember what winning would have looked like."
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtstq1t9_1u": {
+          "title": "Someone",
+          "segments": [
+            "Did I?",
+            "You: Yes.",
+            "Hmph.",
+            "Then I suppose I meant someone.",
+            "There was someone. I remember that much. I remember wanting to find them.",
+            "I remember thinking that if I just kept walking, eventually I’d reach them.",
+            "Look at me. What do you think? I don’t even remember their face anymore. ",
+            "But I remember that I missed them. Funny thing, memory. Sometimes it takes the person and leaves you with the feeling."
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtstt9g9_1y": {
+          "title": "Why are you still here",
+          "segments": [
+            "Because apparently I have terrible judgment.",
+            "I could have left. Probably. I think there was a way out somewhere behind me.",
+            "I have been dead for a while. You’ll have to forgive me if my memory isn’t perfect. The strange thing is, I remember wanting to leave.",
+            "I just don’t remember why I stayed. Maybe I thought they would come looking for me. Or maybe I was afraid that if I left, they wouldn’t know where to find me. "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }
