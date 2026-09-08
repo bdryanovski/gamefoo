@@ -44,7 +44,8 @@
     { "id": "step_water_4", "name": "Water step 4", "file": "player/walking/Water Walk 4.wav", "volume": 0.55 },
     { "id": "step_water_5", "name": "Water step 5", "file": "player/walking/Water Walk 5.wav", "volume": 0.55 },
 
-    { "id": "portal_open", "name": "Portal open", "file": "portal/open.wav", "volume": 0.7 }
+    { "id": "portal_open", "name": "Portal open", "file": "portal/open.wav", "volume": 0.7 },
+    { "id": "chest_open", "name": "Chest open", "file": "chest/open.wav", "volume": 0.7 }
   ],
   "sequences": [
     {

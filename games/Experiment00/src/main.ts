@@ -21,6 +21,8 @@ import {
 } from '../../../src/index';
 import { drawMessages, showMessage, updateMessages } from './hud';
 import { Olive } from './objects/olive';
+import { Chest } from './objects/chest';
+import { Inventory } from './inventory';
 import { Campfire } from './objects/campfire';
 import { Torch } from './objects/torch';
 import { Bookshelf } from './objects/bookshelf';
@@ -114,6 +116,10 @@ class MapGame extends Engine {
     backend: new MemoryBackend('experiment00:save'),
     autoSave: true,
   });
+  /** The player's item bag (persisted with the save; chests fill it). */
+  private readonly inventory = new Inventory(this.save.scope('inventory'));
+  /** A movable shelf whose message is being read; slides once it closes. */
+  private shelfAwaitingSlide?: Bookshelf;
 
   async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
@@ -130,11 +136,16 @@ class MapGame extends Engine {
     registry.register(Olive);
     // Olives read/write their collected flag from the shared save store.
     Olive.useState(this.save.scope('olives'));
+    registry.register(Chest);
+    // Chests remember they are open in the shared save store.
+    Chest.useState(this.save.scope('chests'));
+    // Movable secret shelves remember they have slid open.
+    Bookshelf.useState(this.save.scope('shelves'));
 
     // Screens: a default class for every room, overridden per coordinate.
     const screens = new ScreenRegistry();
     screens.setDefault(RoomScreen);
-    screens.register(0, 3, DarkChamberScreen);
+    screens.register(0, 8, DarkChamberScreen);
 
     // Read the editor's live working project straight from disk (served at
     // /project/…), unmodified. Image urls are "/uploads/<file>".
@@ -174,7 +185,7 @@ class MapGame extends Engine {
 
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
-    this.navigate(0, 3);
+    this.navigate(0, 7);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
   }
@@ -294,13 +305,42 @@ class MapGame extends Engine {
       if (ref && this.dialog?.start(ref)) return;
     }
 
-    // Bookshelves: open the dialog modal for a nearby shelf that has one.
+    // Bookshelves: show the dialog for a nearby shelf. A movable secret shelf
+    // (one with an `id`) slides open one tile — after its message is read, or
+    // immediately when it has none.
     const shelf = this.map?.current
       ?.objectsByType(Bookshelf)
       .find((b) => b.overlaps(player.interactionBox()));
     if (shelf) {
       const ref = shelf.dialogRef;
+      if (shelf.movable && !shelf.isOpen) {
+        if (ref && this.dialog?.start(ref)) {
+          this.shelfAwaitingSlide = shelf;
+        } else {
+          shelf.slideOpen();
+        }
+        return;
+      }
       if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Chests: open the nearest reachable closed chest (one-way — stays open).
+    // Opening grants its item, plays the sound, and runs its dialog once.
+    const chest = this.map?.current
+      ?.objectsByType(Chest)
+      .find((c) => !c.isOpen && c.overlaps(player.interactionBox()));
+    if (chest?.open()) {
+      this.audio?.playSound('chest_open', { volume: 0.7 });
+      const item = chest.item;
+      if (item) {
+        this.inventory.add(item);
+        showMessage(`Found ${item}`, 1.6);
+      } else {
+        showMessage('The chest is empty', 1.2);
+      }
+      const ref = chest.dialogRef;
+      if (ref) this.dialog?.start(ref);
+      return;
     }
 
     // Campfires: toggle the nearest within reach.
@@ -342,6 +382,12 @@ class MapGame extends Engine {
     this.dialog?.update(dt);
     this.dialogBox.update(dt, this.dialog?.active ?? false);
     if (this.dialog?.active) return;
+
+    // The message for a movable shelf was just dismissed — slide it open now.
+    if (this.shelfAwaitingSlide) {
+      this.shelfAwaitingSlide.slideOpen();
+      this.shelfAwaitingSlide = undefined;
+    }
 
     // Feed each rat the player's box + collision so its AI can sense/flee,
     // before the screen advances the live objects (which runs their update).

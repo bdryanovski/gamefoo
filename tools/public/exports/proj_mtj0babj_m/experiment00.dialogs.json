@@ -1158,6 +1158,22 @@
           "meta": {}
         }
       }
+    },
+    "SecretDoor": {
+      "id": "dlg_mtt5iv1i_t",
+      "name": "SecretDoor",
+      "root": "msg_mtt5iv1i_s",
+      "messages": {
+        "msg_mtt5iv1i_s": {
+          "title": "Strange",
+          "segments": [
+            "Strange I feel some wind ...",
+            "The shelf start to move ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }

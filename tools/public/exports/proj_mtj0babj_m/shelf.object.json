@@ -15,7 +15,8 @@
     "height": 32
   },
   "properties": {
-    "message": "0"
+    "message": "0",
+    "id": "0"
   },
   "images": {
     "props.png": {

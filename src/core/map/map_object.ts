@@ -83,6 +83,13 @@ export default class MapObject {
   readonly level: number;
 
   /**
+   * Stable per-placement identity (the map {@link Placement.id}), or `""` when
+   * the object was created without one. Use it to key persistent per-instance
+   * state — an opened chest, a collected pickup — in a store.
+   */
+  readonly id: string;
+
+  /**
    * The object prefab (name, sprites, animations, meta).
    */
   protected readonly def: GameObjectDefinition;
@@ -120,6 +127,7 @@ export default class MapObject {
     this.x = ctx.x;
     this.y = ctx.y;
     this.level = ctx.level;
+    this.id = ctx.id ?? '';
     this.def = ctx.def;
     this.machine = ctx.machine;
     this.properties = ctx.properties;
@@ -240,7 +248,18 @@ export default class MapObject {
    * when the current state authors none (e.g. an unlit, non-solid campfire).
    */
   worldColliders(): WorldCollider[] {
-    const defs = this.def.collisionsByState?.[this.state] ?? [];
+    return this.collidersForState(this.state);
+  }
+
+  /**
+   * This object's colliders for an arbitrary state id, resolved from
+   * `collisionsByState` and placed in world (screen) pixels. Lets a subclass
+   * keep a state's colliders in another state — e.g. an opened chest reusing
+   * its closed state's `solid` so it still blocks. Empty when that state
+   * authors none.
+   */
+  protected collidersForState(stateId: string): WorldCollider[] {
+    const defs = this.def.collisionsByState?.[stateId] ?? [];
     const out: WorldCollider[] = [];
     const grid = this.def.grid;
     const footprint = grid

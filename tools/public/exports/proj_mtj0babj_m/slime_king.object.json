@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "slime_king",
+    "category": "character"
+  },
+  "grid": {
+    "cols": 3,
+    "rows": 4,
+    "cell": 16
+  },
+  "size": {
+    "width": 48,
+    "height": 64
+  },
+  "properties": {},
+  "images": {
+    "slime_king.png": {
+      "src": "/uploads/1788898518613_slime_king.png",
+      "width": 240,
+      "height": 384
+    }
+  },
+  "frames": {
+    "region_395": {
+      "image": "slime_king.png",
+      "x": 0,
+      "y": 64,
+      "width": 48,
+      "height": 64
+    },
+    "region_396": {
+      "image": "slime_king.png",
+      "x": 48,
+      "y": 64,
+      "width": 48,
+      "height": 64
+    }
+  },
+  "animations": {
+    "slime_king_idle": {
+      "frames": [
+        "region_395",
+        "region_396"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
+    },
+    "vision": {
+      "name": "Vision",
+      "color": "#f2c14e"
+    }
+  },
+  "states": {
+    "Idle": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "slime_king_idle"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtt4bnei_n",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.1778846153846154,
+            "y": 16.342307692307692,
+            "width": 47.253846153846155,
+            "height": 42.16538461538462
+          }
+        },
+        {
+          "id": "col_mtt4c4hi_o",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 24,
+            "cy": 32,
+            "radius": 37
+          }
+        },
+        {
+          "id": "col_mtt4cpyk_p",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 24,
+            "cy": 32,
+            "radius": 60
+          }
+        }
+      ]
+    }
+  },
+  "initial": "Idle"
+}

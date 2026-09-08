@@ -221,6 +221,7 @@ export default class Screen {
           level: placement.level,
           transform,
           startStateId,
+          id: placement.id,
         };
 
         const key = owner.properties.class ?? owner.name;

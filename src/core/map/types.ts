@@ -384,6 +384,12 @@ export interface MapObjectContext {
    * Initial state id (resolved from a placement's `stateName`, if any).
    */
   startStateId?: string;
+  /**
+   * Stable per-placement identity (the {@link Placement.id}). Lets a custom
+   * object persist per-instance state (an opened chest, a picked item)
+   * without authoring an `id` property.
+   */
+  id?: string;
 }
 
 /**
