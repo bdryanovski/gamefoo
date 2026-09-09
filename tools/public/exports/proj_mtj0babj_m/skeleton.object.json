@@ -14,7 +14,9 @@
     "width": 16,
     "height": 16
   },
-  "properties": {},
+  "properties": {
+    "message": "msg_mtst4xec_1l"
+  },
   "images": {
     "skeleton.png": {
       "src": "/uploads/1788878855233_skeleton.png",

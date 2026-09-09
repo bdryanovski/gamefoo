@@ -87,20 +87,7 @@
           "segments": [
             "Found some books: \"A guide to getting lost\", \"Things I should have said\", \"The book of small things\", \"How to find someone\", \"An empty book\", \"Olives\", \"Dreams\""
           ],
-          "options": [
-            {
-              "label": "Book: A guide to getting lost",
-              "target": "msg_mtoozas0_1o"
-            },
-            {
-              "label": "Book: The book of small things",
-              "target": "msg_mtop298s_1s"
-            },
-            {
-              "label": "Book: Olives",
-              "target": "msg_mtop55o3_1w"
-            }
-          ],
+          "options": [],
           "meta": {}
         },
         "msg_mtoozas0_1o": {
@@ -139,6 +126,14 @@
           ],
           "options": [],
           "meta": {}
+        },
+        "msg_mtuhlh8h_1": {
+          "title": "Message",
+          "segments": [
+            ""
+          ],
+          "options": [],
+          "meta": {}
         }
       }
     },
@@ -156,17 +151,19 @@
             "Sweet dreams, potato giraffe ..."
           ],
           "options": [],
-          "meta": {}
+          "meta": {
+            "item": "giraffe"
+          }
         }
       }
     },
-    "Campfire 1": {
+    "Note 00": {
       "id": "dlg_mtoq723s_7",
-      "name": "Campfire 1",
+      "name": "Note 00",
       "root": "msg_mtoq723s_6",
       "messages": {
         "msg_mtoq723s_6": {
-          "title": "Campfire",
+          "title": "Note",
           "segments": [
             "Voice: Do you know where you are?",
             "Voice: Neither do I",
@@ -212,13 +209,13 @@
         }
       }
     },
-    "Campfire 2": {
+    "Note 01": {
       "id": "dlg_mtoqjn5v_j",
-      "name": "Campfire 2",
+      "name": "Note 01",
       "root": "msg_mtoqjn5v_i",
       "messages": {
         "msg_mtoqjn5v_i": {
-          "title": "Campfire",
+          "title": "Note",
           "segments": [
             "Everything reminds me of her"
           ],
@@ -248,13 +245,13 @@
         }
       }
     },
-    "Campfire 3": {
+    "Note 03": {
       "id": "dlg_mtoqnys8_r",
-      "name": "Campfire 3",
+      "name": "Note 03",
       "root": "msg_mtoqnys8_q",
       "messages": {
         "msg_mtoqnys8_q": {
-          "title": "Campfire",
+          "title": "Note",
           "segments": [
             "Voice: You know ...",
             "Voice: You don't have to find me",
@@ -284,13 +281,13 @@
         }
       }
     },
-    "Campfire 5": {
+    "Note 04": {
       "id": "dlg_mtoqzbmc_z",
-      "name": "Campfire 5",
+      "name": "Note 04",
       "root": "msg_mtoqzbmc_y",
       "messages": {
         "msg_mtoqzbmc_y": {
-          "title": "Campfire",
+          "title": "Note",
           "segments": [
             "I'm thinking about it",
             "Voice: You should think about me instead...",
@@ -301,13 +298,13 @@
         }
       }
     },
-    "Campfire 6": {
+    "Note": {
       "id": "dlg_mtor0i4f_13",
-      "name": "Campfire 6",
+      "name": "Note",
       "root": "msg_mtor0i4f_12",
       "messages": {
         "msg_mtor0i4f_12": {
-          "title": "Campfire",
+          "title": "Note",
           "segments": [
             "Voice: You make my brain melt",
             "You make me want to be a better person",
@@ -380,19 +377,19 @@
         }
       }
     },
-    "Campfire 7": {
+    "Note 06": {
       "id": "dlg_mtorag3r_1j",
-      "name": "Campfire 7",
+      "name": "Note 06",
       "root": "msg_mtorag3r_1i",
       "messages": {
         "msg_mtorag3r_1i": {
-          "title": "Start",
+          "title": "Note",
           "segments": [
             "I can't find you",
             "Voice: You don't have to",
             "Then where are you",
             "Voice: Around ",
-            "... you don't see me ?"
+            "Voice: ... you don't see me ?"
           ],
           "options": [],
           "meta": {}
@@ -1067,7 +1064,7 @@
             "I’ve seen that look before.",
             "You remember the little things, don’t you? The things nobody else would remember.",
             "The stupid jokes. The strange names. The things she liked because you liked them.",
-            "That’s how you know it was real. Goblin: looks toward the empty throne room.",
+            "That’s how you know it was real. (looks toward the empty throne room.)",
             "Not because it lasted.",
             "Because you still remember.",
             "That’s the cruel part. You can lose someone... and keep everything they left inside you.",

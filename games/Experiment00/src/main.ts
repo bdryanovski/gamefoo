@@ -1,5 +1,6 @@
 // oxlint-disable max-statements curly
 import {
+  AmbientSporeShader,
   AudioSystem,
   DialogBox,
   type DialogDocument,
@@ -35,6 +36,8 @@ import { DarkChamberScreen } from './screens/dark-chamber';
 import { RoomScreen } from './screens/room';
 import { Ghost } from './objects/ghost';
 import { FlyingSkull } from './objects/flying_skull';
+import { Skeleton } from './objects/skeleton';
+import { Goblin } from './objects/goblin';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -45,6 +48,10 @@ const PLAYER_SIZE = 16;
 // Screen tile size (px). Portal `spawn` cells are authored in grid col/row
 // and converted to pixels with this.
 const BLOCK_SIZE = 16;
+// Time a door takes to open (seconds). The `portal_open` cue is played at
+// double rate so it finishes in this window; the pie-fill badge above the
+// door tracks the same clock and completes as the door opens.
+const PORTAL_OPEN_SECONDS = 6;
 // The player draws on this z-level; layers above it (e.g. the `pillars`
 // layer at level 3) occlude it, so keep it below them.
 const PLAYER_LEVEL = 2;
@@ -132,6 +139,8 @@ class MapGame extends Engine {
     registry.register(Rat);
     registry.register(Slime);
     registry.register(FlyingSkull);
+    registry.register(Skeleton);
+    registry.register(Goblin);
     registry.register(Torch);
     registry.register(Olive);
     // Olives read/write their collected flag from the shared save store.
@@ -172,6 +181,9 @@ class MapGame extends Engine {
 
     const shaders = new ShaderSystem();
     shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
+    // Settled, drifting motes over the whole frame — a Stranger Things
+    // "Upside Down" ambience. Added after the vignette so it glows on top.
+    shaders.add(new AmbientSporeShader({ density: 1.2, alpha: 0.22 }));
     this.use(shaders);
 
     // Audio: load the sound/sequence catalog and expose it as a subsystem.
@@ -187,7 +199,7 @@ class MapGame extends Engine {
 
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
-    this.navigate(0, 7);
+    this.navigate(-3, 9);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
   }
@@ -297,12 +309,23 @@ class MapGame extends Engine {
         }
       } else if (!portal.isOpening) {
         // Closed door: play the open sound; it opens once the sound finishes.
-        portal.beginOpening();
-        const handle = this.audio?.playSound('portal_open', { volume: 0.7 });
+        portal.beginOpening(PORTAL_OPEN_SECONDS);
+        const handle = this.audio?.playSound('portal_open', { volume: 0.7, rate: 2 });
         if (handle) handle.onEnded(() => portal.open());
         else portal.open();
       }
       return;
+    }
+
+    // Stalkers (skeleton, goblin): replay the dialog on demand when the player
+    // presses E beside one already in talking range.
+    const stalker = [
+      ...(this.map?.current?.objectsByType(Skeleton) ?? []),
+      ...(this.map?.current?.objectsByType(Goblin) ?? []),
+    ].find((s) => s.overlaps(player.box()));
+    if (stalker) {
+      const ref = stalker.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
     }
 
     // Signs: open the dialog modal for a nearby sign that names a tree.
@@ -415,6 +438,22 @@ class MapGame extends Engine {
       for (const ghost of this.map.current.objectsByType(Ghost)) {
         ghost.sense(pbox, this.map.current.collision);
       }
+
+      // Stalkers (skeleton, goblin) home in on the player; when one reaches
+      // talking range it greets once by opening its `message` dialog. Starting
+      // a dialog freezes the world, so bail out of this frame's update.
+      const stalkers = [
+        ...this.map.current.objectsByType(Skeleton),
+        ...this.map.current.objectsByType(Goblin),
+      ];
+      for (const stalker of stalkers) {
+        stalker.sense(pbox, this.map.current.collision);
+      }
+      for (const stalker of stalkers) {
+        if (stalker.takeGreeting() && stalker.dialogRef && this.dialog?.start(stalker.dialogRef)) {
+          return;
+        }
+      }
     }
     this.map?.update(dt);
     updateMessages(dt);
@@ -488,6 +527,11 @@ class MapGame extends Engine {
       ctx,
       player ? { level: PLAYER_LEVEL, render: (c) => player.render(c) } : undefined,
     );
+    // Door-opening pies draw last, above every map layer, so no wall or
+    // pillar hides them.
+    for (const portal of this.map?.current?.objectsByType(Portal) ?? []) {
+      portal.renderProgress(ctx);
+    }
     ctx.restore();
 
     const fires = this.campfires();

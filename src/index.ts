@@ -121,6 +121,8 @@ export { GlowShader } from './core/shaders/glow_shader';
 export type { GlowConfig } from './core/shaders/glow_shader';
 export { ParticleShader } from './core/shaders/particle_shader';
 export type { ParticleConfig } from './core/shaders/particle_shader';
+export { AmbientSporeShader } from './core/shaders/ambient_spore_shader';
+export type { AmbientSporeConfig } from './core/shaders/ambient_spore_shader';
 export { VignetteShader } from './core/shaders/vignette_shader';
 export type { VignetteConfig } from './core/shaders/vignette_shader';
 export type { ShaderConfig, ShaderRegion } from './core/shaders/types';

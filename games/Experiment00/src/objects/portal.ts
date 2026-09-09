@@ -49,6 +49,12 @@ export class Portal extends MapObject {
   /** True while the open sound is playing, before the door actually opens. */
   private opening = false;
 
+  /** Seconds elapsed since {@link beginOpening} while the door swings open. */
+  private openElapsed = 0;
+
+  /** Expected seconds until the door finishes opening (drives the pie). */
+  private openDuration = 0;
+
   /** Current state's authored NAME (e.g. `top-open`), not its id. */
   private get stateName(): string | undefined {
     return this.machine.states.find((s) => s.id === this.state)?.name;
@@ -68,11 +74,28 @@ export class Portal extends MapObject {
     return this.opening;
   }
 
-  /** Marks the door as opening — call when its open sound starts. */
-  beginOpening(): void {
+  /**
+   * Marks the door as opening — call when its open sound starts. `duration`
+   * is the expected seconds until it finishes (the open cue's length), used
+   * to fill the {@link openProgress} pie.
+   */
+  beginOpening(duration: number): void {
     if (!this.isOpen) {
       this.opening = true;
+      this.openElapsed = 0;
+      this.openDuration = Math.max(0, duration);
     }
+  }
+
+  /**
+   * How far the door has swung open, `0..1` — the pie's fill fraction.
+   * `0` when closed and idle, ramps to `1` as the open cue completes.
+   */
+  get openProgress(): number {
+    if (!this.opening || this.openDuration <= 0) {
+      return 0;
+    }
+    return Math.min(1, this.openElapsed / this.openDuration);
   }
 
   /** The authored state name marked `open`/`close` (by convention). */
@@ -139,6 +162,8 @@ export class Portal extends MapObject {
    */
   open(): boolean {
     this.opening = false;
+    this.openElapsed = 0;
+    this.openDuration = 0;
     if (this.isOpen) {
       return false;
     }
@@ -153,7 +178,51 @@ export class Portal extends MapObject {
     return true;
   }
 
-  override render(ctx: RenderContext): void {
-    super.render(ctx);
+  /** Advances the opening clock while the door is swinging open. */
+  override update(dt: number): void {
+    super.update(dt);
+    if (this.opening) {
+      this.openElapsed += dt;
+    }
+  }
+
+  /**
+   * Draws the pixel-art opening badge: a chunky pie above the door that
+   * fills clockwise from twelve o'clock as {@link openProgress} climbs to
+   * `1`. Rendered by the game as a top-most overlay (after every map layer)
+   * so no wall or pillar can hide it. Cells are whole map pixels, so it
+   * stays crisp under the game's nearest-neighbour upscale.
+   */
+  renderProgress(ctx: RenderContext): void {
+    if (!this.opening) {
+      return;
+    }
+    const box = this.bounds();
+    const cell = 1; // one map pixel per pie block — matches the art grid
+    const radius = Math.max(4, Math.round(Math.min(box.width, box.height) * 0.3));
+    const cx = Math.round(box.x + box.width / 2);
+    const cy = Math.round(box.y) - radius - 2; // hover just above the door
+    const sweep = this.openProgress * Math.PI * 2;
+    const twelve = -Math.PI / 2;
+    for (let gy = -radius; gy <= radius; gy += cell) {
+      for (let gx = -radius; gx <= radius; gx += cell) {
+        const ox = gx + cell / 2;
+        const oy = gy + cell / 2;
+        const dist = Math.hypot(ox, oy);
+        if (dist > radius) {
+          continue;
+        }
+        let color: string;
+        if (dist > radius - cell) {
+          color = '#ffffff'; // rim ring
+        } else {
+          // Clockwise angle from twelve o'clock, 0..2π.
+          let rel = Math.atan2(oy, ox) - twelve;
+          if (rel < 0) rel += Math.PI * 2;
+          color = rel <= sweep ? '#ffd66e' : '#2a2a3a';
+        }
+        ctx.fillRect(cx + gx, cy + gy, cell, cell, color);
+      }
+    }
   }
 }

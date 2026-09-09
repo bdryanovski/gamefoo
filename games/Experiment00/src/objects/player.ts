@@ -42,9 +42,9 @@ export class Player extends MapObject {
   override onSpawn(): void {
     this.attachShader(
       new GlowShader({
-        color: '#8fe9ff',
+        color: '#9bbc0f',
         radius: 12,
-        intensity: 0.25,
+        intensity: 0.65,
         pulseSpeed: 1.2,
         pulseAmount: 0.4,
       }),

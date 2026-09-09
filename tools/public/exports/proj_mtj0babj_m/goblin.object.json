@@ -14,7 +14,9 @@
     "width": 16,
     "height": 16
   },
-  "properties": {},
+  "properties": {
+    "message": "msg_mtorxbq3_2a"
+  },
   "images": {
     "goblin.png": {
       "src": "/uploads/1788878860487_goblin.png",
