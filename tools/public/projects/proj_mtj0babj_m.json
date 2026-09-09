@@ -12141,7 +12141,9 @@
           }
         ]
       },
-      "properties": {},
+      "properties": {
+        "message": "0"
+      },
       "meta": {
         "description": "",
         "category": "character",
@@ -12239,7 +12241,7 @@
     "spr_mtj0ighs_29"
   ],
   "selectedAnimationId": "anim_mtt45ycs_h",
-  "selectedObjectId": "obj_mtsscozz_p",
+  "selectedObjectId": "obj_mtt49mb4_l",
   "activeTool": "select",
   "zoom": 1.768926441122244,
   "pan": {
@@ -50758,8 +50760,7 @@
             },
             "x": 224,
             "y": 128,
-            "level": 2,
-            "flipX": false
+            "level": 2
           }
         ]
       },
@@ -52528,7 +52529,10 @@
             "machineId": "sm_mtt49mb4_k",
             "x": 144,
             "y": 80,
-            "level": 2
+            "level": 2,
+            "properties": {
+              "message": "msg_mtujs2a5_k"
+            }
           },
           {
             "id": "1788899438484_8uom3w",
@@ -60203,7 +60207,7 @@
       "kind": "machine",
       "id": "sm_mto16yyf_1"
     },
-    "selectedPlacementId": "1788879256439_3km224",
+    "selectedPlacementId": "1788899403405_1j5luj",
     "layers": [
       {
         "name": "base",
@@ -60227,11 +60231,11 @@
       }
     ],
     "activeLevel": 2,
-    "activeTool": "move",
-    "zoom": 1.977477648974928,
+    "activeTool": "select",
+    "zoom": 0.9831558816426925,
     "pan": {
-      "x": -5402.862601710063,
-      "y": 1756.2469165837715
+      "x": -2767.856301703034,
+      "y": 231.45082418200354
     }
   },
   "dialog": {
@@ -61418,19 +61422,9 @@
             ],
             "options": [
               {
-                "id": "opt_mtstm7tn_1o",
-                "label": "What were you looking for",
-                "targetId": "msg_mtstmjf9_1q"
-              },
-              {
-                "id": "opt_mtstpmax_1s",
-                "label": "Someone",
-                "targetId": "msg_mtstq1t9_1u"
-              },
-              {
-                "id": "opt_mtstsvf5_1w",
-                "label": "Why are you still here?",
-                "targetId": "msg_mtstt9g9_1y"
+                "id": "opt_mtujm7xf_7",
+                "label": "What question you have",
+                "targetId": "msg_mtujmn1b_9"
               }
             ],
             "meta": []
@@ -61447,7 +61441,13 @@
               "No. Usually it was a chair. Or a rusty sword. Once I walked three rooms because I thought I smelled bread. It was a rat.",
               "I don’t even remember what I was hoping to find anymore. That’s the part that bothers me. Not that I failed. That I can’t remember what winning would have looked like."
             ],
-            "options": [],
+            "options": [
+              {
+                "id": "opt_mtuj4wgq_1",
+                "label": "Back",
+                "targetId": "msg_mtujmn1b_9"
+              }
+            ],
             "meta": []
           },
           {
@@ -61463,7 +61463,13 @@
               "Look at me. What do you think? I don’t even remember their face anymore. ",
               "But I remember that I missed them. Funny thing, memory. Sometimes it takes the person and leaves you with the feeling."
             ],
-            "options": [],
+            "options": [
+              {
+                "id": "opt_mtuj5eb6_3",
+                "label": "Back",
+                "targetId": "msg_mtujmn1b_9"
+              }
+            ],
             "meta": []
           },
           {
@@ -61475,7 +61481,43 @@
               "I have been dead for a while. You’ll have to forgive me if my memory isn’t perfect. The strange thing is, I remember wanting to leave.",
               "I just don’t remember why I stayed. Maybe I thought they would come looking for me. Or maybe I was afraid that if I left, they wouldn’t know where to find me. "
             ],
-            "options": [],
+            "options": [
+              {
+                "id": "opt_mtuj5sfi_5",
+                "label": "Back",
+                "targetId": "msg_mtujmn1b_9"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtujmn1b_9",
+            "title": "Message",
+            "segments": [
+              "What other questions you have ?"
+            ],
+            "options": [
+              {
+                "id": "opt_mtujmwbz_b",
+                "label": "What were you looking for ?",
+                "targetId": "msg_mtstmjf9_1q"
+              },
+              {
+                "id": "opt_mtujna2t_d",
+                "label": "Someone? ",
+                "targetId": "msg_mtstq1t9_1u"
+              },
+              {
+                "id": "opt_mtujnhjt_f",
+                "label": "Why are you still here ?",
+                "targetId": "msg_mtstt9g9_1y"
+              },
+              {
+                "id": "opt_mtujqp9r_h",
+                "label": "Go away (Quit)",
+                "targetId": null
+              }
+            ],
             "meta": []
           }
         ]
@@ -61496,11 +61538,320 @@
             "meta": []
           }
         ]
+      },
+      {
+        "id": "dlg_mtujs2a5_l",
+        "name": "King",
+        "rootId": "msg_mtujs2a5_k",
+        "messages": [
+          {
+            "id": "msg_mtujs2a5_k",
+            "title": "The King",
+            "segments": [
+              "You're late ",
+              "Don't look so surprised ",
+              "Everyone is late when they finally get here."
+            ],
+            "options": [
+              {
+                "id": "opt_mtujtinn_n",
+                "label": "What are you ?",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtujtw50_p",
+            "title": "Ask me",
+            "segments": [
+              "I'm here to answer ..."
+            ],
+            "options": [
+              {
+                "id": "opt_mtujukuf_r",
+                "label": "Who are you ?",
+                "targetId": "msg_mtujuqih_t"
+              },
+              {
+                "id": "opt_mtujwjbd_x",
+                "label": "What is this place ?",
+                "targetId": "msg_mtujwp9p_z"
+              },
+              {
+                "id": "opt_mtujy5t5_13",
+                "label": "Why are you here ?",
+                "targetId": "msg_mtujydsr_15"
+              },
+              {
+                "id": "opt_mtuk078l_19",
+                "label": "The vampires of time",
+                "targetId": "msg_mtuk0fi8_1b"
+              },
+              {
+                "id": "opt_mtuk4eyj_1f",
+                "label": "OptionWhy does everything remind me of her?",
+                "targetId": "msg_mtuk4hxx_1h"
+              },
+              {
+                "id": "opt_mtuk7ebh_1l",
+                "label": "Is she here?",
+                "targetId": "msg_mtuk7gna_1n"
+              },
+              {
+                "id": "opt_mtuk9f3p_1r",
+                "label": "He came here",
+                "targetId": "msg_mtuk9ipz_1t"
+              },
+              {
+                "id": "opt_mtukccrc_1x",
+                "label": "I miss her.",
+                "targetId": "msg_mtukcj15_1z"
+              },
+              {
+                "id": "opt_mtukfeql_23",
+                "label": "Then why did I come here?",
+                "targetId": "msg_mtukfhjc_25"
+              },
+              {
+                "id": "opt_mtukhumx_29",
+                "label": "End",
+                "targetId": "msg_mtukhywe_2b"
+              },
+              {
+                "id": "opt_mtukmf61_2f",
+                "label": "Time to go",
+                "targetId": null
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtujuqih_t",
+            "title": "Who are you?",
+            "segments": [
+              "You: Who are you ?",
+              "Nobody important",
+              "That’s usually what people ask when they’ve reached the end of somewhere.",
+              "They expect a king. A demon. A treasure. Something with enough teeth to make the journey feel worthwhile. Instead, you got me. Terrible ending, isn’t it?"
+            ],
+            "options": [
+              {
+                "id": "opt_mtujwafl_v",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtujwp9p_z",
+            "title": "What is this place ?",
+            "segments": [
+              "The part you weren’t supposed to reach.",
+              "The rooms behind the rooms.",
+              "The things left behind after memories have eaten everything useful.",
+              "You called it a dungeon because that made it easier to walk through.",
+              "People like names.",
+              "Names make terrible things feel organized."
+            ],
+            "options": [
+              {
+                "id": "opt_mtujxyye_11",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtujydsr_15",
+            "title": "Why are you here ?",
+            "segments": [
+              "Because somebody has to clean up.",
+              "You: Clean up what?",
+              "Time.",
+              "Memory.",
+              "Regret.",
+              "All the little pieces people refuse to throw away.",
+              "Mostly memory. Memory is disgusting. It never knows when to die."
+            ],
+            "options": [
+              {
+                "id": "opt_mtujzxsb_17",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtuk0fi8_1b",
+            "title": "The Vampires of Time",
+            "segments": [
+              "You: What do you mean by time?",
+              "Time is hungry.",
+              "It eats everything.",
+              "Faces.",
+              "Voices.",
+              "Places.",
+              "The exact sound someone made when they laughed.",
+              "The things you thought you’d never forget.",
+              "Eventually, time comes for all of it.",
+              "But there are things that refuse to be eaten.",
+              "You: Like what?",
+              "Memories. ",
+              "Little parasites. They hide inside you and wait. Then, years later, something stupid happens. An olive. A stupid joke. A smell. A place. And suddenly they've awake",
+              "That’s when the vampires of time have already lost."
+            ],
+            "options": [
+              {
+                "id": "opt_mtuk3zcm_1d",
+                "label": "Back ",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtuk4hxx_1h",
+            "title": "Why does everything remind me of her?",
+            "segments": [
+              "Because you let her in.",
+              "You: What does that mean?",
+              "You gave ordinary things meaning.",
+              "You let them become yours.",
+              "Then hers.",
+              "Then both.",
+              "Now you can’t tell where one ends and the other begins.",
+              "That’s the price.",
+              "You: What price?",
+              "Caring. You people always want the good part. The laughing. The stupid little things. The feeling that someone somewhere understands you. Nobody tells you about the fucking archaeology afterward."
+            ],
+            "options": [
+              {
+                "id": "opt_mtuk7002_1j",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtuk7gna_1n",
+            "title": "Is she here?",
+            "segments": [
+              "That’s not the right question.",
+              "You: Then what is?",
+              "Why are you still looking? You’ve been carrying her through this entire place.",
+              "Every room. Every stupid little object. Every word you remembered.",
+              "And you still came looking for her. You really are terrible at letting things stay where they happened."
+            ],
+            "options": [
+              {
+                "id": "opt_mtuk903i_1p",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtuk9ipz_1t",
+            "title": "He came here",
+            "segments": [
+              "No",
+              "You brought him here.",
+              "He walks because you tell him where to go.",
+              "He opens the doors because you make him curious.",
+              "He picks up the little things because you want to know what they mean.",
+              "You thought you were searching for her.",
+              "You’ve been searching through him.",
+              "That’s rather cruel.",
+              "Making someone walk through everything you remember."
+            ],
+            "options": [
+              {
+                "id": "opt_mtukb83s_1v",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtukcj15_1z",
+            "title": "I miss her.",
+            "segments": [
+              "I know.",
+              "You: How?",
+              "You built a fucking dungeon about it.",
+              "What else was I supposed to think?",
+              "You: I don’t know what to do with it.",
+              "Nothing.",
+              "You don’t have to solve missing someone. You don’t have to defeat it. You don’t have to turn it into something beautiful. Sometimes you just miss them.",
+              "And it hurts. Then it hurts less. Then one day something reminds you again. And it hurts a little. That’s memory. It doesn’t need your permission."
+            ],
+            "options": [
+              {
+                "id": "opt_mtukex1d_21",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtukfhjc_25",
+            "title": "Then why did I come here?",
+            "segments": [
+              "Because you wanted an ending.",
+              "You: Isn’t there one?",
+              "Look around.",
+              "This is what endings look like.",
+              "Unremarkable.",
+              "A little ugly. Mostly empty. No Music. No grand revelation. Just the thing you were  carrying… and the moment you finally realize you’re still carrying it."
+            ],
+            "options": [
+              {
+                "id": "opt_mtukhegm_27",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          },
+          {
+            "id": "msg_mtukhywe_2b",
+            "title": "End",
+            "segments": [
+              "You: What am I supposed to do now?",
+              "You?",
+              "Nothing.",
+              "For once, stop making him walk. You’ve been looking for her in every room.",
+              "In the books. In the fire. In the little things. In the things you almost forgot. You found her everywhere.",
+              "Except where you wanted her to be. That’s the part you hate. Not that she disappeared. That she didn’t disappear completely. ",
+              "If she had…",
+              "…this place wouldn’t exist.",
+              "Go. Take him with you. You've kept him here long enough.",
+              "And stop looking behind you. There is nothing there.",
+              "Except everything you remember."
+            ],
+            "options": [
+              {
+                "id": "opt_mtukm0aq_2d",
+                "label": "Back",
+                "targetId": "msg_mtujtw50_p"
+              }
+            ],
+            "meta": []
+          }
+        ]
       }
     ],
-    "selectedTreeId": "dlg_mtssvmlb_1i",
-    "selectedMessageId": "msg_mtssvmlb_1h"
+    "selectedTreeId": "dlg_mtujs2a5_l",
+    "selectedMessageId": "msg_mtujs2a5_k"
   },
   "history": [],
-  "lastModified": "2026-09-09T19:59:35.295Z"
+  "lastModified": "2026-09-09T21:12:49.050Z"
 }

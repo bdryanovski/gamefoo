@@ -38,6 +38,7 @@ import { Ghost } from './objects/ghost';
 import { FlyingSkull } from './objects/flying_skull';
 import { Skeleton } from './objects/skeleton';
 import { Goblin } from './objects/goblin';
+import { SlimeKing } from './objects/slime_king';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -141,6 +142,7 @@ class MapGame extends Engine {
     registry.register(FlyingSkull);
     registry.register(Skeleton);
     registry.register(Goblin);
+    registry.register(SlimeKing);
     registry.register(Torch);
     registry.register(Olive);
     // Olives read/write their collected flag from the shared save store.
@@ -199,7 +201,7 @@ class MapGame extends Engine {
 
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
-    this.navigate(-3, 9);
+    this.navigate(1,11);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
   }
@@ -325,6 +327,15 @@ class MapGame extends Engine {
     ].find((s) => s.overlaps(player.box()));
     if (stalker) {
       const ref = stalker.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Slime king: a stationary NPC — press E beside it to run its dialog.
+    const king = this.map?.current
+      ?.objectsByType(SlimeKing)
+      .find((k) => k.overlaps(player.box()));
+    if (king) {
+      const ref = king.dialogRef;
       if (ref && this.dialog?.start(ref)) return;
     }
 
