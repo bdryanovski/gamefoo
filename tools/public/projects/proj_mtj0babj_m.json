@@ -34157,13 +34157,13 @@
             "id": "1788877966176_7li5py",
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
-            "x": 160,
-            "y": 32,
-            "level": 4,
             "properties": {
               "id": "100",
               "message": "msg_mtt5iv1i_s"
-            }
+            },
+            "x": 160,
+            "y": 32,
+            "level": 4
           },
           {
             "id": "1788878013368_v2rnra",
@@ -53436,5 +53436,5 @@
     "selectedMessageId": "msg_mtt5iv1i_s"
   },
   "history": [],
-  "lastModified": "2026-09-08T21:08:01.935Z"
+  "lastModified": "2026-09-08T21:23:30.038Z"
 }
