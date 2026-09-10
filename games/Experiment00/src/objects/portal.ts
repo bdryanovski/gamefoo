@@ -46,6 +46,14 @@ export class Portal extends MapObject {
     Portal.store = store;
   }
 
+  /** Shared "which locked doors have been solved" state, scoped to `"locks"`. */
+  private static locks: ScopedState | null = null;
+
+  /** Binds the solved-locks state every instance reads and writes. */
+  static useLocks(store: ScopedState | null): void {
+    Portal.locks = store;
+  }
+
   /** True while the open sound is playing, before the door actually opens. */
   private opening = false;
 
@@ -133,6 +141,51 @@ export class Portal extends MapObject {
       return null;
     }
     return { col: point.x, row: point.y };
+  }
+
+  /**
+   * The 4-digit numeric code that unlocks this door, from the `lock`
+   * property. `null` when unset or not exactly four digits (e.g. the editor
+   * default `"0"`) — such a door is not locked.
+   */
+  get lock(): string | null {
+    const raw = this.properties.lock?.trim();
+    return raw && /^\d{4}$/.test(raw) ? raw : null;
+  }
+
+  /** Whether this door's lock has already been solved (persisted). */
+  get isUnlocked(): boolean {
+    return this.id !== '' && Portal.locks?.get<boolean>(this.id) === true;
+  }
+
+  /** True when the door has a code and it has not been solved yet. */
+  get isLocked(): boolean {
+    return this.lock !== null && !this.isUnlocked;
+  }
+
+  /**
+   * Dialog to run as the "still locked" reminder, from the `message`
+   * property. The editor's portal template misspells the key `messsage`, so
+   * both are accepted; `"0"`/unset means no reminder.
+   */
+  get reminderRef(): string | null {
+    const raw = (this.properties.message ?? this.properties.messsage)?.trim();
+    return raw && raw !== '0' ? raw : null;
+  }
+
+  /** True when `code` matches this door's lock exactly. */
+  matches(code: string): boolean {
+    return this.lock !== null && code === this.lock;
+  }
+
+  /**
+   * Marks the lock solved for good and remembers it, so the door never asks
+   * for the code again.
+   */
+  unlock(): void {
+    if (this.id !== '') {
+      Portal.locks?.set(this.id, true);
+    }
   }
 
   /**

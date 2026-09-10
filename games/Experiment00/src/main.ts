@@ -4,6 +4,7 @@ import {
   AudioSystem,
   DialogBox,
   type DialogDocument,
+  type Frame,
   DialogRunner,
   Engine,
   Input,
@@ -151,6 +152,15 @@ class MapGame extends Engine {
     phase: 'idle',
     elapsed: 0,
   };
+  /** Draw-ready `n0`..`n9` number sprites, indexed by digit. */
+  private numberFrames: (Frame | undefined)[] = [];
+  /**
+   * Active 4-digit code entry for a locked door: the four current digits and
+   * the box the player is editing. Freezes the world while open.
+   */
+  private lockUI?: { portal: Portal; digits: number[]; cursor: number };
+  /** A locked door whose reminder is showing; its lock UI opens on close. */
+  private pendingLock?: Portal;
 
   async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
@@ -175,6 +185,8 @@ class MapGame extends Engine {
     Chest.useState(this.save.scope('chests'));
     // Doors (portals) remember they have been opened.
     Portal.useState(this.save.scope('doors'));
+    // Locked doors remember, for good, that their code has been solved.
+    Portal.useLocks(this.save.scope('locks'));
     // Movable secret shelves remember they have slid open.
     Bookshelf.useState(this.save.scope('shelves'));
 
@@ -194,6 +206,16 @@ class MapGame extends Engine {
       screens,
     });
     this.map = map;
+
+    // Resolve the `n0`..`n9` number sprites (for the lock UI) from the
+    // project's sprite catalog: name → id → draw-ready frame.
+    const spriteIdByName = new Map<string, string>(
+      ((project.sprites ?? []) as { name: string; id: string }[]).map((s) => [s.name, s.id]),
+    );
+    this.numberFrames = Array.from({ length: 10 }, (_, digit) => {
+      const id = spriteIdByName.get(`n${digit}`);
+      return id ? map.assets.frame(id) : undefined;
+    });
 
     // Dialogs come from the editor's standalone export (kept current on every
     // save) — the runtime consumes that file directly.
@@ -227,7 +249,7 @@ class MapGame extends Engine {
 
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
-    this.navigate(1,11);
+    this.navigate(1,8);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
   }
@@ -303,6 +325,49 @@ class MapGame extends Engine {
     }
   }
 
+  /**
+   * Reacts to E on a locked door: play the door's `message` reminder (the
+   * "stubbed error" that it needs a code) and, once dismissed, open the code
+   * entry. Doors with no reminder go straight to the keypad with a toast.
+   */
+  private promptLock(portal: Portal): void {
+    const ref = portal.reminderRef;
+    if (ref && this.dialog?.start(ref)) {
+      this.pendingLock = portal;
+      return;
+    }
+    showMessage('The door is locked', 1.4);
+    this.openLock(portal);
+  }
+
+  /** Opens the 4-digit code entry for `portal`. */
+  private openLock(portal: Portal): void {
+    this.lockUI = { portal, digits: [0, 0, 0, 0], cursor: 0 };
+  }
+
+  /** Moves the edit cursor between the four boxes (wraps). */
+  private moveLockCursor(delta: number): void {
+    const ui = this.lockUI;
+    if (ui) ui.cursor = (ui.cursor + delta + 4) % 4;
+  }
+
+  /**
+   * Spins the focused digit up/down (wraps 0–9). The moment the four digits
+   * match the code, the door unlocks itself — no confirm — is remembered, and
+   * the keypad closes.
+   */
+  private spinLockDigit(delta: number): void {
+    const ui = this.lockUI;
+    if (!ui) return;
+    ui.digits[ui.cursor] = (ui.digits[ui.cursor]! + delta + 10) % 10;
+    if (ui.portal.matches(ui.digits.join(''))) {
+      ui.portal.unlock();
+      this.audio?.playSound('chest_open', { volume: 0.6 });
+      showMessage('Unlocked', 1.4);
+      this.lockUI = undefined;
+    }
+  }
+
   /** Point (screen px) the world is heard from — the player's centre. */
   private listenerPoint(): { x: number; y: number } {
     const p = this.player;
@@ -354,6 +419,12 @@ class MapGame extends Engine {
       ?.objectsByType(Portal)
       .find((p) => p.overlaps(player.interactionBox()));
     if (portal) {
+      // A locked door refuses to open: remind the player, then ask for the
+      // 4-digit code. It stays shut until the right code is entered.
+      if (portal.isLocked) {
+        this.promptLock(portal);
+        return;
+      }
       if (portal.isOpen) {
         // Travel behind a dungeon iris-wipe: the room collapses to dark, the
         // screen swaps at the covered midpoint, then the destination reopens.
@@ -470,6 +541,17 @@ class MapGame extends Engine {
   private onKey(e: KeyboardEvent): void {
     // Any key is a user gesture — resume the (autoplay-suspended) audio context.
     void this.audio?.unlock();
+    // Code entry captures all keys: arrows spin/move, E/Esc leaves.
+    if (this.lockUI) {
+      if (e.key === 'ArrowUp') this.spinLockDigit(1);
+      else if (e.key === 'ArrowDown') this.spinLockDigit(-1);
+      else if (e.key === 'ArrowLeft') this.moveLockCursor(-1);
+      else if (e.key === 'ArrowRight') this.moveLockCursor(1);
+      else if (e.key === 'Escape' || e.key === 'e' || e.key === 'E') this.lockUI = undefined;
+      else return;
+      e.preventDefault();
+      return;
+    }
     const dialog = this.dialog;
     if (dialog?.active) {
       // Modal is up: arrows move the option cursor, E/Enter confirms.
@@ -490,6 +572,14 @@ class MapGame extends Engine {
     this.dialog?.update(dt);
     this.dialogBox.update(dt, this.dialog?.active ?? false);
     if (this.dialog?.active) return;
+
+    // A locked-door reminder just closed → raise its 4-digit keypad. The
+    // keypad then freezes the world until the code is solved or dismissed.
+    if (this.pendingLock && !this.lockUI) {
+      this.openLock(this.pendingLock);
+      this.pendingLock = undefined;
+    }
+    if (this.lockUI) return;
 
     // A screen-cut freezes the world: advance the iris and swap at its dark
     // midpoint, but run no player/AI logic until it finishes.
@@ -629,6 +719,51 @@ class MapGame extends Engine {
 
     // Dialog modal on top of everything (screen space).
     if (this.dialog) this.dialogBox.render(ctx, this.dialog);
+
+    // Code entry keypad, above the dialog.
+    if (this.lockUI) this.renderLock(ctx);
+  }
+
+  /**
+   * Draws the 4-digit code entry: a dimmed backdrop and four boxes, each
+   * showing its current number sprite (`n0`..`n9`); the focused box is
+   * highlighted with up/down arrows.
+   */
+  private renderLock(ctx: RenderContext): void {
+    const ui = this.lockUI;
+    if (!ui) return;
+    const w = ctx.width;
+    const h = ctx.height;
+    ctx.fillRect(0, 0, w, h, 'rgba(6, 6, 12, 0.72)');
+    const box = Math.round(h * 0.16);
+    const gap = Math.round(box * 0.3);
+    const totalW = 4 * box + 3 * gap;
+    const startX = Math.round((w - totalW) / 2);
+    const y = Math.round((h - box) / 2);
+    ctx.drawText('ENTER CODE', startX, y - Math.round(box * 0.5), '#e8e8ff');
+    for (let i = 0; i < 4; i++) {
+      const x = startX + i * (box + gap);
+      const active = i === ui.cursor;
+      ctx.fillRect(x, y, box, box, active ? '#22243a' : '#14141f');
+      ctx.strokeRect(x, y, box, box, active ? '#ffd66e' : '#3a3a55');
+      const frame = this.numberFrames[ui.digits[i]!];
+      if (frame && ctx.drawSprite) {
+        const s = Math.round(box * 0.7);
+        const dx = x + Math.round((box - s) / 2);
+        const dy = y + Math.round((box - s) / 2);
+        ctx.drawSprite(frame.image, frame.sx, frame.sy, frame.sw, frame.sh, dx, dy, s, s);
+      }
+      if (active) {
+        ctx.drawText('\u25B2', x + Math.round(box / 2) - 6, y - 20, '#ffd66e');
+        ctx.drawText('\u25BC', x + Math.round(box / 2) - 6, y + box + 4, '#ffd66e');
+      }
+    }
+    ctx.drawText(
+      '\u25B2\u25BC change   \u25C4\u25BA move   E / Esc close',
+      startX,
+      y + box + Math.round(box * 0.55),
+      '#9a9ac0',
+    );
   }
 }
 

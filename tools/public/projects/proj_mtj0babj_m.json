@@ -41168,7 +41168,9 @@
             "machineId": "sm_mto16yyf_1",
             "properties": {
               "targetScreen": "1,9",
-              "spawn": "1,7"
+              "spawn": "1,7",
+              "lock": "1331",
+              "messsage": "msg_mtv6w3h3_2"
             },
             "x": 272,
             "y": 112,
@@ -60539,7 +60541,7 @@
       "kind": "machine",
       "id": "sm_mto16yyf_1"
     },
-    "selectedPlacementId": null,
+    "selectedPlacementId": "1788979062392_p5zrtb",
     "layers": [
       {
         "name": "base",
@@ -60564,10 +60566,10 @@
     ],
     "activeLevel": 2,
     "activeTool": "select",
-    "zoom": 0.9831558816426925,
+    "zoom": 3.977413882386321,
     "pan": {
-      "x": -2253.856301703034,
-      "y": 934.4508241820035
+      "x": -10505.769255900012,
+      "y": -511.7483562465675
     }
   },
   "dialog": {
@@ -62179,11 +62181,27 @@
             "meta": []
           }
         ]
+      },
+      {
+        "id": "dlg_mtv6w3h3_3",
+        "name": "LockDoor",
+        "rootId": "msg_mtv6w3h3_2",
+        "messages": [
+          {
+            "id": "msg_mtv6w3h3_2",
+            "title": "Locked",
+            "segments": [
+              "It seems this door is locked"
+            ],
+            "options": [],
+            "meta": []
+          }
+        ]
       }
     ],
-    "selectedTreeId": "dlg_mtujs2a5_l",
-    "selectedMessageId": "msg_mtujs2a5_k"
+    "selectedTreeId": "dlg_mtv6w3h3_3",
+    "selectedMessageId": "msg_mtv6w3h3_2"
   },
   "history": [],
-  "lastModified": "2026-09-10T06:56:57.746Z"
+  "lastModified": "2026-09-10T07:12:28.942Z"
 }

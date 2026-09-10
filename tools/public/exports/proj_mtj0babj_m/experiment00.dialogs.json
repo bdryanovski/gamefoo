@@ -1478,6 +1478,21 @@
           "meta": {}
         }
       }
+    },
+    "LockDoor": {
+      "id": "dlg_mtv6w3h3_3",
+      "name": "LockDoor",
+      "root": "msg_mtv6w3h3_2",
+      "messages": {
+        "msg_mtv6w3h3_2": {
+          "title": "Locked",
+          "segments": [
+            "It seems this door is locked"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }
