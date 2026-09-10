@@ -17,7 +17,8 @@
   "properties": {
     "targetScreen": "0,0",
     "spawn": "0,0",
-    "lock": "0"
+    "lock": "0",
+    "messsage": "0"
   },
   "images": {
     "walls.png": {
