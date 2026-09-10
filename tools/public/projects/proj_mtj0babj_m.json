@@ -9653,7 +9653,8 @@
       },
       "properties": {
         "targetScreen": "0,0",
-        "spawn": "0,0"
+        "spawn": "0,0",
+        "lock": "0"
       },
       "meta": {
         "description": "",
@@ -12241,7 +12242,7 @@
     "spr_mtj0ighs_29"
   ],
   "selectedAnimationId": "anim_mtt45ycs_h",
-  "selectedObjectId": "obj_mtt49mb4_l",
+  "selectedObjectId": "obj_mto16yyf_2",
   "activeTool": "select",
   "zoom": 1.768926441122244,
   "pan": {
@@ -52527,12 +52528,12 @@
             "id": "1788899403405_1j5luj",
             "kind": "machine",
             "machineId": "sm_mtt49mb4_k",
-            "x": 144,
-            "y": 80,
-            "level": 2,
             "properties": {
               "message": "msg_mtujs2a5_k"
-            }
+            },
+            "x": 144,
+            "y": 80,
+            "level": 2
           },
           {
             "id": "1788899438484_8uom3w",
@@ -60207,7 +60208,7 @@
       "kind": "machine",
       "id": "sm_mto16yyf_1"
     },
-    "selectedPlacementId": "1788899403405_1j5luj",
+    "selectedPlacementId": null,
     "layers": [
       {
         "name": "base",
@@ -60234,8 +60235,8 @@
     "activeTool": "select",
     "zoom": 0.9831558816426925,
     "pan": {
-      "x": -2767.856301703034,
-      "y": 231.45082418200354
+      "x": -2253.856301703034,
+      "y": 934.4508241820035
     }
   },
   "dialog": {
@@ -61853,5 +61854,5 @@
     "selectedMessageId": "msg_mtujs2a5_k"
   },
   "history": [],
-  "lastModified": "2026-09-09T21:12:49.050Z"
+  "lastModified": "2026-09-10T06:33:43.109Z"
 }

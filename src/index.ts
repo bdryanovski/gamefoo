@@ -123,6 +123,8 @@ export { ParticleShader } from './core/shaders/particle_shader';
 export type { ParticleConfig } from './core/shaders/particle_shader';
 export { AmbientSporeShader } from './core/shaders/ambient_spore_shader';
 export type { AmbientSporeConfig } from './core/shaders/ambient_spore_shader';
+export { ScreenTransitionShader } from './core/shaders/screen_transition_shader';
+export type { ScreenTransitionConfig } from './core/shaders/screen_transition_shader';
 export { VignetteShader } from './core/shaders/vignette_shader';
 export type { VignetteConfig } from './core/shaders/vignette_shader';
 export type { ShaderConfig, ShaderRegion } from './core/shaders/types';

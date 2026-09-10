@@ -13,6 +13,7 @@ import {
   MapObjectRegistry,
   type RenderContext,
   ScreenRegistry,
+  ScreenTransitionShader,
   ShaderSystem,
   type SoundHandle,
   StateStore,
@@ -56,6 +57,17 @@ const PORTAL_OPEN_SECONDS = 6;
 // The player draws on this z-level; layers above it (e.g. the `pillars`
 // layer at level 3) occlude it, so keep it below them.
 const PLAYER_LEVEL = 2;
+
+// Screen-cut transition timing (seconds): the room collapses to dark over
+// `OUT`, the screen swaps at the covered midpoint, then the new room reopens
+// over `IN`.
+const TRANSITION_OUT = 0.42;
+const TRANSITION_IN = 0.5;
+
+/** Smooth acceleration/deceleration for the iris wipe, `0..1 → 0..1`. */
+function easeInOut(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+}
 
 /**
  * Audio wiring for the demo, kept declarative so it is easy to tune:
@@ -128,6 +140,17 @@ class MapGame extends Engine {
   private readonly inventory = new Inventory(this.save.scope('inventory'));
   /** A movable shelf whose message is being read; slides once it closes. */
   private shelfAwaitingSlide?: Bookshelf;
+  /** The iris-wipe overlay; the game drives its `coverage` each frame. */
+  private transitionShader?: ScreenTransitionShader;
+  /**
+   * Active screen-cut choreography. `apply` runs once at the covered midpoint
+   * (swaps the screen + places the player) so the switch is hidden behind the
+   * fully-dark iris.
+   */
+  private transition: { phase: 'idle' | 'out' | 'in'; elapsed: number; apply?: () => void } = {
+    phase: 'idle',
+    elapsed: 0,
+  };
 
   async load(): Promise<void> {
     // Objects: the map instantiates a class wherever it places a matching
@@ -186,6 +209,9 @@ class MapGame extends Engine {
     // Settled, drifting motes over the whole frame — a Stranger Things
     // "Upside Down" ambience. Added after the vignette so it glows on top.
     shaders.add(new AmbientSporeShader({ density: 1.2, alpha: 0.22 }));
+    // Dungeon iris-wipe for room cuts — added last so it covers every other
+    // effect, the HUD, and any dialog while a transition plays.
+    this.transitionShader = shaders.add(new ScreenTransitionShader({ block: 18 }));
     this.use(shaders);
 
     // Audio: load the sound/sequence catalog and expose it as a subsystem.
@@ -243,6 +269,40 @@ class MapGame extends Engine {
     return true;
   }
 
+  /**
+   * Starts a screen-cut: the iris collapses to dark, `apply` runs once fully
+   * covered (swap the screen + reposition the player), then the new room
+   * reopens. No-op while a cut is already playing.
+   */
+  private beginTransition(apply: () => void): void {
+    if (this.transition.phase !== 'idle') return;
+    this.transition = { phase: 'out', elapsed: 0, apply };
+  }
+
+  /** Advances the active screen-cut and drives the iris `coverage`. */
+  private advanceTransition(dt: number): void {
+    const t = this.transition;
+    t.elapsed += dt;
+    if (t.phase === 'out') {
+      const p = Math.min(1, t.elapsed / TRANSITION_OUT);
+      if (this.transitionShader) this.transitionShader.coverage = easeInOut(p);
+      if (p >= 1) {
+        t.apply?.();
+        t.apply = undefined;
+        t.phase = 'in';
+        t.elapsed = 0;
+        if (this.transitionShader) this.transitionShader.coverage = 1;
+      }
+      return;
+    }
+    const p = Math.min(1, t.elapsed / TRANSITION_IN);
+    if (this.transitionShader) this.transitionShader.coverage = 1 - easeInOut(p);
+    if (p >= 1) {
+      t.phase = 'idle';
+      if (this.transitionShader) this.transitionShader.coverage = 0;
+    }
+  }
+
   /** Point (screen px) the world is heard from — the player's centre. */
   private listenerPoint(): { x: number; y: number } {
     const p = this.player;
@@ -295,19 +355,24 @@ class MapGame extends Engine {
       .find((p) => p.overlaps(player.interactionBox()));
     if (portal) {
       if (portal.isOpen) {
+        // Travel behind a dungeon iris-wipe: the room collapses to dark, the
+        // screen swaps at the covered midpoint, then the destination reopens.
         const target = portal.target;
-        if (target && this.navigate(target.x, target.y)) {
-          // Author-set spawn cell (grid col/row) → pixels, clamped so the
-          // player stays on-screen; falls back to centre when unset.
+        if (target && this.map?.screenAt(target.x, target.y)) {
           const spawn = portal.spawn;
-          const px = spawn
-            ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
-            : (SCREEN_W - PLAYER_SIZE) / 2;
-          const py = spawn
-            ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
-            : (SCREEN_H - PLAYER_SIZE) / 2;
-          player.place(px, py);
-          this.lastSafe = { x: player.x, y: player.y };
+          this.beginTransition(() => {
+            if (!this.navigate(target.x, target.y)) return;
+            // Author-set spawn cell (grid col/row) → pixels, clamped so the
+            // player stays on-screen; falls back to centre when unset.
+            const px = spawn
+              ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
+              : (SCREEN_W - PLAYER_SIZE) / 2;
+            const py = spawn
+              ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
+              : (SCREEN_H - PLAYER_SIZE) / 2;
+            player.place(px, py);
+            this.lastSafe = { x: player.x, y: player.y };
+          });
         }
       } else if (!portal.isOpening) {
         // Closed door: play the open sound; it opens once the sound finishes.
@@ -425,6 +490,13 @@ class MapGame extends Engine {
     this.dialog?.update(dt);
     this.dialogBox.update(dt, this.dialog?.active ?? false);
     if (this.dialog?.active) return;
+
+    // A screen-cut freezes the world: advance the iris and swap at its dark
+    // midpoint, but run no player/AI logic until it finishes.
+    if (this.transition.phase !== 'idle') {
+      this.advanceTransition(dt);
+      return;
+    }
 
     // The message for a movable shelf was just dismissed — slide it open now.
     if (this.shelfAwaitingSlide) {
