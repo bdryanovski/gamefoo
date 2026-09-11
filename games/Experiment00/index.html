@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experiment00 — GameFoo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        min-height: 100vh;
+        background: radial-gradient(circle at 50% 30%, #14142b 0%, #06060f 70%);
+        color: #b9b9d6;
+        font-family: "Courier New", monospace;
+        letter-spacing: 0.04em;
+      }
+      h1 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #7fdbca;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+      }
+      #game-container {
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 0 40px rgba(120, 180, 255, 0.15);
+      }
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Experiment00</h1>
+    <div id="game-container">
+      <canvas id="game"></canvas>
+    </div>
+    <p style="font-size: 0.75rem; color: #5a5a80;">Arrow keys move between screens</p>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

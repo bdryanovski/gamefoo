@@ -1,142 +1,39 @@
-import index from "./index.html";
-import { existsSync, readdirSync, mkdirSync, unlinkSync, rmSync } from "node:fs";
+import express from 'express';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createApiApp } from './server/app';
 
-for (const dir of ["./public/uploads", "./public/projects", "./public/exports"]) {
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-}
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.resolve(__dirname, 'public');
+const distDir = path.resolve(__dirname, 'dist');
 
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  });
-}
-
-async function handleAPI(req: Request, path: string): Promise<Response> {
-  // ── Upload image ────────────────────────────────────────
-  if (path === "/api/upload" && req.method === "POST") {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    if (!file) return json({ error: "No file provided" }, 400);
-
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const filename = `${Date.now()}_${safeName}`;
-    await Bun.write(`./public/uploads/${filename}`, file);
-    return json({ path: `/uploads/${filename}`, name: file.name });
+const app = createApiApp({ publicDir });
+app.use(express.static(distDir));
+app.use((_req, res) => {
+  const index = path.join(distDir, 'index.html');
+  if (existsSync(index)) {
+    res.sendFile(index);
+    return;
   }
-
-  // ── List projects ───────────────────────────────────────
-  if (path === "/api/projects" && req.method === "GET") {
-    const projects: Array<{
-      id: string;
-      name: string;
-      lastModified: string;
-      spriteCount: number;
-      animCount: number;
-      imageName: string;
-    }> = [];
-
-    const dir = "./public/projects";
-    if (existsSync(dir)) {
-      for (const file of readdirSync(dir)) {
-        if (!file.endsWith(".json")) continue;
-        try {
-          const data = await Bun.file(`${dir}/${file}`).json();
-          projects.push({
-            id: file.replace(".json", ""),
-            name: data.projectName || "Untitled",
-            lastModified: data.lastModified || "",
-            spriteCount: data.sprites?.length ?? 0,
-            animCount: data.animations?.length ?? 0,
-            imageName: data.imageData?.name || "",
-          });
-        } catch { /* skip corrupt files */ }
-      }
-    }
-
-    projects.sort((a, b) => b.lastModified.localeCompare(a.lastModified));
-    return json(projects);
-  }
-
-  // ── Project CRUD ────────────────────────────────────────
-  const projectMatch = path.match(/^\/api\/projects\/([\w-]+)$/);
-  if (projectMatch) {
-    const id = projectMatch[1]!;
-
-    if (req.method === "GET") {
-      const file = Bun.file(`./public/projects/${id}.json`);
-      if (await file.exists()) {
-        return new Response(file, {
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-      return json({ error: "Not found" }, 404);
-    }
-
-    if (req.method === "POST") {
-      const body = await req.json();
-      body.lastModified = new Date().toISOString();
-      await Bun.write(
-        `./public/projects/${id}.json`,
-        JSON.stringify(body, null, 2),
-      );
-      return json({ ok: true, id });
-    }
-
-    if (req.method === "DELETE") {
-      const filepath = `./public/projects/${id}.json`;
-      if (existsSync(filepath)) unlinkSync(filepath);
-      const exportDir = `./public/exports/${id}`;
-      if (existsSync(exportDir)) rmSync(exportDir, { recursive: true });
-      return json({ ok: true });
-    }
-  }
-
-  // ── Export project files ────────────────────────────────
-  const exportMatch = path.match(/^\/api\/projects\/([\w-]+)\/export$/);
-  if (exportMatch && req.method === "POST") {
-    const id = exportMatch[1]!;
-    const body = await req.json();
-    const dir = `./public/exports/${id}`;
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-
-    const saved: Record<string, string> = {};
-    for (const [filename, content] of Object.entries(
-      body.files as Record<string, unknown>,
-    )) {
-      await Bun.write(`${dir}/${filename}`, JSON.stringify(content, null, 2));
-      saved[filename] = `/exports/${id}/${filename}`;
-    }
-    return json({ ok: true, files: saved });
-  }
-
-  return json({ error: "Not found" }, 404);
-}
-
-const server = Bun.serve({
-  port: 3001,
-  routes: {
-    "/": index,
-  },
-  async fetch(req) {
-    const url = new URL(req.url);
-    const path = url.pathname;
-
-    if (path.startsWith("/api/")) {
-      return handleAPI(req, path);
-    }
-
-    const file = Bun.file(`./public${path}`);
-    if (await file.exists()) {
-      return new Response(file);
-    }
-
-    return new Response("Not Found", { status: 404 });
-  },
-  development: {
-    hmr: true,
-    console: true,
-  },
+  res.status(404).send('Not Found — run `pnpm build` to produce the frontend, or use `pnpm dev`.');
 });
 
-console.log(`🔧 GameFoo Dev Tools running at ${server.url}`);
+const port = Number(process.env.PORT) || 3001;
+const server = app.listen(port, '0.0.0.0', () => {
+  console.log(`🔧 GameFoo Dev Tools — UI + API at http://localhost:${port}`);
+  console.log('🔧 Development with HMR: pnpm dev → http://localhost:5173');
+});
+
+server.on('error', (err: NodeJS.ErrnoException) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`✖ Port ${port} is already in use — stop the other process, or run PORT=<port> pnpm start`);
+    process.exit(1);
+  }
+  console.error(err);
+  process.exit(1);
+});
+
+const shutdown = () => server.close(() => process.exit(0));
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

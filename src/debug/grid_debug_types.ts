@@ -43,7 +43,9 @@ import type World from '../core/world';
  * ```
  */
 export interface GridDebugConfig {
-  /** The grid to visualise. */
+  /**
+   * The grid to visualise.
+   */
   grid: Grid;
 
   /**

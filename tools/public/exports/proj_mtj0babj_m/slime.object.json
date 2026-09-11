@@ -1,0 +1,333 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "slime",
+    "category": "character"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {},
+  "images": {
+    "slime.png": {
+      "src": "/uploads/1788637631657_slime.png",
+      "width": 64,
+      "height": 96
+    }
+  },
+  "frames": {
+    "sprite_0_0": {
+      "image": "slime.png",
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "image": "slime.png",
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_2": {
+      "image": "slime.png",
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_2": {
+      "image": "slime.png",
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_1": {
+      "image": "slime.png",
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "image": "slime.png",
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_3": {
+      "image": "slime.png",
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_3": {
+      "image": "slime.png",
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "slime_idle": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "slime_right": {
+      "frames": [
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_0_2"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "slime_left": {
+      "frames": [
+        "sprite_0_1",
+        "sprite_1_1",
+        "sprite_0_3",
+        "sprite_1_3",
+        "sprite_0_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "vision": {
+      "name": "Vision",
+      "color": "#f2c14e"
+    }
+  },
+  "states": {
+    "Idle": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "slime_idle"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtost3fj_3e",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 5
+          }
+        },
+        {
+          "id": "col_mtostgiq_3f",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Up": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "slime_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtost3fj_3e",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 5
+          }
+        },
+        {
+          "id": "col_mtostgiq_3f",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Down": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "slime_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtost3fj_3e",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 5
+          }
+        },
+        {
+          "id": "col_mtostgiq_3f",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Left": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "slime_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtost3fj_3e",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 5
+          }
+        },
+        {
+          "id": "col_mtostgiq_3f",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Right": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "slime_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtost3fj_3e",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 5
+          }
+        },
+        {
+          "id": "col_mtostgiq_3f",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    }
+  },
+  "initial": "Idle"
+}

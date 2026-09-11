@@ -1,0 +1,64 @@
+{
+  "sounds": [
+    {
+      "id": "bg_sewers",
+      "name": "Bloodrat Sewers",
+      "file": "background/Bloodrat Sewers.mp3",
+      "volume": 0.5,
+      "loop": true,
+      "preload": true
+    },
+    {
+      "id": "bg_cave",
+      "name": "Cave",
+      "file": "background/Cave.wav",
+      "volume": 0.5,
+      "loop": true
+    },
+    {
+      "id": "bg_cave_storm",
+      "name": "Cave Storm",
+      "file": "background/Cave Storm.wav",
+      "volume": 0.5,
+      "loop": true
+    },
+
+    {
+      "id": "campfire_loop",
+      "name": "Campfire",
+      "file": "campfire/Torch Loop.wav",
+      "volume": 0.9,
+      "loop": true,
+      "distance": { "min": 24, "max": 150 }
+    },
+
+    { "id": "step_dirt_1", "name": "Dirt step 1", "file": "player/walking/Dirt Walk 1.wav", "volume": 0.55 },
+    { "id": "step_dirt_2", "name": "Dirt step 2", "file": "player/walking/Dirt Walk 2.wav", "volume": 0.55 },
+    { "id": "step_dirt_3", "name": "Dirt step 3", "file": "player/walking/Dirt Walk 3.wav", "volume": 0.55 },
+    { "id": "step_dirt_4", "name": "Dirt step 4", "file": "player/walking/Dirt Walk 4.wav", "volume": 0.55 },
+    { "id": "step_dirt_5", "name": "Dirt step 5", "file": "player/walking/Dirt Walk 5.wav", "volume": 0.55 },
+
+    { "id": "step_water_1", "name": "Water step 1", "file": "player/walking/Water Walk 1.wav", "volume": 0.55 },
+    { "id": "step_water_2", "name": "Water step 2", "file": "player/walking/Water Walk 2.wav", "volume": 0.55 },
+    { "id": "step_water_3", "name": "Water step 3", "file": "player/walking/Water Walk 3.wav", "volume": 0.55 },
+    { "id": "step_water_4", "name": "Water step 4", "file": "player/walking/Water Walk 4.wav", "volume": 0.55 },
+    { "id": "step_water_5", "name": "Water step 5", "file": "player/walking/Water Walk 5.wav", "volume": 0.55 },
+
+    { "id": "portal_open", "name": "Portal open", "file": "portal/open.wav", "volume": 0.7 },
+    { "id": "chest_open", "name": "Chest open", "file": "chest/open.wav", "volume": 0.7 }
+  ],
+  "sequences": [
+    {
+      "id": "seq_footsteps",
+      "name": "Footsteps (dirt)",
+      "steps": ["step_dirt_1", "step_dirt_2", "step_dirt_3", "step_dirt_4", "step_dirt_5"],
+      "loop": true
+    },
+    {
+      "id": "seq_footsteps_water",
+      "name": "Footsteps (water)",
+      "steps": ["step_water_1", "step_water_2", "step_water_3", "step_water_4", "step_water_5"],
+      "loop": true
+    }
+  ]
+}

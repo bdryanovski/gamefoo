@@ -39,7 +39,9 @@
  * ```
  */
 
-/** Catalogue name used by an IconBitmap renderer to look up this set. */
+/**
+ * Catalogue name used by an IconBitmap renderer to look up this set.
+ */
 export const ICONS_8x8_NAME = 'icons_8x8';
 
 /**
@@ -658,17 +660,29 @@ export const ICONS_8x8: Record<string, number[]> = {
  * @internal
  */
 export const metadata = {
-  /** Catalogue name. */
+  /**
+   * Catalogue name.
+   */
   name: ICONS_8x8_NAME,
-  /** Cell width including spacing (8 + 2 = 10). */
+  /**
+   * Cell width including spacing (8 + 2 = 10).
+   */
   width: ICONS_8x8_WIDTH + ICONS_8x8_SPACING,
-  /** Cell height (8). */
+  /**
+   * Cell height (8).
+   */
   height: ICONS_8x8_HEIGHT,
-  /** Inter-icon spacing (2). */
+  /**
+   * Inter-icon spacing (2).
+   */
   spacing: ICONS_8x8_SPACING,
-  /** Supported icon keys. */
+  /**
+   * Supported icon keys.
+   */
   keys: ICONS_8x8_KEYS,
-  /** Icon bitmask data. */
+  /**
+   * Icon bitmask data.
+   */
   data: ICONS_8x8,
 };
 

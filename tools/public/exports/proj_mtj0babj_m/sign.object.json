@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "sign",
+    "category": ""
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {
+    "message": "0"
+  },
+  "images": {
+    "props.png": {
+      "src": "/uploads/1788287738546_props.png",
+      "width": 304,
+      "height": 128
+    }
+  },
+  "frames": {
+    "sprite_3_2": {
+      "image": "props.png",
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {},
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_3_2"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtk2ehrf_2",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 1.2138671875,
+            "y": 1.2083333333333333,
+            "width": 13.793619791666666,
+            "height": 8.962890625
+          }
+        },
+        {
+          "id": "col_mtolr23n_0",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

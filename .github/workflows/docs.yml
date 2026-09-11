@@ -16,18 +16,24 @@ jobs:
         with:
           fetch-depth: 0 # needed for lastUpdated git timestamps
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Generate TypeDoc
-        run: bun run docs:generate
+      - name: Generate docs
+        run: pnpm run docs:generate
 
-      - name: Build Astro Starlight
-        run: bun run docs:build
+      - name: Build docs site
+        run: pnpm run docs:build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

@@ -1,7 +1,20 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { AppState } from "../types";
-import { exportAtlas, exportGrid, exportFull } from "../utils/export";
+import { objectMachines } from "../types";
+import {
+  exportAtlasForImage,
+  exportGridForImage,
+  exportFull,
+  exportSprites,
+  exportAnimations,
+  exportConfig,
+  spritesOfImage,
+  projectDocument,
+} from "../utils/export";
 import { exportProjectFiles } from "../utils/storage";
+import { exportStateMachines } from "../statemachine/smExport";
+import { exportDialogs } from "../dialog/dialogExport";
+import { exportObject } from "../objects/objectExport";
 
 interface Props {
   state: AppState;
@@ -26,23 +39,70 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
   const baseName = state.projectName.replace(/\s+/g, "_").toLowerCase();
 
   useEffect(() => {
-    const atlas = exportAtlas(state);
-    const grid = exportGrid(state);
     const full = exportFull(state);
 
     const list: ExportFile[] = [
       {
-        filename: `${baseName}.atlas.json`,
-        label: "Atlas Export (Sprite.fromAtlas)",
-        data: atlas,
+        filename: `${baseName}.config.json`,
+        label: "Project Config (default layers + collision layers)",
+        data: exportConfig(state),
+      },
+      {
+        filename: `${baseName}.sprites.json`,
+        label: "Sprites Export (name + coordinates + size)",
+        data: exportSprites(state),
+      },
+      {
+        filename: `${baseName}.animations.json`,
+        label: "Animations Export (frame order, duration, loop)",
+        data: exportAnimations(state),
       },
     ];
 
-    if (state.grid.enabled) {
+    if (objectMachines(state.objects).length > 0) {
       list.push({
-        filename: `${baseName}.grid.json`,
-        label: "Grid Export (Sprite.fromGrid)",
-        data: grid,
+        filename: `${baseName}.machines.json`,
+        label: "State Machines Export (states, transitions, conditions)",
+        data: exportStateMachines(state),
+      });
+    }
+
+    if (state.dialog.trees.length > 0) {
+      list.push({
+        filename: `${baseName}.dialogs.json`,
+        label: "Dialogs Export (trees, messages, options, meta)",
+        data: exportDialogs(state),
+      });
+    }
+
+    // One atlas (+ grid) per image that has sprites
+    for (const img of state.images) {
+      if (spritesOfImage(state, img.id).length === 0) continue;
+      const imgBase = img.name
+        .replace(/\.[^.]+$/, "")
+        .replace(/\s+/g, "_")
+        .toLowerCase();
+      list.push({
+        filename: `${baseName}.${imgBase}.atlas.json`,
+        label: `Atlas Export — ${img.name} (Sprite.fromAtlas)`,
+        data: exportAtlasForImage(state, img),
+      });
+      if (state.grid.enabled) {
+        list.push({
+          filename: `${baseName}.${imgBase}.grid.json`,
+          label: `Grid Export — ${img.name} (Sprite.fromGrid)`,
+          data: exportGridForImage(state, img),
+        });
+      }
+    }
+
+    // One standalone, self-contained JSON per object.
+    for (const o of state.objects) {
+      const objBase = o.name.replace(/\s+/g, "_").toLowerCase() || o.id;
+      list.push({
+        filename: `${objBase}.object.json`,
+        label: `Object — ${o.name} (standalone: grid, layers, collisions, states)`,
+        data: exportObject(state, o),
       });
     }
 
@@ -55,7 +115,7 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
     list.push({
       filename: `${baseName}.project.json`,
       label: "Project File (re-import into editor)",
-      data: state,
+      data: projectDocument(state),
     });
 
     setFiles(list);
@@ -131,13 +191,12 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
           {/* Status */}
           <div className="save-status raised p-4 mb-8">
             <div>Project saved to server.</div>
-            {state.imageData && (
-              <div className="text-xs text-dim mt-4">
-                Image: {state.imageData.name} ({state.imageData.width}x
-                {state.imageData.height}) — stored at{" "}
-                <code>{state.imageData.url}</code>
+            {state.images.map((img) => (
+              <div key={img.id} className="text-xs text-dim mt-4">
+                Image: {img.name} ({img.width}x{img.height}) — stored at{" "}
+                <code>{img.url}</code>
               </div>
-            )}
+            ))}
           </div>
 
           {/* Save to server button */}

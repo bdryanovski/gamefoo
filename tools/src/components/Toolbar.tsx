@@ -1,16 +1,17 @@
 import React from "react";
 import type { AppState, AppAction, ToolType } from "../types";
+import { Icon, type IconName } from "./Icon";
 
 interface Props {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
 }
 
-const TOOLS: { key: ToolType; icon: string; title: string }[] = [
-  { key: "select", icon: "⇱", title: "Select (V)" },
-  { key: "grid-pick", icon: "▦", title: "Grid Pick (G)" },
-  { key: "region", icon: "▭", title: "Draw Region (R)" },
-  { key: "pan", icon: "✥", title: "Pan (H)" },
+const TOOLS: { key: ToolType; icon: IconName; title: string }[] = [
+  { key: "select", icon: "tool-select", title: "Select (V)" },
+  { key: "grid-pick", icon: "tool-grid", title: "Grid Pick (G)" },
+  { key: "region", icon: "tool-region", title: "Draw Region (R)" },
+  { key: "pan", icon: "tool-pan", title: "Pan (H)" },
 ];
 
 export function Toolbar({ state, dispatch }: Props) {
@@ -34,7 +35,7 @@ export function Toolbar({ state, dispatch }: Props) {
           title={t.title}
           onClick={() => dispatch({ type: "SET_TOOL", tool: t.key })}
         >
-          {t.icon}
+          <Icon name={t.icon} size={16} />
         </button>
       ))}
 
@@ -47,7 +48,7 @@ export function Toolbar({ state, dispatch }: Props) {
           dispatch({ type: "SET_GRID", grid: { enabled: !state.grid.enabled } })
         }
       >
-        #
+        <Icon name="tool-grid" size={16} />
       </button>
 
       <div className="toolbar-sep" />
@@ -57,14 +58,14 @@ export function Toolbar({ state, dispatch }: Props) {
         title="Zoom In (+)"
         onClick={() => dispatch({ type: "SET_ZOOM", zoom: state.zoom * 1.25 })}
       >
-        +
+        <Icon name="add" size={16} />
       </button>
       <button
         className="tool-btn"
         title="Zoom Out (-)"
         onClick={() => dispatch({ type: "SET_ZOOM", zoom: state.zoom / 1.25 })}
       >
-        −
+        <Icon name="subtract" size={16} />
       </button>
       <button
         className="tool-btn"
@@ -74,7 +75,7 @@ export function Toolbar({ state, dispatch }: Props) {
           dispatch({ type: "SET_PAN", x: 0, y: 0 });
         }}
       >
-        ⊙
+        <Icon name="zoom-reset" size={16} />
       </button>
     </div>
   );

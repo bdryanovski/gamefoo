@@ -2,7 +2,7 @@
 title: '~~Type Alias: Dimension~~'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -14,7 +14,7 @@ title: '~~Type Alias: Dimension~~'
 type Dimension = Demension;
 ```
 
-Defined in: [generic\_types.ts:171](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L171)
+Defined in: [generic\_types.ts:201](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L201)
 
 Alias for [Demension](../interfaces/Demension.md) with correct spelling.
 

@@ -1,10 +1,5 @@
-import type Entity from '../../entities/entity';
 import type { GameObject } from '../../entities/types';
-import type {
-  ColliderShape,
-  CollisionInfo,
-  WorldBounds,
-} from '../../generic_types';
+import type { ColliderShape, CollisionInfo, WorldBounds } from '../../generic_types';
 import { Behaviour } from '../behaviour';
 import type World from '../world';
 
@@ -36,7 +31,7 @@ import type World from '../world';
  * };
  * ```
  */
-export type CollidableOptions = {
+export interface CollidableOptions {
   /**
    * The geometric shape used for intersection tests.
    *
@@ -93,7 +88,7 @@ export type CollidableOptions = {
    * @see {@link CollisionInfo}
    */
   onCollision?: (info: CollisionInfo) => void;
-};
+}
 
 /**
  * Collision behaviour that can be attached to any {@link Entity}.
@@ -143,7 +138,9 @@ export type CollidableOptions = {
  * @see {@link Behaviour}      — abstract base class
  */
 export class Collidable extends Behaviour<GameObject> {
-  /** @inheritDoc */
+  /**
+   * @inheritDoc
+   */
   readonly type = 'collidable';
 
   /**
@@ -151,7 +148,7 @@ export class Collidable extends Behaviour<GameObject> {
    *
    * @see {@link ColliderShape}
    */
-  public shape: ColliderShape;
+  shape: ColliderShape;
 
   /**
    * Collision layer. Only colliders sharing the same layer value are
@@ -159,43 +156,45 @@ export class Collidable extends Behaviour<GameObject> {
    *
    * @defaultValue `0`
    */
-  public layer: number = 0;
+  layer: number = 0;
 
   /**
    * Tags identifying this collider (e.g. `"player"`, `"enemy"`).
    *
    * @defaultValue empty `Set`
    */
-  public tags: Set<string> = new Set();
+  tags: Set<string> = new Set();
 
   /**
    * Tags this collider wants to be notified about.
    *
    * @defaultValue empty `Set`
    */
-  public collidesWith: Set<string> = new Set();
+  collidesWith: Set<string> = new Set();
 
   /**
    * Whether this collider participates in overlap resolution.
    *
    * @defaultValue `false`
    */
-  public solid: boolean = false;
+  solid: boolean = false;
 
   /**
    * Whether the owning entity is immovable during overlap resolution.
    *
    * @defaultValue `false`
    */
-  public fixed: boolean = false;
+  fixed: boolean = false;
 
   /**
    * User-supplied callback invoked when a tag-matched collision is
    * detected.
    */
-  public onCollision: (info: CollisionInfo) => void;
+  onCollision: (info: CollisionInfo) => void;
 
-  /** Reference to the {@link World} this collider is registered with. */
+  /**
+   * Reference to the {@link World} this collider is registered with.
+   */
   private world: World;
 
   /**
@@ -260,10 +259,7 @@ export class Collidable extends Behaviour<GameObject> {
    */
   getWorldBounds(): WorldBounds {
     const pos = this.owner.getPosition();
-    const offset =
-      'offset' in this.shape && this.shape.offset
-        ? this.shape.offset
-        : { x: 0, y: 0 };
+    const offset = 'offset' in this.shape && this.shape.offset ? this.shape.offset : { x: 0, y: 0 };
 
     if (this.shape.type === 'aabb') {
       return {

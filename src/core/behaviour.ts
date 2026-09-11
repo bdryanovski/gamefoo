@@ -81,7 +81,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @defaultValue `1`
    */
-  public priority: number = 1;
+  priority: number = 1;
 
   /**
    * Whether this behaviour is currently active.
@@ -91,7 +91,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    *
    * @defaultValue `true`
    */
-  public enabled: boolean = true;
+  enabled: boolean = true;
 
   /**
    * Derived look-up key, equal to {@link Behaviour.type} in lowercase.
@@ -127,7 +127,7 @@ export abstract class Behaviour<T extends Entity = Entity> {
    * Called once per frame to advance this behaviour's logic.
    *
    * Override in subclasses that need per-frame logic. Behaviours that
-   * are purely reactive (collision, health, terminal render) can omit
+   * are purely reactive (collision, health) can omit
    * this — the default is a no-op.
    *
    * @param _deltaTime - Seconds elapsed since the previous frame.

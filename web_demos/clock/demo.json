@@ -1,0 +1,5 @@
+{
+  "title": "Clock",
+  "description": "Analog clock rendered on canvas demonstrating rotation and timing.",
+  "tags": ["clock", "rotation", "timing", "animation"]
+}

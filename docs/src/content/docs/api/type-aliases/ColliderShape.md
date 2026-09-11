@@ -2,7 +2,7 @@
 title: 'Type Alias: ColliderShape'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -25,7 +25,7 @@ type ColliderShape =
 };
 ```
 
-Defined in: [generic\_types.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L87)
+Defined in: [generic\_types.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L91)
 
 Discriminated union describing the shape of a collision volume.
 
@@ -36,7 +36,9 @@ The `type` field acts as the discriminant:
 | `"aabb"`   | `width`, `height`, `offset?` | Axis-aligned bounding box      |
 | `"circle"` | `radius`, `offset?`          | Circle centred on the entity   |
 
-## Type Declaration
+## Union Members
+
+### Type Literal
 
 ```ts
 {
@@ -49,10 +51,14 @@ The `type` field acts as the discriminant:
 
 | Name | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| `height` | `number` | Height of the bounding box in pixels. | [generic\_types.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L94) |
-| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [generic\_types.ts:99](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L99) |
-| `type` | `"aabb"` | Discriminant for an axis-aligned bounding box. | [generic\_types.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L90) |
-| `width` | `number` | Width of the bounding box in pixels. | [generic\_types.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L92) |
+| `height` | `number` | Height of the bounding box in pixels. | [generic\_types.ts:104](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L104) |
+| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [generic\_types.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L109) |
+| `type` | `"aabb"` | Discriminant for an axis-aligned bounding box. | [generic\_types.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L96) |
+| `width` | `number` | Width of the bounding box in pixels. | [generic\_types.ts:100](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L100) |
+
+***
+
+### Type Literal
 
 ```ts
 {
@@ -64,15 +70,17 @@ The `type` field acts as the discriminant:
 
 | Name | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [generic\_types.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L110) |
-| `radius` | `number` | Radius of the circle in pixels. | [generic\_types.ts:105](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L105) |
-| `type` | `"circle"` | Discriminant for a circular collider. | [generic\_types.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L103) |
+| `offset?` | [`Vector2`](../interfaces/Vector2.md) | Optional positional offset relative to the owning entity's origin. | [generic\_types.ts:124](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L124) |
+| `radius` | `number` | Radius of the circle in pixels. | [generic\_types.ts:119](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L119) |
+| `type` | `"circle"` | Discriminant for a circular collider. | [generic\_types.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L115) |
 
 ## Since
 
 0.1.0
 
 ## Examples
+
+**AABB collider**
 
 ```ts
 const box: ColliderShape = {
@@ -81,6 +89,8 @@ const box: ColliderShape = {
   height: 32,
 };
 ```
+
+**Circle collider with offset**
 
 ```ts
 const circle: ColliderShape = {

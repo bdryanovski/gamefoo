@@ -1,0 +1,771 @@
+// oxlint-disable max-statements curly
+import {
+  AmbientSporeShader,
+  AudioSystem,
+  DialogBox,
+  type DialogDocument,
+  type Frame,
+  DialogRunner,
+  Engine,
+  Input,
+  LocalStorageBackend,
+  MapManager,
+  type MapObjectContext,
+  MapObjectRegistry,
+  type RenderContext,
+  ScreenRegistry,
+  ScreenTransitionShader,
+  ShaderSystem,
+  type SoundHandle,
+  StateStore,
+  VignetteShader,
+  WebRenderer,
+  MemoryBackend,
+} from '../../../src/index';
+import { drawMessages, showMessage, updateMessages } from './hud';
+import { Olive } from './objects/olive';
+import { Chest } from './objects/chest';
+import { Inventory } from './inventory';
+import { Campfire } from './objects/campfire';
+import { Torch } from './objects/torch';
+import { Bookshelf } from './objects/bookshelf';
+import { Player } from './objects/player';
+import { Portal } from './objects/portal';
+import { Rat } from './objects/rat';
+import { Slime } from './objects/slime';
+import { Sign } from './objects/sign';
+import { DarkChamberScreen } from './screens/dark-chamber';
+import { RoomScreen } from './screens/room';
+import { Ghost } from './objects/ghost';
+import { FlyingSkull } from './objects/flying_skull';
+import { Skeleton } from './objects/skeleton';
+import { Goblin } from './objects/goblin';
+import { SlimeKing } from './objects/slime_king';
+
+// The Experiment00 project uses 20×16 screens of 16px tiles → a
+// 320×256 screen, up-scaled ×2 for display (640×512).
+const SCREEN_W = 320;
+const SCREEN_H = 256;
+const SCALE = 3;
+const PLAYER_SIZE = 16;
+// Screen tile size (px). Portal `spawn` cells are authored in grid col/row
+// and converted to pixels with this.
+const BLOCK_SIZE = 16;
+// Time a door takes to open (seconds). The `portal_open` cue is played at
+// double rate so it finishes in this window; the pie-fill badge above the
+// door tracks the same clock and completes as the door opens.
+const PORTAL_OPEN_SECONDS = 6;
+// The player draws on this z-level; layers above it (e.g. the `pillars`
+// layer at level 3) occlude it, so keep it below them.
+const PLAYER_LEVEL = 2;
+
+// Screen-cut transition timing (seconds): the room collapses to dark over
+// `OUT`, the screen swaps at the covered midpoint, then the new room reopens
+// over `IN`.
+const TRANSITION_OUT = 0.42;
+const TRANSITION_IN = 0.5;
+
+/** Smooth acceleration/deceleration for the iris wipe, `0..1 → 0..1`. */
+function easeInOut(t: number): number {
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+}
+
+/**
+ * Audio wiring for the demo, kept declarative so it is easy to tune:
+ *
+ * - `backgroundByScreen` maps a screen coordinate (`"cx,cy"`) to an ambient
+ *   bed id; every other screen falls back to `defaultBackground`.
+ * - `footstepSequence` is cycled one step per `stepInterval` seconds while the
+ *   player walks, so a footfall rhythm emerges from movement.
+ * - `campfireSound` is a looping, distance-attenuated emitter attached to each
+ *   lit campfire (swells as the player approaches, silent far away).
+ *
+ * Ids reference `assets/audio/experiment00.audio.project.json`.
+ */
+const AUDIO = {
+  projectUrl: '/assets/audio/experiment00.audio.project.json',
+  ambientFade: 1.2,
+  defaultBackground: 'bg_sewers',
+  backgroundByScreen: {
+    '0,3': 'bg_cave',
+  } as Record<string, string>,
+  footstepSequence: 'seq_footsteps',
+  stepInterval: 0.32,
+  stepVolume: 0.6,
+  campfireSound: 'campfire_loop',
+  campfireVolume: 1,
+} as const;
+
+/** Prefixes the audio base path and percent-encodes each path segment. */
+const resolveAudio = (file: string): string =>
+  '/assets/audio/' + file.split('/').map(encodeURIComponent).join('/');
+
+const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
+
+/**
+ * Drives the Experiment00 map with a playable character: WASD/arrows walk the
+ * player around, open portals carry the player between screens, and `E`
+ * interacts with a nearby campfire.
+ *
+ * Objects and screens are wired declaratively: a {@link MapObjectRegistry}
+ * maps object names to classes (so the map auto-instantiates a `Campfire`
+ * wherever it sees one), and a {@link ScreenRegistry} maps coordinates to
+ * screen classes (a default {@link RoomScreen} for every room, with a bespoke
+ * {@link DarkChamberScreen} at `(0, 3)`). The player is the one game-owned
+ * object — it persists across screens, so the game spawns and repositions it.
+ */
+class MapGame extends Engine {
+  private map?: MapManager;
+  private cx = 0;
+  private cy = 0;
+  private readonly input = new Input();
+  private player?: Player;
+  private lastSafe = { x: 0, y: 0 };
+  private dialog?: DialogRunner;
+  private readonly dialogBox = new DialogBox();
+  private audio?: AudioSystem;
+  /** Seconds since the last footfall; starts "ready" so walking steps at once. */
+  private stepTimer: number = AUDIO.stepInterval;
+  /** Looping campfire emitter per lit fire on the active screen. */
+  private readonly fireVoices = new Map<Campfire, SoundHandle>();
+  /**
+   * Persistent save state (localStorage-backed, saved on every change). Holds
+   * durable world facts such as which olives have been picked up, so they do
+   * not reappear on screen re-entry or reload.
+   */
+  private readonly save = new StateStore({
+    backend: new MemoryBackend('experiment00:save'),
+    autoSave: true,
+  });
+  /** The player's item bag (persisted with the save; chests fill it). */
+  private readonly inventory = new Inventory(this.save.scope('inventory'));
+  /** A movable shelf whose message is being read; slides once it closes. */
+  private shelfAwaitingSlide?: Bookshelf;
+  /** The iris-wipe overlay; the game drives its `coverage` each frame. */
+  private transitionShader?: ScreenTransitionShader;
+  /**
+   * Active screen-cut choreography. `apply` runs once at the covered midpoint
+   * (swaps the screen + places the player) so the switch is hidden behind the
+   * fully-dark iris.
+   */
+  private transition: { phase: 'idle' | 'out' | 'in'; elapsed: number; apply?: () => void } = {
+    phase: 'idle',
+    elapsed: 0,
+  };
+  /** Draw-ready `n0`..`n9` number sprites, indexed by digit. */
+  private numberFrames: (Frame | undefined)[] = [];
+  /**
+   * Active 4-digit code entry for a locked door: the four current digits and
+   * the box the player is editing. Freezes the world while open.
+   */
+  private lockUI?: { portal: Portal; digits: number[]; cursor: number };
+  /** A locked door whose reminder is showing; its lock UI opens on close. */
+  private pendingLock?: Portal;
+
+  async load(): Promise<void> {
+    // Objects: the map instantiates a class wherever it places a matching
+    // object. `Campfire` is keyed by its static `type` ("campfire").
+    const registry = new MapObjectRegistry();
+    registry.register(Campfire);
+    registry.register(Portal);
+    registry.register(Sign);
+    registry.register(Bookshelf);
+    registry.register(Rat);
+    registry.register(Slime);
+    registry.register(FlyingSkull);
+    registry.register(Skeleton);
+    registry.register(Goblin);
+    registry.register(SlimeKing);
+    registry.register(Torch);
+    registry.register(Olive);
+    // Olives read/write their collected flag from the shared save store.
+    Olive.useState(this.save.scope('olives'));
+    registry.register(Chest);
+    // Chests remember they are open in the shared save store.
+    Chest.useState(this.save.scope('chests'));
+    // Doors (portals) remember they have been opened.
+    Portal.useState(this.save.scope('doors'));
+    // Locked doors remember, for good, that their code has been solved.
+    Portal.useLocks(this.save.scope('locks'));
+    // Movable secret shelves remember they have slid open.
+    Bookshelf.useState(this.save.scope('shelves'));
+
+    // Screens: a default class for every room, overridden per coordinate.
+    const screens = new ScreenRegistry();
+    screens.setDefault(RoomScreen);
+    screens.register(0, 8, DarkChamberScreen);
+
+    // Read the editor's live working project straight from disk (served at
+    // /project/…), unmodified. Image urls are "/uploads/<file>".
+    const url = '/project/projects/proj_mtj0babj_m.json';
+    const project = await fetch(url).then((r) => r.json());
+    const map = new MapManager();
+    await map.load(project, {
+      resolve: (img) => `/project${img.url}`,
+      registry,
+      screens,
+    });
+    this.map = map;
+
+    // Resolve the `n0`..`n9` number sprites (for the lock UI) from the
+    // project's sprite catalog: name → id → draw-ready frame.
+    const spriteIdByName = new Map<string, string>(
+      ((project.sprites ?? []) as { name: string; id: string }[]).map((s) => [s.name, s.id]),
+    );
+    this.numberFrames = Array.from({ length: 10 }, (_, digit) => {
+      const id = spriteIdByName.get(`n${digit}`);
+      return id ? map.assets.frame(id) : undefined;
+    });
+
+    // Dialogs come from the editor's standalone export (kept current on every
+    // save) — the runtime consumes that file directly.
+    const dialogs: DialogDocument = await fetch(
+      '/project/exports/proj_mtj0babj_m/experiment00.dialogs.json',
+    )
+      .then((r) => (r.ok ? r.json() : { trees: {} }))
+      .catch(() => ({ trees: {} }));
+    this.dialog = new DialogRunner(dialogs);
+
+    const shaders = new ShaderSystem();
+    shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
+    // Settled, drifting motes over the whole frame — a Stranger Things
+    // "Upside Down" ambience. Added after the vignette so it glows on top.
+    shaders.add(new AmbientSporeShader({ density: 1.2, alpha: 0.22 }));
+    // Dungeon iris-wipe for room cuts — added last so it covers every other
+    // effect, the HUD, and any dialog while a transition plays.
+    this.transitionShader = shaders.add(new ScreenTransitionShader({ block: 18 }));
+    this.use(shaders);
+
+    // Audio: load the sound/sequence catalog and expose it as a subsystem.
+    // File paths are resolved under assets/audio and percent-encoded (names
+    // contain spaces). The listener follows the player so campfire emitters
+    // attenuate with distance.
+    const audio = new AudioSystem();
+    const audioProject = await fetch(AUDIO.projectUrl).then((r) => r.json());
+    await audio.load(audioProject, { resolve: (d) => resolveAudio(d.file) });
+    this.audio = audio;
+    this.use(audio);
+    audio.setListener(() => this.listenerPoint());
+
+    // Start on the dark chamber (its screen class extinguishes the fires),
+    // then spawn the player centred.
+    this.navigate(0, 0);
+    this.spawnPlayer();
+    window.addEventListener('keydown', (e) => this.onKey(e));
+  }
+
+  /** Builds the persistent player from the loaded "player" prefab. */
+  private spawnPlayer(): void {
+    const assets = this.map?.assets;
+    const def = assets?.objectByName('player');
+    if (!assets || !def) return;
+    const start = def.machine.states.find((s) => s.name === 'Idle')?.id;
+    const context: MapObjectContext = {
+      assets,
+      machine: def.machine,
+      def,
+      properties: def.properties,
+      x: (SCREEN_W - PLAYER_SIZE) / 2,
+      y: (SCREEN_H - PLAYER_SIZE) / 2,
+      level: PLAYER_LEVEL,
+      startStateId: start ?? def.machine.initialStateId ?? undefined,
+    };
+    this.player = new Player(context, this.input);
+    this.player.onSpawn();
+    this.lastSafe = { x: this.player.x, y: this.player.y };
+    this.map?.current?.collision.addOccupant(this.player);
+  }
+
+  /** Live campfires on the active screen. */
+  private campfires(): Campfire[] {
+    return this.map?.current?.objectsByType(Campfire) ?? [];
+  }
+
+  /** Navigates to a screen; returns whether it existed. */
+  private navigate(x: number, y: number): boolean {
+    if (!this.map?.navigateTo(x, y)) return false;
+    this.cx = x;
+    this.cy = y;
+    if (this.player) this.map.current?.collision.addOccupant(this.player);
+    this.updateBackground();
+    return true;
+  }
+
+  /**
+   * Starts a screen-cut: the iris collapses to dark, `apply` runs once fully
+   * covered (swap the screen + reposition the player), then the new room
+   * reopens. No-op while a cut is already playing.
+   */
+  private beginTransition(apply: () => void): void {
+    if (this.transition.phase !== 'idle') return;
+    this.transition = { phase: 'out', elapsed: 0, apply };
+  }
+
+  /** Advances the active screen-cut and drives the iris `coverage`. */
+  private advanceTransition(dt: number): void {
+    const t = this.transition;
+    t.elapsed += dt;
+    if (t.phase === 'out') {
+      const p = Math.min(1, t.elapsed / TRANSITION_OUT);
+      if (this.transitionShader) this.transitionShader.coverage = easeInOut(p);
+      if (p >= 1) {
+        t.apply?.();
+        t.apply = undefined;
+        t.phase = 'in';
+        t.elapsed = 0;
+        if (this.transitionShader) this.transitionShader.coverage = 1;
+      }
+      return;
+    }
+    const p = Math.min(1, t.elapsed / TRANSITION_IN);
+    if (this.transitionShader) this.transitionShader.coverage = 1 - easeInOut(p);
+    if (p >= 1) {
+      t.phase = 'idle';
+      if (this.transitionShader) this.transitionShader.coverage = 0;
+    }
+  }
+
+  /**
+   * Reacts to E on a locked door: play the door's `message` reminder (the
+   * "stubbed error" that it needs a code) and, once dismissed, open the code
+   * entry. Doors with no reminder go straight to the keypad with a toast.
+   */
+  private promptLock(portal: Portal): void {
+    const ref = portal.reminderRef;
+    if (ref && this.dialog?.start(ref)) {
+      this.pendingLock = portal;
+      return;
+    }
+    showMessage('The door is locked', 1.4);
+    this.openLock(portal);
+  }
+
+  /** Opens the 4-digit code entry for `portal`. */
+  private openLock(portal: Portal): void {
+    this.lockUI = { portal, digits: [0, 0, 0, 0], cursor: 0 };
+  }
+
+  /** Moves the edit cursor between the four boxes (wraps). */
+  private moveLockCursor(delta: number): void {
+    const ui = this.lockUI;
+    if (ui) ui.cursor = (ui.cursor + delta + 4) % 4;
+  }
+
+  /**
+   * Spins the focused digit up/down (wraps 0–9). The moment the four digits
+   * match the code, the door unlocks itself — no confirm — is remembered, and
+   * the keypad closes.
+   */
+  private spinLockDigit(delta: number): void {
+    const ui = this.lockUI;
+    if (!ui) return;
+    ui.digits[ui.cursor] = (ui.digits[ui.cursor]! + delta + 10) % 10;
+    if (ui.portal.matches(ui.digits.join(''))) {
+      ui.portal.unlock();
+      this.audio?.playSound('chest_open', { volume: 0.6 });
+      showMessage('Unlocked', 1.4);
+      this.lockUI = undefined;
+    }
+  }
+
+  /** Point (screen px) the world is heard from — the player's centre. */
+  private listenerPoint(): { x: number; y: number } {
+    const p = this.player;
+    if (!p) return { x: 0, y: 0 };
+    return { x: p.x + PLAYER_SIZE / 2, y: p.y + PLAYER_SIZE / 2 };
+  }
+
+  /** Crossfades to the ambient bed configured for the current screen. */
+  private updateBackground(): void {
+    const id = AUDIO.backgroundByScreen[`${this.cx},${this.cy}`] ?? AUDIO.defaultBackground;
+    this.audio?.playAmbient(id, { fadeIn: AUDIO.ambientFade, fadeOut: AUDIO.ambientFade });
+  }
+
+  /**
+   * Reconciles the looping campfire emitters with the lit fires on-screen:
+   * starts a distance-attenuated, fire-following voice for each newly lit
+   * campfire and fades out any that went cold or left with the screen.
+   */
+  private syncCampfires(): void {
+    const audio = this.audio;
+    if (!audio) return;
+    const lit = new Set(this.campfires().filter((f) => f.lit));
+    for (const [fire, handle] of this.fireVoices) {
+      if (lit.has(fire)) continue;
+      handle.stop({ fadeOut: 0.3 });
+      this.fireVoices.delete(fire);
+    }
+    for (const fire of lit) {
+      if (this.fireVoices.has(fire)) continue;
+      const handle = audio.playSound(AUDIO.campfireSound, {
+        volume: AUDIO.campfireVolume,
+        follow: () => {
+          const b = fire.collisionBox;
+          return { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+        },
+      });
+      if (handle) this.fireVoices.set(fire, handle);
+    }
+  }
+
+  /** Opens a nearby portal (and travels), else toggles a nearby campfire. */
+  private interact(): void {
+    const player = this.player;
+    if (!player) return;
+
+    // Doors (portals): a closed door plays its open sound and opens when the
+    // sound finishes (once, then remembered). An already-open door travels.
+    const portal = this.map?.current
+      ?.objectsByType(Portal)
+      .find((p) => p.overlaps(player.interactionBox()));
+    if (portal) {
+      // A locked door refuses to open: remind the player, then ask for the
+      // 4-digit code. It stays shut until the right code is entered.
+      if (portal.isLocked) {
+        this.promptLock(portal);
+        return;
+      }
+      if (portal.isOpen) {
+        // Travel behind a dungeon iris-wipe: the room collapses to dark, the
+        // screen swaps at the covered midpoint, then the destination reopens.
+        const target = portal.target;
+        if (target && this.map?.screenAt(target.x, target.y)) {
+          const spawn = portal.spawn;
+          this.beginTransition(() => {
+            if (!this.navigate(target.x, target.y)) return;
+            // Author-set spawn cell (grid col/row) → pixels, clamped so the
+            // player stays on-screen; falls back to centre when unset.
+            const px = spawn
+              ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
+              : (SCREEN_W - PLAYER_SIZE) / 2;
+            const py = spawn
+              ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
+              : (SCREEN_H - PLAYER_SIZE) / 2;
+            player.place(px, py);
+            this.lastSafe = { x: player.x, y: player.y };
+          });
+        }
+      } else if (!portal.isOpening) {
+        // Closed door: play the open sound; it opens once the sound finishes.
+        portal.beginOpening(PORTAL_OPEN_SECONDS);
+        const handle = this.audio?.playSound('portal_open', { volume: 0.7, rate: 2 });
+        if (handle) handle.onEnded(() => portal.open());
+        else portal.open();
+      }
+      return;
+    }
+
+    // Stalkers (skeleton, goblin): replay the dialog on demand when the player
+    // presses E beside one already in talking range.
+    const stalker = [
+      ...(this.map?.current?.objectsByType(Skeleton) ?? []),
+      ...(this.map?.current?.objectsByType(Goblin) ?? []),
+    ].find((s) => s.overlaps(player.box()));
+    if (stalker) {
+      const ref = stalker.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Slime king: a stationary NPC — press E beside it to run its dialog.
+    const king = this.map?.current?.objectsByType(SlimeKing).find((k) => k.overlaps(player.box()));
+    if (king) {
+      const ref = king.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Signs: open the dialog modal for a nearby sign that names a tree.
+    const sign = this.map?.current
+      ?.objectsByType(Sign)
+      .find((s) => s.overlaps(player.interactionBox()));
+    if (sign) {
+      const ref = sign.dialogRef;
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Bookshelves: show the dialog for a nearby shelf. A movable secret shelf
+    // (one with an `id`) slides open one tile — after its message is read, or
+    // immediately when it has none.
+    const shelf = this.map?.current
+      ?.objectsByType(Bookshelf)
+      .find((b) => b.overlaps(player.interactionBox()));
+    if (shelf) {
+      const ref = shelf.dialogRef;
+      if (shelf.movable && !shelf.isOpen) {
+        if (ref && this.dialog?.start(ref)) {
+          this.shelfAwaitingSlide = shelf;
+        } else {
+          shelf.slideOpen();
+        }
+        return;
+      }
+      if (ref && this.dialog?.start(ref)) return;
+    }
+
+    // Chests: open the nearest reachable closed chest (one-way — stays open).
+    // Opening grants its item, plays the sound, and runs its dialog once.
+    const chest = this.map?.current
+      ?.objectsByType(Chest)
+      .find((c) => !c.isOpen && c.overlaps(player.interactionBox()));
+    if (chest?.open()) {
+      this.audio?.playSound('chest_open', { volume: 0.7 });
+      const item = chest.item;
+      if (item) {
+        this.inventory.add(item);
+        showMessage(`Found ${item}`, 1.6);
+      } else {
+        showMessage('The chest is empty', 1.2);
+      }
+      const ref = chest.dialogRef;
+      if (ref) this.dialog?.start(ref);
+      return;
+    }
+
+    // Campfires: toggle the nearest within reach.
+    const p = player.box();
+    const pcx = p.x + p.width / 2;
+    const pcy = p.y + p.height / 2;
+    const reach = 24;
+    for (const fire of this.campfires()) {
+      const b = fire.collisionBox;
+      const dx = pcx - (b.x + b.w / 2);
+      const dy = pcy - (b.y + b.h / 2);
+      if (dx * dx + dy * dy <= reach * reach) {
+        fire.toggle();
+        break;
+      }
+    }
+  }
+
+  private onKey(e: KeyboardEvent): void {
+    // Any key is a user gesture — resume the (autoplay-suspended) audio context.
+    void this.audio?.unlock();
+    // Code entry captures all keys: arrows spin/move, E/Esc leaves.
+    if (this.lockUI) {
+      if (e.key === 'ArrowUp') this.spinLockDigit(1);
+      else if (e.key === 'ArrowDown') this.spinLockDigit(-1);
+      else if (e.key === 'ArrowLeft') this.moveLockCursor(-1);
+      else if (e.key === 'ArrowRight') this.moveLockCursor(1);
+      else if (e.key === 'Escape' || e.key === 'e' || e.key === 'E') this.lockUI = undefined;
+      else return;
+      e.preventDefault();
+      return;
+    }
+    const dialog = this.dialog;
+    if (dialog?.active) {
+      // Modal is up: arrows move the option cursor, E/Enter confirms.
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') dialog.moveSelection(-1);
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') dialog.moveSelection(1);
+      else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter')
+        dialog.confirm();
+      else return;
+      e.preventDefault();
+      return;
+    }
+    if (e.key === 'e' || e.key === 'E' || e.key === ' ') this.interact();
+  }
+
+  override update(dt: number): void {
+    // Advance the dialog typewriter + slide animation every frame; while the
+    // modal is open it freezes the world (no map/player updates).
+    this.dialog?.update(dt);
+    this.dialogBox.update(dt, this.dialog?.active ?? false);
+    if (this.dialog?.active) return;
+
+    // A locked-door reminder just closed → raise its 4-digit keypad. The
+    // keypad then freezes the world until the code is solved or dismissed.
+    if (this.pendingLock && !this.lockUI) {
+      this.openLock(this.pendingLock);
+      this.pendingLock = undefined;
+    }
+    if (this.lockUI) return;
+
+    // A screen-cut freezes the world: advance the iris and swap at its dark
+    // midpoint, but run no player/AI logic until it finishes.
+    if (this.transition.phase !== 'idle') {
+      this.advanceTransition(dt);
+      return;
+    }
+
+    // The message for a movable shelf was just dismissed — slide it open now.
+    if (this.shelfAwaitingSlide) {
+      this.shelfAwaitingSlide.slideOpen();
+      this.shelfAwaitingSlide = undefined;
+    }
+
+    // Feed each rat the player's box + collision so its AI can sense/flee,
+    // before the screen advances the live objects (which runs their update).
+    if (this.player && this.map?.current) {
+      const pbox = this.player.box();
+      for (const rat of this.map.current.objectsByType(Rat)) {
+        rat.sense(pbox, this.map.current.collision);
+      }
+      for (const slime of this.map.current.objectsByType(Slime)) {
+        slime.sense(pbox, this.map.current.collision);
+      }
+
+      for (const flyingskull of this.map.current.objectsByType(FlyingSkull)) {
+        flyingskull.sense(pbox, this.map.current.collision);
+      }
+      for (const ghost of this.map.current.objectsByType(Ghost)) {
+        ghost.sense(pbox, this.map.current.collision);
+      }
+
+      // Stalkers (skeleton, goblin) home in on the player; when one reaches
+      // talking range it greets once by opening its `message` dialog. Starting
+      // a dialog freezes the world, so bail out of this frame's update.
+      const stalkers = [
+        ...this.map.current.objectsByType(Skeleton),
+        ...this.map.current.objectsByType(Goblin),
+      ];
+      for (const stalker of stalkers) {
+        stalker.sense(pbox, this.map.current.collision);
+      }
+      for (const stalker of stalkers) {
+        if (stalker.takeGreeting() && stalker.dialogRef && this.dialog?.start(stalker.dialogRef)) {
+          return;
+        }
+      }
+    }
+    this.map?.update(dt);
+    updateMessages(dt);
+    const player = this.player;
+    const screen = this.map?.current;
+    if (!player || !screen) return;
+    player.update(dt, screen.collision);
+
+    // Screens no longer hand off at their edges — portals are the only exit,
+    // so keep the player inside the current screen's bounds.
+    const maxX = SCREEN_W - PLAYER_SIZE;
+    const maxY = SCREEN_H - PLAYER_SIZE;
+    player.place(Math.max(0, Math.min(maxX, player.x)), Math.max(0, Math.min(maxY, player.y)));
+
+    const foot = player.footPoint();
+    if (screen.collision.isWalkable(foot.x, foot.y)) {
+      this.lastSafe = { x: player.x, y: player.y };
+    } else {
+      player.place(this.lastSafe.x, this.lastSafe.y);
+    }
+
+    // Footsteps: cycle the configured sequence one step per interval while the
+    // player walks; reset the timer when idle so the next stride steps at once.
+    if (player.isWalking()) {
+      this.stepTimer += dt;
+      if (this.stepTimer >= AUDIO.stepInterval) {
+        this.audio?.playSequenceStep(AUDIO.footstepSequence, {
+          tracker: 'player',
+          volume: AUDIO.stepVolume,
+          rate: 0.94 + Math.random() * 0.12,
+        });
+        this.stepTimer = 0;
+      }
+    } else {
+      this.stepTimer = AUDIO.stepInterval;
+    }
+
+    // Keep the looping campfire emitters in sync with the lit fires on-screen.
+    this.syncCampfires();
+
+    // Collect any olive the player is standing on.
+    this.pickupOlives();
+  }
+
+  /**
+   * Picks up every olive whose `pickup` collider the player overlaps: records
+   * it (so it stays gone across screens/reloads), shows a toast, and — for an
+   * olive with a `message` property — opens its dialog and stops for the frame
+   * (the modal freezes the world).
+   */
+  private pickupOlives(): void {
+    const player = this.player;
+    const screen = this.map?.current;
+    if (!player || !screen) return;
+    for (const object of screen.collision.owners(player.box(), 'pickup', player)) {
+      if (!(object instanceof Olive) || !object.collect()) continue;
+      showMessage('You picked an olive', 1.2);
+      const ref = object.dialogRef;
+      if (ref && this.dialog?.start(ref)) break;
+    }
+  }
+
+  override render(ctx: RenderContext): void {
+    const raw = ctx.getCanvas?.();
+    if (raw) raw.imageSmoothingEnabled = false;
+
+    ctx.save();
+    ctx.scale(SCALE, SCALE);
+    const player = this.player;
+    this.map?.render(
+      ctx,
+      player ? { level: PLAYER_LEVEL, render: (c) => player.render(c) } : undefined,
+    );
+    // Door-opening pies draw last, above every map layer, so no wall or
+    // pillar hides them.
+    for (const portal of this.map?.current?.objectsByType(Portal) ?? []) {
+      portal.renderProgress(ctx);
+    }
+    ctx.restore();
+
+    const fires = this.campfires();
+    const lit = fires.filter((f) => f.lit).length;
+    ctx.drawText(
+      `screen ${this.cx},${this.cy}   WASD move · E use / open portal   campfires ${lit}/${fires.length} lit`,
+      8,
+      20,
+      '#ffffff',
+    );
+    drawMessages(ctx, 8, 40);
+
+    // Dialog modal on top of everything (screen space).
+    if (this.dialog) this.dialogBox.render(ctx, this.dialog);
+
+    // Code entry keypad, above the dialog.
+    if (this.lockUI) this.renderLock(ctx);
+  }
+
+  /**
+   * Draws the 4-digit code entry: a dimmed backdrop and four boxes, each
+   * showing its current number sprite (`n0`..`n9`); the focused box is
+   * highlighted with up/down arrows.
+   */
+  private renderLock(ctx: RenderContext): void {
+    const ui = this.lockUI;
+    if (!ui) return;
+    const w = ctx.width;
+    const h = ctx.height;
+    ctx.fillRect(0, 0, w, h, 'rgba(6, 6, 12, 0.72)');
+    const box = Math.round(h * 0.16);
+    const gap = Math.round(box * 0.3);
+    const totalW = 4 * box + 3 * gap;
+    const startX = Math.round((w - totalW) / 2);
+    const y = Math.round((h - box) / 2);
+    ctx.drawText('ENTER CODE', startX, y - Math.round(box * 0.5), '#e8e8ff');
+    for (let i = 0; i < 4; i++) {
+      const x = startX + i * (box + gap);
+      const active = i === ui.cursor;
+      ctx.fillRect(x, y, box, box, active ? '#22243a' : '#14141f');
+      ctx.strokeRect(x, y, box, box, active ? '#ffd66e' : '#3a3a55');
+      const frame = this.numberFrames[ui.digits[i]!];
+      if (frame && ctx.drawSprite) {
+        const s = Math.round(box * 0.7);
+        const dx = x + Math.round((box - s) / 2);
+        const dy = y + Math.round((box - s) / 2);
+        ctx.drawSprite(frame.image, frame.sx, frame.sy, frame.sw, frame.sh, dx, dy, s, s);
+      }
+      if (active) {
+        ctx.drawText('\u25B2', x + Math.round(box / 2) - 6, y - 20, '#ffd66e');
+        ctx.drawText('\u25BC', x + Math.round(box / 2) - 6, y + box + 4, '#ffd66e');
+      }
+    }
+    ctx.drawText(
+      '\u25B2\u25BC change   \u25C4\u25BA move   E / Esc close',
+      startX,
+      y + box + Math.round(box * 0.55),
+      '#9a9ac0',
+    );
+  }
+}
+
+const game = new MapGame(renderer, { backgroundColor: '#12121c' });
+game.setup(async () => {
+  await void game.load();
+});

@@ -2,7 +2,7 @@
 title: 'Class: TileLayer'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/tilemap/tile\_layer.ts:38](https://github.com/bdryanovski/game
 new TileLayer(config: TileLayerConfig): TileLayer;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L84)
+Defined in: [core/tilemap/tile\_layer.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L102)
 
 Creates a new tile layer.
 
@@ -54,15 +54,15 @@ const layer = new TileLayer({
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="cols"></a> `cols` | `readonly` | `number` | Number of tile columns. | [core/tilemap/tile\_layer.ts:43](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L43) |
-| <a id="name"></a> `name` | `readonly` | `string` | Human-readable name of this layer. | [core/tilemap/tile\_layer.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L40) |
-| <a id="offsetx"></a> `offsetX` | `public` | `number` | Horizontal pixel offset (parallax). | [core/tilemap/tile\_layer.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L58) |
-| <a id="offsety"></a> `offsetY` | `public` | `number` | Vertical pixel offset (parallax). | [core/tilemap/tile\_layer.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L61) |
-| <a id="opacity"></a> `opacity` | `public` | `number` | Layer opacity in `[0, 1]`. | [core/tilemap/tile\_layer.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L55) |
-| <a id="rows"></a> `rows` | `readonly` | `number` | Number of tile rows. | [core/tilemap/tile\_layer.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L46) |
-| <a id="tileset"></a> `tileSet` | `public` | [`TileSet`](TileSet.md) | The tileset used to resolve tile IDs to sprite frames. | [core/tilemap/tile\_layer.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L49) |
-| <a id="visible"></a> `visible` | `public` | `boolean` | Whether this layer is rendered. | [core/tilemap/tile\_layer.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L52) |
-| <a id="data"></a> `data` | `private` | `number`[] | Flat row-major tile data. `-1` means empty. | [core/tilemap/tile\_layer.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L64) |
+| <a id="cols"></a> `cols` | `readonly` | `number` | Number of tile columns. | [core/tilemap/tile\_layer.ts:47](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L47) |
+| <a id="name"></a> `name` | `readonly` | `string` | Human-readable name of this layer. | [core/tilemap/tile\_layer.ts:42](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L42) |
+| <a id="offsetx"></a> `offsetX` | `public` | `number` | Horizontal pixel offset (parallax). | [core/tilemap/tile\_layer.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L72) |
+| <a id="offsety"></a> `offsetY` | `public` | `number` | Vertical pixel offset (parallax). | [core/tilemap/tile\_layer.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L77) |
+| <a id="opacity"></a> `opacity` | `public` | `number` | Layer opacity in `[0, 1]`. | [core/tilemap/tile\_layer.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L67) |
+| <a id="rows"></a> `rows` | `readonly` | `number` | Number of tile rows. | [core/tilemap/tile\_layer.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L52) |
+| <a id="tileset"></a> `tileSet` | `public` | [`TileSet`](TileSet.md) | The tileset used to resolve tile IDs to sprite frames. | [core/tilemap/tile\_layer.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L57) |
+| <a id="visible"></a> `visible` | `public` | `boolean` | Whether this layer is rendered. | [core/tilemap/tile\_layer.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L62) |
+| <a id="data"></a> `data` | `private` | `number`[] | Flat row-major tile data. `-1` means empty. | [core/tilemap/tile\_layer.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L82) |
 
 ## Methods
 
@@ -72,7 +72,7 @@ const layer = new TileLayer({
 getTile(col: number, row: number): number;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L113)
+Defined in: [core/tilemap/tile\_layer.ts:131](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L131)
 
 Returns the tile ID at the given grid position.
 
@@ -117,10 +117,11 @@ renderIsometric(
   y: number;
 }, 
    gridCols: number, 
-   gridRows: number): void;
+   gridRows: number
+): void;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:243](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L243)
+Defined in: [core/tilemap/tile\_layer.ts:275](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L275)
 
 Renders visible tiles in **isometric** mode using the given
 projection for coordinate conversion.
@@ -170,10 +171,11 @@ renderOrthogonal(
   width: number;
   x: number;
   y: number;
-}): void;
+}
+): void;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:173](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L173)
+Defined in: [core/tilemap/tile\_layer.ts:199](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L199)
 
 #### Parameters
 
@@ -200,10 +202,11 @@ Defined in: [core/tilemap/tile\_layer.ts:173](https://github.com/bdryanovski/gam
 setTile(
    col: number, 
    row: number, 
-   tileId: number): void;
+   tileId: number
+): void;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:135](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L135)
+Defined in: [core/tilemap/tile\_layer.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L155)
 
 Sets the tile ID at the given grid position.
 
@@ -240,7 +243,7 @@ layer.setTile(5, 4, -1); // clear tile
 private withOpacity(ctx: RenderContext, fn: () => void): void;
 ```
 
-Defined in: [core/tilemap/tile\_layer.ts:165](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L165)
+Defined in: [core/tilemap/tile\_layer.ts:187](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tile_layer.ts#L187)
 
 **`Internal`**
 

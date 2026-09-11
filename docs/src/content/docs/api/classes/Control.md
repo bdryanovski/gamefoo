@@ -2,7 +2,7 @@
 title: 'Class: Control'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,34 +10,13 @@ title: 'Class: Control'
 
 # Class: Control
 
-Defined in: [core/behaviours/control.ts:29](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L29)
+Defined in: [core/behaviours/control.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L50)
 
-Keyboard-driven movement behaviour for a [Entity](Entity.md).
-
-`Control` reads the current keyboard state from an [Input](Input.md)
-instance every frame and translates WASD / arrow-key presses into
-entity position changes. Diagonal movement is normalised so the
-entity moves at a consistent speed in all directions.
+Keyboard and gamepad driven movement behaviour.
 
 ## Since
 
 0.1.0
-
-## Example
-
-```ts
-import { Control, Input, Player } from "gamefoo";
-
-const input  = new Input();
-const player = new Player("hero", 400, 300, 50, 50);
-
-player.attachBehaviour(new Control(player, input));
-```
-
-## See
-
- - [Input](Input.md)     — the polling input manager consumed by this behaviour
- - [Behaviour](Behaviour.md) — abstract base class
 
 ## Extends
 
@@ -48,23 +27,45 @@ player.attachBehaviour(new Control(player, input));
 ### Constructor
 
 ```ts
-new Control(owner: DynamicEntity, input: Input): Control;
+new Control(
+   owner: DynamicEntity, 
+   input: Input, 
+   scheme?: ControlScheme
+): Control;
 ```
 
-Defined in: [core/behaviours/control.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L49)
+Defined in: [core/behaviours/control.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L91)
 
-Creates a new keyboard control behaviour.
+Creates a new control behaviour.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `owner` | [`DynamicEntity`](DynamicEntity.md) | The dynamic entity whose velocity will be updated. |
-| `input` | [`Input`](Input.md) | The [Input](Input.md) instance to read key state from. |
+| Parameter | Type | Default value | Description |
+| ------ | ------ | ------ | ------ |
+| `owner` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | The dynamic entity whose velocity will be updated. |
+| `input` | [`Input`](Input.md) | `undefined` | The [Input](Input.md) instance to read input from. |
+| `scheme` | [`ControlScheme`](../interfaces/ControlScheme.md) | `CONTROL_SCHEMES.DEFAULT` | The control scheme to use (default: DEFAULT). |
 
 #### Returns
 
 `Control`
+
+#### Since
+
+0.1.0 (scheme parameter added in 0.5.0)
+
+#### Example
+
+```ts
+// Default controls (WASD + arrows)
+player.attachBehaviour(new Control(player, input));
+
+// NES-style controls
+player.attachBehaviour(new Control(player, input, CONTROL_SCHEMES.NES));
+
+// PICO-8 controls
+player.attachBehaviour(new Control(player, input, CONTROL_SCHEMES.PICO8));
+```
 
 #### Overrides
 
@@ -76,10 +77,10 @@ Creates a new keyboard control behaviour.
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
-| <a id="type"></a> `type` | `readonly` | `"control"` | `'control'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/control.ts:31](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L31) |
+| <a id="type"></a> `type` | `readonly` | `"control"` | `'control'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/control.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L54) |
 | <a id="owner"></a> `owner` | `protected` | [`DynamicEntity`](DynamicEntity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
-| <a id="input"></a> `input` | `private` | [`Input`](Input.md) | `undefined` | The input manager to poll each frame. | - | - | [core/behaviours/control.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L34) |
-| <a id="speed"></a> `speed` | `private` | `number` | `500` | Movement speed in pixels per second. | - | - | [core/behaviours/control.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L41) |
+| <a id="mapper"></a> `mapper` | `private` | [`InputMapper`](InputMapper.md) | `undefined` | Input mapper for action-based queries. **Since** 0.5.0 | - | - | [core/behaviours/control.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L61) |
+| <a id="speed"></a> `speed` | `private` | `number` | `500` | Movement speed in pixels per second. | - | - | [core/behaviours/control.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L68) |
 
 ## Accessors
 
@@ -108,6 +109,41 @@ case-insensitive.
 
 ## Methods
 
+### getMapper()
+
+```ts
+getMapper(): InputMapper;
+```
+
+Defined in: [core/behaviours/control.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L145)
+
+Gets the InputMapper for advanced input queries.
+
+Use this to check action buttons or access the control scheme.
+
+#### Returns
+
+[`InputMapper`](InputMapper.md)
+
+The InputMapper instance
+
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+const control = player.getBehaviour('control') as Control;
+const mapper = control.getMapper();
+
+if (mapper.isAction('PRIMARY')) {
+  player.jump();
+}
+```
+
+***
+
 ### getOwner()
 
 ```ts
@@ -131,6 +167,50 @@ The owning entity.
 #### Inherited from
 
 [`Behaviour`](Behaviour.md).[`getOwner`](Behaviour.md#getowner)
+
+***
+
+### getScheme()
+
+```ts
+getScheme(): ControlScheme;
+```
+
+Defined in: [core/behaviours/control.ts:173](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L173)
+
+Gets the current control scheme.
+
+#### Returns
+
+[`ControlScheme`](../interfaces/ControlScheme.md)
+
+The current ControlScheme
+
+#### Since
+
+0.5.0
+
+***
+
+### getSpeed()
+
+```ts
+getSpeed(): number;
+```
+
+Defined in: [core/behaviours/control.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L195)
+
+Gets the current movement speed.
+
+#### Returns
+
+`number`
+
+Speed in pixels per second
+
+#### Since
+
+0.5.0
 
 ***
 
@@ -190,7 +270,7 @@ optional render(ctx: RenderContext): void;
 Defined in: [core/behaviour.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L146)
 
 Optional rendering hook invoked after the entity's own
-[Entity.render](Entity.md#render) call.
+[Entity.render](DynamicEntity.md#render) call.
 
 Override this to draw debug shapes, health bars, status effects, etc.
 
@@ -210,31 +290,94 @@ Override this to draw debug shapes, health bars, status effects, etc.
 
 ***
 
+### setScheme()
+
+```ts
+setScheme(scheme: ControlScheme): void;
+```
+
+Defined in: [core/behaviours/control.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L162)
+
+Changes the control scheme.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `scheme` | [`ControlScheme`](../interfaces/ControlScheme.md) | The new control scheme to use |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+// Switch to SNES controls
+control.setScheme(CONTROL_SCHEMES.SNES);
+```
+
+***
+
+### setSpeed()
+
+```ts
+setSpeed(speed: number): void;
+```
+
+Defined in: [core/behaviours/control.ts:184](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L184)
+
+Sets the movement speed.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `speed` | `number` | Speed in pixels per second |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+***
+
 ### update()
 
 ```ts
 update(_deltaTime: number): void;
 ```
 
-Defined in: [core/behaviours/control.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L70)
+Defined in: [core/behaviours/control.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/control.ts#L113)
 
-Reads the current key state and moves the owner entity.
+Reads the current input state and moves the owner entity.
 
-Supported keys: `W` / `ArrowUp`, `S` / `ArrowDown`,
-`A` / `ArrowLeft`, `D` / `ArrowRight`.
+Uses the control scheme's directional actions (UP, DOWN, LEFT, RIGHT)
+to determine movement. Supports both keyboard and gamepad input.
 
 Diagonal input is normalised so the effective speed remains
 constant regardless of direction.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `_deltaTime` | `number` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `_deltaTime` | `number` | Seconds elapsed since the previous frame (unused). |
 
 #### Returns
 
 `void`
+
+#### Since
+
+0.1.0
 
 #### Overrides
 

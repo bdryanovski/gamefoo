@@ -1,0 +1,1498 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-dialog-editor",
+    "projectName": "Experiment00"
+  },
+  "trees": {
+    "Welcome": {
+      "id": "dlg_mtojp4nh_3",
+      "name": "Welcome",
+      "root": "msg_mtombzfb_a",
+      "messages": {
+        "msg_mtombzfb_a": {
+          "title": "You are here",
+          "segments": [
+            "Where am I ?",
+            "Voice: Keep going ...",
+            "Wait ... wait ... how ?",
+            "Use AWSD and E to activate shits ... ready? Never mind you are ready, you will never be ready anyway ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "First Sign": {
+      "id": "dlg_mtomi0j6_g",
+      "name": "First Sign",
+      "root": "msg_mtomi0j6_f",
+      "messages": {
+        "msg_mtomi0j6_f": {
+          "title": "SAFE PLACE",
+          "segments": [
+            "Is this the SAVE PLACE that you promise me ?",
+            "Don't look safe, but kind-a familiar ? This is not the first time I'm here ...",
+            "Why does everything here remind me of ... her?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "You lost": {
+      "id": "dlg_mton1hnd_k",
+      "name": "You lost",
+      "root": "msg_mton1hnd_j",
+      "messages": {
+        "msg_mton1hnd_j": {
+          "title": "Hey",
+          "segments": [
+            "Not this way, dummy!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire": {
+      "id": "dlg_mtooike6_1f",
+      "name": "Campfire",
+      "root": "msg_mtooike6_1e",
+      "messages": {
+        "msg_mtooike6_1e": {
+          "title": "Silence",
+          "segments": [
+            "Voice: You're quiet",
+            "I don't know what to say either ...",
+            "So I'll just stay here",
+            "Voice: Sometimes not talking feels louder than talking ",
+            "Voice: Still here ?",
+            "Voice: Good"
+          ],
+          "options": [],
+          "meta": {
+            "memory": "1"
+          }
+        }
+      }
+    },
+    "Bookshelf 0": {
+      "id": "dlg_mtoon4r9_1j",
+      "name": "Bookshelf 0",
+      "root": "msg_mtoon4r9_1i",
+      "messages": {
+        "msg_mtoon4r9_1i": {
+          "title": "Start",
+          "segments": [
+            "Found some books: \"A guide to getting lost\", \"Things I should have said\", \"The book of small things\", \"How to find someone\", \"An empty book\", \"Olives\", \"Dreams\""
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtoozas0_1o": {
+          "title": "A guide to getting lost",
+          "segments": [
+            "Chapter 1",
+            "Go forward ...",
+            "Chapter 2",
+            "You are still going forward ...",
+            "Chapter 3",
+            "You have been here before ...",
+            "Chapter 4",
+            "You just didn't notice"
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtop298s_1s": {
+          "title": "Book of small things",
+          "segments": [
+            "There are things you remember because they mattered",
+            "And there are things that mattered because you remembered them",
+            "Sometime you don't know which came first"
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtop55o3_1w": {
+          "title": "Book about Olives",
+          "segments": [
+            "Olives",
+            "Green",
+            "Apparently thirty is reasonable",
+            "It isn't",
+            "She disagrees ..."
+          ],
+          "options": [],
+          "meta": {}
+        },
+        "msg_mtuhlh8h_1": {
+          "title": "Message",
+          "segments": [
+            ""
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Bookshelf 1": {
+      "id": "dlg_mtoq2vsg_3",
+      "name": "Bookshelf 1",
+      "root": "msg_mtoq2vsg_2",
+      "messages": {
+        "msg_mtoq2vsg_2": {
+          "title": "Pet Giraffe",
+          "segments": [
+            "A tiny stuffed giraffe found",
+            "Soft",
+            "Why do I recognize this ?",
+            "Sweet dreams, potato giraffe ..."
+          ],
+          "options": [],
+          "meta": {
+            "item": "giraffe"
+          }
+        }
+      }
+    },
+    "Note 00": {
+      "id": "dlg_mtoq723s_7",
+      "name": "Note 00",
+      "root": "msg_mtoq723s_6",
+      "messages": {
+        "msg_mtoq723s_6": {
+          "title": "Note",
+          "segments": [
+            "Voice: Do you know where you are?",
+            "Voice: Neither do I",
+            "Voice: Maybe that's okay?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Bookshelf 2": {
+      "id": "dlg_mtoq9k8g_b",
+      "name": "Bookshelf 2",
+      "root": "msg_mtoq9k8g_a",
+      "messages": {
+        "msg_mtoq9k8g_a": {
+          "title": "Book: How to find someone?",
+          "segments": [
+            "Look for them",
+            "Look harder ...",
+            "Look somewhere else ...",
+            "They're probably closer than you think "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Empty Chest": {
+      "id": "dlg_mtoqgmst_f",
+      "name": "Empty Chest",
+      "root": "msg_mtoqgmst_e",
+      "messages": {
+        "msg_mtoqgmst_e": {
+          "title": "Chest",
+          "segments": [
+            "Voice: You expected something ?",
+            "Voice: You still do ...",
+            "Voice: Nothing "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 01": {
+      "id": "dlg_mtoqjn5v_j",
+      "name": "Note 01",
+      "root": "msg_mtoqjn5v_i",
+      "messages": {
+        "msg_mtoqjn5v_i": {
+          "title": "Note",
+          "segments": [
+            "Everything reminds me of her"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Bookshelf 3": {
+      "id": "dlg_mtoql23p_n",
+      "name": "Bookshelf 3",
+      "root": "msg_mtoql23p_m",
+      "messages": {
+        "msg_mtoql23p_m": {
+          "title": "Book: The things I notice",
+          "segments": [
+            "The way you disappear into work...",
+            "The way you pretend you're fine",
+            "The stupid things you send me",
+            "The things you don't say",
+            "The things you think I don't notice ",
+            "I notice.",
+            "End of book"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 03": {
+      "id": "dlg_mtoqnys8_r",
+      "name": "Note 03",
+      "root": "msg_mtoqnys8_q",
+      "messages": {
+        "msg_mtoqnys8_q": {
+          "title": "Note",
+          "segments": [
+            "Voice: You know ...",
+            "Voice: You don't have to find me",
+            "Voice: I'm always around",
+            "Voice: Always nearby, even when you don't see me",
+            "Voice: But you should probably keep looking ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Campfire 4": {
+      "id": "dlg_mtoqwwca_v",
+      "name": "Campfire 4",
+      "root": "msg_mtoqwwca_u",
+      "messages": {
+        "msg_mtoqwwca_u": {
+          "title": "Campfire",
+          "segments": [
+            "You're quite",
+            "I don't know what to say either.",
+            "So I'll just stay here ? "
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 04": {
+      "id": "dlg_mtoqzbmc_z",
+      "name": "Note 04",
+      "root": "msg_mtoqzbmc_y",
+      "messages": {
+        "msg_mtoqzbmc_y": {
+          "title": "Note",
+          "segments": [
+            "I'm thinking about it",
+            "Voice: You should think about me instead...",
+            "I'm fucking trying"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note": {
+      "id": "dlg_mtor0i4f_13",
+      "name": "Note",
+      "root": "msg_mtor0i4f_12",
+      "messages": {
+        "msg_mtor0i4f_12": {
+          "title": "Note",
+          "segments": [
+            "Voice: You make my brain melt",
+            "You make me want to be a better person",
+            "Just to impress you",
+            "Voice: Are you hitting on me?",
+            "Are you falling for it",
+            "Voice: I am.",
+            "...",
+            "Voice: Kinda hard."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 1": {
+      "id": "dlg_mtor3jbb_17",
+      "name": "Note 1",
+      "root": "msg_mtor3jbb_16",
+      "messages": {
+        "msg_mtor3jbb_16": {
+          "title": "Note",
+          "segments": [
+            "Voice: Miss you a lottle.",
+            "A what?",
+            "Voice: A little but a lot",
+            "That's not a word !",
+            "Voice: It is now."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 2": {
+      "id": "dlg_mtor5nx6_1b",
+      "name": "Note 2",
+      "root": "msg_mtor5nx6_1a",
+      "messages": {
+        "msg_mtor5nx6_1a": {
+          "title": "Note",
+          "segments": [
+            "Sometimes I dream about it",
+            "Voice: Wish it was us?",
+            "Maybe in another dimension?",
+            "Voice: Should've been this one"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 3": {
+      "id": "dlg_mtor83gk_1f",
+      "name": "Note 3",
+      "root": "msg_mtor83gk_1e",
+      "messages": {
+        "msg_mtor83gk_1e": {
+          "title": "Note",
+          "segments": [
+            "Voice: If you ever get lost ... ",
+            "Voice: You know where to find me ...",
+            "You mean ... ?",
+            "Voice: You have my pigeon, Batman !",
+            "Right ... ",
+            "Voice: You know how to get to me ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 06": {
+      "id": "dlg_mtorag3r_1j",
+      "name": "Note 06",
+      "root": "msg_mtorag3r_1i",
+      "messages": {
+        "msg_mtorag3r_1i": {
+          "title": "Note",
+          "segments": [
+            "I can't find you",
+            "Voice: You don't have to",
+            "Then where are you",
+            "Voice: Around ",
+            "Voice: ... you don't see me ?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Book: Everything": {
+      "id": "dlg_mtord2tx_1n",
+      "name": "Book: Everything",
+      "root": "msg_mtord2tx_1m",
+      "messages": {
+        "msg_mtord2tx_1m": {
+          "title": "Book: Everything",
+          "segments": [
+            "First page: Everything reminds me of you",
+            "A stupid picture ...",
+            "A stupid joke ...",
+            "Something you said three weeks ago, an olive, a giraffe, a magnet",
+            "Last page: This is getting ridiculous!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Magnet": {
+      "id": "dlg_mtorg8k9_1r",
+      "name": "Magnet",
+      "root": "msg_mtorg8k9_1q",
+      "messages": {
+        "msg_mtorg8k9_1q": {
+          "title": "Found a magnet",
+          "segments": [
+            "You were supposed to bring this ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Coffee": {
+      "id": "dlg_mtorh2ih_1v",
+      "name": "Coffee",
+      "root": "msg_mtorh2ih_1u",
+      "messages": {
+        "msg_mtorh2ih_1u": {
+          "title": "Found Coffee ",
+          "segments": [
+            "Before everything else"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Tiny Bear": {
+      "id": "dlg_mtorhu8r_1z",
+      "name": "Tiny Bear",
+      "root": "msg_mtorhu8r_1y",
+      "messages": {
+        "msg_mtorhu8r_1y": {
+          "title": "Found Tiny Bear",
+          "segments": [
+            "You found a tiny bear, sweet dreams ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Final": {
+      "id": "dlg_mtorjeem_23",
+      "name": "Final",
+      "root": "msg_mtorjeem_22",
+      "messages": {
+        "msg_mtorjeem_22": {
+          "title": "You already won",
+          "segments": [
+            "Voice: Still here?",
+            "Voice: You know ...",
+            "Voice: You already won",
+            "What did I win ?",
+            "Voice: Me being here",
+            "Don't make it weird!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Note 4": {
+      "id": "dlg_mtorl72u_27",
+      "name": "Note 4",
+      "root": "msg_mtorl72u_26",
+      "messages": {
+        "msg_mtorl72u_26": {
+          "title": "Note",
+          "segments": [
+            "Do you ever dream about us ?",
+            "Voice: Sometimes",
+            "What happens? ",
+            "Voice: We find each other ...",
+            "That's convenient.",
+            "Voice: We chase each other through the universes ",
+            "Better ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "End": {
+      "id": "dlg_mtorxbq3_2b",
+      "name": "End",
+      "root": "msg_mtorxbq3_2a",
+      "messages": {
+        "msg_mtorxbq3_2a": {
+          "title": "End",
+          "segments": [
+            "There was once a place where nothing grew. Only water, bones, and things nobody came back for. He walked until the rooms began to repeat.",
+            "A word, a joke, an olive, a memory, he kept searching for the things waiting at the end...",
+            "... but there was no door, no answer, no one waiting, only the swamp, only the dead.",
+            "And behind him, a small fire still burning ... He finally understood.",
+            "Nothing had been waiting for him at the end. Everything had been waiting for him along the way. So he stopped searching.",
+            "And listened to the fire. It was the only thing in the dungeon that was still alive."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 1": {
+      "id": "dlg_mtslnnkc_3",
+      "name": "Olive 1",
+      "root": "msg_mtslnnkc_2",
+      "messages": {
+        "msg_mtslnnkc_2": {
+          "title": "Olive",
+          "segments": [
+            "An olive.",
+            "You have no idea why you’re collecting these."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 2": {
+      "id": "dlg_mtsltedy_9",
+      "name": "Olive 2",
+      "root": "msg_mtsltedy_8",
+      "messages": {
+        "msg_mtsltedy_8": {
+          "title": "Olive",
+          "segments": [
+            "Another one.",
+            "This is starting to feel deliberate."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 3": {
+      "id": "dlg_mtslu14k_d",
+      "name": "Olive 3",
+      "root": "msg_mtslu14k_c",
+      "messages": {
+        "msg_mtslu14k_c": {
+          "title": "Olive",
+          "segments": [
+            "Three olives.",
+            "Apparently this is how a bond begins."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 4": {
+      "id": "dlg_mtslurso_h",
+      "name": "Olive 4",
+      "root": "msg_mtslurso_g",
+      "messages": {
+        "msg_mtslurso_g": {
+          "title": "Olive",
+          "segments": [
+            "You remember her saying she liked that you liked olives.",
+            "You remember thinking that was a ridiculous thing to remember."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 5": {
+      "id": "dlg_mtslvnee_l",
+      "name": "Olive 5",
+      "root": "msg_mtslvnee_k",
+      "messages": {
+        "msg_mtslvnee_k": {
+          "title": "Olive",
+          "segments": [
+            "At some point, you stopped asking why."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 6": {
+      "id": "dlg_mtslw708_p",
+      "name": "Olive 6",
+      "root": "msg_mtslw708_o",
+      "messages": {
+        "msg_mtslw708_o": {
+          "title": "Olive",
+          "segments": [
+            "She once said thirty was a reasonable amount.",
+            "You don’t remember what she was talking about."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive 7": {
+      "id": "dlg_mtslwv7g_t",
+      "name": "Olive 7",
+      "root": "msg_mtslwv7g_s",
+      "messages": {
+        "msg_mtslwv7g_s": {
+          "title": "Olive",
+          "segments": [
+            "You find yourself counting them.",
+            "You don’t remember when you started."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive next to skeleton ": {
+      "id": "dlg_mtslxg4h_x",
+      "name": "Olive next to skeleton ",
+      "root": "msg_mtslxg4h_w",
+      "messages": {
+        "msg_mtslxg4h_w": {
+          "title": "Olive",
+          "segments": [
+            "An olive sits beside an old skeleton.",
+            "Neither of them seems particularly concerned about being here."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - almost mist": {
+      "id": "dlg_mtsly62r_11",
+      "name": "Olive - almost mist",
+      "root": "msg_mtsly62r_10",
+      "messages": {
+        "msg_mtsly62r_10": {
+          "title": "Olive",
+          "segments": [
+            "You almost leave this one behind.",
+            "Then you think about how she always noticed the small things."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - 10 of them": {
+      "id": "dlg_mtslz735_15",
+      "name": "Olive - 10 of them",
+      "root": "msg_mtslz735_14",
+      "messages": {
+        "msg_mtslz735_14": {
+          "title": "Olive",
+          "segments": [
+            "A completely unreasonable amount of olives."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - reminder": {
+      "id": "dlg_mtsm07e4_19",
+      "name": "Olive - reminder",
+      "root": "msg_mtsm07e4_18",
+      "messages": {
+        "msg_mtsm07e4_18": {
+          "title": "Olive",
+          "segments": [
+            "She liked when you told her about ordinary things.",
+            "What you ate. What annoyed you. What happened that day."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - in the middle of the room": {
+      "id": "dlg_mtsm1066_1d",
+      "name": "Olive - in the middle of the room",
+      "root": "msg_mtsm1066_1c",
+      "messages": {
+        "msg_mtsm1066_1c": {
+          "title": "Olive",
+          "segments": [
+            "An olive in the middle of an empty room.",
+            "You expected someone to be here."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - to remember": {
+      "id": "dlg_mtsm1tu1_1h",
+      "name": "Olive - to remember",
+      "root": "msg_mtsm1tu1_1g",
+      "messages": {
+        "msg_mtsm1tu1_1g": {
+          "title": "Olive",
+          "segments": [
+            "You remember her saying that everything reminded her of you.",
+            "You didn’t understand how dangerous that sentence would become.",
+            "... look an olive"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - warm ": {
+      "id": "dlg_mtsm2u10_1l",
+      "name": "Olive - warm ",
+      "root": "msg_mtsm2u10_1k",
+      "messages": {
+        "msg_mtsm2u10_1k": {
+          "title": "Olive",
+          "segments": [
+            "The olive is warm.",
+            "You don’t remember it being warm."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - ghost": {
+      "id": "dlg_mtsm3ihl_1p",
+      "name": "Olive - ghost",
+      "root": "msg_mtsm3ihl_1o",
+      "messages": {
+        "msg_mtsm3ihl_1o": {
+          "title": "Olive",
+          "segments": [
+            "For a moment, you think you hear her laugh.",
+            "There is nobody here.",
+            "... oh except the rat ... Sorry Mickey!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - 20": {
+      "id": "dlg_mtsm458w_1t",
+      "name": "Olive - 20",
+      "root": "msg_mtsm458w_1s",
+      "messages": {
+        "msg_mtsm458w_1s": {
+          "title": "Start",
+          "segments": [
+            "Twenty olives.",
+            "You have crossed the point where this is a joke."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - get lost": {
+      "id": "dlg_mtsm4vly_1x",
+      "name": "Olive - get lost",
+      "root": "msg_mtsm4vly_1w",
+      "messages": {
+        "msg_mtsm4vly_1w": {
+          "title": "Olive ",
+          "segments": [
+            "She once told you that if you got lost, you knew where to find her.",
+            "You wonder if that works both ways.",
+            "How olives works ?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - empty room door": {
+      "id": "dlg_mtsm5w3s_21",
+      "name": "Olive - empty room door",
+      "root": "msg_mtsm5w3s_20",
+      "messages": {
+        "msg_mtsm5w3s_20": {
+          "title": "Olive",
+          "segments": [
+            "You find an olive beside a door that leads nowhere.",
+            "Some things were never meant to open."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - want to stop": {
+      "id": "dlg_mtsm72mp_25",
+      "name": "Olive - want to stop",
+      "root": "msg_mtsm72mp_24",
+      "messages": {
+        "msg_mtsm72mp_24": {
+          "title": "Olive",
+          "segments": [
+            "You suddenly don’t want to find them.",
+            "What happen when all of them are found ?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - hope ": {
+      "id": "dlg_mtsm7vqw_29",
+      "name": "Olive - hope ",
+      "root": "msg_mtsm7vqw_28",
+      "messages": {
+        "msg_mtsm7vqw_28": {
+          "title": "Olive",
+          "segments": [
+            "You pick up the olive.",
+            "For a second, the dungeon feels less empty."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - not about them": {
+      "id": "dlg_mtsm8ho8_2d",
+      "name": "Olive - not about them",
+      "root": "msg_mtsm8ho8_2c",
+      "messages": {
+        "msg_mtsm8ho8_2c": {
+          "title": "Olive ",
+          "segments": [
+            "You finally understand why you kept looking.",
+            "It was never about the olives."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - the last one is close": {
+      "id": "dlg_mtsm96o9_2h",
+      "name": "Olive - the last one is close",
+      "root": "msg_mtsm96o9_2g",
+      "messages": {
+        "msg_mtsm96o9_2g": {
+          "title": "Olive",
+          "segments": [
+            "Where is the last one ?",
+            "You already know where it is right ?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - last one": {
+      "id": "dlg_mtsma4mm_2l",
+      "name": "Olive - last one",
+      "root": "msg_mtsma4mm_2k",
+      "messages": {
+        "msg_mtsma4mm_2k": {
+          "title": "Olive",
+          "segments": [
+            "The last olive is waiting beside the fire.",
+            "You pick it up.",
+            "Nothing happens.",
+            "And somehow, that hurts more than if something had."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - part of her": {
+      "id": "dlg_mtsmtd69_2p",
+      "name": "Olive - part of her",
+      "root": "msg_mtsmtd69_2o",
+      "messages": {
+        "msg_mtsmtd69_2o": {
+          "title": "Olive",
+          "segments": [
+            "Now even an olive feels like a piece of her."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - small one": {
+      "id": "dlg_mtsmy7qb_35",
+      "name": "Olive - small one",
+      "root": "msg_mtsmy7qb_34",
+      "messages": {
+        "msg_mtsmy7qb_34": {
+          "title": "Olive ",
+          "segments": [
+            "The olive is small enough to disappear in your palm.",
+            "Somehow, you don’t want to let it go."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - holding": {
+      "id": "dlg_mtsmvb26_2x",
+      "name": "Olive - holding",
+      "root": "msg_mtsmvb26_2w",
+      "messages": {
+        "msg_mtsmvb26_2w": {
+          "title": "Olive",
+          "segments": [
+            "You close your hand around the olive.",
+            "For a moment, it almost feels like holding onto her."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - memmory": {
+      "id": "dlg_mtsmwmks_31",
+      "name": "Olive - memmory",
+      "root": "msg_mtsmwmks_30",
+      "messages": {
+        "msg_mtsmwmks_30": {
+          "title": "Olive",
+          "segments": [
+            "She once told you that everything could become a memory.",
+            "You didn’t believe her.",
+            "Now you collect olives - you are that kind of person now!"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - not a treasure ": {
+      "id": "dlg_mtsmzasg_39",
+      "name": "Olive - not a treasure ",
+      "root": "msg_mtsmzasg_38",
+      "messages": {
+        "msg_mtsmzasg_38": {
+          "title": "Olive",
+          "segments": [
+            "You look around the room.",
+            "For the first time, you aren’t searching for treasure."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive and the love": {
+      "id": "dlg_mtsn0uer_3d",
+      "name": "Olive and the love",
+      "root": "msg_mtsn0uer_3c",
+      "messages": {
+        "msg_mtsn0uer_3c": {
+          "title": "Olive ",
+          "segments": [
+            "Maybe love is remembering things that should have been forgettable."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - too much ?": {
+      "id": "dlg_mtsn1xxf_3h",
+      "name": "Olive - too much ?",
+      "root": "msg_mtsn1xxf_3g",
+      "messages": {
+        "msg_mtsn1xxf_3g": {
+          "title": "Olive",
+          "segments": [
+            "You wonder if she would still call thirty olives unreasonable.",
+            "You suspect she would."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - tease": {
+      "id": "dlg_mtsn304e_3l",
+      "name": "Olive - tease",
+      "root": "msg_mtsn304e_3k",
+      "messages": {
+        "msg_mtsn304e_3k": {
+          "title": "Olive",
+          "segments": [
+            "You remember her teasing you about olives.",
+            "You remember smiling."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - pick up": {
+      "id": "dlg_mtsn4ael_3p",
+      "name": "Olive - pick up",
+      "root": "msg_mtsn4ael_3o",
+      "messages": {
+        "msg_mtsn4ael_3o": {
+          "title": "Olive",
+          "segments": [
+            "You pick up the olive carefully.",
+            "For some reason, it feels like something that belongs to her."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Olive - remember": {
+      "id": "dlg_mtsn5lha_3t",
+      "name": "Olive - remember",
+      "root": "msg_mtsn5lha_3s",
+      "messages": {
+        "msg_mtsn5lha_3s": {
+          "title": "Olive",
+          "segments": [
+            "You smile before you remember why.",
+            "Then you remember."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Goblin": {
+      "id": "dlg_mtssvmlb_1i",
+      "name": "Goblin",
+      "root": "msg_mtssvmlb_1h",
+      "messages": {
+        "msg_mtssvmlb_1h": {
+          "title": "Goblin",
+          "segments": [
+            "You came all this way for her.",
+            "Don’t bother lying.",
+            "I’ve seen that look before.",
+            "You remember the little things, don’t you? The things nobody else would remember.",
+            "The stupid jokes. The strange names. The things she liked because you liked them.",
+            "That’s how you know it was real. (looks toward the empty throne room.)",
+            "Not because it lasted.",
+            "Because you still remember.",
+            "That’s the cruel part. You can lose someone... and keep everything they left inside you.",
+            "So tell me. What exactly are you hoping to find at the end of this place? Her?",
+            "Or the version of you that existed when she was here?",
+            "But you can’t go back. You can only remember. I suppose that’s why I built this place.",
+            "A kingdom full of things that stayed. ",
+            "People are much harder to keep."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Skeleton": {
+      "id": "dlg_mtst4xec_1m",
+      "name": "Skeleton",
+      "root": "msg_mtst4xec_1l",
+      "messages": {
+        "msg_mtst4xec_1l": {
+          "title": "Skeleton",
+          "segments": [
+            "Oh. You.",
+            "I was hoping you wouldn’t come this far.",
+            "Not because you’re dangerous. You just look like the sort of person who is going to ask questions.",
+            "You: What are you doing here?",
+            "That’s a very good question.",
+            "Unfortunately, I’ve been trying to remember the answer for quite some time.",
+            "I think I was looking for something.",
+            "Or someone.",
+            "At some point I stopped being sure which one. (Looking around ...)",
+            "Then again, perhaps I was only looking for a way out. I don’t remember that either."
+          ],
+          "options": [
+            {
+              "label": "What question you have",
+              "target": "msg_mtujmn1b_9"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtstmjf9_1q": {
+          "title": "What were you looking for",
+          "segments": [
+            "I told you. Something.",
+            "Very useful, I know.",
+            "I remember walking for a long time. There were doors, rooms, corridors…",
+            "Every time I found something, I thought it was the thing I had come for.",
+            "You: And was it?",
+            "No. Usually it was a chair. Or a rusty sword. Once I walked three rooms because I thought I smelled bread. It was a rat.",
+            "I don’t even remember what I was hoping to find anymore. That’s the part that bothers me. Not that I failed. That I can’t remember what winning would have looked like."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujmn1b_9"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtstq1t9_1u": {
+          "title": "Someone",
+          "segments": [
+            "Did I?",
+            "You: Yes.",
+            "Hmph.",
+            "Then I suppose I meant someone.",
+            "There was someone. I remember that much. I remember wanting to find them.",
+            "I remember thinking that if I just kept walking, eventually I’d reach them.",
+            "Look at me. What do you think? I don’t even remember their face anymore. ",
+            "But I remember that I missed them. Funny thing, memory. Sometimes it takes the person and leaves you with the feeling."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujmn1b_9"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtstt9g9_1y": {
+          "title": "Why are you still here",
+          "segments": [
+            "Because apparently I have terrible judgment.",
+            "I could have left. Probably. I think there was a way out somewhere behind me.",
+            "I have been dead for a while. You’ll have to forgive me if my memory isn’t perfect. The strange thing is, I remember wanting to leave.",
+            "I just don’t remember why I stayed. Maybe I thought they would come looking for me. Or maybe I was afraid that if I left, they wouldn’t know where to find me. "
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujmn1b_9"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtujmn1b_9": {
+          "title": "Message",
+          "segments": [
+            "What other questions you have ?"
+          ],
+          "options": [
+            {
+              "label": "What were you looking for ?",
+              "target": "msg_mtstmjf9_1q"
+            },
+            {
+              "label": "Someone? ",
+              "target": "msg_mtstq1t9_1u"
+            },
+            {
+              "label": "Why are you still here ?",
+              "target": "msg_mtstt9g9_1y"
+            },
+            {
+              "label": "Go away (Quit)",
+              "target": null
+            }
+          ],
+          "meta": {}
+        }
+      }
+    },
+    "SecretDoor": {
+      "id": "dlg_mtt5iv1i_t",
+      "name": "SecretDoor",
+      "root": "msg_mtt5iv1i_s",
+      "messages": {
+        "msg_mtt5iv1i_s": {
+          "title": "Strange",
+          "segments": [
+            "Strange I feel some wind ...",
+            "The shelf start to move ..."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "King": {
+      "id": "dlg_mtujs2a5_l",
+      "name": "King",
+      "root": "msg_mtujs2a5_k",
+      "messages": {
+        "msg_mtujs2a5_k": {
+          "title": "The King",
+          "segments": [
+            "You're late ",
+            "Don't look so surprised ",
+            "Everyone is late when they finally get here."
+          ],
+          "options": [
+            {
+              "label": "What are you ?",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtujtw50_p": {
+          "title": "Ask me",
+          "segments": [
+            "I'm here to answer ..."
+          ],
+          "options": [
+            {
+              "label": "Who are you ?",
+              "target": "msg_mtujuqih_t"
+            },
+            {
+              "label": "What is this place ?",
+              "target": "msg_mtujwp9p_z"
+            },
+            {
+              "label": "Why are you here ?",
+              "target": "msg_mtujydsr_15"
+            },
+            {
+              "label": "The vampires of time",
+              "target": "msg_mtuk0fi8_1b"
+            },
+            {
+              "label": "OptionWhy does everything remind me of her?",
+              "target": "msg_mtuk4hxx_1h"
+            },
+            {
+              "label": "Is she here?",
+              "target": "msg_mtuk7gna_1n"
+            },
+            {
+              "label": "He came here",
+              "target": "msg_mtuk9ipz_1t"
+            },
+            {
+              "label": "I miss her.",
+              "target": "msg_mtukcj15_1z"
+            },
+            {
+              "label": "Then why did I come here?",
+              "target": "msg_mtukfhjc_25"
+            },
+            {
+              "label": "End",
+              "target": "msg_mtukhywe_2b"
+            },
+            {
+              "label": "Time to go",
+              "target": null
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtujuqih_t": {
+          "title": "Who are you?",
+          "segments": [
+            "You: Who are you ?",
+            "Nobody important",
+            "That’s usually what people ask when they’ve reached the end of somewhere.",
+            "They expect a king. A demon. A treasure. Something with enough teeth to make the journey feel worthwhile. Instead, you got me. Terrible ending, isn’t it?"
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtujwp9p_z": {
+          "title": "What is this place ?",
+          "segments": [
+            "The part you weren’t supposed to reach.",
+            "The rooms behind the rooms.",
+            "The things left behind after memories have eaten everything useful.",
+            "You called it a dungeon because that made it easier to walk through.",
+            "People like names.",
+            "Names make terrible things feel organized."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtujydsr_15": {
+          "title": "Why are you here ?",
+          "segments": [
+            "Because somebody has to clean up.",
+            "You: Clean up what?",
+            "Time.",
+            "Memory.",
+            "Regret.",
+            "All the little pieces people refuse to throw away.",
+            "Mostly memory. Memory is disgusting. It never knows when to die."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtuk0fi8_1b": {
+          "title": "The Vampires of Time",
+          "segments": [
+            "You: What do you mean by time?",
+            "Time is hungry.",
+            "It eats everything.",
+            "Faces.",
+            "Voices.",
+            "Places.",
+            "The exact sound someone made when they laughed.",
+            "The things you thought you’d never forget.",
+            "Eventually, time comes for all of it.",
+            "But there are things that refuse to be eaten.",
+            "You: Like what?",
+            "Memories. ",
+            "Little parasites. They hide inside you and wait. Then, years later, something stupid happens. An olive. A stupid joke. A smell. A place. And suddenly they've awake",
+            "That’s when the vampires of time have already lost."
+          ],
+          "options": [
+            {
+              "label": "Back ",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtuk4hxx_1h": {
+          "title": "Why does everything remind me of her?",
+          "segments": [
+            "Because you let her in.",
+            "You: What does that mean?",
+            "You gave ordinary things meaning.",
+            "You let them become yours.",
+            "Then hers.",
+            "Then both.",
+            "Now you can’t tell where one ends and the other begins.",
+            "That’s the price.",
+            "You: What price?",
+            "Caring. You people always want the good part. The laughing. The stupid little things. The feeling that someone somewhere understands you. Nobody tells you about the fucking archaeology afterward."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtuk7gna_1n": {
+          "title": "Is she here?",
+          "segments": [
+            "That’s not the right question.",
+            "You: Then what is?",
+            "Why are you still looking? You’ve been carrying her through this entire place.",
+            "Every room. Every stupid little object. Every word you remembered.",
+            "And you still came looking for her. You really are terrible at letting things stay where they happened."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtuk9ipz_1t": {
+          "title": "He came here",
+          "segments": [
+            "No",
+            "You brought him here.",
+            "He walks because you tell him where to go.",
+            "He opens the doors because you make him curious.",
+            "He picks up the little things because you want to know what they mean.",
+            "You thought you were searching for her.",
+            "You’ve been searching through him.",
+            "That’s rather cruel.",
+            "Making someone walk through everything you remember."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtukcj15_1z": {
+          "title": "I miss her.",
+          "segments": [
+            "I know.",
+            "You: How?",
+            "You built a fucking dungeon about it.",
+            "What else was I supposed to think?",
+            "You: I don’t know what to do with it.",
+            "Nothing.",
+            "You don’t have to solve missing someone. You don’t have to defeat it. You don’t have to turn it into something beautiful. Sometimes you just miss them.",
+            "And it hurts. Then it hurts less. Then one day something reminds you again. And it hurts a little. That’s memory. It doesn’t need your permission."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtukfhjc_25": {
+          "title": "Then why did I come here?",
+          "segments": [
+            "Because you wanted an ending.",
+            "You: Isn’t there one?",
+            "Look around.",
+            "This is what endings look like.",
+            "Unremarkable.",
+            "A little ugly. Mostly empty. No Music. No grand revelation. Just the thing you were  carrying… and the moment you finally realize you’re still carrying it."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        },
+        "msg_mtukhywe_2b": {
+          "title": "End",
+          "segments": [
+            "You: What am I supposed to do now?",
+            "You?",
+            "Nothing.",
+            "For once, stop making him walk. You’ve been looking for her in every room.",
+            "In the books. In the fire. In the little things. In the things you almost forgot. You found her everywhere.",
+            "Except where you wanted her to be. That’s the part you hate. Not that she disappeared. That she didn’t disappear completely. ",
+            "If she had…",
+            "…this place wouldn’t exist.",
+            "Go. Take him with you. You've kept him here long enough.",
+            "And stop looking behind you. There is nothing there.",
+            "Except everything you remember."
+          ],
+          "options": [
+            {
+              "label": "Back",
+              "target": "msg_mtujtw50_p"
+            }
+          ],
+          "meta": {}
+        }
+      }
+    },
+    "LockDoor": {
+      "id": "dlg_mtv6w3h3_3",
+      "name": "LockDoor",
+      "root": "msg_mtv6w3h3_2",
+      "messages": {
+        "msg_mtv6w3h3_2": {
+          "title": "Locked",
+          "segments": [
+            "It seems this door is locked"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    }
+  }
+}

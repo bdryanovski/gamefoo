@@ -1,14 +1,14 @@
 ---
-title: 'Interface: GridCell<T>'
+title: 'Interface: GridCell<T = `number`>'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
 [@dryanovski/gamefoo](../README.md) / GridCell
 
-# Interface: GridCell\<T\>
+# Interface: GridCell\<T = `number`\>
 
 Defined in: [core/grid/grid\_types.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L54)
 
@@ -32,6 +32,8 @@ const cell: GridCell<number> = {
   walkable: true,
 };
 ```
+
+**Custom cell data**
 
 ```ts
 interface TerrainData {
@@ -57,7 +59,7 @@ const cell: GridCell<TerrainData> = {
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="col"></a> `col` | `number` | Zero-based column index (horizontal). | [core/grid/grid\_types.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L56) |
-| <a id="row"></a> `row` | `number` | Zero-based row index (vertical). | [core/grid/grid\_types.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L58) |
-| <a id="value"></a> `value` | `T` | User-defined payload for this cell. | [core/grid/grid\_types.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L60) |
-| <a id="walkable"></a> `walkable` | `boolean` | Whether entities can traverse this cell. Used by pathfinding. | [core/grid/grid\_types.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L62) |
+| <a id="col"></a> `col` | `number` | Zero-based column index (horizontal). | [core/grid/grid\_types.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L58) |
+| <a id="row"></a> `row` | `number` | Zero-based row index (vertical). | [core/grid/grid\_types.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L62) |
+| <a id="value"></a> `value` | `T` | User-defined payload for this cell. | [core/grid/grid\_types.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L66) |
+| <a id="walkable"></a> `walkable` | `boolean` | Whether entities can traverse this cell. Used by pathfinding. | [core/grid/grid\_types.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/grid_types.ts#L70) |

@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "animated_props.png",
+    "imageWidth": 176,
+    "imageHeight": 128,
+    "exportedAt": "2026-09-01T15:32:22.642Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "torch": 0,
+    "torch_1": 1,
+    "torch_2": 2,
+    "torch_3": 3,
+    "fire": 44,
+    "fire_1": 45,
+    "fire_2": 46,
+    "fire_3": 47,
+    "ork": 18,
+    "ork_1": 19,
+    "lanter": 20,
+    "sprite_10_1": 21
+  },
+  "animations": {
+    "anim_0": {
+      "frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "fire": {
+      "frames": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Ork": {
+      "frames": [
+        18,
+        19
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Lanter": {
+      "frames": [
+        20,
+        21
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  }
+}

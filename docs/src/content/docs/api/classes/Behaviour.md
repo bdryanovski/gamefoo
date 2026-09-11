@@ -1,14 +1,14 @@
 ---
-title: 'Abstract Class: Behaviour<T>'
+title: 'Abstract Class: Behaviour<T extends [`Entity`](Entity.md) = [`Entity`](Entity.md)>'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
 [@dryanovski/gamefoo](../README.md) / Behaviour
 
-# Abstract Class: Behaviour\<T\>
+# Abstract Class: Behaviour\<T *extends* [`Entity`](Entity.md) = [`Entity`](Entity.md)\>
 
 Defined in: [core/behaviour.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L52)
 
@@ -36,6 +36,8 @@ Subclasses **may** override:
 
 ## Examples
 
+**Creating a custom behaviour**
+
 ```ts
 import { Behaviour, type Entity } from "gamefoo";
 
@@ -47,6 +49,8 @@ class Gravity extends Behaviour<Entity> {
   }
 }
 ```
+
+**Attaching to an entity**
 
 ```ts
 const entity = new Player("hero", 100, 100, 32, 32);
@@ -65,7 +69,6 @@ entity.attachBehaviour(new Gravity(entity));
 - [`HealthKit`](HealthKit.md)
 - [`PathFollower`](PathFollower.md)
 - [`SpriteRender`](SpriteRender.md)
-- [`TerminalRender`](TerminalRender.md)
 
 ## Type Parameters
 
@@ -78,7 +81,7 @@ entity.attachBehaviour(new Gravity(entity));
 ### Constructor
 
 ```ts
-new Behaviour<T>(owner: T): Behaviour<T>;
+new Behaviour<T extends Entity = Entity>(owner: T): Behaviour<T>;
 ```
 
 Defined in: [core/behaviour.ts:111](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L111)
@@ -197,7 +200,7 @@ optional render(ctx: RenderContext): void;
 Defined in: [core/behaviour.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L146)
 
 Optional rendering hook invoked after the entity's own
-[Entity.render](Entity.md#render) call.
+[Entity.render](DynamicEntity.md#render) call.
 
 Override this to draw debug shapes, health bars, status effects, etc.
 
@@ -224,7 +227,7 @@ Defined in: [core/behaviour.ts:136](https://github.com/bdryanovski/gamefoo/blob/
 Called once per frame to advance this behaviour's logic.
 
 Override in subclasses that need per-frame logic. Behaviours that
-are purely reactive (collision, health, terminal render) can omit
+are purely reactive (collision, health) can omit
 this — the default is a no-op.
 
 #### Parameters

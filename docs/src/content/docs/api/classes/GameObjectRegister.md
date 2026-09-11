@@ -2,7 +2,7 @@
 title: 'Class: GameObjectRegister'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -25,6 +25,8 @@ this register.
 
 ## Examples
 
+**Registering and retrieving objects**
+
 ```ts
 const register = new GameObjectRegister();
 
@@ -34,6 +36,8 @@ register.register(rock);
 const found = register.get("tree"); // Entity | undefined
 console.log(register.has("rock"));  // true
 ```
+
+**Bulk update / render**
 
 ```ts
 // Called internally by Engine each frame:
@@ -103,7 +107,7 @@ if (crate) crate.x += 10;
 getAll(filter?: (obj: GameObject) => boolean): GameObject[];
 ```
 
-Defined in: [core/game\_object\_register.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L116)
+Defined in: [core/game\_object\_register.ts:114](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L114)
 
 Returns all registered objects that pass the supplied filter.
 
@@ -188,9 +192,9 @@ register.register(new Crate("crate_1", 200, 150, 32, 32));
 renderAll(ctx: RenderContext): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L162)
+Defined in: [core/game\_object\_register.ts:160](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L160)
 
-Calls [render(ctx)](Entity.md#render) on every registered
+Calls [render(ctx)](DynamicEntity.md#render) on every registered
 object.
 
 #### Parameters
@@ -211,7 +215,7 @@ object.
 sort(compareFn: (a: GameObject, b: GameObject) => number): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:152](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L152)
+Defined in: [core/game\_object\_register.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L150)
 
 Sorts the internal object cache using the given comparator.
 
@@ -233,6 +237,8 @@ for isometric depth).
 0.4.0
 
 #### Example
+
+**Y-sort for isometric depth**
 
 ```ts
 register.sort((a, b) => a.y - b.y);
@@ -271,7 +277,7 @@ An array of all [GameObject](../type-aliases/GameObject.md) instances in the reg
 updateAll(deltaTime: number): void;
 ```
 
-Defined in: [core/game\_object\_register.ts:130](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L130)
+Defined in: [core/game\_object\_register.ts:128](https://github.com/bdryanovski/gamefoo/blob/main/src/core/game_object_register.ts#L128)
 
 Calls GameObject.update \| update(deltaTime) on every
 registered object.

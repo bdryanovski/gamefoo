@@ -2,7 +2,7 @@
 title: 'Class: PerlinNoise'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -29,12 +29,16 @@ seeded linear congruential generator (LCG) and Ken Perlin's improved
 
 ## Examples
 
+**Basic noise sampling**
+
 ```ts
 import { PerlinNoise } from "gamefoo";
 
 const noise = new PerlinNoise(42);
 const value = noise.noise2d(1.5, 2.3); // returns a value in [-1, 1]
 ```
+
+**Generating a heightmap with fBm**
 
 ```ts
 const noise = new PerlinNoise(12345);
@@ -47,6 +51,8 @@ for (let y = 0; y < 128; y++) {
   }
 }
 ```
+
+**Seeded reproducibility**
 
 ```ts
 const a = new PerlinNoise(7);
@@ -96,7 +102,8 @@ fbm(
    y: number, 
    octaves?: number, 
    lacunarity?: number, 
-   persistence?: number): number;
+   persistence?: number
+): number;
 ```
 
 Defined in: [core/utils/perlin\_noise.ts:185](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L185)
@@ -150,7 +157,7 @@ const height = noise.fbm(x * 0.01, y * 0.01, 6, 2.0, 0.5);
 noise2d(x: number, y: number): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:136](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L136)
+Defined in: [core/utils/perlin\_noise.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L140)
 
 Samples 2-D Perlin noise at the given coordinates.
 
@@ -182,7 +189,7 @@ const n = noise.noise2d(0.5, 0.5);
 private fade(t: number): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L84)
+Defined in: [core/utils/perlin\_noise.ts:88](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L88)
 
 **`Internal`**
 
@@ -209,10 +216,11 @@ Smoothed value in `[0, 1]`.
 private grad(
    hash: number, 
    x: number, 
-   y: number): number;
+   y: number
+): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:116](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L116)
+Defined in: [core/utils/perlin\_noise.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L120)
 
 **`Internal`**
 
@@ -244,10 +252,11 @@ Dot product of the gradient and offset vectors.
 private lerp(
    a: number, 
    b: number, 
-   t: number): number;
+   t: number
+): number;
 ```
 
-Defined in: [core/utils/perlin\_noise.ts:98](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L98)
+Defined in: [core/utils/perlin\_noise.ts:102](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/perlin_noise.ts#L102)
 
 **`Internal`**
 

@@ -31,26 +31,14 @@ import type Entity from './entities/entity';
  * ```
  */
 export interface Vector2 {
-  /** Horizontal component (increases rightward). */
+  /**
+   * Horizontal component (increases rightward).
+   */
   x: number;
-  /** Vertical component (increases downward in canvas coordinates). */
+  /**
+   * Vertical component (increases downward in canvas coordinates).
+   */
   y: number;
-}
-
-/**
- * An object representin 2D demensions of anything
- *
- * @category Types
- * @since 0.2.0
- *
- * @example Basic set
- * ```ts
- * const Size: Demension = { width: 32, height: 32 };
- * ```
- */
-export interface Demension {
-  width: number;
-  height: number;
 }
 
 /**
@@ -58,8 +46,8 @@ export interface Demension {
  *
  * The `type` field acts as the discriminant:
  *
- * | `type`     | Extra fields               | Description                    |
- * | ---------- | -------------------------- | ------------------------------ |
+ * | `type`     | Extra fields                 | Description                    |
+ * | ---------- | ---------------------------- | ------------------------------ |
  * | `"aabb"`   | `width`, `height`, `offset?` | Axis-aligned bounding box      |
  * | `"circle"` | `radius`, `offset?`          | Circle centred on the entity   |
  *
@@ -86,11 +74,17 @@ export interface Demension {
  */
 export type ColliderShape =
   | {
-      /** Discriminant for an axis-aligned bounding box. */
+      /**
+       * Discriminant for an axis-aligned bounding box.
+       */
       type: 'aabb';
-      /** Width of the bounding box in pixels. */
+      /**
+       * Width of the bounding box in pixels.
+       */
       width: number;
-      /** Height of the bounding box in pixels. */
+      /**
+       * Height of the bounding box in pixels.
+       */
       height: number;
       /**
        * Optional positional offset relative to the owning entity's origin.
@@ -99,9 +93,13 @@ export type ColliderShape =
       offset?: Vector2;
     }
   | {
-      /** Discriminant for a circular collider. */
+      /**
+       * Discriminant for a circular collider.
+       */
       type: 'circle';
-      /** Radius of the circle in pixels. */
+      /**
+       * Radius of the circle in pixels.
+       */
       radius: number;
       /**
        * Optional positional offset relative to the owning entity's origin.
@@ -130,13 +128,21 @@ export type ColliderShape =
  * ```
  */
 export interface CollisionInfo {
-  /** The entity that *owns* this collision callback. */
+  /**
+   * The entity that *owns* this collision callback.
+   */
   self: Entity;
-  /** The other entity involved in the collision. */
+  /**
+   * The other entity involved in the collision.
+   */
   other: Entity;
-  /** Tags belonging to {@link CollisionInfo.self | self}. */
+  /**
+   * Tags belonging to {@link CollisionInfo.self | self}.
+   */
   selfTags: Set<string>;
-  /** Tags belonging to {@link CollisionInfo.other | other}. */
+  /**
+   * Tags belonging to {@link CollisionInfo.other | other}.
+   */
   otherTags: Set<string>;
 }
 
@@ -148,24 +154,78 @@ export interface CollisionInfo {
  * @category Types
  * @since 0.1.0
  *
+ * @deprecated Use {@link Box} shorter property names same thing.
+ *
  * @see {@link World} — consumes these bounds during the detection pass
  */
 export interface WorldBounds {
-  /** Left edge X coordinate. */
+  /**
+   * Left edge X coordinate.
+   */
   x: number;
-  /** Top edge Y coordinate. */
+  /**
+   * Top edge Y coordinate.
+   */
   y: number;
-  /** Horizontal extent in pixels. */
+  /**
+   * Horizontal extent in pixels.
+   */
   width: number;
-  /** Vertical extent in pixels. */
+  /**
+   * Vertical extent in pixels.
+   */
   height: number;
 }
 
 /**
- * Alias for {@link Demension} with correct spelling.
+ * An object representin 2D demensions of anything
  *
- * @deprecated Use `Dimension` instead of `Demension`.
+ * @example Basic set
+ * ```ts
+ * const Size: Demension = { width: 32, height: 32 };
+ * ```
+ *
  * @category Types
  * @since 0.4.0
  */
-export type Dimension = Demension;
+export interface Dimension {
+  width: number;
+  height: number;
+}
+
+/**
+ * The amount of time between renders
+ *
+ * @category Types
+ * @since 0.5.0
+ */
+export type DeltaTime = number;
+
+/**
+ * HexColor value
+ *
+ * @example
+ *
+ * ```ts
+ *   var color: HexColor = '#f4f4f4'
+ * ```
+ * @category Types
+ * @since 0.5.0
+ */
+export type HexColor = string;
+
+/**
+ * Box
+ *
+ * Type for holding boxes on the screen by definining position using x,y and demensions
+ * with h, w
+ *
+ * @category Types
+ * @since 0.5.0
+ */
+export interface Box {
+  x: number;
+  y: number;
+  h: number;
+  w: number;
+}

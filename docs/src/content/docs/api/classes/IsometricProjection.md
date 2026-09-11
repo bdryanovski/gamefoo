@@ -2,7 +2,7 @@
 title: 'Class: IsometricProjection'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/grid/isometric.ts:50](https://github.com/bdryanovski/gamefoo/b
 new IsometricProjection(config: IsoConfig): IsometricProjection;
 ```
 
-Defined in: [core/grid/isometric.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L92)
+Defined in: [core/grid/isometric.ts:108](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L108)
 
 Creates a new isometric projection.
 
@@ -53,16 +53,16 @@ const iso = new IsometricProjection({
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="layout"></a> `layout` | `readonly` | [`IsoLayout`](../type-aliases/IsoLayout.md) | Layout mode: `"diamond"` or `"staggered"`. | [core/grid/isometric.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L61) |
-| <a id="origin"></a> `origin` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | Screen-space offset applied to all projected coordinates. | [core/grid/isometric.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L58) |
-| <a id="tileheight"></a> `tileHeight` | `readonly` | `number` | Full height of an isometric tile in pixels. | [core/grid/isometric.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L55) |
-| <a id="tilewidth"></a> `tileWidth` | `readonly` | `number` | Full width of an isometric tile in pixels. | [core/grid/isometric.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L52) |
-| <a id="_gridout"></a> `_gridOut` | `private` | \{ `col`: `number`; `row`: `number`; \} | Reusable output object for screenToGrid to reduce allocations. | [core/grid/isometric.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L73) |
-| `_gridOut.col` | `public` | `number` | - | [core/grid/isometric.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L73) |
-| `_gridOut.row` | `public` | `number` | - | [core/grid/isometric.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L73) |
-| <a id="_screenout"></a> `_screenOut` | `private` | [`Vector2`](../interfaces/Vector2.md) | Reusable output object for gridToScreen to reduce allocations. | [core/grid/isometric.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L70) |
-| <a id="hh"></a> `hh` | `private` | `number` | Half-tile height, cached for performance. | [core/grid/isometric.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L67) |
-| <a id="hw"></a> `hw` | `private` | `number` | Half-tile width, cached for performance. | [core/grid/isometric.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L64) |
+| <a id="layout"></a> `layout` | `readonly` | [`IsoLayout`](../type-aliases/IsoLayout.md) | Layout mode: `"diamond"` or `"staggered"`. | [core/grid/isometric.ts:69](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L69) |
+| <a id="origin"></a> `origin` | `readonly` | [`Vector2`](../interfaces/Vector2.md) | Screen-space offset applied to all projected coordinates. | [core/grid/isometric.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L64) |
+| <a id="tileheight"></a> `tileHeight` | `readonly` | `number` | Full height of an isometric tile in pixels. | [core/grid/isometric.ts:59](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L59) |
+| <a id="tilewidth"></a> `tileWidth` | `readonly` | `number` | Full width of an isometric tile in pixels. | [core/grid/isometric.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L54) |
+| <a id="_gridout"></a> `_gridOut` | `private` | \{ `col`: `number`; `row`: `number`; \} | Reusable output object for screenToGrid to reduce allocations. | [core/grid/isometric.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L89) |
+| `_gridOut.col` | `public` | `number` | - | [core/grid/isometric.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L89) |
+| `_gridOut.row` | `public` | `number` | - | [core/grid/isometric.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L89) |
+| <a id="_screenout"></a> `_screenOut` | `private` | [`Vector2`](../interfaces/Vector2.md) | Reusable output object for gridToScreen to reduce allocations. | [core/grid/isometric.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L84) |
+| <a id="hh"></a> `hh` | `private` | `number` | Half-tile height, cached for performance. | [core/grid/isometric.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L79) |
+| <a id="hw"></a> `hw` | `private` | `number` | Half-tile width, cached for performance. | [core/grid/isometric.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L74) |
 
 ## Methods
 
@@ -72,7 +72,7 @@ const iso = new IsometricProjection({
 getTileDiamond(col: number, row: number): [Vector2, Vector2, Vector2, Vector2];
 ```
 
-Defined in: [core/grid/isometric.ts:274](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L274)
+Defined in: [core/grid/isometric.ts:287](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L287)
 
 Returns the four corner vertices of a tile diamond at the given
 grid position. Useful for debug rendering and hit-testing.
@@ -99,6 +99,8 @@ Array of 4 screen-space points forming the diamond.
 
 #### Example
 
+**Draw a tile outline**
+
 ```ts
 const [top, right, bottom, left] = iso.getTileDiamond(3, 2);
 
@@ -122,10 +124,11 @@ getVisibleRange(
    viewW: number, 
    viewH: number, 
    gridCols: number, 
-   gridRows: number): VisibleRange;
+   gridRows: number
+): VisibleRange;
 ```
 
-Defined in: [core/grid/isometric.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L324)
+Defined in: [core/grid/isometric.ts:334](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L334)
 
 Computes the range of grid cells that are potentially visible
 within a viewport rectangle.
@@ -156,6 +159,8 @@ A [VisibleRange](../interfaces/VisibleRange.md) with min/max column and row.
 
 #### Example
 
+**Render only visible tiles**
+
 ```ts
 const view = camera.getViewRect();
 const range = iso.getVisibleRange(
@@ -163,9 +168,9 @@ const range = iso.getVisibleRange(
   grid.cols, grid.rows,
 );
 
-for (let r = range.minRow; r <= range.maxRow; r++) {
-  for (let c = range.minCol; c <= range.maxCol; c++) {
-    renderTile(c, r);
+for (let row = range.minRow; row <= range.maxRow; row += 1) {
+  for (let col = range.minCol; col <= range.maxCol; col += 1) {
+    renderTile(col, row);
   }
 }
 ```
@@ -178,7 +183,7 @@ for (let r = range.minRow; r <= range.maxRow; r++) {
 gridToScreen(col: number, row: number): Vector2;
 ```
 
-Defined in: [core/grid/isometric.ts:131](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L131)
+Defined in: [core/grid/isometric.ts:147](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L147)
 
 Converts grid coordinates to screen-space pixel position.
 
@@ -205,10 +210,14 @@ Screen-space pixel position.
 
 #### Examples
 
+**Diamond layout**
+
 ```ts
 const pos = iso.gridToScreen(2, 3);
 // Classic 2:1 (64×32): { x: origin.x + (2-3)*32, y: origin.y + (2+3)*16 }
 ```
+
+**Staggered layout**
 
 ```ts
 const iso = new IsometricProjection({
@@ -226,7 +235,7 @@ const pos = iso.gridToScreen(2, 3);
 gridToScreenFast(col: number, row: number): Vector2;
 ```
 
-Defined in: [core/grid/isometric.ts:180](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L180)
+Defined in: [core/grid/isometric.ts:196](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L196)
 
 Allocation-free variant of [gridToScreen](#gridtoscreen). Writes into a
 shared internal object and returns it. **Do not cache** the
@@ -263,7 +272,7 @@ screenToGrid(screenX: number, screenY: number): {
 };
 ```
 
-Defined in: [core/grid/isometric.ts:159](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L159)
+Defined in: [core/grid/isometric.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L175)
 
 Converts a screen-space pixel position back to grid coordinates.
 
@@ -291,8 +300,8 @@ Grid column and row as integers.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/grid/isometric.ts:159](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L159) |
-| `row` | `number` | [core/grid/isometric.ts:159](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L159) |
+| `col` | `number` | [core/grid/isometric.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L175) |
+| `row` | `number` | [core/grid/isometric.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L175) |
 
 #### Since
 
@@ -318,7 +327,7 @@ screenToGridFast(screenX: number, screenY: number): {
 };
 ```
 
-Defined in: [core/grid/isometric.ts:203](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L203)
+Defined in: [core/grid/isometric.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L219)
 
 Allocation-free variant of [screenToGrid](#screentogrid). Writes into a
 shared internal object and returns it. **Do not cache** the
@@ -344,8 +353,8 @@ Shared mutable `{ col, row }` — use immediately.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/grid/isometric.ts:206](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L206) |
-| `row` | `number` | [core/grid/isometric.ts:206](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L206) |
+| `col` | `number` | [core/grid/isometric.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L219) |
+| `row` | `number` | [core/grid/isometric.ts:219](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L219) |
 
 #### Since
 
@@ -362,7 +371,7 @@ snapToGrid(screenX: number, screenY: number): {
 };
 ```
 
-Defined in: [core/grid/isometric.ts:242](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L242)
+Defined in: [core/grid/isometric.ts:255](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L255)
 
 Snaps a screen-space position to the nearest grid cell center.
 
@@ -389,8 +398,8 @@ The grid cell that the point falls within.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/grid/isometric.ts:242](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L242) |
-| `row` | `number` | [core/grid/isometric.ts:242](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L242) |
+| `col` | `number` | [core/grid/isometric.ts:255](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L255) |
+| `row` | `number` | [core/grid/isometric.ts:255](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L255) |
 
 #### Since
 
@@ -412,7 +421,7 @@ building.moveTo(snapped.col, snapped.row);
 private gridToScreenDiamond(col: number, row: number): Vector2;
 ```
 
-Defined in: [core/grid/isometric.ts:365](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L365)
+Defined in: [core/grid/isometric.ts:369](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L369)
 
 **`Internal`**
 
@@ -442,7 +451,7 @@ screenY = origin.y + (col + row) * (tileHeight / 2)
 private gridToScreenStaggered(col: number, row: number): Vector2;
 ```
 
-Defined in: [core/grid/isometric.ts:403](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L403)
+Defined in: [core/grid/isometric.ts:404](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L404)
 
 **`Internal`**
 
@@ -472,7 +481,7 @@ private screenToGridDiamond(screenX: number, screenY: number): {
 };
 ```
 
-Defined in: [core/grid/isometric.ts:382](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L382)
+Defined in: [core/grid/isometric.ts:386](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L386)
 
 **`Internal`**
 
@@ -501,8 +510,8 @@ row = floor((sy / halfH - sx / halfW) / 2)
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/grid/isometric.ts:385](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L385) |
-| `row` | `number` | [core/grid/isometric.ts:385](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L385) |
+| `col` | `number` | [core/grid/isometric.ts:386](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L386) |
+| `row` | `number` | [core/grid/isometric.ts:386](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L386) |
 
 ***
 
@@ -515,7 +524,7 @@ private screenToGridStaggered(screenX: number, screenY: number): {
 };
 ```
 
-Defined in: [core/grid/isometric.ts:416](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L416)
+Defined in: [core/grid/isometric.ts:417](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L417)
 
 **`Internal`**
 
@@ -539,5 +548,5 @@ Staggered layout: screen → grid.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `col` | `number` | [core/grid/isometric.ts:419](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L419) |
-| `row` | `number` | [core/grid/isometric.ts:419](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L419) |
+| `col` | `number` | [core/grid/isometric.ts:417](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L417) |
+| `row` | `number` | [core/grid/isometric.ts:417](https://github.com/bdryanovski/gamefoo/blob/main/src/core/grid/isometric.ts#L417) |

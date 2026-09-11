@@ -2,7 +2,7 @@
 title: 'Class: CollisionSystem'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -51,11 +51,15 @@ Creates a collision subsystem.
 
 #### Examples
 
+**Using a shared world**
+
 ```ts
 const world = new World();
 // Register colliders on `world`, then:
 engine.use(new CollisionSystem(world));
 ```
+
+**Legacy (internal world)**
 
 ```ts
 engine.use(new CollisionSystem());
