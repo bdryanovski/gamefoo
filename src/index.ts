@@ -139,6 +139,7 @@ export type { ScreenConstructor, ScreenContext } from './core/map/screen';
 export { default as ScreenRegistry } from './core/map/screen_registry';
 export { default as AnimatedObject } from './core/map/animated_object';
 export { default as MapObject } from './core/map/map_object';
+export { default as TextObject } from './core/map/text_object';
 export type { MapObjectConstructor } from './core/map/map_object';
 export { default as MapObjectRegistry } from './core/map/map_object_registry';
 export { drawFrame } from './core/map/draw';
@@ -165,6 +166,7 @@ export type {
   ScreenName,
   SpriteRegionDefinition,
   StateMachineDefinition,
+  TextConfig,
   Transform,
 } from './core/map/types';
 // ── Dialog ──────────────────────────────────────────────────────────

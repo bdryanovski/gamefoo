@@ -249,7 +249,7 @@ class MapGame extends Engine {
 
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
-    this.navigate(1,8);
+    this.navigate(0, 0);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
   }
@@ -467,9 +467,7 @@ class MapGame extends Engine {
     }
 
     // Slime king: a stationary NPC — press E beside it to run its dialog.
-    const king = this.map?.current
-      ?.objectsByType(SlimeKing)
-      .find((k) => k.overlaps(player.box()));
+    const king = this.map?.current?.objectsByType(SlimeKing).find((k) => k.overlaps(player.box()));
     if (king) {
       const ref = king.dialogRef;
       if (ref && this.dialog?.start(ref)) return;

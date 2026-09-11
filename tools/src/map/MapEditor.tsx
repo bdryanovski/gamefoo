@@ -26,6 +26,7 @@ const MAP_TOOLS: { key: MapToolType; icon: IconName; title: string }[] = [
   { key: "fill", icon: "tool-fill", title: "Fill (F) — set screen default tile" },
   { key: "pick", icon: "tool-pick", title: "Pick (I) — sample a sprite/object into the paint brush" },
   { key: "move", icon: "tool-move", title: "Move (M) — drag a placement to reposition it" },
+  { key: "text", icon: "draw", title: "Text (T) — click to drop a free-positioned text label (not grid-snapped)" },
   { key: "pan", icon: "tool-pan", title: "Pan (H) — drag to move view (or Space)" },
 ];
 
@@ -38,6 +39,7 @@ const KEY_MAP: Record<string, MapToolType> = {
   m: "move",
   c: "select",
   h: "pan",
+  t: "text",
 };
 
 type MapTabType = "palette" | "export";
@@ -115,13 +117,16 @@ export function MapEditor({
     return () => window.removeEventListener("keydown", handleKey);
   }, [mapDispatch, state.map]);
 
-  const selectedSpriteName = map.selected
-    ? map.selected.kind === "sprite"
-      ? (state.sprites.find((s) => s.id === map.selected!.id)?.name ?? "?")
-      : map.selected.kind === "animation"
-        ? (state.animations.find((a) => a.id === map.selected!.id)?.name ?? "?")
-        : (objectMachines(state.objects).find((m) => m.id === map.selected!.id)?.name ?? "?")
-    : "—";
+  const sel = map.selected;
+  const selectedSpriteName = !sel
+    ? "—"
+    : sel.kind === "sprite"
+      ? (state.sprites.find((s) => s.id === sel.id)?.name ?? "?")
+      : sel.kind === "animation"
+        ? (state.animations.find((a) => a.id === sel.id)?.name ?? "?")
+        : sel.kind === "text"
+          ? `"${sel.text}"`
+          : (objectMachines(state.objects).find((m) => m.id === sel.id)?.name ?? "?");
 
   const screenCount = Object.keys(map.screens).length;
 

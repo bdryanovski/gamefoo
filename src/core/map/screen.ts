@@ -4,16 +4,19 @@ import type AssetManager from './asset_manager';
 import { drawFrame } from './draw';
 import CollisionMap, { shapeBounds, translateShape } from './collision_map';
 import MapObject, { type MapObjectConstructor } from './map_object';
+import TextObject from './text_object';
 import type MapObjectRegistry from './map_object_registry';
 import {
   type Clip,
   type CollisionDefinition,
   type Frame,
   type LayerDefinition,
+  type GameObjectDefinition,
   type MapData,
   type MapObjectContext,
   type ScreenCoordinate,
   type ScreenData,
+  type StateMachineDefinition,
   type ScreenName,
   type Transform,
   screenKey,
@@ -24,6 +27,30 @@ import type { DeltaTime } from '@/generic_types';
  * Placement z-level treated as the walkable floor for ground detection.
  */
 const GROUND_LEVEL = 0;
+
+/**
+ * Empty FSM shared by every {@link TextObject}: text carries no state display,
+ * so the base {@link MapObject} constructor simply skips display resolution.
+ */
+const TEXT_MACHINE: StateMachineDefinition = {
+  id: '',
+  name: 'text',
+  states: [],
+  transitions: [],
+  initialStateId: null,
+};
+
+/**
+ * Minimal prefab backing text objects (the base ctor requires a `def`).
+ */
+const TEXT_DEF: GameObjectDefinition = {
+  id: '',
+  name: 'Text',
+  sprites: [],
+  animations: [],
+  properties: {},
+  machine: TEXT_MACHINE,
+};
 
 /**
  * A static tile: a resolved frame at a fixed offset with a transform.
@@ -196,6 +223,26 @@ export default class Screen {
             transform,
           });
         }
+      } else if (placement.kind === 'text') {
+        const context: MapObjectContext = {
+          assets,
+          machine: TEXT_MACHINE,
+          def: TEXT_DEF,
+          properties: {},
+          x: placement.x,
+          y: placement.y,
+          level: placement.level,
+          transform,
+          id: placement.id,
+          text: {
+            text: placement.text,
+            font: placement.font,
+            fontSize: placement.fontSize,
+            color: placement.color,
+            align: placement.align,
+          },
+        };
+        layer.descriptors.push({ kind: 'object', ctor: TextObject, context });
       } else {
         const owner = assets.objectByMachine(placement.machineId);
 

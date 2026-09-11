@@ -58,10 +58,33 @@ export interface AnimationPlacement {
   flipY?: boolean;
 }
 
+/** A styled text string placed on a screen (rendered by the engine's TextObject). */
+export interface TextPlacement {
+  id: string;
+  kind: "text";
+  /** The rendered string. */
+  text: string;
+  /** CSS font family. */
+  font: string;
+  /** Font size in game pixels. */
+  fontSize: number;
+  /** CSS colour. */
+  color: string;
+  /** Horizontal alignment relative to x. */
+  align: "left" | "center" | "right";
+  x: number;
+  y: number;
+  level: number;
+  rotation?: number;
+  flipX?: boolean;
+  flipY?: boolean;
+}
+
 export type MapPlacement =
   | SpritePlacement
   | MachinePlacement
-  | AnimationPlacement;
+  | AnimationPlacement
+  | TextPlacement;
 
 export interface MapScreen {
   x: number;
@@ -80,8 +103,38 @@ export type MapToolType =
   | "pick"
   | "select"
   | "move"
-  | "pan";
+  | "pan"
+  | "text";
 
+
+/** Editable text styling shared by the text brush and a placed text label. */
+export interface TextStyle {
+  text: string;
+  font: string;
+  fontSize: number;
+  color: string;
+  align: "left" | "center" | "right";
+}
+
+/** Fonts offered by the text palette (CSS families safe on the canvas). */
+export const TEXT_FONTS: readonly string[] = [
+  "monospace",
+  "sans-serif",
+  "serif",
+  "Georgia, serif",
+  "'Courier New', monospace",
+  "'Comic Sans MS', cursive",
+  "Impact, sans-serif",
+];
+
+/** Seed style for a new text brush / label. */
+export const DEFAULT_TEXT_STYLE: TextStyle = {
+  text: "Text",
+  font: "monospace",
+  fontSize: 16,
+  color: "#ffffff",
+  align: "left",
+};
 /** What the paint tool currently places. */
 export type PaletteSelection =
   | { kind: "sprite"; id: string }
@@ -94,6 +147,7 @@ export type PaletteSelection =
       properties?: Record<string, string>;
     }
   | { kind: "animation"; id: string }
+  | ({ kind: "text" } & TextStyle)
   | null;
 
 /** A named, toggleable map layer. Its array index is the placement `level`. */
@@ -177,6 +231,11 @@ export type MapAction =
       Pick<MapPlacement, "x" | "y" | "level" | "rotation" | "flipX" | "flipY"> & {
         stateName?: string;
         properties?: Record<string, string>;
+        text?: string;
+        font?: string;
+        fontSize?: number;
+        color?: string;
+        align?: "left" | "center" | "right";
       }
     >;
   }
@@ -387,6 +446,9 @@ export function mapReducer(state: MapState, action: MapAction): MapState {
     }
 
     case "SET_TOOL":
+      if (action.tool === "text" && state.selected?.kind !== "text") {
+        return { ...state, activeTool: action.tool, selected: { kind: "text", ...DEFAULT_TEXT_STYLE } };
+      }
       return { ...state, activeTool: action.tool };
 
     case "SET_ZOOM":
@@ -430,6 +492,9 @@ export function resolvePlacementDisplay(
   if (p.kind === "sprite") {
     const exists = sprites.some((s) => s.id === p.spriteId);
     return { spriteId: exists ? p.spriteId : null, animationId: null };
+  }
+  if (p.kind === "text") {
+    return { spriteId: null, animationId: null };
   }
   if (p.kind === "animation") {
     const anim = animations.find((a) => a.id === p.animationId);
@@ -480,6 +545,7 @@ export function sanitizeMap(
       placements: (s.placements ?? []).filter((p) => {
         if (p.kind === "sprite") return spriteIds.has(p.spriteId);
         if (p.kind === "animation") return animIds.has(p.animationId);
+        if (p.kind === "text") return true;
         return machineIds.has(p.machineId);
       }),
     };
@@ -501,7 +567,9 @@ export function sanitizeMap(
         ? sel
         : sel?.kind === "machine" && machineIds.has(sel.id)
           ? sel
-          : null;
+          : sel?.kind === "text"
+            ? sel
+            : null;
 
   return {
     ...map,
@@ -560,11 +628,23 @@ export function migrateMapState(raw: unknown): MapState {
             : undefined;
         return {
           id: (p.id as string) ?? `pl_${key}_${i}`,
-          kind: (p.kind as "sprite" | "machine" | "animation") ?? "sprite",
+          kind: (p.kind as "sprite" | "machine" | "animation" | "text") ?? "sprite",
           spriteId: p.spriteId as string | undefined,
           machineId: p.machineId as string | undefined,
           animationId: p.animationId as string | undefined,
           stateName: p.stateName as string | undefined,
+          // Text label style — preserve so labels survive load/import.
+          ...(p.kind === "text"
+            ? {
+                text: typeof p.text === "string" ? p.text : DEFAULT_TEXT_STYLE.text,
+                font: typeof p.font === "string" ? p.font : DEFAULT_TEXT_STYLE.font,
+                fontSize:
+                  typeof p.fontSize === "number" ? p.fontSize : DEFAULT_TEXT_STYLE.fontSize,
+                color: typeof p.color === "string" ? p.color : DEFAULT_TEXT_STYLE.color,
+                align:
+                  p.align === "center" || p.align === "right" ? p.align : DEFAULT_TEXT_STYLE.align,
+              }
+            : {}),
           // Per-placement property overrides — must survive load/import,
           // else placed instances silently revert to the object defaults.
           ...(properties && Object.keys(properties).length > 0 ? { properties } : {}),
@@ -592,9 +672,11 @@ export function migrateMapState(raw: unknown): MapState {
         rawSel.kind === "machine") &&
       typeof rawSel.id === "string"
       ? { kind: rawSel.kind, id: rawSel.id }
-      : (old.selectedSpriteId ?? old.selectedAssetId)
-        ? { kind: "sprite", id: (old.selectedSpriteId ?? old.selectedAssetId)! }
-        : INITIAL_MAP_STATE.selected;
+      : rawSel && typeof rawSel === "object" && rawSel.kind === "text"
+        ? { ...DEFAULT_TEXT_STYLE, ...(rawSel as Partial<TextStyle>), kind: "text" }
+        : (old.selectedSpriteId ?? old.selectedAssetId)
+          ? { kind: "sprite", id: (old.selectedSpriteId ?? old.selectedAssetId)! }
+          : INITIAL_MAP_STATE.selected;
 
   const maxLevel = Object.values(screens).reduce(
     (m, s) => s.placements.reduce((mm, p) => Math.max(mm, p.level), m),

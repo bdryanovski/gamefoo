@@ -56,6 +56,15 @@ export function exportMap(state: AppState) {
             kind: p.kind,
             ...(p.kind === "sprite" ? { spriteId: p.spriteId } : {}),
             ...(p.kind === "animation" ? { animationId: p.animationId } : {}),
+            ...(p.kind === "text"
+              ? {
+                  text: p.text,
+                  font: p.font,
+                  fontSize: p.fontSize,
+                  color: p.color,
+                  align: p.align,
+                }
+              : {}),
             ...(p.kind === "machine"
               ? {
                   machineId: p.machineId,
@@ -108,7 +117,7 @@ export function exportMapScreens(state: AppState) {
           : null;
         return {
           kind: p.kind,
-          name: spriteName ?? animName ?? "?",
+          name: p.kind === "text" ? p.text : (spriteName ?? animName ?? "?"),
           x: p.x,
           y: p.y,
           level: p.level,

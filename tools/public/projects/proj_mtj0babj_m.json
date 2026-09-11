@@ -128,7 +128,7 @@
       "height": 112
     }
   ],
-  "activeImageId": "img_mtv68u7c_0",
+  "activeImageId": "img_mtj0c93a_p",
   "grid": {
     "enabled": true,
     "cellWidth": 16,
@@ -12575,12 +12575,12 @@
   "selectedAnimationId": "anim_mtt45ycs_h",
   "selectedObjectId": "obj_mto16yyf_2",
   "activeTool": "grid-pick",
-  "zoom": 7.156294047780352,
+  "zoom": 2.3394052183841674,
   "pan": {
-    "x": 54.61283625859596,
-    "y": 219.9863788865564
+    "x": 0,
+    "y": 0
   },
-  "activeTab": "sprites",
+  "activeTab": "images",
   "map": {
     "blockSize": 16,
     "screenCols": 20,
@@ -13647,6 +13647,58 @@
             "y": 176,
             "level": 2,
             "rotation": 90
+          },
+          {
+            "id": "1789163079311_uklwjy",
+            "kind": "sprite",
+            "spriteId": "spr_mtv6bi8p_b",
+            "x": 48,
+            "y": 48,
+            "level": 2
+          },
+          {
+            "id": "1789163085538_z8kki2",
+            "kind": "sprite",
+            "spriteId": "spr_mtv6bmzp_c",
+            "x": 32,
+            "y": 64,
+            "level": 2
+          },
+          {
+            "id": "1789163089350_b6g22k",
+            "kind": "sprite",
+            "spriteId": "spr_mtv6bo3i_d",
+            "x": 48,
+            "y": 64,
+            "level": 2
+          },
+          {
+            "id": "1789163093085_8nllkm",
+            "kind": "sprite",
+            "spriteId": "spr_mtv6br2g_e",
+            "x": 64,
+            "y": 64,
+            "level": 2
+          },
+          {
+            "id": "1789163101680_xxmypf",
+            "kind": "sprite",
+            "spriteId": "spr_mtv6btyu_f",
+            "x": 80,
+            "y": 32,
+            "level": 2
+          },
+          {
+            "id": "1789163695931_u95hle",
+            "kind": "text",
+            "text": "Action",
+            "font": "monospace",
+            "fontSize": 7,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 101,
+            "y": 36,
+            "level": 2
           }
         ]
       },
@@ -14255,6 +14307,66 @@
             "y": 176,
             "level": 2,
             "rotation": 270
+          },
+          {
+            "id": "1789164048418_yxqdow",
+            "kind": "text",
+            "text": "The dungeon has no name.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 65,
+            "y": 49,
+            "level": 2
+          },
+          {
+            "id": "1789164061572_dmtagh",
+            "kind": "text",
+            "text": "No map leads here.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 65,
+            "y": 65,
+            "level": 2
+          },
+          {
+            "id": "1789164076342_ibgpd1",
+            "kind": "text",
+            "text": "No one remembers building it.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 66,
+            "y": 88,
+            "level": 2
+          },
+          {
+            "id": "1789164086047_0t0rnd",
+            "kind": "text",
+            "text": "Yet somehow, you have arrived.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 66,
+            "y": 102,
+            "level": 2
+          },
+          {
+            "id": "1789164095050_h4rlxc",
+            "kind": "text",
+            "text": "Keep moving.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 205,
+            "y": 144,
+            "level": 2
           }
         ]
       },
@@ -14864,6 +14976,66 @@
             "y": 192,
             "level": 2,
             "rotation": 270
+          },
+          {
+            "id": "1789164122646_dkt8t2",
+            "kind": "text",
+            "text": "Rooms repeat.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 16,
+            "y": 55,
+            "level": 2
+          },
+          {
+            "id": "1789164132261_qsi2v3",
+            "kind": "text",
+            "text": "Paths disappear.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 16,
+            "y": 70,
+            "level": 2
+          },
+          {
+            "id": "1789164142445_vowuaq",
+            "kind": "text",
+            "text": "And sometimes, in the middle of nowhere,",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 15,
+            "y": 102,
+            "level": 2
+          },
+          {
+            "id": "1789164158754_9b7tgh",
+            "kind": "text",
+            "text": "you find something you swear you’ve seen before.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 17,
+            "y": 119,
+            "level": 2
+          },
+          {
+            "id": "1789164170491_yw4znk",
+            "kind": "text",
+            "text": "Keep going.",
+            "font": "monospace",
+            "fontSize": 9,
+            "color": "#ffffff",
+            "align": "left",
+            "x": 209,
+            "y": 146,
+            "level": 2
           }
         ]
       },
@@ -60538,10 +60710,14 @@
       }
     },
     "selected": {
-      "kind": "machine",
-      "id": "sm_mto16yyf_1"
+      "text": "Keep going.",
+      "font": "monospace",
+      "fontSize": 9,
+      "color": "#ffffff",
+      "align": "left",
+      "kind": "text"
     },
-    "selectedPlacementId": "1788979062392_p5zrtb",
+    "selectedPlacementId": "1789164095050_h4rlxc",
     "layers": [
       {
         "name": "base",
@@ -60565,11 +60741,11 @@
       }
     ],
     "activeLevel": 2,
-    "activeTool": "select",
-    "zoom": 0.7434070938697109,
+    "activeTool": "move",
+    "zoom": 2.274099296321166,
     "pan": {
-      "x": -1336.908138766909,
-      "y": 1003.0668038441236
+      "x": -907.2016331068753,
+      "y": 267.82794630602564
     }
   },
   "dialog": {
@@ -62203,5 +62379,5 @@
     "selectedMessageId": "msg_mtv6w3h3_2"
   },
   "history": [],
-  "lastModified": "2026-09-10T07:37:34.386Z"
+  "lastModified": "2026-09-11T22:10:27.690Z"
 }

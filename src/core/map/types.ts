@@ -224,6 +224,37 @@ export interface Transform {
 }
 
 /**
+ * Text styling shared by a {@link Placement | text placement} and the
+ * {@link TextObject} it builds: the string plus optional CSS font family,
+ * pixel size, colour, and horizontal alignment. Omitted fields fall back to
+ * the object's defaults (a monospace stack, `16`px, white, left-aligned).
+ *
+ * @since 0.5.0
+ */
+export interface TextConfig {
+  /**
+   * The rendered string.
+   */
+  text: string;
+  /**
+   * CSS font family (e.g. `"monospace"`, `"Georgia, serif"`).
+   */
+  font?: string;
+  /**
+   * Font size in game (logical) pixels.
+   */
+  fontSize?: number;
+  /**
+   * CSS colour string.
+   */
+  color?: string;
+  /**
+   * Horizontal alignment relative to the placement `x`.
+   */
+  align?: 'left' | 'center' | 'right';
+}
+
+/**
  * One thing painted on a screen at a pixel offset and z-`level`.
  */
 export type Placement = Transform & {
@@ -251,6 +282,7 @@ export type Placement = Transform & {
          */
         properties?: Record<string, string>;
       }
+    | ({ kind: 'text' } & TextConfig)
   );
 
 /**
@@ -390,6 +422,11 @@ export interface MapObjectContext {
    * without authoring an `id` property.
    */
   id?: string;
+  /**
+   * Text styling for a {@link TextObject} built from a `text` placement.
+   * Absent for every other object kind.
+   */
+  text?: TextConfig;
 }
 
 /**

@@ -2,8 +2,8 @@ import React, { useMemo, useCallback, useState } from "react";
 import type { AppState, AppAction, SpriteRegion, AnimationDef, GameObjectDef } from "../types";
 import { objectMachines } from "../types";
 import type { StateMachineDef } from "../statemachine/types";
-import type { MapAction, MapPlacement } from "./types";
-import { resolvePlacementDisplay, resolveMachineState } from "./types";
+import type { MapAction, MapPlacement, TextStyle } from "./types";
+import { resolvePlacementDisplay, resolveMachineState, TEXT_FONTS, DEFAULT_TEXT_STYLE } from "./types";
 import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
 import { Icon } from "../components/Icon";
 
@@ -252,6 +252,80 @@ function MachineConfigFields({
   );
 }
 
+/**
+ * Text styling controls shared by the text brush (configures new labels) and
+ * the placement editor (edits one placed label): content, font, size, colour,
+ * alignment. `onChange` receives only the changed fields.
+ */
+function TextConfigFields({
+  value,
+  onChange,
+}: {
+  value: TextStyle;
+  onChange: (patch: Partial<TextStyle>) => void;
+}) {
+  return (
+    <>
+      <div className="field-row">
+        <span className="field-label">Text:</span>
+        <input
+          type="text"
+          className="input input-full"
+          value={value.text}
+          onChange={(e) => onChange({ text: e.target.value })}
+        />
+      </div>
+      <div className="field-row">
+        <span className="field-label">Font:</span>
+        <select
+          className="input"
+          value={value.font}
+          onChange={(e) => onChange({ font: e.target.value })}
+        >
+          {TEXT_FONTS.map((f) => (
+            <option key={f} value={f}>
+              {f}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="field-row">
+        <span className="field-label">Size:</span>
+        <input
+          type="number"
+          className="input input-sm"
+          min={1}
+          max={512}
+          value={value.fontSize}
+          onChange={(e) =>
+            onChange({ fontSize: Math.max(1, Math.min(512, Number(e.target.value) || 1)) })
+          }
+        />
+        <span className="text-xs text-dim">px</span>
+        <span className="field-label">Color:</span>
+        <input
+          type="color"
+          className="input input-sm"
+          value={value.color}
+          onChange={(e) => onChange({ color: e.target.value })}
+        />
+      </div>
+      <div className="field-row">
+        <span className="field-label">Align:</span>
+        {(["left", "center", "right"] as const).map((a) => (
+          <button
+            key={a}
+            className={`btn btn-sm ${value.align === a ? "active" : ""}`}
+            onClick={() => onChange({ align: a })}
+          >
+            {a}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
 export function MapPalettePanel({
   state,
   dispatch,
@@ -325,12 +399,20 @@ export function MapPalettePanel({
     ? (state.objects.find((o) => o.machine.id === brushMachine.id) ?? null)
     : null;
 
+  // The text brush loaded into the palette, if any — its style seeds new labels.
+  const brushText = map.selected?.kind === "text" ? map.selected : null;
+
   const updatePlacement = useCallback(
     (
       updates: Partial<
         Pick<MapPlacement, "x" | "y" | "rotation" | "flipX" | "flipY"> & {
           stateName: string;
           properties: Record<string, string>;
+          text: string;
+          font: string;
+          fontSize: number;
+          color: string;
+          align: "left" | "center" | "right";
         }
       >,
     ) => {
@@ -367,7 +449,7 @@ export function MapPalettePanel({
         <div className="section">
           <div className="section-title">
             <span>
-              Placement: {selSprite?.name ?? "?"}
+              Placement: {selectedPlacement.placement.kind === "text" ? "Text label" : (selSprite?.name ?? "?")}
             </span>
             <button
               className="btn btn-sm"
@@ -405,6 +487,13 @@ export function MapPalettePanel({
               properties={selMachine.properties}
               onState={(name) => updatePlacement({ stateName: name })}
               onProperties={(props) => updatePlacement({ properties: props })}
+            />
+          )}
+
+          {selectedPlacement.placement.kind === "text" && (
+            <TextConfigFields
+              value={selectedPlacement.placement}
+              onChange={(patch) => updatePlacement(patch)}
             />
           )}
 
@@ -836,6 +925,35 @@ export function MapPalettePanel({
               }
             />
           </div>
+        )}
+      </div>
+
+      {/* Text palette — styled labels rendered by the engine's TextObject */}
+      <div className="section">
+        <div className="section-title">Text</div>
+        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+          Pick the <b>Text tool (T)</b>, set the style below, then click anywhere on
+          a screen — the label lands at the exact pixel (not grid-snapped). The
+          engine renders each as a TextObject you can move or animate at runtime.
+        </div>
+        <div className="row gap-sm" style={{ padding: 4 }}>
+          <button
+            className={`btn btn-sm ${map.activeTool === "text" ? "active" : ""}`}
+            onClick={() => mapDispatch({ type: "SET_TOOL", tool: "text" })}
+          >
+            {map.activeTool === "text" ? "Text tool active" : "Use Text tool"}
+          </button>
+        </div>
+        {brushText && (
+          <TextConfigFields
+            value={brushText}
+            onChange={(patch) =>
+              mapDispatch({
+                type: "SELECT_PALETTE",
+                selection: { ...brushText, ...patch },
+              })
+            }
+          />
         )}
       </div>
       {/* Sprite palette — from the shared library */}

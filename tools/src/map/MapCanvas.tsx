@@ -4,8 +4,9 @@ import type {
   MapAction,
   MapPlacement,
   PaletteSelection,
+  TextPlacement,
 } from "./types";
-import { screenKey, resolvePlacementDisplay, resolveMachineState } from "./types";
+import { screenKey, resolvePlacementDisplay, resolveMachineState, DEFAULT_TEXT_STYLE } from "./types";
 import type { AppState, SpriteRegion } from "../types";
 import { objectMachines } from "../types";
 import { Icon } from "../components/Icon";
@@ -78,6 +79,29 @@ export function MapCanvas({
     [displayOf, spriteById],
   );
 
+  /** Approx text box (world px, top-left) for hit-testing and outlines. */
+  const textBox = useCallback(
+    (p: TextPlacement | Omit<TextPlacement, "id" | "kind">) => {
+      const width = Math.max(1, p.text.length * p.fontSize * 0.6);
+      const height = p.fontSize;
+      const ox =
+        p.align === "center" ? p.x - width / 2 : p.align === "right" ? p.x - width : p.x;
+      return { ox, oy: p.y, width, height };
+    },
+    [],
+  );
+
+  /** Local top-left box + size for any placement (null when undrawable). */
+  const boxOf = useCallback(
+    (p: MapPlacement): { ox: number; oy: number; width: number; height: number } | null => {
+      if (p.kind === "text") return textBox(p);
+      const sprite = sizeSpriteOf(p);
+      if (!sprite) return null;
+      return { ox: p.x, oy: p.y, width: sprite.width, height: sprite.height };
+    },
+    [sizeSpriteOf, textBox],
+  );
+
   // ── Pan / interaction state ────────────────────────────
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0 });
@@ -99,6 +123,7 @@ export function MapCanvas({
     rotation?: number;
     flipX?: boolean;
     flipY?: boolean;
+    text?: TextPlacement;
     valid: boolean;
   } | null>(null);
   const [hover, setHover] = useState<{
@@ -291,6 +316,25 @@ export function MapCanvas({
     /** Draw a placement: animated kinds play live, machines show
      *  their current state; a ▶ badge marks animated objects. */
     const drawPlacement = (p: MapPlacement, alpha = 1) => {
+      // Text placement: draw the styled string directly.
+      if (p.kind === "text") {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = p.color;
+        ctx.font = `${p.fontSize}px ${p.font}`;
+        ctx.textAlign = p.align;
+        ctx.textBaseline = "top";
+        if (p.rotation || p.flipX || p.flipY) {
+          ctx.translate(p.x, p.y);
+          if (p.rotation) ctx.rotate((p.rotation * Math.PI) / 180);
+          if (p.flipX || p.flipY) ctx.scale(p.flipX ? -1 : 1, p.flipY ? -1 : 1);
+          ctx.fillText(p.text, 0, 0);
+        } else {
+          ctx.fillText(p.text, p.x, p.y);
+        }
+        ctx.restore();
+        return;
+      }
       // Machine placement: composite every visible cell of its current state
       // (e.g. a portal's `base` + `door`), each at its grid offset.
       if (p.kind === "machine") {
@@ -442,20 +486,34 @@ export function MapCanvas({
           movePreview &&
           movePreview.screenKey === screenKey(r.screen.x, r.screen.y)
         ) {
-          const mpSprite = movePreview.spriteId
-            ? spriteById.get(movePreview.spriteId)
-            : null;
-          const mw = mpSprite?.width ?? map.blockSize;
-          const mh = mpSprite?.height ?? map.blockSize;
-          drawSprite(
-            movePreview.spriteId,
-            movePreview.x,
-            movePreview.y,
-            0.6,
-            movePreview,
-          );
+          let mw = map.blockSize;
+          let mh = map.blockSize;
+          let mox = movePreview.x;
+          let moy = movePreview.y;
+          if (movePreview.text) {
+            const t = { ...movePreview.text, x: movePreview.x, y: movePreview.y };
+            const b = textBox(t);
+            mw = b.width;
+            mh = b.height;
+            mox = b.ox;
+            moy = b.oy;
+            drawPlacement({ ...movePreview.text, id: movePreview.id, x: movePreview.x, y: movePreview.y }, 0.6);
+          } else {
+            const mpSprite = movePreview.spriteId
+              ? spriteById.get(movePreview.spriteId)
+              : null;
+            mw = mpSprite?.width ?? map.blockSize;
+            mh = mpSprite?.height ?? map.blockSize;
+            drawSprite(
+              movePreview.spriteId,
+              movePreview.x,
+              movePreview.y,
+              0.6,
+              movePreview,
+            );
+          }
           ctx.save();
-          ctx.translate(movePreview.x + mw / 2, movePreview.y + mh / 2);
+          ctx.translate(mox + mw / 2, moy + mh / 2);
           if (movePreview.rotation) {
             ctx.rotate((movePreview.rotation * Math.PI) / 180);
           }
@@ -478,11 +536,13 @@ export function MapCanvas({
           levelVisible(selPlacement.level) &&
           !(movePreview && movePreview.id === selPlacement.id)
         ) {
-          const sSprite = sizeSpriteOf(selPlacement);
-          const sw = sSprite?.width ?? map.blockSize;
-          const sh = sSprite?.height ?? map.blockSize;
+          const sBox = boxOf(selPlacement);
+          const sw = sBox?.width ?? map.blockSize;
+          const sh = sBox?.height ?? map.blockSize;
+          const sox = sBox?.ox ?? selPlacement.x;
+          const soy = sBox?.oy ?? selPlacement.y;
           ctx.save();
-          ctx.translate(selPlacement.x + sw / 2, selPlacement.y + sh / 2);
+          ctx.translate(sox + sw / 2, soy + sh / 2);
           if (selPlacement.rotation) {
             ctx.rotate((selPlacement.rotation * Math.PI) / 180);
           }
@@ -515,6 +575,26 @@ export function MapCanvas({
               0.5,
             );
           }
+        }
+
+        // Text tool: ghost the label at the exact cursor pixel (free-form).
+        if (
+          hover &&
+          hover.screenKey === screenKey(r.screen.x, r.screen.y) &&
+          map.activeTool === "text"
+        ) {
+          const style = map.selected?.kind === "text" ? map.selected : DEFAULT_TEXT_STYLE;
+          drawPlacement(
+            {
+              id: "ghost",
+              kind: "text",
+              ...style,
+              x: Math.round(hover.localX),
+              y: Math.round(hover.localY),
+              level: map.activeLevel,
+            },
+            0.5,
+          );
         }
 
         ctx.restore();
@@ -561,6 +641,7 @@ export function MapCanvas({
         const anim = animById.get(sel.id);
         return { spriteId: anim?.frames[0] ?? null, animationId: sel.id };
       }
+      if (sel.kind === "text") return null;
       const machine = machineById.get(sel.id);
       if (!machine) return null;
       const st =
@@ -611,29 +692,26 @@ export function MapCanvas({
       for (let i = sorted.length - 1; i >= 0; i--) {
         const p = sorted[i]!;
         if (!levelInteractive(p.level)) continue;
-        const sprite = sizeSpriteOf(p);
-        if (!sprite) continue;
+        const box = boxOf(p);
+        if (!box) continue;
         const rot = ((p.rotation ?? 0) * Math.PI) / 180;
+        const cx = box.ox + box.width / 2;
+        const cy = box.oy + box.height / 2;
         if (rot === 0) {
           if (
-            localX >= p.x &&
-            localX < p.x + sprite.width &&
-            localY >= p.y &&
-            localY < p.y + sprite.height
+            localX >= box.ox &&
+            localX < box.ox + box.width &&
+            localY >= box.oy &&
+            localY < box.oy + box.height
           ) {
             return p;
           }
         } else {
-          const cx = p.x + sprite.width / 2;
-          const cy = p.y + sprite.height / 2;
           const dx = localX - cx;
           const dy = localY - cy;
           const lx = dx * Math.cos(rot) + dy * Math.sin(rot);
           const ly = -dx * Math.sin(rot) + dy * Math.cos(rot);
-          if (
-            Math.abs(lx) <= sprite.width / 2 &&
-            Math.abs(ly) <= sprite.height / 2
-          ) {
+          if (Math.abs(lx) <= box.width / 2 && Math.abs(ly) <= box.height / 2) {
             return p;
           }
         }
@@ -659,6 +737,8 @@ export function MapCanvas({
       if (sel.kind === "animation") {
         return { id, kind: "animation", animationId: sel.id, x, y, level };
       }
+      // Text is placed free-form by the Text tool, never grid-snapped by paint.
+      if (sel.kind === "text") return null;
       return {
         id,
         kind: "machine",
@@ -718,14 +798,23 @@ export function MapCanvas({
                 ? { kind: "sprite", id: p.spriteId }
                 : p.kind === "animation"
                   ? { kind: "animation", id: p.animationId }
-                  : {
-                      kind: "machine",
-                      id: p.machineId,
-                      ...(p.stateName ? { stateName: p.stateName } : {}),
-                      ...(p.properties && Object.keys(p.properties).length > 0
-                        ? { properties: p.properties }
-                        : {}),
-                    },
+                  : p.kind === "text"
+                    ? {
+                        kind: "text",
+                        text: p.text,
+                        font: p.font,
+                        fontSize: p.fontSize,
+                        color: p.color,
+                        align: p.align,
+                      }
+                    : {
+                        kind: "machine",
+                        id: p.machineId,
+                        ...(p.stateName ? { stateName: p.stateName } : {}),
+                        ...(p.properties && Object.keys(p.properties).length > 0
+                          ? { properties: p.properties }
+                          : {}),
+                      },
           });
           mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
         } else {
@@ -777,10 +866,31 @@ export function MapCanvas({
           rotation: p.rotation,
           flipX: p.flipX,
           flipY: p.flipY,
+          text: p.kind === "text" ? p : undefined,
           valid: true,
         });
         return;
       }
+      // Text: drop a free-positioned label at the exact pixel (no grid snap).
+      if (tool === "text") {
+        const style = map.selected?.kind === "text" ? map.selected : DEFAULT_TEXT_STYLE;
+        const placement: MapPlacement = {
+          id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          kind: "text",
+          text: style.text,
+          font: style.font,
+          fontSize: style.fontSize,
+          color: style.color,
+          align: style.align,
+          x: Math.round(localX),
+          y: Math.round(localY),
+          level: map.activeLevel,
+        };
+        mapDispatch({ type: "ADD_PLACEMENT", screenKey: key, placement });
+        mapDispatch({ type: "SELECT_PLACEMENT", id: placement.id });
+        return;
+      }
+
 
       // Paint: click places one item per click at the active level.
       if (tool === "paint") {
@@ -882,8 +992,12 @@ export function MapCanvas({
         const key = screenKey(r.screen.x, r.screen.y);
         const localX = world.x - r.wx;
         const localY = world.y - r.wy;
-        const nx = Math.round(localX / map.blockSize) * map.blockSize;
-        const ny = Math.round(localY / map.blockSize) * map.blockSize;
+        const original = map.screens[moving.screenKey]?.placements.find(
+          (p) => p.id === moving.id,
+        );
+        const free = original?.kind === "text";
+        const nx = free ? Math.round(localX) : Math.round(localX / map.blockSize) * map.blockSize;
+        const ny = free ? Math.round(localY) : Math.round(localY / map.blockSize) * map.blockSize;
         setMovePreview((prev) =>
           prev
             ? {
