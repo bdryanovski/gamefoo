@@ -24,6 +24,11 @@ export class ExploreAI extends CritterAI {
 
   private wanderTimer = 0;
 
+  /** True while the critter is bolting away from a sensed player. */
+  get fleeing(): boolean {
+    return this.sees;
+  }
+
   protected think(dt: DeltaTime): void {
     const speed = this.sees ? this.fleeHeading() : this.wanderHeading(dt);
     const dx = this.heading.x * speed * dt;
