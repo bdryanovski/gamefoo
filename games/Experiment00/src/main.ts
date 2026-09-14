@@ -43,6 +43,10 @@ import { Skeleton } from './objects/skeleton';
 import { Goblin } from './objects/goblin';
 import { SlimeKing } from './objects/slime_king';
 
+import { inject } from '@vercel/analytics';
+
+inject();
+
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
 const SCREEN_W = 320;
