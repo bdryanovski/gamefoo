@@ -35,6 +35,7 @@ import { Rat } from './objects/rat';
 import { Slime } from './objects/slime';
 import { Sign } from './objects/sign';
 import { DarkChamberScreen } from './screens/dark-chamber';
+import { HeaderScreen } from './screens/header';
 import { RoomScreen } from './screens/room';
 import { Ghost } from './objects/ghost';
 import { FlyingSkull } from './objects/flying_skull';
@@ -89,7 +90,7 @@ const AUDIO = {
   backgroundByScreen: {
     '0,3': 'bg_cave',
   } as Record<string, string>,
-  footstepSequence: 'seq_footsteps',
+  footstepSequence: 'seq_footsteps_water',
   stepInterval: 0.32,
   stepVolume: 0.6,
   campfireSound: 'campfire_loop',
@@ -194,6 +195,7 @@ class MapGame extends Engine {
     const screens = new ScreenRegistry();
     screens.setDefault(RoomScreen);
     screens.register(0, 8, DarkChamberScreen);
+    screens.register(0, 0, HeaderScreen);
 
     // Read the editor's live working project straight from disk (served at
     // /project/…), unmodified. Image urls are "/uploads/<file>".

@@ -13653,7 +13653,7 @@
             "kind": "sprite",
             "spriteId": "spr_mtv6bi8p_b",
             "x": 48,
-            "y": 48,
+            "y": 96,
             "level": 2
           },
           {
@@ -13661,7 +13661,7 @@
             "kind": "sprite",
             "spriteId": "spr_mtv6bmzp_c",
             "x": 32,
-            "y": 64,
+            "y": 112,
             "level": 2
           },
           {
@@ -13669,7 +13669,7 @@
             "kind": "sprite",
             "spriteId": "spr_mtv6bo3i_d",
             "x": 48,
-            "y": 64,
+            "y": 112,
             "level": 2
           },
           {
@@ -13677,27 +13677,15 @@
             "kind": "sprite",
             "spriteId": "spr_mtv6br2g_e",
             "x": 64,
-            "y": 64,
+            "y": 112,
             "level": 2
           },
           {
             "id": "1789163101680_xxmypf",
             "kind": "sprite",
             "spriteId": "spr_mtv6btyu_f",
-            "x": 80,
-            "y": 32,
-            "level": 2
-          },
-          {
-            "id": "1789163695931_u95hle",
-            "kind": "text",
-            "text": "Action",
-            "font": "monospace",
-            "fontSize": 7,
-            "color": "#ffffff",
-            "align": "left",
-            "x": 101,
-            "y": 36,
+            "x": 256,
+            "y": 96,
             "level": 2
           }
         ]
@@ -60717,7 +60705,7 @@
       "align": "left",
       "kind": "text"
     },
-    "selectedPlacementId": "1789164095050_h4rlxc",
+    "selectedPlacementId": "1789163101680_xxmypf",
     "layers": [
       {
         "name": "base",
@@ -60744,8 +60732,8 @@
     "activeTool": "move",
     "zoom": 2.274099296321166,
     "pan": {
-      "x": -907.2016331068753,
-      "y": 267.82794630602564
+      "x": 446.7983668931247,
+      "y": 257.82794630602564
     }
   },
   "dialog": {
@@ -62379,5 +62367,5 @@
     "selectedMessageId": "msg_mtv6w3h3_2"
   },
   "history": [],
-  "lastModified": "2026-09-11T22:10:27.690Z"
+  "lastModified": "2026-09-14T13:45:12.886Z"
 }
