@@ -14435,7 +14435,7 @@
             "machineId": "sm_mto16yyf_1",
             "properties": {
               "targetScreen": "0,2",
-              "spawn": "2,12"
+              "spawn": "3,11"
             },
             "x": 288,
             "y": 192,
@@ -60869,7 +60869,7 @@
       "align": "left",
       "kind": "text"
     },
-    "selectedPlacementId": null,
+    "selectedPlacementId": "1788980928664_8hyg2a",
     "layers": [
       {
         "name": "base",
@@ -60893,11 +60893,11 @@
       }
     ],
     "activeLevel": 2,
-    "activeTool": "erase",
+    "activeTool": "select",
     "zoom": 2.274099296321166,
     "pan": {
-      "x": 355.6712467147184,
-      "y": 129.04050250860223
+      "x": -991.3287532852817,
+      "y": 19.04050250860223
     }
   },
   "dialog": {
@@ -62564,5 +62564,5 @@
     "selectedMessageId": "msg_mu1qi93b_9"
   },
   "history": [],
-  "lastModified": "2026-09-14T21:10:03.151Z"
+  "lastModified": "2026-09-14T21:12:54.406Z"
 }
