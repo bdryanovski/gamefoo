@@ -259,7 +259,7 @@ class MapGame extends Engine {
   /** Builds the persistent player from the loaded "player" prefab. */
   private spawnPlayer(): void {
     const assets = this.map?.assets;
-    const def = assets?.objectByName('player');
+    const def = assets?.objectByName('boy');
     if (!assets || !def) return;
     const start = def.machine.states.find((s) => s.name === 'Idle')?.id;
     const context: MapObjectContext = {

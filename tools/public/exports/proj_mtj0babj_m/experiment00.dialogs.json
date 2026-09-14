@@ -1493,6 +1493,21 @@
           "meta": {}
         }
       }
+    },
+    "Password": {
+      "id": "dlg_mu1hv9cu_6",
+      "name": "Password",
+      "root": "msg_mu1hv9cu_5",
+      "messages": {
+        "msg_mu1hv9cu_5": {
+          "title": "Password",
+          "segments": [
+            "Written on the sign \"1608\" what is that?"
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }

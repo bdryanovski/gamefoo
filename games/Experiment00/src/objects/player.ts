@@ -1,6 +1,7 @@
 import type { DeltaTime } from '../../../../src/generic_types';
 import {
   type CollisionMap,
+  FootstepTrailShader,
   GlowShader,
   Input,
   MapObject,
@@ -28,7 +29,7 @@ type Facing = 'down' | 'up' | 'left' | 'right';
  * the right-walk art), `Idle` = idle facing down, `idle_up` = idle facing up.
  */
 export class Player extends MapObject {
-  static override readonly type = 'player';
+  static override readonly type = 'boy';
 
   private readonly input: Input;
   private facing: Facing = 'down';
@@ -41,10 +42,20 @@ export class Player extends MapObject {
 
   override onSpawn(): void {
     this.attachShader(
+      new FootstepTrailShader({
+        color: '#1a1a1a',
+        spacing: 6,
+        life: 2,
+        size: 1,
+        offset: 2,
+        alpha: 0.25,
+      }),
+    );
+    this.attachShader(
       new GlowShader({
         color: '#9bbc0f',
         radius: 12,
-        intensity: 0.65,
+        intensity: 0.25,
         pulseSpeed: 1.2,
         pulseAmount: 0.4,
       }),

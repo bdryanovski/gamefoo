@@ -199,6 +199,10 @@ export default class MapObject {
    * Draws the current state's display.
    */
   render(ctx: RenderContext): void {
+    const bounds = this.bounds();
+    // Ground decals (trails, shadows) draw beneath the sprite; glow/particles
+    // and other overlays draw on top.
+    this.shaders.renderUnder(ctx, bounds);
     for (const part of this.parts) {
       if (part.anim) {
         // keep the animation aligned with the object (custom classes may move it)
@@ -209,7 +213,7 @@ export default class MapObject {
         drawFrame(ctx, part.frame, this.x + part.ox, this.y + part.oy, part.transform);
       }
     }
-    this.shaders.render(ctx, this.bounds());
+    this.shaders.renderOver(ctx, bounds);
   }
 
   /**

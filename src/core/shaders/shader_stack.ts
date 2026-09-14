@@ -85,4 +85,28 @@ export class ShaderStack {
       }
     }
   }
+
+  /**
+   * Renders every enabled shader whose {@link Shader.under} is `true` — the
+   * host draws these beneath its sprite.
+   */
+  renderUnder(ctx: RenderContext, region: ShaderRegion): void {
+    for (const shader of this.items) {
+      if (shader.enabled && shader.under) {
+        shader.render(ctx, region);
+      }
+    }
+  }
+
+  /**
+   * Renders every enabled shader whose {@link Shader.under} is `false` — the
+   * host draws these on top of its sprite.
+   */
+  renderOver(ctx: RenderContext, region: ShaderRegion): void {
+    for (const shader of this.items) {
+      if (shader.enabled && !shader.under) {
+        shader.render(ctx, region);
+      }
+    }
+  }
 }

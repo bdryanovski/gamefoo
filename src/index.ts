@@ -121,6 +121,8 @@ export { GlowShader } from './core/shaders/glow_shader';
 export type { GlowConfig } from './core/shaders/glow_shader';
 export { ParticleShader } from './core/shaders/particle_shader';
 export type { ParticleConfig } from './core/shaders/particle_shader';
+export { FootstepTrailShader } from './core/shaders/footstep_trail_shader';
+export type { FootstepTrailConfig } from './core/shaders/footstep_trail_shader';
 export { AmbientSporeShader } from './core/shaders/ambient_spore_shader';
 export type { AmbientSporeConfig } from './core/shaders/ambient_spore_shader';
 export { ScreenTransitionShader } from './core/shaders/screen_transition_shader';

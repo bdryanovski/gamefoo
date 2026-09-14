@@ -42,6 +42,15 @@ export abstract class Shader {
   enabled: boolean;
 
   /**
+   * When `true`, the host draws this shader **beneath** its sprite (a ground
+   * decal — trail, shadow, scorch) instead of on top. Hosts that don't
+   * distinguish passes (e.g. full-screen {@link ShaderSystem}) ignore it.
+   *
+   * @defaultValue `false`
+   */
+  readonly under: boolean = false;
+
+  /**
    * @param config - Base options (currently just `enabled`). Subclasses
    *   extend {@link ShaderConfig} with their own tunables.
    */
