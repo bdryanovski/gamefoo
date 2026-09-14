@@ -1508,6 +1508,23 @@
           "meta": {}
         }
       }
+    },
+    "Random Olive": {
+      "id": "dlg_mu1q1ehy_3",
+      "name": "Random Olive",
+      "root": "msg_mu1q1ehy_2",
+      "messages": {
+        "msg_mu1q1ehy_2": {
+          "title": "Found an Olive",
+          "segments": [
+            "You pick up the olive.",
+            "You remember how easily you used to have something to tell her.",
+            "Now, even the smallest things feel too quiet."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }

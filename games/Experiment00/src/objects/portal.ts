@@ -240,7 +240,7 @@ export class Portal extends MapObject {
   }
 
   /**
-   * Draws the pixel-art opening badge: a chunky pie above the door that
+   * Draws the pixel-art opening badge: a chunky pie centred on the door that
    * fills clockwise from twelve o'clock as {@link openProgress} climbs to
    * `1`. Rendered by the game as a top-most overlay (after every map layer)
    * so no wall or pillar can hide it. Cells are whole map pixels, so it
@@ -254,7 +254,7 @@ export class Portal extends MapObject {
     const cell = 1; // one map pixel per pie block — matches the art grid
     const radius = Math.max(4, Math.round(Math.min(box.width, box.height) * 0.3));
     const cx = Math.round(box.x + box.width / 2);
-    const cy = Math.round(box.y) - radius - 2; // hover just above the door
+    const cy = Math.round(box.y + box.height / 2); // centre of the door
     const sweep = this.openProgress * Math.PI * 2;
     const twelve = -Math.PI / 2;
     for (let gy = -radius; gy <= radius; gy += cell) {
