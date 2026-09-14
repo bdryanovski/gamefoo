@@ -193,16 +193,15 @@
       }
     },
     "Empty Chest": {
-      "id": "dlg_mtoqgmst_f",
+      "id": "dlg_mu1qi93b_a",
       "name": "Empty Chest",
-      "root": "msg_mtoqgmst_e",
+      "root": "msg_mu1qi93b_9",
       "messages": {
-        "msg_mtoqgmst_e": {
-          "title": "Chest",
+        "msg_mu1qi93b_9": {
+          "title": "Empty",
           "segments": [
-            "Voice: You expected something ?",
-            "Voice: You still do ...",
-            "Voice: Nothing "
+            "Empty.",
+            "Yet somehow, you were expecting her to leave something here."
           ],
           "options": [],
           "meta": {}
@@ -1503,23 +1502,6 @@
           "title": "Password",
           "segments": [
             "Written on the sign \"1608\" what is that?"
-          ],
-          "options": [],
-          "meta": {}
-        }
-      }
-    },
-    "Random Olive": {
-      "id": "dlg_mu1q1ehy_3",
-      "name": "Random Olive",
-      "root": "msg_mu1q1ehy_2",
-      "messages": {
-        "msg_mu1q1ehy_2": {
-          "title": "Found an Olive",
-          "segments": [
-            "You pick up the olive.",
-            "You remember how easily you used to have something to tell her.",
-            "Now, even the smallest things feel too quiet."
           ],
           "options": [],
           "meta": {}
