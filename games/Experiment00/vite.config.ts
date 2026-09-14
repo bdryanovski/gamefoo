@@ -1,4 +1,4 @@
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { cpSync, createReadStream, existsSync, mkdirSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
@@ -6,6 +6,7 @@ import { defineConfig, type Plugin } from 'vite';
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '../..');
 const projectRoot = resolve(repoRoot, 'tools/public');
+const distRoot = resolve(here, 'dist');
 
 const MIME: Record<string, string> = {
   json: 'application/json',
@@ -39,11 +40,49 @@ function serveProject(): Plugin {
   };
 }
 
+// Stage every runtime-fetched static file into `dist/` at the exact URL the
+// built game requests, so a plain static host (Vercel, etc.) serves them with
+// no dev middleware. In dev these come from `serveProject` and Vite's root
+// static serving; a production `vite build` ships none of them by default.
+// Build-only (`apply: 'build'`); runs after the bundle is written.
+function stageStaticAssets(): Plugin {
+  return {
+    name: 'stage-static-assets',
+    apply: 'build',
+    closeBundle() {
+      const copies: [from: string, to: string][] = [
+        // Audio catalog + clips, fetched from `/assets/audio/…`.
+        [resolve(here, 'assets'), resolve(distRoot, 'assets')],
+        // The map project, fetched from `/project/projects/…`.
+        [
+          resolve(projectRoot, 'projects/proj_mtj0babj_m.json'),
+          resolve(distRoot, 'project/projects/proj_mtj0babj_m.json'),
+        ],
+        // Dialog export, fetched from `/project/exports/…`.
+        [
+          resolve(projectRoot, 'exports/proj_mtj0babj_m/experiment00.dialogs.json'),
+          resolve(distRoot, 'project/exports/proj_mtj0babj_m/experiment00.dialogs.json'),
+        ],
+        // Sprite-sheet images, resolved to `/project/uploads/…` by the loader.
+        [resolve(projectRoot, 'uploads'), resolve(distRoot, 'project/uploads')],
+      ];
+      for (const [from, to] of copies) {
+        if (!existsSync(from)) {
+          this.warn(`stage-static-assets: missing source ${from}`);
+          continue;
+        }
+        mkdirSync(dirname(to), { recursive: true });
+        cpSync(from, to, { recursive: true });
+      }
+    },
+  };
+}
+
 // The engine is read straight from its TypeScript source (`../../src`); the
 // `@` alias mirrors the engine's own internal import prefix.
 export default defineConfig({
   root: here,
-  plugins: [serveProject()],
+  plugins: [serveProject(), stageStaticAssets()],
   server: {
     host: '0.0.0.0',
     port: 5173,

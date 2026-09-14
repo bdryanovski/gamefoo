@@ -4,6 +4,7 @@ node_modules
 # output
 out
 dist
+.vercel
 *.tgz
 
 # code coverage
@@ -35,3 +36,4 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Generated demo server
 web_demos/server.ts
+.env*
