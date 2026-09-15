@@ -33,8 +33,16 @@ function ensureMixpanel(): boolean {
   if (mixpanelReady) return true;
   if (!MIXPANEL_TOKEN) return false;
   mixpanel.init(MIXPANEL_TOKEN, {
+    // EU data residency — this project lives on Mixpanel's EU cluster, so
+    // ingestion MUST target the EU host (the default routes to US and
+    // silently lands in the wrong region).
+    api_host: 'https://api-eu.mixpanel.com',
+    // Auto-capture page views, clicks, and form interactions on top of the
+    // typed gameplay events emitted below.
+    autocapture: true,
+    // Record 100% of sessions for session replay.
+    record_sessions_percent: 100,
     persistence: 'localStorage',
-    track_pageview: false,
     debug: false,
   });
   mixpanelReady = true;
