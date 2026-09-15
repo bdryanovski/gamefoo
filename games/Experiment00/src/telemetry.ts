@@ -1,8 +1,9 @@
-import { inject, track } from '@vercel/analytics';
+import mixpanel from 'mixpanel-browser';
 
 /**
- * Flat property values Vercel custom events accept — nested objects are
- * rejected by the API, so every event payload is a flat record of these.
+ * Flat property values every event payload uses. Mixpanel accepts nested
+ * objects, but a flat record keeps events consistent across every sink
+ * (Mixpanel, an optional `endpoint`, an optional `forward`).
  */
 type Value = string | number | boolean | null;
 type Props = Record<string, Value>;
@@ -11,6 +12,34 @@ type Props = Record<string, Value>;
 const UID_KEY = 'experiment00:uid';
 /** localStorage key for a bound known user id (set via {@link Telemetry.identify}). */
 const USER_KEY = 'experiment00:user';
+
+/**
+ * Mixpanel project token, injected at build time from the `MIX_PANEL` env var
+ * (Vercel-provided; `.env.local` locally — never committed). Exposed to client
+ * code via the `MIX_PANEL` entry in `vite.config.ts`'s `envPrefix`. When
+ * absent (e.g. a build with no token configured) Mixpanel is disabled and the
+ * other sinks still receive events.
+ */
+const MIXPANEL_TOKEN = (import.meta.env.MIX_PANEL as string | undefined)?.trim();
+
+/** True once {@link ensureMixpanel} has successfully initialised the SDK. */
+let mixpanelReady = false;
+
+/**
+ * Idempotently initialises the Mixpanel browser SDK. Returns whether Mixpanel
+ * is usable — `false` when no `MIX_PANEL` token is configured.
+ */
+function ensureMixpanel(): boolean {
+  if (mixpanelReady) return true;
+  if (!MIXPANEL_TOKEN) return false;
+  mixpanel.init(MIXPANEL_TOKEN, {
+    persistence: 'localStorage',
+    track_pageview: false,
+    debug: false,
+  });
+  mixpanelReady = true;
+  return true;
+}
 
 /** One emitted event: its name and the full, flat payload sent to every sink. */
 export interface TelemetryEvent {
@@ -25,13 +54,12 @@ export interface TelemetryOptions {
   /**
    * A second endpoint the SAME events are POSTed to (via `navigator.sendBeacon`)
    * as JSON. Point it at your own collector / serverless function that appends
-   * to a per-user store — this is what makes an **ordered, individual journey**
-   * possible (Vercel Web Analytics is aggregate and cannot replay one user).
+   * to a per-user store.
    */
   endpoint?: string;
   /**
-   * A custom sink for the SAME events — e.g. forward to PostHog/Amplitude/
-   * Mixpanel, which support `identify` + per-user timelines:
+   * A custom sink for the SAME events — e.g. forward to PostHog/Amplitude,
+   * which support `identify` + per-user timelines:
    * `forward: (e) => posthog.capture(e.name, e.props)`.
    */
   forward?: (event: TelemetryEvent) => void;
@@ -40,8 +68,8 @@ export interface TelemetryOptions {
 /**
  * Central analytics for Experiment00.
  *
- * Wraps `@vercel/analytics` and fans every event to up to three sinks: Vercel
- * Web Analytics (aggregate), an optional `endpoint` (your own per-user store),
+ * Wraps `mixpanel-browser` and fans every event to up to three sinks: Mixpanel
+ * (per-user event timelines), an optional `endpoint` (your own per-user store),
  * and an optional `forward` callback (PostHog/Amplitude/…). Each event is
  * stamped with everything needed to reconstruct **one user's journey**:
  *
@@ -54,21 +82,19 @@ export interface TelemetryOptions {
  * - `screen` — the current room.
  *
  * ### Individual-user tracking
- * Vercel Web Analytics is aggregate: you can *filter* custom events by the
- * `uid`/`user` property in the dashboard, but it will not give an ordered
- * timeline per person. For a real per-user journey, set `endpoint` (your store)
- * or `forward` (a product-analytics SDK) — the same stamped events flow there.
+ * Mixpanel gives an ordered per-person timeline out of the box: call
+ * {@link Telemetry.identify} to bind a known identity, and every later event is
+ * attributed to that user. For extra sinks, set `endpoint` (your own store) or
+ * `forward` (another product-analytics SDK) — the same stamped events flow there.
  *
  * @example Anonymous (default)
  * ```ts
  * const telemetry = new Telemetry();
  * ```
  *
- * @example Real per-user journeys via PostHog
+ * @example Bind a known identity after sign-in
  * ```ts
- * const telemetry = new Telemetry({
- *   forward: (e) => posthog.capture(e.name, e.props),
- * });
+ * const telemetry = new Telemetry();
  * telemetry.identify(loggedInUser.id, { plan: 'pro' });
  * ```
  *
@@ -101,7 +127,14 @@ export class Telemetry {
     this.startedAt = performance.now();
     this.endpoint = options.endpoint;
     this.forward = options.forward;
-    inject({ mode: 'auto' });
+    if (ensureMixpanel()) {
+      // Attach the stable device id so anonymous sessions are grouped, and
+      // adopt any already-bound identity from a previous visit.
+      mixpanel.register({ uid: this.uid });
+      if (this.userId !== this.uid) {
+        mixpanel.identify(this.userId);
+      }
+    }
     this.emit('session_start');
   }
 
@@ -109,7 +142,7 @@ export class Telemetry {
    * Binds a **known identity** to this player (e.g. after sign-in). Persists it
    * so the same person is recognised on their next visit, and stamps every
    * later event with it. `traits` (plan, cohort, …) ride on the `identify`
-   * event for your downstream store.
+   * event for your downstream store and become Mixpanel people properties.
    */
   identify(userId: string, traits?: Props): void {
     this.userId = userId;
@@ -117,6 +150,12 @@ export class Telemetry {
       localStorage.setItem(USER_KEY, userId);
     } catch {
       // storage unavailable (private mode) — identity holds for this session.
+    }
+    if (mixpanelReady) {
+      mixpanel.identify(userId);
+      if (traits) {
+        mixpanel.people.set(traits);
+      }
     }
     this.emit('identify', traits);
   }
@@ -250,7 +289,7 @@ export class Telemetry {
 
   /**
    * Stamps identity + journey context onto `props` and fans the event to every
-   * configured sink (Vercel, then `endpoint`, then `forward`).
+   * configured sink (Mixpanel, then `endpoint`, then `forward`).
    */
   private emit(name: string, props?: Props): void {
     this.seq += 1;
@@ -268,7 +307,9 @@ export class Telemetry {
       },
     };
 
-    track(event.name, event.props);
+    if (mixpanelReady) {
+      mixpanel.track(event.name, event.props);
+    }
 
     if (
       this.endpoint &&

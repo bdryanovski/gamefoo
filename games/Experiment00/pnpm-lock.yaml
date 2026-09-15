@@ -8,9 +8,9 @@ importers:
 
   .:
     devDependencies:
-      '@vercel/analytics':
-        specifier: ^2.0.1
-        version: 2.0.1
+      mixpanel-browser:
+        specifier: ^2.65.0
+        version: 2.83.0
       typescript:
         specifier: ^5.6.0
         version: 5.9.3
@@ -176,6 +176,27 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@mixpanel/rrdom@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-JY1Kr8c5pPmFBdPMLIEm1e0/hw2xvsS515Qqf+5Lpm0AW+2e/ZvA6P6M+z4fXeuachfZZv06UhTvixiUJv355Q==, tarball: https://registry.npmjs.org/@mixpanel/rrdom/-/rrdom-2.0.0-alpha.18.6.tgz}
+
+  '@mixpanel/rrweb-plugin-console-record@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-qfRNGfWLHZHnMQ4IFQMObxf7ctX8YrRf205hppwb9yXwjZHyBsKkK+Gm3aot2pUMu1BEFeXSvFS38Nf3vKg4Qw==, tarball: https://registry.npmjs.org/@mixpanel/rrweb-plugin-console-record/-/rrweb-plugin-console-record-2.0.0-alpha.18.6.tgz}
+    peerDependencies:
+      '@mixpanel/rrweb': ^2.0.0-alpha.18
+      '@mixpanel/rrweb-utils': ^2.0.0-alpha.18
+
+  '@mixpanel/rrweb-snapshot@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-8c8TArw8l0mmYPvKc3asq3hIzQ7uVrNVQ4xsVt+ESxHohW8r47ua/YLDpd2jV30FZj4Y3KvGTQl5sXLDI+02Zw==, tarball: https://registry.npmjs.org/@mixpanel/rrweb-snapshot/-/rrweb-snapshot-2.0.0-alpha.18.6.tgz}
+
+  '@mixpanel/rrweb-types@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-KvaTcbZR4mJ3w1b1fEq4AeSg9rUqvQ1gKko9r56ANUw4fqWam23xoXrLJ8Og+hPYTwIDQ99TkZBVXFTGJqYwpQ==, tarball: https://registry.npmjs.org/@mixpanel/rrweb-types/-/rrweb-types-2.0.0-alpha.18.6.tgz}
+
+  '@mixpanel/rrweb-utils@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-1eEcOunlnv27oqHRhaK9F2fo5kB97M98+3VoZz6CCq816J37wveGQIiXDvb5qUOgMqjwJ9GCNRMUhrxSyM0C5w==, tarball: https://registry.npmjs.org/@mixpanel/rrweb-utils/-/rrweb-utils-2.0.0-alpha.18.6.tgz}
+
+  '@mixpanel/rrweb@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-9DOB723vDEy8zP88nrEmA2dFmVa+z0tc2AGTVrxHl1pJcnyhT3Z7SASWQxgcT4KGsqTIorJJ/D1sNI7j597Z9g==, tarball: https://registry.npmjs.org/@mixpanel/rrweb/-/rrweb-2.0.0-alpha.18.6.tgz}
+
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     resolution: {integrity: sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ==, tarball: https://registry.npmjs.org/@napi-rs/lzma-linux-x64-gnu/-/lzma-linux-x64-gnu-1.5.1.tgz}
     engines: {node: ^22.20 || ^24.12 || >=25}
@@ -321,37 +342,21 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@types/css-font-loading-module@0.0.7':
+    resolution: {integrity: sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==, tarball: https://registry.npmjs.org/@types/css-font-loading-module/-/css-font-loading-module-0.0.7.tgz}
+
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==, tarball: https://registry.npmjs.org/@types/estree/-/estree-1.0.9.tgz}
 
-  '@vercel/analytics@2.0.1':
-    resolution: {integrity: sha512-MTQG6V9qQrt1tsDeF+2Uoo5aPjqbVPys1xvnIftXSJYG2SrwXRHnqEvVoYID7BTruDz4lCd2Z7rM1BdkUehk2g==, tarball: https://registry.npmjs.org/@vercel/analytics/-/analytics-2.0.1.tgz}
-    peerDependencies:
-      '@remix-run/react': ^2
-      '@sveltejs/kit': ^1 || ^2
-      next: '>= 13'
-      nuxt: '>= 3'
-      react: ^18 || ^19 || ^19.0.0-rc
-      svelte: '>= 4'
-      vue: ^3
-      vue-router: ^4
-    peerDependenciesMeta:
-      '@remix-run/react':
-        optional: true
-      '@sveltejs/kit':
-        optional: true
-      next:
-        optional: true
-      nuxt:
-        optional: true
-      react:
-        optional: true
-      svelte:
-        optional: true
-      vue:
-        optional: true
-      vue-router:
-        optional: true
+  '@types/json-logic-js@2.0.5':
+    resolution: {integrity: sha512-hu/FTi0zwCjQEFfbPur275cNoZj6NsuOBhhYNzqoSdfmMhuxFr58OZ957lyIOWc9+kO+2tFlBthRjcxuytD4HA==, tarball: https://registry.npmjs.org/@types/json-logic-js/-/json-logic-js-2.0.5.tgz}
+
+  '@xstate/fsm@1.6.5':
+    resolution: {integrity: sha512-b5o1I6aLNeYlU/3CPlj/Z91ybk1gUsKT+5NAJI+2W4UjvS5KLG28K9v5UvNoFVjHV8PajVZ00RH3vnjyQO7ZAw==, tarball: https://registry.npmjs.org/@xstate/fsm/-/fsm-1.6.5.tgz}
+
+  base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==, tarball: https://registry.npmjs.org/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz}
+    engines: {node: '>= 0.6.0'}
 
   esbuild@0.25.12:
     resolution: {integrity: sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==, tarball: https://registry.npmjs.org/esbuild/-/esbuild-0.25.12.tgz}
@@ -371,6 +376,15 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==, tarball: https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  json-logic-js@2.0.5:
+    resolution: {integrity: sha512-rTT2+lqcuUmj4DgWfmzupZqQDA64AdmYqizzMPWj3DxGdfFNsxPpcNVSaTj4l8W2tG/+hg7/mQhxjU3aPacO6g==, tarball: https://registry.npmjs.org/json-logic-js/-/json-logic-js-2.0.5.tgz}
+
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==, tarball: https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz}
+
+  mixpanel-browser@2.83.0:
+    resolution: {integrity: sha512-TuAh1+6iLv5BB4v9D9qS/QAGeDVOv2r78vFNi36Uy/RAYanOXw2ncXDmvq1BKHdV0vtw3K3YgJJ1i03V3U3qkg==, tarball: https://registry.npmjs.org/mixpanel-browser/-/mixpanel-browser-2.83.0.tgz}
 
   nanoid@3.3.18:
     resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==, tarball: https://registry.npmjs.org/nanoid/-/nanoid-3.3.18.tgz}
@@ -526,6 +540,34 @@ snapshots:
   '@esbuild/win32-x64@0.25.12':
     optional: true
 
+  '@mixpanel/rrdom@2.0.0-alpha.18.6':
+    dependencies:
+      '@mixpanel/rrweb-snapshot': 2.0.0-alpha.18.6
+
+  '@mixpanel/rrweb-plugin-console-record@2.0.0-alpha.18.6(@mixpanel/rrweb-utils@2.0.0-alpha.18.6)(@mixpanel/rrweb@2.0.0-alpha.18.6)':
+    dependencies:
+      '@mixpanel/rrweb': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.6
+
+  '@mixpanel/rrweb-snapshot@2.0.0-alpha.18.6':
+    dependencies:
+      postcss: 8.5.26
+
+  '@mixpanel/rrweb-types@2.0.0-alpha.18.6': {}
+
+  '@mixpanel/rrweb-utils@2.0.0-alpha.18.6': {}
+
+  '@mixpanel/rrweb@2.0.0-alpha.18.6':
+    dependencies:
+      '@mixpanel/rrdom': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-snapshot': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-types': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.6
+      '@types/css-font-loading-module': 0.0.7
+      '@xstate/fsm': 1.6.5
+      base64-arraybuffer: 1.0.2
+      mitt: 3.0.1
+
   '@napi-rs/lzma-linux-x64-gnu@1.5.1':
     optional: true
 
@@ -604,9 +646,15 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.63.1':
     optional: true
 
+  '@types/css-font-loading-module@0.0.7': {}
+
   '@types/estree@1.0.9': {}
 
-  '@vercel/analytics@2.0.1': {}
+  '@types/json-logic-js@2.0.5': {}
+
+  '@xstate/fsm@1.6.5': {}
+
+  base64-arraybuffer@1.0.2: {}
 
   esbuild@0.25.12:
     optionalDependencies:
@@ -643,6 +691,18 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  json-logic-js@2.0.5: {}
+
+  mitt@3.0.1: {}
+
+  mixpanel-browser@2.83.0:
+    dependencies:
+      '@mixpanel/rrweb': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-plugin-console-record': 2.0.0-alpha.18.6(@mixpanel/rrweb-utils@2.0.0-alpha.18.6)(@mixpanel/rrweb@2.0.0-alpha.18.6)
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.6
+      '@types/json-logic-js': 2.0.5
+      json-logic-js: 2.0.5
 
   nanoid@3.3.18: {}
 

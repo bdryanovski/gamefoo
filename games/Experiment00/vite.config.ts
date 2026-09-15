@@ -83,6 +83,10 @@ function stageStaticAssets(): Plugin {
 export default defineConfig({
   root: here,
   plugins: [serveProject(), stageStaticAssets()],
+  // Expose `MIX_PANEL` (Vercel-provided at build) to client code alongside the
+  // default `VITE_` prefix. Vite inlines matching vars from `.env.local` (dev)
+  // and `process.env` (Vercel build) into `import.meta.env`.
+  envPrefix: ['VITE_', 'MIX_PANEL'],
   server: {
     host: '0.0.0.0',
     port: 5173,
