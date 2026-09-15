@@ -136,12 +136,20 @@ export class Telemetry {
     this.endpoint = options.endpoint;
     this.forward = options.forward;
     if (ensureMixpanel()) {
-      // Attach the stable device id so anonymous sessions are grouped, and
-      // adopt any already-bound identity from a previous visit.
+      // Make the stable, localStorage-persisted device id the canonical
+      // Mixpanel identity. Without this, Mixpanel invents its own random
+      // `$device_id` per browser and never promotes the player to an
+      // identified user — so no People profile is created and the player is
+      // absent from the Users report. Identifying with `uid` gives every
+      // player (even with no sign-in) one unique, cross-session identity.
       mixpanel.register({ uid: this.uid });
-      if (this.userId !== this.uid) {
-        mixpanel.identify(this.userId);
-      }
+      mixpanel.identify(this.userId);
+      // Create/refresh the People profile so the player appears as a user.
+      // `set_once` writes first-touch fields only; `set` refreshes each visit.
+      const now = new Date().toISOString();
+      mixpanel.people.set_once({ first_seen: now });
+      mixpanel.people.set({ last_seen: now });
+      mixpanel.people.increment('sessions');
     }
     this.emit('session_start');
   }
