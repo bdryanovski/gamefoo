@@ -23,12 +23,12 @@ export type AnyPalette = ColorPalette | GeneratedPalette;
 import { type ControlSchemeName, getControlScheme } from '@/core/controls';
 import type { GridSize, MonitorSystem } from '@/subsystems/monitor_system';
 import type MenuSystem from './MenuSystem';
-import type AudioPage from './pages/AudioPage';
-import type ControlsPage from './pages/ControlsPage';
-import type DebugPage from './pages/DebugPage';
-import type GraphicsPage from './pages/GraphicsPage';
-import type PalettePage from './pages/PalettePage';
-import type QuitPage from './pages/QuitPage';
+import AudioPage from './pages/AudioPage';
+import ControlsPage from './pages/ControlsPage';
+import DebugPage from './pages/DebugPage';
+import GraphicsPage from './pages/GraphicsPage';
+import PalettePage from './pages/PalettePage';
+import QuitPage from './pages/QuitPage';
 
 /**
  * Debug overlay state.
@@ -250,9 +250,6 @@ export default class MenuIntegration {
    * @since 0.5.0
    */
   createControlsPage(): ControlsPage {
-    // Dynamic import to avoid circular dependencies
-    const { default: ControlsPage } = require('./pages/ControlsPage');
-
     return new ControlsPage({
       initialScheme: this._controlScheme,
       onSchemeChange: (scheme: ControlScheme, name: ControlSchemeName) => {
@@ -270,8 +267,6 @@ export default class MenuIntegration {
    * @since 0.5.0
    */
   createGraphicsPage(): GraphicsPage {
-    const { default: GraphicsPage } = require('./pages/GraphicsPage');
-
     return new GraphicsPage({
       scale: this._graphics.scale,
       scales: [1, 2, 3, 4],
@@ -299,8 +294,6 @@ export default class MenuIntegration {
    * @since 0.5.0
    */
   createAudioPage(): AudioPage {
-    const { default: AudioPage } = require('./pages/AudioPage');
-
     return new AudioPage({
       masterVolume: this._audio.masterVolume,
       musicVolume: this._audio.musicVolume,
@@ -333,8 +326,6 @@ export default class MenuIntegration {
    * @since 0.5.0
    */
   createPalettePage(): PalettePage {
-    const { default: PalettePage } = require('./pages/PalettePage');
-
     return new PalettePage({
       palettes: this._palettes,
       selectedIndex: this._paletteIndex,
@@ -356,8 +347,6 @@ export default class MenuIntegration {
    * @since 0.5.0
    */
   createDebugPage(): DebugPage {
-    const { default: DebugPage } = require('./pages/DebugPage');
-
     const page = new DebugPage({
       monitorSystem: this._monitorSystem ?? undefined,
       onShowFpsChange: (_value: boolean) => {
@@ -389,8 +378,6 @@ export default class MenuIntegration {
    * @since 0.5.0
    */
   createQuitPage(message?: string): QuitPage {
-    const { default: QuitPage } = require('./pages/QuitPage');
-
     return new QuitPage({
       message: message ?? 'Are you sure you want to quit?',
       onQuit: () => {

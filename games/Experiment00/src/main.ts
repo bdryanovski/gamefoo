@@ -43,9 +43,7 @@ import { Skeleton } from './objects/skeleton';
 import { Goblin } from './objects/goblin';
 import { SlimeKing } from './objects/slime_king';
 
-import { inject } from '@vercel/analytics';
-
-inject();
+import { Telemetry } from './telemetry';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -167,7 +165,12 @@ class MapGame extends Engine {
   /** A locked door whose reminder is showing; its lock UI opens on close. */
   private pendingLock?: Portal;
 
+  /** Anonymous, per-event analytics for the whole play session. */
+  private readonly telemetry = new Telemetry();
+
   async load(): Promise<void> {
+    const loadStart = performance.now();
+    this.telemetry.gameStart();
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
     const registry = new MapObjectRegistry();
@@ -258,6 +261,7 @@ class MapGame extends Engine {
     this.navigate(0, 0);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
+    this.telemetry.gameLoaded(performance.now() - loadStart);
   }
 
   /** Builds the persistent player from the loaded "player" prefab. */
@@ -294,6 +298,8 @@ class MapGame extends Engine {
     this.cy = y;
     if (this.player) this.map.current?.collision.addOccupant(this.player);
     this.updateBackground();
+    this.telemetry.setScreen(x, y);
+    this.telemetry.screenEnter(x, y);
     return true;
   }
 
@@ -338,7 +344,7 @@ class MapGame extends Engine {
    */
   private promptLock(portal: Portal): void {
     const ref = portal.reminderRef;
-    if (ref && this.dialog?.start(ref)) {
+    if (this.startDialog(ref, 'portal_reminder')) {
       this.pendingLock = portal;
       return;
     }
@@ -349,6 +355,7 @@ class MapGame extends Engine {
   /** Opens the 4-digit code entry for `portal`. */
   private openLock(portal: Portal): void {
     this.lockUI = { portal, digits: [0, 0, 0, 0], cursor: 0 };
+    this.telemetry.keypadOpen(portal.id);
   }
 
   /** Moves the edit cursor between the four boxes (wraps). */
@@ -368,6 +375,7 @@ class MapGame extends Engine {
     ui.digits[ui.cursor] = (ui.digits[ui.cursor]! + delta + 10) % 10;
     if (ui.portal.matches(ui.digits.join(''))) {
       ui.portal.unlock();
+      this.telemetry.keypadUnlocked(ui.portal.id);
       this.audio?.playSound('chest_open', { volume: 0.6 });
       showMessage('Unlocked', 1.4);
       this.lockUI = undefined;
@@ -414,6 +422,18 @@ class MapGame extends Engine {
     }
   }
 
+  /**
+   * Starts a dialog by `ref` and, on success, records it with its trigger
+   * `source` (sign, chest, slime_king, …). Returns whether a dialog opened.
+   */
+  private startDialog(ref: string | null, source: string): boolean {
+    if (ref && this.dialog?.start(ref)) {
+      this.telemetry.dialogOpen(source, ref);
+      return true;
+    }
+    return false;
+  }
+
   /** Opens a nearby portal (and travels), else toggles a nearby campfire. */
   private interact(): void {
     const player = this.player;
@@ -428,6 +448,7 @@ class MapGame extends Engine {
       // A locked door refuses to open: remind the player, then ask for the
       // 4-digit code. It stays shut until the right code is entered.
       if (portal.isLocked) {
+        this.telemetry.portalLocked(portal.id);
         this.promptLock(portal);
         return;
       }
@@ -436,6 +457,7 @@ class MapGame extends Engine {
         // screen swaps at the covered midpoint, then the destination reopens.
         const target = portal.target;
         if (target && this.map?.screenAt(target.x, target.y)) {
+          this.telemetry.portalTravel(portal.id, `${target.x},${target.y}`);
           const spawn = portal.spawn;
           this.beginTransition(() => {
             if (!this.navigate(target.x, target.y)) return;
@@ -454,6 +476,7 @@ class MapGame extends Engine {
       } else if (!portal.isOpening) {
         // Closed door: play the open sound; it opens once the sound finishes.
         portal.beginOpening(PORTAL_OPEN_SECONDS);
+        this.telemetry.portalOpen(portal.id);
         const handle = this.audio?.playSound('portal_open', { volume: 0.7, rate: 2 });
         if (handle) handle.onEnded(() => portal.open());
         else portal.open();
@@ -468,15 +491,13 @@ class MapGame extends Engine {
       ...(this.map?.current?.objectsByType(Goblin) ?? []),
     ].find((s) => s.overlaps(player.box()));
     if (stalker) {
-      const ref = stalker.dialogRef;
-      if (ref && this.dialog?.start(ref)) return;
+      if (this.startDialog(stalker.dialogRef, 'stalker')) return;
     }
 
     // Slime king: a stationary NPC — press E beside it to run its dialog.
     const king = this.map?.current?.objectsByType(SlimeKing).find((k) => k.overlaps(player.box()));
     if (king) {
-      const ref = king.dialogRef;
-      if (ref && this.dialog?.start(ref)) return;
+      if (this.startDialog(king.dialogRef, 'slime_king')) return;
     }
 
     // Signs: open the dialog modal for a nearby sign that names a tree.
@@ -484,8 +505,7 @@ class MapGame extends Engine {
       ?.objectsByType(Sign)
       .find((s) => s.overlaps(player.interactionBox()));
     if (sign) {
-      const ref = sign.dialogRef;
-      if (ref && this.dialog?.start(ref)) return;
+      if (this.startDialog(sign.dialogRef, 'sign')) return;
     }
 
     // Bookshelves: show the dialog for a nearby shelf. A movable secret shelf
@@ -495,16 +515,15 @@ class MapGame extends Engine {
       ?.objectsByType(Bookshelf)
       .find((b) => b.overlaps(player.interactionBox()));
     if (shelf) {
-      const ref = shelf.dialogRef;
       if (shelf.movable && !shelf.isOpen) {
-        if (ref && this.dialog?.start(ref)) {
+        if (this.startDialog(shelf.dialogRef, 'bookshelf')) {
           this.shelfAwaitingSlide = shelf;
         } else {
           shelf.slideOpen();
         }
         return;
       }
-      if (ref && this.dialog?.start(ref)) return;
+      if (this.startDialog(shelf.dialogRef, 'bookshelf')) return;
     }
 
     // Chests: open the nearest reachable closed chest (one-way — stays open).
@@ -515,14 +534,14 @@ class MapGame extends Engine {
     if (chest?.open()) {
       this.audio?.playSound('chest_open', { volume: 0.7 });
       const item = chest.item;
+      this.telemetry.chestOpen(chest.id, item ?? null);
       if (item) {
         this.inventory.add(item);
         showMessage(`Found ${item}`, 1.6);
       } else {
         showMessage('The chest is empty', 1.2);
       }
-      const ref = chest.dialogRef;
-      if (ref) this.dialog?.start(ref);
+      this.startDialog(chest.dialogRef, 'chest');
       return;
     }
 
@@ -537,6 +556,7 @@ class MapGame extends Engine {
       const dy = pcy - (b.y + b.h / 2);
       if (dx * dx + dy * dy <= reach * reach) {
         fire.toggle();
+        this.telemetry.campfireToggle(fire.id, fire.lit);
         break;
       }
     }
@@ -547,12 +567,15 @@ class MapGame extends Engine {
     void this.audio?.unlock();
     // Code entry captures all keys: arrows spin/move, E/Esc leaves.
     if (this.lockUI) {
+      const lockedPortal = this.lockUI.portal;
       if (e.key === 'ArrowUp') this.spinLockDigit(1);
       else if (e.key === 'ArrowDown') this.spinLockDigit(-1);
       else if (e.key === 'ArrowLeft') this.moveLockCursor(-1);
       else if (e.key === 'ArrowRight') this.moveLockCursor(1);
-      else if (e.key === 'Escape' || e.key === 'e' || e.key === 'E') this.lockUI = undefined;
-      else return;
+      else if (e.key === 'Escape' || e.key === 'e' || e.key === 'E') {
+        this.telemetry.keypadDismissed(lockedPortal.id);
+        this.lockUI = undefined;
+      } else return;
       e.preventDefault();
       return;
     }
@@ -561,9 +584,10 @@ class MapGame extends Engine {
       // Modal is up: arrows move the option cursor, E/Enter confirms.
       if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') dialog.moveSelection(-1);
       else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') dialog.moveSelection(1);
-      else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter')
+      else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter') {
         dialog.confirm();
-      else return;
+        this.telemetry.dialogAdvance();
+      } else return;
       e.preventDefault();
       return;
     }
@@ -627,8 +651,9 @@ class MapGame extends Engine {
         stalker.sense(pbox, this.map.current.collision);
       }
       for (const stalker of stalkers) {
-        if (stalker.takeGreeting() && stalker.dialogRef && this.dialog?.start(stalker.dialogRef)) {
-          return;
+        if (stalker.takeGreeting()) {
+          this.telemetry.enemyGreeting(stalker instanceof Goblin ? 'goblin' : 'skeleton');
+          if (this.startDialog(stalker.dialogRef, 'greeting')) return;
         }
       }
     }
@@ -650,6 +675,7 @@ class MapGame extends Engine {
       this.lastSafe = { x: player.x, y: player.y };
     } else {
       player.place(this.lastSafe.x, this.lastSafe.y);
+      this.telemetry.playerReset();
     }
 
     // Footsteps: cycle the configured sequence one step per interval while the
@@ -688,8 +714,8 @@ class MapGame extends Engine {
     for (const object of screen.collision.owners(player.box(), 'pickup', player)) {
       if (!(object instanceof Olive) || !object.collect()) continue;
       showMessage('You picked an olive', 1.2);
-      const ref = object.dialogRef;
-      if (ref && this.dialog?.start(ref)) break;
+      this.telemetry.olivePickup(object.id);
+      if (this.startDialog(object.dialogRef, 'olive')) break;
     }
   }
 
