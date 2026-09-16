@@ -12,18 +12,24 @@
  *
  * ---
  *
- * ### Ambient music (one persistent slot)
+ * ### Ambient channels (stackable beds)
  *
- * {@link AudioSystem.playAmbient} starts a looping bed that plays until
- * stopped or replaced — entering a room, leaving it, whatever the game
- * says. Replacing crossfades by default, so room-to-room transitions are
- * smooth:
+ * {@link AudioSystem.playAmbient} starts a looping bed on a named
+ * *channel* — the default one when none is given. Each channel holds a
+ * single bed with its own volume and fades, and beds on different
+ * channels stack, so music, weather, and room tone can all fill the
+ * world at once:
  *
  * ```ts
- * audio.playAmbient("music_forest", { fadeIn: 1.5 }); // entering the forest
- * audio.playAmbient("music_cave", { fadeIn: 1.5 });    // forest fades out as the cave fades in
- * audio.stopAmbient({ fadeOut: 2 });                   // boss cutscene: everything fades
+ * audio.playAmbient("music_forest", { channel: "music", fadeIn: 1.5 });
+ * audio.playAmbient("amb_wind", { channel: "weather", volume: 0.4, fadeIn: 3 });
+ * audio.stopAmbient("weather", { fadeOut: 2 }); // wind dies away, music stays
+ * audio.stopAmbient({ fadeOut: 2 });             // boss cutscene: everything fades
  * ```
+ *
+ * A new sound on a channel replaces the old bed with a crossfade, so
+ * room-to-room transitions stay smooth; replaying the id already
+ * running on a channel just retargets its volume.
  *
  * ### One-shot effects
  *
@@ -101,13 +107,37 @@ import type {
 const DEFAULT_MAX_VOICES = 32;
 
 /**
- * Internal: ambient spawn parameters — a forced-loop voice fading in.
+ * The ambient channel beds play on when
+ * {@link AmbientPlayOptions.channel} is omitted — the one persistent
+ * slot for games that never layer.
+ */
+const DEFAULT_AMBIENT_CHANNEL = 'ambient';
+
+/**
+ * Internal: ambient spawn parameters — which channel the bed belongs to
+ * and how long it takes to swell in.
  *
  * @internal
  * @since 0.5.0
  */
 interface AmbientSpawn {
+  channel: string;
   fadeIn: number;
+}
+
+/**
+ * Internal: one ambient channel — the id of the bed it holds, its
+ * volume, and its handle/voice pair. The voice is `null` from the play
+ * call until the lazy decode resolves and spawns it.
+ *
+ * @internal
+ * @since 0.5.0
+ */
+interface AmbientChannel {
+  soundId: string;
+  handle: SoundHandle;
+  voice: AudioVoice | null;
+  volume: number;
 }
 
 /**
@@ -151,10 +181,11 @@ export class AudioSystem implements SubSystem {
    * Handles whose lazy load is still in flight (counted against the cap).
    */
   private readonly pendingPlays = new Set<SoundHandle>();
-  private ambientHandle: SoundHandle | null = null;
-  private ambientVoice: AudioVoice | null = null;
-  private ambientSoundId: string | null = null;
-  private ambientVolumeValue: number = 1;
+  /**
+   * Live ambient beds — one per named channel, stacked on the same
+   * master gain.
+   */
+  private readonly ambientChannels = new Map<string, AmbientChannel>();
   /**
    * The ears of the game — usually the player entity.
    */
@@ -290,26 +321,50 @@ export class AudioSystem implements SubSystem {
   }
 
   /**
-   * The ambient sound currently filling the slot, or `null`.
-   */
-  get ambientId(): string | null {
-    return this.ambientSoundId;
-  }
-
-  /**
-   * The ambient channel volume `0..1`.
-   */
-  get ambientVolume(): number {
-    return this.ambientVolumeValue;
-  }
-
-  /**
-   * Starts (or retargets) the ambient bed. The sound loops regardless of
-   * its JSON `loop` flag — background music must persist. Replacing a
-   * running ambient crossfades: the old bed fades out (default: over the
-   * same duration as the new one's fade-in) while the new one swells in.
+   * The sound id playing on an ambient channel, or `null` when the
+   * channel is idle. Omit the channel to query the default bed.
    *
-   * Playing the id that is already running just retargets its volume.
+   * @example
+   * ```ts
+   * if (audio.ambientId("weather") === "amb_wind") { startStorm(); }
+   * ```
+   */
+  ambientId(channel: string = DEFAULT_AMBIENT_CHANNEL): string | null {
+    return this.ambientChannels.get(channel)?.soundId ?? null;
+  }
+
+  /**
+   * Names of every ambient channel that currently holds a bed (playing
+   * or still fading in). Empty when nothing is ambient.
+   */
+  get ambientChannelIds(): string[] {
+    return [...this.ambientChannels.keys()];
+  }
+
+  /**
+   * An ambient channel's volume `0..1` — `0` when the channel is idle.
+   * Omit the channel to read the default bed.
+   */
+  ambientVolume(channel: string = DEFAULT_AMBIENT_CHANNEL): number {
+    return this.ambientChannels.get(channel)?.volume ?? 0;
+  }
+
+  /**
+   * Starts (or retargets) the ambient bed on a channel. The sound loops
+   * regardless of its JSON `loop` flag — background beds must persist.
+   * Every channel is independent: its own volume, its own fades, stacked
+   * on top of every other channel.
+   *
+   * Replacing a running bed on the same channel crossfades: the old one
+   * fades out (default: over the same duration as the new one's
+   * fade-in) while the new one swells in. Replaying the id already
+   * running on the channel just retargets its volume.
+   *
+   * @example Layered ambience
+   * ```ts
+   * audio.playAmbient("music_forest", { channel: "music", fadeIn: 1.5 });
+   * audio.playAmbient("amb_rain", { channel: "weather", volume: 0.3 });
+   * ```
    */
   playAmbient(id: string, options: AmbientPlayOptions = {}): void {
     if (this.destroyed) {
@@ -320,34 +375,84 @@ export class AudioSystem implements SubSystem {
       console.warn(`[AudioSystem] Unknown ambient sound id: ${id}`);
       return;
     }
-    const alreadyRunning = this.ambientSoundId === id && (this.ambientVoice?.active ?? false);
-    if (alreadyRunning) {
-      this.setAmbientVolume(options.volume ?? this.ambientVolumeValue, options.fadeIn ?? 0);
+    const channelName = options.channel ?? DEFAULT_AMBIENT_CHANNEL;
+    const existing = this.ambientChannels.get(channelName);
+    if (existing?.soundId === id && (existing.voice?.active ?? false)) {
+      // Same bed, new level — retarget instead of restarting the loop.
+      existing.volume = Math.min(1, Math.max(0, options.volume ?? existing.volume));
+      existing.handle.setVolume(existing.volume, options.fadeIn ?? 0);
       return;
     }
     const fadeIn = options.fadeIn ?? 0;
     const fadeOut = options.fadeOut ?? fadeIn;
-    this.ambientHandle?.stop({ fadeOut });
-    this.ambientSoundId = id;
-    this.ambientVolumeValue = Math.min(1, Math.max(0, options.volume ?? 1));
+    existing?.handle.stop({ fadeOut });
     const handle = new SoundHandle(id);
-    void this.spawnVoice(handle, definition, {}, { fadeIn });
+    this.ambientChannels.set(channelName, {
+      soundId: id,
+      handle,
+      voice: null,
+      volume: Math.min(1, Math.max(0, options.volume ?? 1)),
+    });
+    void this.spawnVoice(handle, definition, {}, { channel: channelName, fadeIn });
   }
 
   /**
-   * Fades/stops the ambient bed and empties the slot.
+   * Fades/stops one ambient channel and empties its slot — or every
+   * channel at once when no channel is given.
+   *
+   * @example
+   * ```ts
+   * audio.stopAmbient("weather", { fadeOut: 2 }); // just the wind
+   * audio.stopAmbient({ fadeOut: 2 });            // boss cutscene: everything
+   * ```
    */
-  stopAmbient(options: FadeStopOptions = {}): void {
-    this.ambientHandle?.stop({ fadeOut: options.fadeOut ?? 0 });
-    this.clearAmbient();
+  stopAmbient(channelOrOptions?: string | FadeStopOptions, options: FadeStopOptions = {}): void {
+    if (typeof channelOrOptions !== 'string') {
+      const stopOptions = channelOrOptions ?? options;
+      for (const state of this.ambientChannels.values()) {
+        state.handle.stop({ fadeOut: stopOptions.fadeOut ?? 0 });
+      }
+      this.ambientChannels.clear();
+      return;
+    }
+    const state = this.ambientChannels.get(channelOrOptions);
+    if (state === undefined) {
+      return;
+    }
+    state.handle.stop({ fadeOut: options.fadeOut ?? 0 });
+    this.ambientChannels.delete(channelOrOptions);
   }
 
   /**
-   * Fades the ambient channel volume to `volume` over `fadeSeconds`.
+   * Fades an ambient channel's volume to `volume` over `fadeSeconds`.
+   *
+   * The channel may be named first, or omitted to retarget the default
+   * bed:
+   *
+   * ```ts
+   * audio.setAmbientVolume("weather", 0.2, 1.5); // named channel
+   * audio.setAmbientVolume(0.5, 0.5);             // the default bed
+   * ```
    */
-  setAmbientVolume(volume: number, fadeSeconds = 0): void {
-    this.ambientVolumeValue = Math.min(1, Math.max(0, volume));
-    this.ambientHandle?.setVolume(this.ambientVolumeValue, fadeSeconds);
+  setAmbientVolume(channelOrVolume: string | number, volumeOrFade?: number, fadeSeconds = 0): void {
+    let channel: string;
+    let volume: number;
+    let fade: number;
+    if (typeof channelOrVolume === 'string') {
+      channel = channelOrVolume;
+      volume = volumeOrFade ?? 1;
+      fade = fadeSeconds;
+    } else {
+      channel = DEFAULT_AMBIENT_CHANNEL;
+      volume = channelOrVolume;
+      fade = volumeOrFade ?? 0;
+    }
+    const state = this.ambientChannels.get(channel);
+    if (state === undefined) {
+      return;
+    }
+    state.volume = Math.min(1, Math.max(0, volume));
+    state.handle.setVolume(state.volume, fade);
   }
 
   /**
@@ -530,14 +635,17 @@ export class AudioSystem implements SubSystem {
         return;
       }
       if (ambient !== null) {
-        this.startAmbientVoice(handle, definition, buffer, ambient.fadeIn);
+        this.startAmbientVoice(ambient.channel, handle, definition, buffer, ambient.fadeIn);
       } else {
         this.startOneShot(handle, definition, buffer, options);
       }
     } catch (error) {
       console.warn(`[AudioSystem] Failed to play "${definition.id}"`, error);
-      if (ambient !== null && this.ambientSoundId === definition.id) {
-        this.clearAmbient();
+      if (ambient !== null) {
+        const state = this.ambientChannels.get(ambient.channel);
+        if (state?.handle === handle) {
+          this.ambientChannels.delete(ambient.channel);
+        }
       }
       handle.markEnded();
     } finally {
@@ -582,37 +690,43 @@ export class AudioSystem implements SubSystem {
   }
 
   /**
-   * Starts the ambient bed — always looping, fading in from silence when
-   * requested, with the ambient channel volume as its instance volume.
+   * Starts the ambient bed of one channel — always looping, fading in
+   * from silence when requested, with the channel's volume as its
+   * instance volume. The channel's state supplies the volume so a
+   * `setAmbientVolume` during the lazy decode is honoured.
    */
   private startAmbientVoice(
+    channel: string,
     handle: SoundHandle,
     definition: SoundDefinition,
     buffer: AudioBuffer,
     fadeIn: number,
   ): void {
+    const state = this.ambientChannels.get(channel);
+    if (state === undefined) {
+      return;
+    }
     const { context, masterGain } = this.ensureGraph();
     this.unlockQuietly();
     const definitionVolume = Math.min(1, Math.max(0, definition.volume ?? 1));
-    const ambientVolume = this.ambientVolumeValue;
     const spawn: VoiceSpawnOptions = {
       soundId: definition.id,
       buffer,
       loop: true,
       baseVolume: definitionVolume,
       rate: 1,
-      initialGain: fadeIn > 0 ? 0 : definitionVolume * ambientVolume,
+      initialGain: fadeIn > 0 ? 0 : definitionVolume * state.volume,
       distance: undefined,
       follow: undefined,
+      onEnded: () => handle.markEnded(),
     };
     const voice = new AudioVoice(context, masterGain, spawn);
     handle.bind(voice);
     this.voices.push(voice);
-    this.ambientVoice = voice;
-    this.ambientHandle = handle;
-    if (fadeIn > 0) {
-      voice.setVolume(ambientVolume, fadeIn);
-    }
+    state.voice = voice;
+    // Sync the voice's instance volume with the channel's — `initialGain`
+    // alone would be overwritten by the first `update` tick.
+    voice.setVolume(state.volume, fadeIn);
   }
 
   /**
@@ -706,20 +820,9 @@ export class AudioSystem implements SubSystem {
       if (alive) {
         this.voices[writeIndex] = voice;
         writeIndex += 1;
-      } else if (voice === this.ambientVoice) {
-        this.clearAmbient();
       }
     }
     this.voices.length = writeIndex;
-  }
-
-  /**
-   * Empties the ambient slot (ids, handle, voice pointer).
-   */
-  private clearAmbient(): void {
-    this.ambientHandle = null;
-    this.ambientVoice = null;
-    this.ambientSoundId = null;
   }
 
   /**

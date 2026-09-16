@@ -8,7 +8,6 @@ import {
   DialogRunner,
   Engine,
   Input,
-  LocalStorageBackend,
   MapManager,
   type MapObjectContext,
   MapObjectRegistry,
@@ -44,6 +43,7 @@ import { Goblin } from './objects/goblin';
 import { SlimeKing } from './objects/slime_king';
 
 import { Telemetry } from './telemetry';
+import { Bat } from './objects/bat';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -60,13 +60,15 @@ const BLOCK_SIZE = 16;
 const PORTAL_OPEN_SECONDS = 6;
 // The player draws on this z-level; layers above it (e.g. the `pillars`
 // layer at level 3) occlude it, so keep it below them.
-const PLAYER_LEVEL = 2;
+const PLAYER_LEVEL = 3;
 
 // Screen-cut transition timing (seconds): the room collapses to dark over
 // `OUT`, the screen swaps at the covered midpoint, then the new room reopens
 // over `IN`.
 const TRANSITION_OUT = 0.42;
 const TRANSITION_IN = 0.5;
+
+const JUMP = [-2, 7];
 
 /** Smooth acceleration/deceleration for the iris wipe, `0..1 → 0..1`. */
 function easeInOut(t: number): number {
@@ -90,18 +92,29 @@ const AUDIO = {
   ambientFade: 1.2,
   defaultBackground: 'bg_sewers',
   backgroundByScreen: {
-    '0,3': 'bg_cave',
+    '0,0': 'bg_cantgoon',
+    '0,1': 'bg_cantgoon',
+    '0,2': 'bg_cantgoon',
+    '0,3': 'bg_cantgoon',
+    '0,7': 'bg_cantgoon',
+    '0,8': 'bg_end',
+    '1,8': 'bg_cantgoon',
+    '1,9': 'bg_finalpath',
+    '2,8': 'bg_withouttrace',
+    '-1,7': 'bg_ceilingstars',
+    '-3,8': 'bg_ceilingstars',
+    '-3,9': 'bg_down',
   } as Record<string, string>,
   footstepSequence: 'seq_footsteps_water',
   stepInterval: 0.32,
-  stepVolume: 0.6,
+  stepVolume: 0.1,
   campfireSound: 'campfire_loop',
-  campfireVolume: 1,
+  campfireVolume: 0.2,
 } as const;
 
 /** Prefixes the audio base path and percent-encodes each path segment. */
 const resolveAudio = (file: string): string =>
-  '/assets/audio/' + file.split('/').map(encodeURIComponent).join('/');
+  `/assets/audio/${file.split('/').map(encodeURIComponent).join('/')}`;
 
 const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
 
@@ -140,6 +153,7 @@ class MapGame extends Engine {
     backend: new MemoryBackend('experiment00:save'),
     autoSave: true,
   });
+
   /** The player's item bag (persisted with the save; chests fill it). */
   private readonly inventory = new Inventory(this.save.scope('inventory'));
   /** A movable shelf whose message is being read; slides once it closes. */
@@ -179,6 +193,8 @@ class MapGame extends Engine {
     registry.register(Sign);
     registry.register(Bookshelf);
     registry.register(Rat);
+    registry.register(Bat);
+    registry.register(Ghost);
     registry.register(Slime);
     registry.register(FlyingSkull);
     registry.register(Skeleton);
@@ -258,7 +274,7 @@ class MapGame extends Engine {
 
     // Start on the dark chamber (its screen class extinguishes the fires),
     // then spawn the player centred.
-    this.navigate(0, 0);
+    this.navigate(JUMP[0], JUMP[1]);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
     this.telemetry.gameLoaded(performance.now() - loadStart);
@@ -391,8 +407,21 @@ class MapGame extends Engine {
 
   /** Crossfades to the ambient bed configured for the current screen. */
   private updateBackground(): void {
-    const id = AUDIO.backgroundByScreen[`${this.cx},${this.cy}`] ?? AUDIO.defaultBackground;
-    this.audio?.playAmbient(id, { fadeIn: AUDIO.ambientFade, fadeOut: AUDIO.ambientFade });
+    const id = AUDIO.backgroundByScreen[`${this.cx},${this.cy}`];
+    this.audio?.playAmbient(AUDIO.defaultBackground, {
+      channel: 'cave',
+      fadeIn: AUDIO.ambientFade,
+      fadeOut: AUDIO.ambientFade,
+      volume: 0.2,
+    });
+    if (id) {
+      this.audio?.playAmbient(id, {
+        channel: 'music',
+        fadeIn: AUDIO.ambientFade,
+        fadeOut: AUDIO.ambientFade,
+        volume: 0.7,
+      });
+    }
   }
 
   /**
@@ -477,7 +506,7 @@ class MapGame extends Engine {
         // Closed door: play the open sound; it opens once the sound finishes.
         portal.beginOpening(PORTAL_OPEN_SECONDS);
         this.telemetry.portalOpen(portal.id);
-        const handle = this.audio?.playSound('portal_open', { volume: 0.7, rate: 2 });
+        const handle = this.audio?.playSound('portal_open', { volume: 0.4, rate: 2 });
         if (handle) handle.onEnded(() => portal.open());
         else portal.open();
       }
@@ -629,6 +658,10 @@ class MapGame extends Engine {
       for (const rat of this.map.current.objectsByType(Rat)) {
         rat.sense(pbox, this.map.current.collision);
       }
+      for (const bat of this.map.current.objectsByType(Bat)) {
+        bat.sense(pbox, this.map.current.collision);
+      }
+
       for (const slime of this.map.current.objectsByType(Slime)) {
         slime.sense(pbox, this.map.current.collision);
       }
@@ -738,9 +771,8 @@ class MapGame extends Engine {
     ctx.restore();
 
     const fires = this.campfires();
-    const lit = fires.filter((f) => f.lit).length;
     ctx.drawText(
-      `screen ${this.cx},${this.cy}   WASD move · E use / open portal   campfires ${lit}/${fires.length} lit`,
+      `screen ${this.cx},${this.cy}   WASD move · E use / open portal`,
       8,
       20,
       '#ffffff',

@@ -173,7 +173,7 @@ export class AudioVoice {
     if (this.finished) {
       return false;
     }
-    const target = this.computeTargetGain(listener);
+    const target = this.computeTargetGain(listener) || 1;
     if (this.fade === null) {
       // No fade — write the fresh target (distance / volume changes).
       this.gainNode.gain.value = target;

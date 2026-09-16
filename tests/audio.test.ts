@@ -345,15 +345,15 @@ describe('AudioSystem — one-shot playback', () => {
   });
 });
 
-// ── Ambient channel ───────────────────────────────────────────────────
+// ── Ambient channels ──────────────────────────────────────────────────
 
-describe('AudioSystem — ambient channel', () => {
+describe('AudioSystem — ambient channels', () => {
   test('playAmbient — loops, fades in from silence, stays until told', async () => {
     const { system, context } = await setup();
     system.playAmbient('music_forest', { fadeIn: 1 });
     await flush();
 
-    expect(system.ambientId).toBe('music_forest');
+    expect(system.ambientId()).toBe('music_forest');
     const source = context.sources[0]!;
     expect(source.loop).toBe(true);
     expect(context.gains[1]!.gain.value).toBe(0); // silent at spawn
@@ -371,7 +371,56 @@ describe('AudioSystem — ambient channel', () => {
     expect(context.gains[1]!.gain.value).toBeCloseTo(0.7);
   });
 
-  test('playAmbient — same id retargets volume without a new voice', async () => {
+  test('playAmbient — different channels stack with independent volumes', async () => {
+    const { system, context } = await setup();
+    system.playAmbient('music_forest', { channel: 'music' });
+    system.playAmbient('amb_torch', { channel: 'weather', volume: 0.5 });
+    await flush();
+
+    expect(context.sources).toHaveLength(2);
+    expect(context.sources[0]!.loop).toBe(true);
+    expect(context.sources[1]!.loop).toBe(true);
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.7); // forest bed
+    expect(context.gains[2]!.gain.value).toBeCloseTo(0.25); // 0.5 × 0.5 torch bed
+
+    expect(system.ambientId('music')).toBe('music_forest');
+    expect(system.ambientId('weather')).toBe('amb_torch');
+    expect(system.ambientId()).toBeNull(); // default channel is idle
+    expect(system.ambientVolume('weather')).toBe(0.5);
+    expect(system.ambientChannelIds).toEqual(['music', 'weather']);
+  });
+
+  test('playAmbient — replacing on a channel crossfades, other channels untouched', async () => {
+    const { system, context } = await setup();
+    system.playAmbient('music_forest', { channel: 'music', fadeIn: 1 });
+    system.playAmbient('amb_torch', { channel: 'weather', volume: 0.5 });
+    await flush();
+    system.update(1); // forest at full 0.7, torch at 0.25
+
+    system.playAmbient('music_cave', { channel: 'music', fadeIn: 1, fadeOut: 1 });
+    await flush();
+
+    expect(system.ambientId('music')).toBe('music_cave');
+    expect(system.ambientId('weather')).toBe('amb_torch'); // untouched
+    expect(context.sources).toHaveLength(3); // forest, torch, cave
+
+    const forestGain = context.gains[1]!;
+    const torchGain = context.gains[2]!;
+    const caveGain = context.gains[3]!;
+
+    system.update(0.5);
+    expect(forestGain.gain.value).toBeCloseTo(0.35); // dying away
+    expect(caveGain.gain.value).toBeCloseTo(0.35); // swelling in
+    expect(torchGain.gain.value).toBeCloseTo(0.25); // steady
+
+    system.update(0.5);
+    expect(forestGain.gain.value).toBe(0);
+    expect(context.sources[0]!.stop).toHaveBeenCalled(); // old bed is gone
+    expect(caveGain.gain.value).toBeCloseTo(0.7); // new bed at full
+    expect(torchGain.gain.value).toBeCloseTo(0.25); // still steady
+  });
+
+  test('playAmbient — same id on a channel retargets volume without a new voice', async () => {
     const { system, context } = await setup();
     system.playAmbient('music_forest', { fadeIn: 1 });
     await flush();
@@ -385,61 +434,86 @@ describe('AudioSystem — ambient channel', () => {
     expect(context.gains[1]!.gain.value).toBeCloseTo(0.28); // 0.7 × 0.4
   });
 
-  test('playAmbient — replacing crossfades old out, new in', async () => {
+  test('playAmbient — replaying a still-loading bed restarts it with the new options', async () => {
     const { system, context } = await setup();
-    system.playAmbient('music_forest', { fadeIn: 1 });
-    await flush();
-    system.update(1); // forest at full 0.7
-
-    system.playAmbient('music_cave', { fadeIn: 1, fadeOut: 1 });
+    system.playAmbient('music_cave', { volume: 0.5 }); // lazy decode pending
+    system.playAmbient('music_cave', { volume: 1 }); // replaces before it spawns
     await flush();
 
-    expect(system.ambientId).toBe('music_cave');
-    expect(context.sources).toHaveLength(2);
-
-    const forestSource = context.sources[0]!;
-    const forestGain = context.gains[1]!;
-    const caveGain = context.gains[2]!;
-
-    system.update(0.5);
-    expect(forestGain.gain.value).toBeCloseTo(0.35); // dying away
-    expect(caveGain.gain.value).toBeCloseTo(0.35); // swelling in
-
-    system.update(0.5);
-    expect(forestGain.gain.value).toBe(0);
-    expect(forestSource.stop).toHaveBeenCalled(); // old bed is gone
-    expect(caveGain.gain.value).toBeCloseTo(0.7); // new bed at full
-    expect(system.ambientId).toBe('music_cave');
+    expect(context.sources).toHaveLength(1); // only the second spawn landed
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.7); // 0.7 × 1
+    expect(system.ambientId()).toBe('music_cave');
   });
 
-  test('stopAmbient — fades out and empties the slot immediately', async () => {
+  test('stopAmbient(channel) — fades out and empties only that channel', async () => {
     const { system, context } = await setup();
-    system.playAmbient('music_forest', { fadeIn: 1 });
+    system.playAmbient('music_forest');
+    system.playAmbient('amb_torch', { channel: 'weather', volume: 0.5 });
     await flush();
     system.update(1);
 
-    system.stopAmbient({ fadeOut: 0.5 });
-    expect(system.ambientId).toBeNull();
+    system.stopAmbient('weather', { fadeOut: 0.5 });
+    expect(system.ambientId('weather')).toBeNull(); // slot empties immediately
+    expect(system.ambientId()).toBe('music_forest'); // the other bed stays
 
+    const forestGain = context.gains[1]!;
+    const torchGain = context.gains[2]!;
     system.update(0.25);
-    expect(context.gains[1]!.gain.value).toBeCloseTo(0.35);
+    expect(torchGain.gain.value).toBeCloseTo(0.125); // 0.25 → 0, halfway
+    expect(forestGain.gain.value).toBeCloseTo(0.7); // untouched
     system.update(0.25);
-    expect(context.sources[0]!.stop).toHaveBeenCalled();
-    expect(context.gains[1]!.gain.value).toBe(0);
+    expect(context.sources[1]!.stop).toHaveBeenCalled();
+    expect(torchGain.gain.value).toBe(0);
+    expect(forestGain.gain.value).toBeCloseTo(0.7);
   });
 
-  test('setAmbientVolume — fades the channel volume', async () => {
+  test('stopAmbient() — fades out every channel', async () => {
+    const { system, context } = await setup();
+    system.playAmbient('music_forest', { channel: 'music' });
+    system.playAmbient('amb_torch', { channel: 'weather', volume: 0.5 });
+    await flush();
+
+    system.stopAmbient({ fadeOut: 1 });
+    expect(system.ambientChannelIds).toEqual([]);
+
+    system.update(0.5);
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.35);
+    expect(context.gains[2]!.gain.value).toBeCloseTo(0.125);
+    system.update(0.5);
+    expect(context.sources[0]!.stop).toHaveBeenCalled();
+    expect(context.sources[1]!.stop).toHaveBeenCalled();
+  });
+
+  test('setAmbientVolume — fades only the named channel', async () => {
+    const { system, context } = await setup();
+    system.playAmbient('music_forest');
+    system.playAmbient('amb_torch', { channel: 'weather', volume: 0.5 });
+    await flush();
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.7);
+    expect(context.gains[2]!.gain.value).toBeCloseTo(0.25);
+
+    system.setAmbientVolume('ambient', 0.5, 1);
+    system.update(0.5);
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.525); // 0.7 → 0.35, halfway
+    expect(context.gains[2]!.gain.value).toBeCloseTo(0.25); // weather untouched
+    system.update(0.5);
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.35);
+    expect(system.ambientVolume('ambient')).toBe(0.5);
+
+    // Legacy shape (no channel) also retargets the default bed.
+    system.setAmbientVolume(1, 0.5);
+    system.update(0.5);
+    expect(context.gains[1]!.gain.value).toBeCloseTo(0.7);
+    expect(context.gains[2]!.gain.value).toBeCloseTo(0.25); // weather untouched
+  });
+
+  test('stopAmbient — unknown channel is a silent no-op', async () => {
     const { system, context } = await setup();
     system.playAmbient('music_forest');
     await flush();
-    expect(context.gains[1]!.gain.value).toBeCloseTo(0.7);
-
-    system.setAmbientVolume(0.5, 1);
-    system.update(0.5);
-    expect(context.gains[1]!.gain.value).toBeCloseTo(0.525); // 0.7 → 0.35, halfway
-    system.update(0.5);
-    expect(context.gains[1]!.gain.value).toBeCloseTo(0.35);
-    expect(system.ambientVolume).toBe(0.5);
+    system.stopAmbient('nope');
+    expect(system.ambientId()).toBe('music_forest');
+    expect(context.sources[0]!.stop).not.toHaveBeenCalled();
   });
 
   test('playAmbient — unknown id warns', async () => {
@@ -447,6 +521,26 @@ describe('AudioSystem — ambient channel', () => {
     const { system } = await setup();
     system.playAmbient('nope');
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('Unknown ambient sound id'));
+  });
+
+  test('playAmbient — failed lazy load frees its channel', async () => {
+    const warn = spyWarnings();
+    const context = new FakeAudioContext();
+    const decoder = vi.fn(async (url: string) => {
+      if (url === 'audio/music/cave.mp3') {
+        throw new Error('404');
+      }
+      return { url } as AudioBuffer;
+    });
+    const system = new AudioSystem({ context: context as unknown as AudioContextLike });
+    await system.load(makeProject(), { decoder });
+
+    system.playAmbient('music_cave', { channel: 'music' });
+    await flush();
+
+    expect(system.ambientId('music')).toBeNull();
+    expect(system.ambientChannelIds).toEqual([]);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('Failed to play'), expect.anything());
   });
 });
 
@@ -639,7 +733,7 @@ describe('AudioSystem — master volume & lifecycle', () => {
     for (const source of context.sources) {
       expect(source.stop).toHaveBeenCalled();
     }
-    expect(system.ambientId).toBeNull();
+    expect(system.ambientId()).toBeNull();
     expect(context.close).not.toHaveBeenCalled(); // injected context: caller owns it
     expect(system.playSound('sfx_step_1')).toBeNull(); // dead system refuses
   });

@@ -1,9 +1,9 @@
 import type { DeltaTime } from '../../../../src/generic_types';
+import type { Input } from '../../../../src/index';
 import {
   type CollisionMap,
   FootstepTrailShader,
   GlowShader,
-  Input,
   MapObject,
   type MapObjectContext,
   type Rect,

@@ -341,15 +341,32 @@ export interface SequenceStepOptions extends PlaySoundOptions {
  * @category Audio
  * @since 0.5.0
  *
- * @example Smooth room transition
+ * @example Smooth room transition (the default channel's bed is replaced)
  * ```ts
  * // leaving the forest, entering the cave:
  * audio.playAmbient("music_cave", { fadeIn: 1.5, fadeOut: 1.5 });
  * ```
+ *
+ * @example Stacked beds on separate channels
+ * ```ts
+ * audio.playAmbient("music_forest", { channel: "music", fadeIn: 1.5 });
+ * audio.playAmbient("amb_wind", { channel: "weather", volume: 0.4, fadeIn: 3 });
+ * // forest and wind play together, each on its own channel;
+ * // stopping the weather leaves the music untouched:
+ * audio.stopAmbient("weather", { fadeOut: 2 });
+ * ```
  */
 export interface AmbientPlayOptions {
   /**
-   * Ambient channel volume `0..1`.
+   * Which ambient channel the bed plays on. Each channel holds one bed
+   * with its own volume; beds on different channels stack, while a new
+   * sound on the same channel replaces the old one with a crossfade.
+   *
+   * @defaultValue `"ambient"`
+   */
+  channel?: string;
+  /**
+   * The channel's volume `0..1` — the bed swells and dies at this level.
    *
    * @defaultValue `1`
    */
@@ -362,8 +379,9 @@ export interface AmbientPlayOptions {
    */
   fadeIn?: number;
   /**
-   * Seconds the **replaced** ambient takes to die away. Defaults to
-   * `fadeIn` so room changes crossfade by default.
+   * Seconds the bed this play **replaces on the same channel** takes to
+   * die away. Defaults to `fadeIn` so channel changes crossfade by
+   * default. Other channels are never touched.
    *
    * @defaultValue the `fadeIn` value
    */

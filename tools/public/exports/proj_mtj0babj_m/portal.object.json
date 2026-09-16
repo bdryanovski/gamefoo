@@ -45,10 +45,6 @@
   },
   "animations": {},
   "collisionLayers": {
-    "solid": {
-      "name": "Solid",
-      "color": "#e05a5a"
-    },
     "activation": {
       "name": "Activation",
       "color": "#4ea3f2"
@@ -72,18 +68,6 @@
         }
       ],
       "collisions": [
-        {
-          "id": "col_mto18678_5",
-          "layer": "solid",
-          "enabled": true,
-          "shape": {
-            "kind": "rect",
-            "x": 0.030924479166666668,
-            "y": 0.0003255208333333333,
-            "width": 15.846028645833334,
-            "height": 10.9013671875
-          }
-        },
         {
           "id": "col_mto18ojr_6",
           "layer": "activation",
@@ -128,18 +112,6 @@
         }
       ],
       "collisions": [
-        {
-          "id": "col_mto18678_5",
-          "layer": "solid",
-          "enabled": true,
-          "shape": {
-            "kind": "rect",
-            "x": 0.030924479166666668,
-            "y": 0.0003255208333333333,
-            "width": 15.846028645833334,
-            "height": 10.9013671875
-          }
-        },
         {
           "id": "col_mto18ojr_6",
           "layer": "activation",

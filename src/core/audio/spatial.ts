@@ -53,6 +53,19 @@ export function distanceFactor(
     // Degenerate range — treat the sound as non-spatial.
     return 1;
   }
+  if (
+    !Number.isFinite(listener.x) ||
+    !Number.isFinite(listener.y) ||
+    !Number.isFinite(emitter.x) ||
+    !Number.isFinite(emitter.y) ||
+    !Number.isFinite(config.min) ||
+    !Number.isFinite(config.max)
+  ) {
+    // Garbage input (an unplaced entity, a malformed JSON range) — every
+    // comparison against NaN is false, so the falloff below would hand
+    // back NaN. Treat the sound as non-spatial instead.
+    return 1;
+  }
   const min = config.min < 0 ? 0 : config.min;
   const dx = emitter.x - listener.x;
   const dy = emitter.y - listener.y;
