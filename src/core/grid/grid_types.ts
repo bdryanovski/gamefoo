@@ -52,13 +52,21 @@ import type { Vector2 } from '../../generic_types';
  * ```
  */
 export interface GridCell<T = number> {
-  /** Zero-based column index (horizontal). */
+  /**
+   * Zero-based column index (horizontal).
+   */
   col: number;
-  /** Zero-based row index (vertical). */
+  /**
+   * Zero-based row index (vertical).
+   */
   row: number;
-  /** User-defined payload for this cell. */
+  /**
+   * User-defined payload for this cell.
+   */
   value: T;
-  /** Whether entities can traverse this cell. Used by pathfinding. */
+  /**
+   * Whether entities can traverse this cell. Used by pathfinding.
+   */
   walkable: boolean;
 }
 
@@ -90,13 +98,21 @@ export interface GridCell<T = number> {
  * ```
  */
 export interface GridConfig {
-  /** Number of columns in the grid. */
+  /**
+   * Number of columns in the grid.
+   */
   cols: number;
-  /** Number of rows in the grid. */
+  /**
+   * Number of rows in the grid.
+   */
   rows: number;
-  /** Width of a single cell in world-space pixels. */
+  /**
+   * Width of a single cell in world-space pixels.
+   */
   cellWidth: number;
-  /** Height of a single cell in world-space pixels. */
+  /**
+   * Height of a single cell in world-space pixels.
+   */
   cellHeight: number;
   /**
    * World-space offset of the grid origin (cell 0,0).

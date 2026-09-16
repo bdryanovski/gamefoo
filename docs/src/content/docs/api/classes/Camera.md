@@ -2,7 +2,7 @@
 title: 'Class: Camera'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -25,6 +25,8 @@ player's position so the viewport stays centred on the action.
 
 ## Examples
 
+**Basic usage inside the engine**
+
 ```ts
 const camera = new Camera(800, 600);
 camera.follow(player.getPosition());
@@ -32,6 +34,8 @@ camera.follow(player.getPosition());
 const view = camera.getViewRect();
 // view → { x: px - 400, y: py - 300, width: 800, height: 600 }
 ```
+
+**Manual camera control**
 
 ```ts
 const camera = new Camera(800, 600);
@@ -55,7 +59,7 @@ console.log(camera.getPosition());    // { x: 0, y: 0 }
 new Camera(width: number, height: number): Camera;
 ```
 
-Defined in: [core/camera.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L51)
+Defined in: [core/camera.ts:59](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L59)
 
 Creates a camera with the given viewport dimensions.
 
@@ -74,10 +78,10 @@ Creates a camera with the given viewport dimensions.
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `private` | `number` | `undefined` | Viewport height in pixels. | [core/camera.ts:43](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L43) |
-| <a id="width"></a> `width` | `private` | `number` | `undefined` | Viewport width in pixels. | [core/camera.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L40) |
-| <a id="x"></a> `x` | `private` | `number` | `0` | Current X coordinate of the camera centre. | [core/camera.ts:34](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L34) |
-| <a id="y"></a> `y` | `private` | `number` | `0` | Current Y coordinate of the camera centre. | [core/camera.ts:37](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L37) |
+| <a id="height"></a> `height` | `private` | `number` | `undefined` | Viewport height in pixels. | [core/camera.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L51) |
+| <a id="width"></a> `width` | `private` | `number` | `undefined` | Viewport width in pixels. | [core/camera.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L46) |
+| <a id="x"></a> `x` | `private` | `number` | `0` | Current X coordinate of the camera centre. | [core/camera.ts:36](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L36) |
+| <a id="y"></a> `y` | `private` | `number` | `0` | Current Y coordinate of the camera centre. | [core/camera.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L41) |
 
 ## Methods
 
@@ -87,7 +91,7 @@ Creates a camera with the given viewport dimensions.
 follow(target: Vector2): void;
 ```
 
-Defined in: [core/camera.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L68)
+Defined in: [core/camera.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L76)
 
 Centres the camera on a target position.
 
@@ -117,7 +121,7 @@ camera.follow(player.getPosition());
 getPosition(): Vector2;
 ```
 
-Defined in: [core/camera.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L96)
+Defined in: [core/camera.ts:104](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L104)
 
 Returns the current centre position of the camera.
 
@@ -140,7 +144,7 @@ getViewRect(): {
 };
 ```
 
-Defined in: [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118)
+Defined in: [core/camera.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L126)
 
 Computes the axis-aligned rectangle that represents the visible
 area in world-space.
@@ -163,10 +167,10 @@ An object with `x` (left edge), `y` (top edge), `width`,
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `height` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
-| `width` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
-| `x` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
-| `y` | `number` | [core/camera.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L118) |
+| `height` | `number` | [core/camera.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L126) |
+| `width` | `number` | [core/camera.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L126) |
+| `x` | `number` | [core/camera.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L126) |
+| `y` | `number` | [core/camera.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L126) |
 
 #### Example
 
@@ -186,7 +190,7 @@ if (entity.x < rect.x || entity.x > rect.x + rect.width) {
 moveTo(target: Vector2): void;
 ```
 
-Defined in: [core/camera.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L87)
+Defined in: [core/camera.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L95)
 
 Instantly teleports the camera to a specific position.
 
@@ -218,7 +222,7 @@ camera.moveTo({ x: 500, y: 300 });
 resize(width: number, height: number): void;
 ```
 
-Defined in: [core/camera.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L140)
+Defined in: [core/camera.ts:148](https://github.com/bdryanovski/gamefoo/blob/main/src/core/camera.ts#L148)
 
 Updates the viewport dimensions, e.g. after a window resize.
 

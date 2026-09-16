@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "props.png",
+    "imageWidth": 304,
+    "imageHeight": 128,
+    "exportedAt": "2026-09-01T15:32:22.642Z"
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "namedFrames": {
+    "jar": 19,
+    "jar_broken": 20,
+    "rocks": 78,
+    "rocks_crystal": 79,
+    "sign": 41,
+    "skeleton": 57,
+    "shelf": 15
+  },
+  "animations": {}
+}

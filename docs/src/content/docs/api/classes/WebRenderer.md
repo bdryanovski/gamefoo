@@ -2,7 +2,7 @@
 title: 'Class: WebRenderer'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: WebRenderer'
 
 # Class: WebRenderer
 
-Defined in: [core/renderer/web\_renderer.ts:47](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L47)
+Defined in: [core/renderer/web\_renderer.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L51)
 
 Canvas-backed [RenderContext](../interfaces/RenderContext.md) implementation for browser games.
 
@@ -20,16 +20,21 @@ the minimal [RenderContext](../interfaces/RenderContext.md) interface the engine
 
 ### Scaling
 
-When `gameScale > 1` (e.g. `4` for a 200×75 pixel-art game displayed
-at 800×300):
+The `gameScale` parameter controls how large the game appears on screen:
+
+- `gameScale = 1`: 1:1 pixel mapping. A 200×75 game displays at 200×75 CSS pixels.
+- `gameScale = 2`: 2× scale. A 200×75 game displays at 400×150 CSS pixels.
+- `gameScale = 4`: 4× scale. A 200×75 game displays at 800×300 CSS pixels.
+
+Internally:
 
 - The canvas **backing buffer** is sized to `width × gameScale` ×
   `height × gameScale` so there is a physical pixel for each logical
   pixel in the up-scaled view.
+- The canvas **CSS size** is also set to `width × gameScale` ×
+  `height × gameScale` so the game appears at the scaled size.
 - `ctx.scale(gameScale, gameScale)` is applied once at construction so
   all subsequent draw calls use logical (`width × height`) coordinates.
-- CSS is set to `width × height` so the browser displays the canvas at
-  its intended logical size.
 - `imageSmoothingEnabled` is disabled globally to preserve crisp
   pixel-art edges.
 
@@ -39,6 +44,8 @@ at 800×300):
 
 ## Examples
 
+**Basic setup**
+
 ```ts
 import { Engine, WebRenderer } from "gamefoo";
 
@@ -46,6 +53,8 @@ const renderer = new WebRenderer("game-canvas", 800, 600);
 const engine   = new Engine(renderer, { backgroundColor: "#1a1a2e" });
 engine.setup();
 ```
+
+**Pixel-art game with 4× scale**
 
 ```ts
 // Internal resolution 200×75, displayed at 800×300
@@ -56,8 +65,7 @@ engine.setup();
 
 ## See
 
- - [RenderContext](../interfaces/RenderContext.md)         — the interface this class implements
- - [TerminalRenderContext](TerminalRenderContext.md) — ANSI terminal alternative
+[RenderContext](../interfaces/RenderContext.md)         — the interface this class implements
 
 ## Implements
 
@@ -72,10 +80,11 @@ new WebRenderer(
    canvasId: string, 
    width: number, 
    height: number, 
-   gameScale?: number): WebRenderer;
+   gameScale?: number
+): WebRenderer;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:101](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L101)
+Defined in: [core/renderer/web\_renderer.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L122)
 
 Creates a new `WebRenderer` and configures the target canvas.
 
@@ -108,6 +117,8 @@ If no `<canvas>` element with `id === canvasId` is found,
 const renderer = new WebRenderer("game", 800, 600);
 ```
 
+**Pixel-art 4× scale**
+
 ```ts
 const renderer = new WebRenderer("game", 200, 75, 4);
 ```
@@ -116,10 +127,11 @@ const renderer = new WebRenderer("game", 200, 75, 4);
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `readonly` | `number` | The logical height — coordinates supplied to draw calls should stay within `0..height`. **Since** 0.4.0 | [core/renderer/web\_renderer.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L65) |
-| <a id="width"></a> `width` | `readonly` | `number` | The logical width — coordinates supplied to draw calls should stay within `0..width`. **Since** 0.4.0 | [core/renderer/web\_renderer.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L57) |
-| <a id="ctx"></a> `ctx` | `private` | `CanvasRenderingContext2D` | The underlying canvas 2-D rendering context. | [core/renderer/web\_renderer.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L49) |
-| <a id="gamescale"></a> `gameScale` | `private` | `number` | The pixel scale factor applied to the canvas backing buffer. Stored so that `clear()` can reset the full buffer regardless of accumulated transforms. | [core/renderer/web\_renderer.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L72) |
+| <a id="gamescale"></a> `gameScale` | `public` | `number` | The pixel scale factor applied to the canvas backing buffer. Stored so that `clear()` can reset the full buffer regardless of accumulated transforms. | [core/renderer/web\_renderer.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L83) |
+| <a id="height"></a> `height` | `public` | `number` | The logical height — coordinates supplied to draw calls should stay within `0..height`. **Since** 0.4.0 | [core/renderer/web\_renderer.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L76) |
+| <a id="width"></a> `width` | `public` | `number` | The logical width — coordinates supplied to draw calls should stay within `0..width`. **Since** 0.4.0 | [core/renderer/web\_renderer.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L68) |
+| <a id="canvas"></a> `canvas` | `private` | `HTMLCanvasElement` | The underlying canvas element. | [core/renderer/web\_renderer.ts:60](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L60) |
+| <a id="ctx"></a> `ctx` | `private` | `CanvasRenderingContext2D` | The underlying canvas 2-D rendering context. | [core/renderer/web\_renderer.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L55) |
 
 ## Methods
 
@@ -129,7 +141,7 @@ const renderer = new WebRenderer("game", 200, 75, 4);
 clear(color?: string): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:212](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L212)
+Defined in: [core/renderer/web\_renderer.ts:284](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L284)
 
 Clears the entire canvas and fills it with `color`.
 
@@ -164,10 +176,11 @@ drawChar(
    char: string, 
    x: number, 
    y: number, 
-   color?: string): void;
+   color?: string
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:303](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L303)
+Defined in: [core/renderer/web\_renderer.ts:379](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L379)
 
 Draws a single character at `(x, y)`.
 
@@ -204,10 +217,11 @@ drawCircle(
    y: number, 
    radius: number, 
    color: string, 
-   fill?: boolean): void;
+   fill?: boolean
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:368](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L368)
+Defined in: [core/renderer/web\_renderer.ts:445](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L445)
 
 Draws a circle (stroke or fill).
 
@@ -243,10 +257,11 @@ drawLine(
    y1: number, 
    x2: number, 
    y2: number, 
-   color: string): void;
+   color: string
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:349](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L349)
+Defined in: [core/renderer/web\_renderer.ts:426](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L426)
 
 Draws a straight line between two points.
 
@@ -286,10 +301,11 @@ drawSprite(
    dx: number, 
    dy: number, 
    dw: number, 
-   dh: number): void;
+   dh: number
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:324](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L324)
+Defined in: [core/renderer/web\_renderer.ts:401](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L401)
 
 Draws an image region (sprite frame) onto the canvas.
 
@@ -331,10 +347,11 @@ drawText(
    x: number, 
    y: number, 
    color?: string, 
-   _bgColor?: string): void;
+   _bgColor?: string
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:280](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L280)
+Defined in: [core/renderer/web\_renderer.ts:362](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L362)
 
 Draws a text string using the canvas's current font setting.
 
@@ -366,6 +383,39 @@ if needed.
 
 ***
 
+### fill()
+
+```ts
+fill(path?: Path2D, fillRule?: CanvasFillRule): void;
+```
+
+Defined in: [core/renderer/web\_renderer.ts:305](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L305)
+
+Fills the current path or a provided Path2D.
+
+Mirrors the Canvas 2D `fill()` API.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `path?` | `Path2D` | Optional Path2D to fill. If omitted, fills the current path. |
+| `fillRule?` | `CanvasFillRule` | Optional fill rule: "nonzero" (default) or "evenodd". |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+#### Implementation of
+
+[`RenderContext`](../interfaces/RenderContext.md).[`fill`](../interfaces/RenderContext.md#fill)
+
+***
+
 ### fillRect()
 
 ```ts
@@ -374,10 +424,11 @@ fillRect(
    y: number, 
    w: number, 
    h: number, 
-   color: string): void;
+   color: string
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:244](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L244)
+Defined in: [core/renderer/web\_renderer.ts:326](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L326)
 
 Draws a filled rectangle.
 
@@ -405,37 +456,13 @@ Draws a filled rectangle.
 
 ***
 
-### flush()
-
-```ts
-flush(): void;
-```
-
-Defined in: [core/renderer/web\_renderer.ts:391](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L391)
-
-No-op — canvas rendering is immediate-mode and requires no explicit flush.
-
-#### Returns
-
-`void`
-
-#### Since
-
-0.4.0
-
-#### Implementation of
-
-[`RenderContext`](../interfaces/RenderContext.md).[`flush`](../interfaces/RenderContext.md#flush)
-
-***
-
 ### getCanvas()
 
 ```ts
 getCanvas(): CanvasRenderingContext2D;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:416](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L416)
+Defined in: [core/renderer/web\_renderer.ts:478](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L478)
 
 Returns the underlying `CanvasRenderingContext2D`.
 
@@ -469,13 +496,85 @@ The raw 2-D canvas rendering context.
 
 ***
 
+### readGameScale()
+
+```ts
+readGameScale(): number;
+```
+
+Defined in: [core/renderer/web\_renderer.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L90)
+
+Return the actual game scale
+
+#### Returns
+
+`number`
+
+#### Since
+
+0.5.0
+
+#### Implementation of
+
+[`RenderContext`](../interfaces/RenderContext.md).[`readGameScale`](../interfaces/RenderContext.md#readgamescale)
+
+***
+
+### resize()
+
+```ts
+resize(
+   width: number, 
+   height: number, 
+   scale?: number
+): void;
+```
+
+Defined in: [core/renderer/web\_renderer.ts:187](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L187)
+
+Resizes the canvas to new dimensions while preserving the scale factor.
+
+This method updates both the backing buffer size and the CSS display size.
+After calling resize, you should also call `engine.resize(width, height)`
+to keep the engine's dimensions in sync.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `width` | `number` | New logical width in game-world pixels. |
+| `height` | `number` | New logical height in game-world pixels. |
+| `scale?` | `number` | Optional new scale factor. If not provided, keeps current scale. |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+#### Example
+
+```ts
+// Change to Game Boy resolution
+renderer.resize(160, 144);
+engine.resize(160, 144);
+
+// Change resolution and scale
+renderer.resize(256, 240, 3);
+engine.resize(256, 240);
+```
+
+***
+
 ### restore()
 
 ```ts
 restore(): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:165](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L165)
+Defined in: [core/renderer/web\_renderer.ts:237](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L237)
 
 Restores the most recently saved canvas state.
 
@@ -499,7 +598,7 @@ Restores the most recently saved canvas state.
 save(): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:156](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L156)
+Defined in: [core/renderer/web\_renderer.ts:228](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L228)
 
 Saves the current canvas state onto the state stack.
 
@@ -530,7 +629,7 @@ value set at construction.
 scale(x: number, y: number): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:197](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L197)
+Defined in: [core/renderer/web\_renderer.ts:269](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L269)
 
 Multiplies the current transform by a scale factor.
 
@@ -567,10 +666,11 @@ strokeRect(
    y: number, 
    w: number, 
    h: number, 
-   color: string): void;
+   color: string
+): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:260](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L260)
+Defined in: [core/renderer/web\_renderer.ts:342](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L342)
 
 Draws a stroked (outlined) rectangle.
 
@@ -604,7 +704,7 @@ Draws a stroked (outlined) rectangle.
 translate(x: number, y: number): void;
 ```
 
-Defined in: [core/renderer/web\_renderer.ts:181](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L181)
+Defined in: [core/renderer/web\_renderer.ts:253](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/web_renderer.ts#L253)
 
 Translates the canvas origin by `(x, y)` in logical coordinates.
 

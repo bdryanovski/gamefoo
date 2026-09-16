@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "Skull",
+    "category": "",
+    "exportedAt": "2026-09-01T15:26:08.342Z"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {},
+  "images": {
+    "props.png": {
+      "src": "/uploads/1787640551726_props.png",
+      "width": 304,
+      "height": 128
+    }
+  },
+  "frames": {
+    "skeleton": {
+      "image": "props.png",
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {},
+  "layers": [
+    {
+      "name": "base",
+      "cells": [
+        {
+          "col": 0,
+          "row": 0,
+          "source": {
+            "kind": "sprite",
+            "sprite": "skeleton"
+          }
+        }
+      ]
+    }
+  ],
+  "collisionLayers": {},
+  "collisions": [],
+  "states": {
+    "init": {
+      "layers": [
+        "base"
+      ],
+      "collisionsOff": []
+    }
+  },
+  "initial": "init"
+}

@@ -22,13 +22,7 @@ Catalog.set(FONT_6x8_METADATA.name, FONT_6x8_METADATA);
 Catalog.set(FONT_8x13_METADATA.name, FONT_8x13_METADATA);
 Catalog.set(FONT_8x8_METADATA.name, FONT_8x8_METADATA);
 
-export type InternalBitmapFontName =
-  | '3x5'
-  | '4x6'
-  | '5x5'
-  | '6x8'
-  | '8x13'
-  | '8x8';
+export type InternalBitmapFontName = '3x5' | '4x6' | '5x5' | '6x8' | '8x13' | '8x8';
 
 /**
  * Pixel-perfect bitmap font renderer.
@@ -91,7 +85,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * @returns Font metadata object or `null`.
    */
   get metadata() {
-    return Catalog.get(this.name) || null;
+    return Catalog.get(this.name) ?? null;
   }
 
   /**
@@ -102,7 +96,9 @@ export default class FontBitmap extends BitmapDataRenderer {
    */
   private buildGlyphPath(char: string): Path2D | null {
     const charData = this.getChar(char);
-    if (!charData) return null;
+    if (!charData) {
+      return null;
+    }
 
     const path = new Path2D();
     const w = this.width - this.spacing;
@@ -121,7 +117,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * Pre-builds `Path2D` objects for a set of characters, storing them in the `glyphPaths`
    * cache.
    */
-  public prebuildGlyphs(chars: string[] = []): void {
+  prebuildGlyphs(chars: string[] = []): void {
     for (const char of chars) {
       if (!this.glyphPaths.has(char)) {
         const built = this.buildGlyphPath(char);
@@ -145,7 +141,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * ```
    */
   getChar(char: string): number[] | null {
-    return this.data[char] || null;
+    return this.data[char] ?? null;
   }
 
   /**
@@ -177,12 +173,10 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderChar("G", 20, 40, ctx);
    * ```
    */
-  public renderChar(char: string, x: number, y: number, ctx: RenderContext) {
+  renderChar(char: string, x: number, y: number, ctx: RenderContext) {
     const canvasCtx = ctx.getCanvas?.();
 
-    // For terminal / non-canvas contexts, delegate to drawText
     if (!canvasCtx) {
-      ctx.drawText(char, x, y);
       return;
     }
 
@@ -190,7 +184,9 @@ export default class FontBitmap extends BitmapDataRenderer {
     let path = this.glyphPaths.get(char);
     if (path === undefined) {
       const built = this.buildGlyphPath(char);
-      if (!built) return;
+      if (!built) {
+        return;
+      }
       path = built;
       this.glyphPaths.set(char, path);
     }
@@ -215,9 +211,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * ```
    */
   renderText(text: string, x: number, y: number, ctx: RenderContext) {
-    // For terminal / non-canvas contexts, use drawText directly
     if (!ctx.getCanvas?.()) {
-      ctx.drawText(text, x, y);
       return;
     }
 

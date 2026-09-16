@@ -2,7 +2,7 @@
 title: 'Class: TilemapSystem'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: TilemapSystem'
 
 # Class: TilemapSystem
 
-Defined in: [core/tilemap/tilemap\_system.ts:40](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L40)
+Defined in: [core/tilemap/tilemap\_system.ts:42](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L42)
 
 SubSystem is a modular component of the game engine that can be added or removed as needed.
 It provides hooks for initialization, updating, rendering, and destruction.
@@ -32,7 +32,7 @@ Each subsystem can have its own logic and state, and can interact with the engin
 new TilemapSystem(tilemap: TileMap): TilemapSystem;
 ```
 
-Defined in: [core/tilemap/tilemap\_system.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L73)
+Defined in: [core/tilemap/tilemap\_system.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L83)
 
 Creates a new tilemap subsystem.
 
@@ -61,12 +61,12 @@ engine.use(system);
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `public` | `string` | `'tilemap'` | Subsystem identifier. | [core/tilemap/tilemap\_system.ts:42](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L42) |
-| <a id="order"></a> `order` | `public` | `number` | `15` | Execution order. `15` places this after camera (10) and before objects (20). | [core/tilemap/tilemap\_system.ts:48](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L48) |
-| <a id="camerasystem"></a> `cameraSystem` | `private` | `CameraLike` \| `null` | `null` | Cached reference to the camera subsystem, resolved in `init`. | [core/tilemap/tilemap\_system.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L54) |
-| <a id="canvasheight"></a> `canvasHeight` | `private` | `number` | `0` | - | [core/tilemap/tilemap\_system.ts:58](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L58) |
-| <a id="canvaswidth"></a> `canvasWidth` | `private` | `number` | `0` | Canvas dimensions fallback when no camera is available. | [core/tilemap/tilemap\_system.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L57) |
-| <a id="tilemap"></a> `tilemap` | `private` | [`TileMap`](TileMap.md) | `undefined` | The tilemap to render. | [core/tilemap/tilemap\_system.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L51) |
+| <a id="id"></a> `id` | `public` | `string` | `'tilemap'` | Subsystem identifier. | [core/tilemap/tilemap\_system.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L46) |
+| <a id="order"></a> `order` | `public` | `number` | `15` | Execution order. `15` places this after camera (10) and before objects (20). | [core/tilemap/tilemap\_system.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L52) |
+| <a id="camerasystem"></a> `cameraSystem` | `private` | `CameraLike` \| `null` | `null` | Cached reference to the camera subsystem, resolved in `init`. | [core/tilemap/tilemap\_system.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L62) |
+| <a id="canvasheight"></a> `canvasHeight` | `private` | `number` | `0` | - | [core/tilemap/tilemap\_system.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L68) |
+| <a id="canvaswidth"></a> `canvasWidth` | `private` | `number` | `0` | Canvas dimensions fallback when no camera is available. | [core/tilemap/tilemap\_system.ts:67](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L67) |
+| <a id="tilemap"></a> `tilemap` | `private` | [`TileMap`](TileMap.md) | `undefined` | The tilemap to render. | [core/tilemap/tilemap\_system.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L57) |
 
 ## Methods
 
@@ -76,7 +76,7 @@ engine.use(system);
 attachCamera(cameraSystem: CameraLike): void;
 ```
 
-Defined in: [core/tilemap/tilemap\_system.ts:113](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L113)
+Defined in: [core/tilemap/tilemap\_system.ts:123](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L123)
 
 Attaches a camera system reference so the tilemap can use the
 camera viewport for culling.
@@ -116,7 +116,7 @@ tmSys.attachCamera(camSys);
 init(engine: Engine): void;
 ```
 
-Defined in: [core/tilemap/tilemap\_system.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L87)
+Defined in: [core/tilemap/tilemap\_system.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L97)
 
 Called by the engine when this subsystem is attached.
 
@@ -149,7 +149,7 @@ Stores canvas dimensions for viewport fallback and looks up the
 render(ctx: RenderContext): void;
 ```
 
-Defined in: [core/tilemap/tilemap\_system.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L125)
+Defined in: [core/tilemap/tilemap\_system.ts:135](https://github.com/bdryanovski/gamefoo/blob/main/src/core/tilemap/tilemap_system.ts#L135)
 
 Renders the tilemap. Uses the camera viewport for culling when
 available, otherwise renders the full canvas area.

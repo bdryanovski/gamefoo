@@ -23,7 +23,9 @@
  * ```
  */
 
-/** Catalogue name used by {@link FontBitmap} to look up this font. */
+/**
+ * Catalogue name used by {@link FontBitmap} to look up this font.
+ */
 export const FONT_8x13_NAME = '8x13';
 
 /**
@@ -163,17 +165,29 @@ export const FONT_8x13: Record<string, number[]> = {
  * @internal
  */
 export const metadata = {
-  /** Catalogue name. */
+  /**
+   * Catalogue name.
+   */
   name: FONT_8x13_NAME,
-  /** Cell width including spacing (8 + 1 = 9). */
+  /**
+   * Cell width including spacing (8 + 1 = 9).
+   */
   width: FONT_8x13_WIDTH + FONT_8x13_SPACING,
-  /** Cell height (13). */
+  /**
+   * Cell height (13).
+   */
   height: FONT_8x13_HEIGHT,
-  /** Inter-glyph spacing (1). */
+  /**
+   * Inter-glyph spacing (1).
+   */
   spacing: FONT_8x13_SPACING,
-  /** Supported character string. */
+  /**
+   * Supported character string.
+   */
   chars: FONT_8x13_CHARS,
-  /** Glyph bitmask data. */
+  /**
+   * Glyph bitmask data.
+   */
   data: FONT_8x13,
 };
 

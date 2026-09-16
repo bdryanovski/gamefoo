@@ -2,7 +2,7 @@
 title: 'Interface: GeneratedMapData'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Interface: GeneratedMapData'
 
 # Interface: GeneratedMapData
 
-Defined in: [core/utils/map\_generator\_types.ts:140](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator_types.ts#L140)
+Defined in: [core/utils/map\_generator\_types.ts:150](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator_types.ts#L150)
 
 Output of [MapGenerator.generateTileData](../classes/MapGenerator.md#generatetiledata).
 
@@ -30,5 +30,5 @@ console.log(result.walkableMap[0]!.length); // cols
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="data"></a> `data` | `number`[] | Flat row-major tile ID array (length = cols × rows). | [core/utils/map\_generator\_types.ts:142](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator_types.ts#L142) |
-| <a id="walkablemap"></a> `walkableMap` | `boolean`[][] | 2D walkability map indexed `[row][col]`. | [core/utils/map\_generator\_types.ts:144](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator_types.ts#L144) |
+| <a id="data"></a> `data` | `number`[] | Flat row-major tile ID array (length = cols × rows). | [core/utils/map\_generator\_types.ts:154](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator_types.ts#L154) |
+| <a id="walkablemap"></a> `walkableMap` | `boolean`[][] | 2D walkability map indexed `[row][col]`. | [core/utils/map\_generator\_types.ts:158](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator_types.ts#L158) |

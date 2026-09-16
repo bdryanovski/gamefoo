@@ -3,113 +3,154 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GameFoo — Demos</title>
+    <title>GameFoo Demos</title>
+    <link rel="stylesheet" href="/shared.css" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
       body {
-        background: #0d0d1a;
-        color: #e0e0e0;
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 60px 20px;
+        padding: 40px 20px;
+        justify-content: flex-start;
       }
 
-      h1 {
-        font-size: 2rem;
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
         font-weight: 700;
-        letter-spacing: 0.08em;
-        color: #8888ff;
+        letter-spacing: 0.1em;
         margin-bottom: 6px;
       }
 
       .subtitle {
-        color: #555;
-        font-size: 0.85rem;
-        margin-bottom: 48px;
+        color: #888;
+        font-size: 0.9rem;
+      }
+
+      .count {
+        display: inline-block;
+        background: #fff;
+        color: #666;
+        font-size: 0.75rem;
+        padding: 4px 12px;
+        border-radius: 12px;
+        margin-top: 12px;
+        border: 1px solid #ddd;
       }
 
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        max-width: 800px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        max-width: 1000px;
         width: 100%;
       }
 
       .card {
-        background: #111122;
-        border: 1px solid #2a2a4a;
+        background: #fff;
+        border: 1px solid #ddd;
         border-radius: 8px;
-        padding: 24px;
+        padding: 20px 24px;
         text-decoration: none;
         color: inherit;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s,
-          transform 0.15s;
+        transition: all 0.2s ease;
       }
 
       .card:hover {
-        border-color: #5566cc;
-        box-shadow: 0 0 24px rgba(80, 100, 220, 0.15);
+        border-color: #bbb;
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
       }
 
       .card h2 {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: 600;
-        color: #aabbff;
+        color: #333;
         margin-bottom: 8px;
       }
-
       .card p {
         font-size: 0.8rem;
         color: #666;
         line-height: 1.5;
       }
+      .card p.empty {
+        color: #aaa;
+        font-style: italic;
+      }
 
-      .card .tags {
-        margin-top: 12px;
+      .tags {
+        margin-top: 14px;
         display: flex;
         gap: 6px;
         flex-wrap: wrap;
       }
-
       .tag {
         font-size: 0.65rem;
-        padding: 2px 8px;
-        border-radius: 3px;
-        background: #1a1a2e;
-        color: #7fdbca;
-        border: 1px solid #2a3a3a;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: #f0f0f0;
+        color: #555;
+        border: 1px solid #e0e0e0;
       }
 
       footer {
-        margin-top: 60px;
-        font-size: 0.7rem;
-        color: #333;
+        text-align: center;
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid #ddd;
+        font-size: 0.75rem;
+        color: #888;
+      }
+
+      footer code {
+        background: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #555;
+        border: 1px solid #ddd;
+      }
+
+      .tip {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px 20px;
+        max-width: 600px;
+        margin-bottom: 32px;
+        font-size: 0.8rem;
+        color: #666;
+        text-align: center;
+      }
+
+      .tip strong {
+        color: #444;
+      }
+      .tip code {
+        background: #f5f5f5;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 0.85em;
       }
     </style>
   </head>
   <body>
-    <h1>GAMEFOO</h1>
-    <p class="subtitle">Demo collection</p>
+    <header>
+      <h1>GAMEFOO</h1>
+      <p class="subtitle">Demo Collection</p>
+      <span class="count">12 demos</span>
+    </header>
+
+    <div class="tip">
+      <strong>Add a new demo:</strong> Create a folder with an
+      <code>index.html</code>. Add <code>demo.json</code> for metadata. Restart
+      server.
+    </div>
 
     <div class="grid">
-      <a class="card" href="/demo">
+      <a class="card" href="/demo/">
         <h2>Basic Demo</h2>
-        <p>
-          Player movement, collision detection, health system, and a wandering blob enemy. The
-          original engine test.
-        </p>
+        <p>Player movement, collision detection, health system, and a wandering blob enemy. The original engine test.</p>
         <div class="tags">
           <span class="tag">player</span>
           <span class="tag">collision</span>
@@ -118,12 +159,42 @@
         </div>
       </a>
 
-      <a class="card" href="/endless-world">
+      <a class="card" href="/clock/">
+        <h2>Clock</h2>
+        <p>Analog clock rendered on canvas demonstrating rotation and timing.</p>
+        <div class="tags">
+          <span class="tag">clock</span>
+          <span class="tag">rotation</span>
+          <span class="tag">timing</span>
+          <span class="tag">animation</span>
+        </div>
+      </a>
+
+      <a class="card" href="/duel/">
+        <h2>Duel</h2>
+        <p>Two-player combat demo with attack, defense, and health mechanics.</p>
+        <div class="tags">
+          <span class="tag">combat</span>
+          <span class="tag">2-player</span>
+          <span class="tag">health</span>
+          <span class="tag">attack</span>
+        </div>
+      </a>
+
+      <a class="card" href="/dungen/">
+        <h2>Dungeon Generator</h2>
+        <p>Procedural dungeon generation with rooms, corridors, and exploration.</p>
+        <div class="tags">
+          <span class="tag">procedural</span>
+          <span class="tag">dungeon</span>
+          <span class="tag">generation</span>
+          <span class="tag">rooms</span>
+        </div>
+      </a>
+
+      <a class="card" href="/endless-world/">
         <h2>Endless World</h2>
-        <p>
-          Camera &amp; viewport stress-test in a 4000&times;4000 world with Perlin terrain, trees,
-          rocks, ponds, and critters.
-        </p>
+        <p>Camera & viewport stress-test in a 4000x4000 world with Perlin terrain, trees, rocks, ponds, and critters.</p>
         <div class="tags">
           <span class="tag">camera</span>
           <span class="tag">perlin noise</span>
@@ -131,62 +202,41 @@
           <span class="tag">minimap</span>
         </div>
       </a>
-      <a class="card" href="/sprite">
-        <h2>Sprites</h2>
-        <p>Sprite and animation playground</p>
+
+      <a class="card" href="/floppy/">
+        <h2>Floppy Bird</h2>
+        <p>Flappy Bird clone demonstrating physics, obstacles, and scoring.</p>
         <div class="tags">
-          <span class="tag">sprites</span>
-          <span class="tag">animation</span>
-          <span class="tag">sprite sheets</span>
-          <span class="tag">flipX</span>
+          <span class="tag">game</span>
+          <span class="tag">physics</span>
+          <span class="tag">obstacles</span>
+          <span class="tag">score</span>
         </div>
       </a>
-      <a class="card" href="/fonts">
+
+      <a class="card" href="/fonts/">
         <h2>Fonts</h2>
-        <p>Demo of the fonts</p>
+        <p>Demo of the built-in pixel font rendering system.</p>
         <div class="tags">
           <span class="tag">fonts</span>
-        </div>
-      </a>
-      <a class="card" href="/floppy">
-        <h2>Floppy Bird</h2>
-        <p>Experiment</p>
-        <div class="tags">
-          <span class="tag">sprites</span>
-          <span class="tag">animation</span>
-          <span class="tag">sprite sheets</span>
-          <span class="tag">flipX</span>
+          <span class="tag">text</span>
+          <span class="tag">rendering</span>
         </div>
       </a>
 
-      <a class="card" href="/icons">
+      <a class="card" href="/icons/">
         <h2>Icons</h2>
-        <p>Experiment</p>
+        <p>Icon rendering and sprite sheet extraction demo.</p>
         <div class="tags">
+          <span class="tag">icons</span>
           <span class="tag">sprites</span>
-          <span class="tag">animation</span>
-          <span class="tag">sprite sheets</span>
-          <span class="tag">flipX</span>
+          <span class="tag">assets</span>
         </div>
       </a>
 
-      <a class="card" href="/clock">
-        <h2>Clock</h2>
-        <p>Experiment</p>
-        <div class="tags">
-          <span class="tag">sprites</span>
-          <span class="tag">animation</span>
-          <span class="tag">sprite sheets</span>
-          <span class="tag">flipX</span>
-        </div>
-      </a>
-
-      <a class="card" href="/isometric">
+      <a class="card" href="/isometric/">
         <h2>Isometric World</h2>
-        <p>
-          Procedurally generated isometric map with Perlin noise terrain, A* pathfinding NPCs,
-          collision detection, zoom camera, and full debug overlays.
-        </p>
+        <p>Procedurally generated isometric map with Perlin noise terrain, A* pathfinding NPCs, collision detection, zoom camera, and debug overlays.</p>
         <div class="tags">
           <span class="tag">isometric</span>
           <span class="tag">tilemap</span>
@@ -197,12 +247,43 @@
         </div>
       </a>
 
-      <a class="card" href="/duel">
-        <h2>Duel</h2>
-        <p></p>
+      <a class="card" href="/map/">
+        <h2>Map</h2>
+        <p>Empty scaffold for a tilemap demo.</p>
+        <div class="tags">
+          <span class="tag">map</span>
+        </div>
+      </a>
+
+      <a class="card" href="/palette/">
+        <h2>Palette</h2>
+        <p>Color palette viewer and editor for game graphics.</p>
+        <div class="tags">
+          <span class="tag">colors</span>
+          <span class="tag">palette</span>
+          <span class="tag">editor</span>
+        </div>
+      </a>
+
+      <a class="card" href="/sprite/">
+        <h2>Sprites</h2>
+        <p>Sprite and animation playground showcasing sprite sheets and transformations.</p>
+        <div class="tags">
+          <span class="tag">sprites</span>
+          <span class="tag">animation</span>
+        </div>
+      </a>
+
+      <a class="card" href="/ui/">
+        <h2>UI Components</h2>
+        <p>UI component showcase with buttons, panels, and interactive elements.</p>
+        <div class="tags">
+          <span class="tag">ui</span>
+          <span class="tag">components</span>
+        </div>
       </a>
     </div>
 
-    <footer>bun run dev</footer>
+    <footer>Vite dev server &middot; <code>pnpm run dev</code></footer>
   </body>
 </html>

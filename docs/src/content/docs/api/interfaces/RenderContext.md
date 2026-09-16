@@ -2,7 +2,7 @@
 title: 'Interface: RenderContext'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Interface: RenderContext'
 
 # Interface: RenderContext
 
-Defined in: [core/renderer/type.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L52)
+Defined in: [core/renderer/type.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L46)
 
 The unified rendering surface interface used throughout the engine.
 
@@ -19,21 +19,16 @@ accepts `RenderContext`. This decouples game logic from the specific
 rendering backend so the same entities and subsystems can run under:
 
 - **[WebRenderer](../classes/WebRenderer.md)** — wraps the browser's `CanvasRenderingContext2D`.
-- **[TerminalRenderContext](../classes/TerminalRenderContext.md)** — writes ANSI escape codes to
-  `process.stdout` in Bun / Node terminal environments.
 
 ---
 
 ### Coordinate space
 
 - **Canvas mode**: logical units are CSS pixels (floating-point).
-- **Terminal mode**: logical units are game-world pixels; the renderer
-  maps them to character cells via configurable `cellWidth` / `cellHeight`.
 
 ### Optional methods
 
 `drawSprite` and `flush` are optional because:
-- Terminal renderers cannot render pixel sprites (`drawSprite` is a no-op).
 - Canvas renderers are immediate-mode and do not need flushing.
 
 ## Since
@@ -41,6 +36,8 @@ rendering backend so the same entities and subsystems can run under:
 0.4.0
 
 ## Example
+
+**Implementing a custom renderer**
 
 ```ts
 import type { RenderContext } from "gamefoo";
@@ -64,15 +61,15 @@ class NullRenderer implements RenderContext {
 
 ## See
 
- - [WebRenderer](../classes/WebRenderer.md)          — canvas implementation
- - [TerminalRenderContext](../classes/TerminalRenderContext.md) — ANSI terminal implementation
+[WebRenderer](../classes/WebRenderer.md)          — canvas implementation
 
 ## Properties
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `readonly` | `number` | Logical height of the rendering surface. - Canvas: pixel height of the `<canvas>` element. - Terminal: `rows × cellHeight` in game-world units. **Since** 0.4.0 | [core/renderer/type.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L71) |
-| <a id="width"></a> `width` | `readonly` | `number` | Logical width of the rendering surface. - Canvas: pixel width of the `<canvas>` element. - Terminal: `cols × cellWidth` in game-world units. **Since** 0.4.0 | [core/renderer/type.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L61) |
+| <a id="gamescale"></a> `gameScale` | `readonly` | `number` | Rendered scalling factor **Since** 0.5.0 | [core/renderer/type.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L70) |
+| <a id="height"></a> `height` | `readonly` | `number` | Logical height of the rendering surface. - Canvas: pixel height of the `<canvas>` element. **Since** 0.4.0 | [core/renderer/type.ts:63](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L63) |
+| <a id="width"></a> `width` | `readonly` | `number` | Logical width of the rendering surface. - Canvas: pixel width of the `<canvas>` element. **Since** 0.4.0 | [core/renderer/type.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L54) |
 
 ## Methods
 
@@ -86,9 +83,6 @@ Defined in: [core/renderer/type.ts:142](https://github.com/bdryanovski/gamefoo/b
 
 Clears the entire surface, optionally filling it with a background
 colour.
-
-On terminal renderers this fills the double-buffer with blank cells;
-the actual TTY output only changes on the next [RenderContext.flush](#flush).
 
 #### Parameters
 
@@ -119,17 +113,13 @@ drawChar(
    character: string, 
    x: number, 
    y: number, 
-   color?: string, 
-   bgColor?: string): void;
+   color?: string
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L232)
+Defined in: [core/renderer/type.ts:239](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L239)
 
 Draws a single character at the specified position.
-
-Equivalent to calling `drawText(char, x, y, ...)` with a one-character
-string. Provided as a convenience for terminal-mode entity rendering
-via [TerminalRender](../classes/TerminalRender.md).
 
 #### Parameters
 
@@ -139,7 +129,6 @@ via [TerminalRender](../classes/TerminalRender.md).
 | `x` | `number` | Left edge in logical units. |
 | `y` | `number` | Top edge in logical units. |
 | `color?` | `string` | Foreground colour. Defaults to white. |
-| `bgColor?` | `string` | Background colour. Defaults to black (terminal only). |
 
 #### Returns
 
@@ -165,15 +154,13 @@ drawCircle(
    y: number, 
    radius: number, 
    color: string, 
-   fill?: boolean): void;
+   fill?: boolean
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:300](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L300)
+Defined in: [core/renderer/type.ts:292](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L292)
 
 Draws a circle outline (or filled circle).
-
-Terminal renderers use the midpoint circle algorithm with `"o"`
-characters.
 
 #### Parameters
 
@@ -203,15 +190,13 @@ drawLine(
    y1: number, 
    x2: number, 
    y2: number, 
-   color: string): void;
+   color: string
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:284](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L284)
+Defined in: [core/renderer/type.ts:279](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L279)
 
 Draws a straight line between two points.
-
-Terminal renderers approximate the line using Bresenham's algorithm
-and box-drawing characters.
 
 #### Parameters
 
@@ -245,15 +230,13 @@ optional drawSprite(
    destinationX: number, 
    destinationY: number, 
    destinationWidth: number, 
-   destinationHeight: number): void;
+   destinationHeight: number
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:258](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L258)
+Defined in: [core/renderer/type.ts:256](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L256)
 
 Draws a sprite (image region) onto the surface. **Optional.**
-
-Terminal renderers implement this as a no-op. Canvas renderers
-delegate to `ctx.drawImage(...)`.
 
 #### Parameters
 
@@ -286,16 +269,15 @@ drawText(
    text: string, 
    x: number, 
    y: number, 
-   color?: string, 
-   bgColor?: string): void;
+   color?: string
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:204](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L204)
+Defined in: [core/renderer/type.ts:222](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L222)
 
 Draws a text string at the specified position.
 
 - **Canvas**: delegates to `CanvasRenderingContext2D.fillText`.
-- **Terminal**: writes each character directly into the cell buffer.
 
 #### Parameters
 
@@ -305,7 +287,6 @@ Draws a text string at the specified position.
 | `x` | `number` | Left edge in logical units. |
 | `y` | `number` | Top edge (baseline) in logical units. |
 | `color?` | `string` | Foreground colour. Defaults to white. |
-| `bgColor?` | `string` | Background colour. Defaults to black (terminal only). |
 
 #### Returns
 
@@ -323,6 +304,63 @@ ctx.drawText("SCORE: 100", 8, 8, "#ffff00");
 
 ***
 
+### fill()
+
+```ts
+fill(path?: Path2D): void;
+```
+
+Defined in: [core/renderer/type.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L177)
+
+Fills the current path or a provided Path2D.
+
+Mirrors the Canvas 2D `fill()` API.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `path?` | `Path2D` | Optional Path2D to fill. If omitted, fills the current path. |
+
+#### Returns
+
+`void`
+
+#### Since
+
+0.5.0
+
+#### Examples
+
+**Fill current path**
+
+```ts
+ctx.beginPath();
+ctx.moveTo(10, 10);
+ctx.lineTo(50, 50);
+ctx.lineTo(10, 50);
+ctx.closePath();
+ctx.fill();
+```
+
+**Fill a Path2D**
+
+```ts
+const path = new Path2D();
+path.rect(10, 10, 50, 50);
+ctx.fill(path);
+```
+
+**Fill a Bitmap (call render() to get Path2D)**
+
+```ts
+const bitmap = new Bitmap('icon', [0b11111, 0b10001, 0b11111], { width: 5, height: 3 });
+ctx.translate(100, 100);
+ctx.fill(bitmap.render());
+```
+
+***
+
 ### fillRect()
 
 ```ts
@@ -331,10 +369,11 @@ fillRect(
    y: number, 
    width: number, 
    height: number, 
-   color: string): void;
+   color: string
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:155](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L155)
+Defined in: [core/renderer/type.ts:190](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L190)
 
 Draws a filled rectangle.
 
@@ -358,41 +397,16 @@ Draws a filled rectangle.
 
 ***
 
-### flush()?
-
-```ts
-optional flush(): void;
-```
-
-Defined in: [core/renderer/type.ts:318](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L318)
-
-Flushes buffered output to the display. **Optional.**
-
-- **Terminal**: performs a dirty-cell diff against the previous frame
-  and writes only changed cells to `process.stdout`. Call this at the
-  end of every frame (the engine does this automatically).
-- **Canvas**: no-op (immediate-mode rendering needs no flush).
-
-#### Returns
-
-`void`
-
-#### Since
-
-0.4.0
-
-***
-
 ### getCanvas()?
 
 ```ts
 optional getCanvas(): CanvasRenderingContext2D | null;
 ```
 
-Defined in: [core/renderer/type.ts:337](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L337)
+Defined in: [core/renderer/type.ts:311](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L311)
 
 Returns the raw `CanvasRenderingContext2D` if this renderer is
-canvas-backed, or `null` for non-canvas renderers (terminal, etc.).
+canvas-backed, or `null` for non-canvas renderers.
 
 Use this to access canvas-specific APIs (Path2D, globalAlpha, etc.)
 that are not part of the `RenderContext` surface:
@@ -415,13 +429,33 @@ if (raw) {
 
 ***
 
+### readGameScale()
+
+```ts
+readGameScale(): number;
+```
+
+Defined in: [core/renderer/type.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L77)
+
+Read the rendering scale factor
+
+#### Returns
+
+`number`
+
+#### Since
+
+0.5.0
+
+***
+
 ### restore()
 
 ```ts
 restore(): void;
 ```
 
-Defined in: [core/renderer/type.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L97)
+Defined in: [core/renderer/type.ts:103](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L103)
 
 Restores the most recently saved transform state.
 
@@ -441,7 +475,7 @@ Restores the most recently saved transform state.
 save(): void;
 ```
 
-Defined in: [core/renderer/type.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L90)
+Defined in: [core/renderer/type.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L96)
 
 Saves the current transform state onto a stack.
 
@@ -472,12 +506,9 @@ ctx.restore();
 scale(x: number, y: number): void;
 ```
 
-Defined in: [core/renderer/type.ts:122](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L122)
+Defined in: [core/renderer/type.ts:125](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L125)
 
 Applies a scale factor to the current transform.
-
-Terminal renderers ignore this call (character cells cannot scale
-arbitrarily).
 
 #### Parameters
 
@@ -504,15 +535,13 @@ strokeRect(
    y: number, 
    width: number, 
    height: number, 
-   color: string): void;
+   color: string
+): void;
 ```
 
-Defined in: [core/renderer/type.ts:177](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L177)
+Defined in: [core/renderer/type.ts:203](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L203)
 
 Draws a stroked (outlined) rectangle.
-
-On terminal renderers, box-drawing characters (`─`, `│`, `┌`…) are
-used for the border.
 
 #### Parameters
 
@@ -540,7 +569,7 @@ used for the border.
 translate(x: number, y: number): void;
 ```
 
-Defined in: [core/renderer/type.ts:109](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L109)
+Defined in: [core/renderer/type.ts:115](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/type.ts#L115)
 
 Applies a translation to the current transform.
 

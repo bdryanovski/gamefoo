@@ -2,7 +2,7 @@
 title: 'Type Alias: ConsoleName'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -11,9 +11,13 @@ title: 'Type Alias: ConsoleName'
 # Type Alias: ConsoleName
 
 ```ts
-type ConsoleName = keyof typeof CONSOLE_RESOLUTION;
+type ConsoleName = keyof typeof CONSOLES;
 ```
 
-Defined in: core/renderer/resolutions.ts:48
+Defined in: [core/consoles/index.ts:236](https://github.com/bdryanovski/gamefoo/blob/main/src/core/consoles/index.ts#L236)
 
-Predefined supported console resolutions
+Type for valid console names.
+
+## Since
+
+0.5.0

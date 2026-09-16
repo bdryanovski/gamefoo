@@ -1,0 +1,1090 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "exportedAt": "2026-09-01T15:32:22.642Z"
+  },
+  "images": [
+    {
+      "id": "img_mt7oeg3l_0",
+      "name": "walls.png",
+      "url": "/uploads/1787602234111_walls.png",
+      "width": 224,
+      "height": 256
+    },
+    {
+      "id": "img_mt8b11kl_0",
+      "name": "props.png",
+      "url": "/uploads/1787640551726_props.png",
+      "width": 304,
+      "height": 128
+    },
+    {
+      "id": "img_mt8e3iq1_6",
+      "name": "animated_props.png",
+      "url": "/uploads/1787645706113_animated_props.png",
+      "width": 176,
+      "height": 128
+    },
+    {
+      "id": "img_mt8gk093_f",
+      "name": "grounds.png",
+      "url": "/uploads/1787649834561_grounds.png",
+      "width": 208,
+      "height": 256
+    }
+  ],
+  "frames": {
+    "floor": {
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_north": {
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_west": {
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_east": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_south": {
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_south_east": {
+      "x": 48,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_north_west": {
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_south_west": {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_north_east": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "middle_one": {
+      "x": 32,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "middle_two": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "empty": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "wall_bottom": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "top_right": {
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "top_left": {
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "bottom_left": {
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_north": {
+      "x": 176,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_east": {
+      "x": 208,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_south": {
+      "x": 192,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "portal_west": {
+      "x": 160,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "walls.png"
+    },
+    "jar": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "jar_broken": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "rocks": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "rocks_crystal": {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "sign": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "skeleton": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16,
+      "image": "props.png"
+    },
+    "shelf": {
+      "x": 240,
+      "y": 2,
+      "width": 16,
+      "height": 30,
+      "image": "props.png"
+    },
+    "torch": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "animated_props.png"
+    },
+    "torch_1": {
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "animated_props.png"
+    },
+    "torch_2": {
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "animated_props.png"
+    },
+    "torch_3": {
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "image": "animated_props.png"
+    },
+    "fire": {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 32,
+      "image": "animated_props.png"
+    },
+    "fire_1": {
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 32,
+      "image": "animated_props.png"
+    },
+    "fire_2": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 32,
+      "image": "animated_props.png"
+    },
+    "fire_3": {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 32,
+      "image": "animated_props.png"
+    },
+    "ork": {
+      "x": 112,
+      "y": 16,
+      "width": 16,
+      "height": 32,
+      "image": "animated_props.png"
+    },
+    "ork_1": {
+      "x": 128,
+      "y": 16,
+      "width": 16,
+      "height": 32,
+      "image": "animated_props.png"
+    },
+    "lanter": {
+      "x": 144,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "animated_props.png"
+    },
+    "sprite_10_1": {
+      "x": 160,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "image": "animated_props.png"
+    },
+    "ground": {
+      "x": 192,
+      "y": 192,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_0": {
+      "x": 144,
+      "y": 208,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_1": {
+      "x": 128,
+      "y": 192,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_2": {
+      "x": 144,
+      "y": 192,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_3": {
+      "x": 176,
+      "y": 192,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_4": {
+      "x": 160,
+      "y": 192,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_5": {
+      "x": 176,
+      "y": 240,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_6": {
+      "x": 128,
+      "y": 240,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "groung_7": {
+      "x": 144,
+      "y": 240,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_8": {
+      "x": 160,
+      "y": 240,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_9": {
+      "x": 176,
+      "y": 224,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_10": {
+      "x": 128,
+      "y": 224,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_11": {
+      "x": 128,
+      "y": 208,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    },
+    "ground_12": {
+      "x": 176,
+      "y": 208,
+      "width": 16,
+      "height": 16,
+      "image": "grounds.png"
+    }
+  },
+  "animations": {
+    "anim_0": {
+      "frames": [
+        "torch",
+        "torch_1",
+        "torch_2",
+        "torch_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "fire": {
+      "frames": [
+        "fire",
+        "fire_1",
+        "fire_2",
+        "fire_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Ork": {
+      "frames": [
+        "ork",
+        "ork_1"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "Lanter": {
+      "frames": [
+        "lanter",
+        "sprite_10_1"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "objects": {
+    "torch": {
+      "sprites": [],
+      "animations": [],
+      "properties": {},
+      "category": "",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "cell": 32
+      },
+      "layers": [],
+      "collisionLayers": {},
+      "collisions": [],
+      "states": {
+        "Normal": {
+          "layers": [],
+          "collisionsOff": []
+        }
+      },
+      "initial": "Normal"
+    },
+    "Fire": {
+      "sprites": [
+        "fire_3"
+      ],
+      "animations": [
+        "fire"
+      ],
+      "properties": {},
+      "category": "",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "cell": 32
+      },
+      "layers": [],
+      "collisionLayers": {},
+      "collisions": [],
+      "states": {},
+      "initial": null
+    },
+    "Ork": {
+      "sprites": [
+        "ork_1"
+      ],
+      "animations": [
+        "Ork"
+      ],
+      "properties": {},
+      "category": "",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "cell": 32
+      },
+      "layers": [],
+      "collisionLayers": {},
+      "collisions": [],
+      "states": {},
+      "initial": null
+    },
+    "Jar": {
+      "sprites": [],
+      "animations": [],
+      "properties": {},
+      "category": "",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "cell": 32
+      },
+      "layers": [],
+      "collisionLayers": {},
+      "collisions": [],
+      "states": {
+        "ok": {
+          "layers": [],
+          "collisionsOff": []
+        },
+        "broken": {
+          "layers": [],
+          "collisionsOff": []
+        }
+      },
+      "initial": "ok"
+    },
+    "booo": {
+      "sprites": [
+        "skeleton"
+      ],
+      "animations": [],
+      "properties": {},
+      "category": "",
+      "description": "",
+      "tags": [],
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "cell": 16
+      },
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "skeleton"
+              }
+            }
+          ]
+        }
+      ],
+      "collisionLayers": {
+        "solid": {
+          "name": "Solid",
+          "color": "#e05a5a"
+        }
+      },
+      "collisions": [
+        {
+          "id": "col_mtitpywl_0",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0,
+            "y": 0,
+            "width": 16,
+            "height": 16
+          }
+        }
+      ],
+      "states": {
+        "init": {
+          "layers": [
+            "base"
+          ],
+          "collisionsOff": []
+        }
+      },
+      "initial": "init"
+    }
+  },
+  "collisionLayers": [
+    {
+      "id": "solid",
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    {
+      "id": "vision",
+      "name": "Vision",
+      "color": "#f2c14e"
+    },
+    {
+      "id": "damage",
+      "name": "Damage",
+      "color": "#d94fd9"
+    },
+    {
+      "id": "activation",
+      "name": "Activation",
+      "color": "#4ea3f2"
+    },
+    {
+      "id": "hitbox",
+      "name": "Hitbox",
+      "color": "#ff7043"
+    },
+    {
+      "id": "hurtbox",
+      "name": "Hurtbox",
+      "color": "#5ad07a"
+    },
+    {
+      "id": "trigger",
+      "name": "Trigger",
+      "color": "#26c6da"
+    },
+    {
+      "id": "pickup",
+      "name": "Pickup",
+      "color": "#ffd54f"
+    },
+    {
+      "id": "ledge",
+      "name": "Ledge",
+      "color": "#8d6e63"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "color": "#29b6f6"
+    }
+  ],
+  "spriteMetadata": {
+    "floor": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 0,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_north": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 1,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 2,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 3,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_south": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 4,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_south_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 5,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_north_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 6,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_south_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 7,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_north_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 8,
+      "level": 0,
+      "properties": {}
+    },
+    "middle_one": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 9,
+      "level": 0,
+      "properties": {}
+    },
+    "middle_two": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 10,
+      "level": 0,
+      "properties": {}
+    },
+    "empty": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 11,
+      "level": 0,
+      "properties": {}
+    },
+    "wall_bottom": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 12,
+      "level": 0,
+      "properties": {}
+    },
+    "top_right": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 13,
+      "level": 0,
+      "properties": {}
+    },
+    "top_left": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 14,
+      "level": 0,
+      "properties": {}
+    },
+    "bottom_left": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 15,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_north": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 16,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_east": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 17,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_south": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 18,
+      "level": 0,
+      "properties": {}
+    },
+    "portal_west": {
+      "image": "walls.png",
+      "tags": [],
+      "group": "",
+      "order": 19,
+      "level": 0,
+      "properties": {}
+    },
+    "jar": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 20,
+      "level": 0,
+      "properties": {}
+    },
+    "jar_broken": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 21,
+      "level": 0,
+      "properties": {}
+    },
+    "rocks": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 22,
+      "level": 0,
+      "properties": {}
+    },
+    "rocks_crystal": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 23,
+      "level": 0,
+      "properties": {}
+    },
+    "sign": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 24,
+      "level": 0,
+      "properties": {}
+    },
+    "skeleton": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 25,
+      "level": 0,
+      "properties": {}
+    },
+    "shelf": {
+      "image": "props.png",
+      "tags": [],
+      "group": "",
+      "order": 26,
+      "level": 0,
+      "properties": {}
+    },
+    "torch": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 27,
+      "level": 0,
+      "properties": {}
+    },
+    "torch_1": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 28,
+      "level": 1,
+      "properties": {}
+    },
+    "torch_2": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 29,
+      "level": 0,
+      "properties": {}
+    },
+    "torch_3": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 30,
+      "level": 0,
+      "properties": {}
+    },
+    "fire": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 31,
+      "level": 0,
+      "properties": {}
+    },
+    "fire_1": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 33,
+      "level": 0,
+      "properties": {}
+    },
+    "fire_2": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 33,
+      "level": 0,
+      "properties": {}
+    },
+    "fire_3": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 34,
+      "level": 0,
+      "properties": {}
+    },
+    "ork": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 35,
+      "level": 0,
+      "properties": {}
+    },
+    "ork_1": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 36,
+      "level": 0,
+      "properties": {}
+    },
+    "lanter": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 37,
+      "level": 0,
+      "properties": {}
+    },
+    "sprite_10_1": {
+      "image": "animated_props.png",
+      "tags": [],
+      "group": "",
+      "order": 38,
+      "level": 0,
+      "properties": {}
+    },
+    "ground": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 39,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_0": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 40,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_1": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 41,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_2": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 42,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_3": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 43,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_4": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 44,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_5": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 45,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_6": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 46,
+      "level": 0,
+      "properties": {}
+    },
+    "groung_7": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 47,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_8": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 48,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_9": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 49,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_10": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 50,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_11": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 51,
+      "level": 0,
+      "properties": {}
+    },
+    "ground_12": {
+      "image": "grounds.png",
+      "tags": [],
+      "group": "",
+      "order": 52,
+      "level": 0,
+      "properties": {}
+    }
+  },
+  "grid": {
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  }
+}

@@ -2,7 +2,7 @@
 title: 'Function: log()'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -14,7 +14,8 @@ title: 'Function: log()'
 function log(
    target: object, 
    propertyKey: string | symbol, 
-   descriptor: PropertyDescriptor): PropertyDescriptor;
+   descriptor: PropertyDescriptor
+): PropertyDescriptor;
 ```
 
 Defined in: [decorators/log.ts:32](https://github.com/bdryanovski/gamefoo/blob/main/src/decorators/log.ts#L32)
