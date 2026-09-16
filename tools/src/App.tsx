@@ -20,6 +20,8 @@ import { SaveScreen } from './components/SaveScreen';
 import { MapEditor } from './map/MapEditor';
 import { DialogEditor } from './dialog/DialogEditor';
 import { ProjectConfigPanel } from './components/ProjectConfigPanel';
+import { SettingsPanel } from './components/SettingsPanel';
+import { loadTheme, applyTheme, type ThemeId } from './utils/theme';
 import {
   saveStateToLocal,
   loadStateFromLocal,
@@ -334,6 +336,8 @@ export function App() {
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(() => getProjectId());
   const [showProjects, setShowProjects] = useState(false);
   const [showSaveScreen, setShowSaveScreen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [theme, setTheme] = useState<ThemeId>(() => loadTheme());
   const [saving, setSaving] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
@@ -443,6 +447,12 @@ export function App() {
   useEffect(() => {
     localStorage.setItem('gamefoo-tools-mode', mode);
   }, [mode]);
+
+  // ── Apply + persist theme ──────────────────────────────
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
 
   // ── Global undo (Ctrl/Cmd+Z) ───────────────────────────
 
@@ -715,6 +725,13 @@ export function App() {
           {state.projectName}
           {currentProjectId ? '' : ' (unsaved)'}
         </span>
+        <button
+          className="mode-btn"
+          onClick={() => setShowSettings(true)}
+          title="Settings — theme &amp; editor preferences"
+        >
+          <Icon name="settings" size={15} /> Settings
+        </button>
       </div>
       <div className="mode-content">
         {mode === 'sprite' ? (
@@ -891,6 +908,13 @@ export function App() {
           state={state}
           projectId={currentProjectId!}
           onClose={() => setShowSaveScreen(false)}
+        />
+      )}
+      {showSettings && (
+        <SettingsPanel
+          theme={theme}
+          onSelect={setTheme}
+          onClose={() => setShowSettings(false)}
         />
       )}
 

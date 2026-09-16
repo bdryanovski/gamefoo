@@ -35,6 +35,24 @@
   --hover-line: #000080;
   --text-disabled: #4d4d4d;
   --text-muted: #4a4a4a;
+
+  /* ── Themeable structural tokens (retro defaults) ─────
+     Non-color chrome that flat themes override. Bevels
+     derive from --border-* and re-flatten automatically
+     when those are equalized. */
+  --radius: 0px;
+  --elevation: 4px 4px 0 rgba(0, 0, 0, 0.3);
+  --font-smoothing: none;
+  --btn-inset-hi: #f4f4f4;
+  --btn-shadow:
+    inset -1px -1px 0 var(--border-mid),
+    inset 1px 1px 0 var(--btn-inset-hi);
+  --btn-face-hover: linear-gradient(180deg, #ececec 0%, #d2d2d2 55%, #c6c6c6 100%);
+  --section-grad: linear-gradient(180deg, #b0b0b0 0%, #9a9a9a 100%);
+  --section-text: #202020;
+  --row-hover: #b4b4b4;
+  --title-text: var(--accent-text);
+  --title-text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 * {
@@ -56,7 +74,7 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-size: var(--font-size);
-  -webkit-font-smoothing: none;
+  -webkit-font-smoothing: var(--font-smoothing);
   -moz-osx-font-smoothing: unset;
   image-rendering: pixelated;
 }
@@ -96,9 +114,7 @@ body {
   border-left: 2px solid var(--border-light);
   border-bottom: 2px solid var(--border-dark);
   border-right: 2px solid var(--border-dark);
-  box-shadow:
-    inset -1px -1px 0 var(--border-mid),
-    inset 1px 1px 0 #f4f4f4;
+  box-shadow: var(--btn-shadow);
   padding: 2px 9px;
   font-family: var(--font);
   font-size: var(--font-size);
@@ -110,7 +126,7 @@ body {
 }
 
 .btn:hover:not(:disabled) {
-  background: linear-gradient(180deg, #ececec 0%, #d2d2d2 55%, #c6c6c6 100%);
+  background: var(--btn-face-hover);
 }
 
 .btn:focus-visible {
@@ -146,9 +162,7 @@ body {
 .btn:disabled {
   color: var(--text-disabled);
   cursor: default;
-  box-shadow:
-    inset -1px -1px 0 var(--border-mid),
-    inset 1px 1px 0 #f4f4f4;
+  box-shadow: var(--btn-shadow);
 }
 
 .btn-sm {
@@ -277,14 +291,14 @@ select.input {
   border-left: 2px solid var(--border-light);
   border-bottom: 2px solid var(--border-dark);
   border-right: 2px solid var(--border-dark);
-  box-shadow: inset 1px 1px 0 #f4f4f4;
+  box-shadow: inset 1px 1px 0 var(--btn-inset-hi);
   padding: 3px 12px;
   cursor: pointer;
   user-select: none;
 }
 
 .mode-btn:hover {
-  background: linear-gradient(180deg, #ececec 0%, #d2d2d2 100%);
+  background: var(--btn-face-hover);
 }
 
 .mode-btn.active {
@@ -321,7 +335,7 @@ select.input {
 .title-bar {
   height: var(--title-height);
   background: var(--title-grad);
-  color: var(--accent-text);
+  color: var(--title-text);
   display: flex;
   align-items: center;
   padding: 0 4px 0 5px;
@@ -340,7 +354,7 @@ select.input {
   align-items: center;
   justify-content: center;
   font-size: 13px;
-  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(var(--title-text-shadow));
   flex-shrink: 0;
 }
 
@@ -348,7 +362,7 @@ select.input {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+  text-shadow: var(--title-text-shadow);
 }
 
 .main-area {
@@ -377,6 +391,7 @@ select.input {
   align-items: center;
   justify-content: center;
   background: var(--bg);
+  color: var(--text);
   border-top: 2px solid var(--border-light);
   border-left: 2px solid var(--border-light);
   border-bottom: 2px solid var(--border-dark);
@@ -624,7 +639,7 @@ select.input {
 
 .panel-tab:hover {
   color: var(--text);
-  background: #b4b4b4;
+  background: var(--row-hover);
 }
 .panel-tab:first-child {
   border-left: 2px solid var(--border-light);
@@ -675,8 +690,8 @@ select.input {
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 3px 4px 3px 8px;
-  background: linear-gradient(180deg, #b0b0b0 0%, #9a9a9a 100%);
-  color: #202020;
+  background: var(--section-grad);
+  color: var(--section-text);
   border-top: 1px solid var(--border-light);
   border-bottom: 1px solid var(--border-dark);
   margin-bottom: 4px;
@@ -1039,7 +1054,7 @@ select.input {
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: var(--elevation);
 }
 
 .modal-wide {
@@ -1424,7 +1439,7 @@ code {
 }
 
 .dialog-tree-item:hover {
-  background: #b4b4b4;
+  background: var(--row-hover);
 }
 
 .dialog-tree-item.active {
@@ -1540,7 +1555,7 @@ code {
 }
 
 .dialog-card:hover {
-  background: #d8d8d8;
+  background: var(--row-hover);
 }
 
 .dialog-card.active {
@@ -1900,4 +1915,317 @@ code {
 
 .dialog-id.copied .dialog-id__hint {
   color: #2c7a2c;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   THEMES
+   Retro (default) lives in :root above. Each alt theme overrides the
+   palette + structural tokens. Bevels are built from --border-* and
+   flatten automatically once those are equalized; a shared "flat"
+   block below rounds corners, thins borders, and drops the inset
+   highlights for the three modern themes.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared flat chrome (modern / linear / gmail) ─────── */
+
+:root[data-theme='modern'],
+:root[data-theme='linear'],
+:root[data-theme='gmail'] {
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-size: 12px;
+  --font-smoothing: antialiased;
+  --btn-inset-hi: transparent;
+  --btn-shadow: none;
+  --title-text-shadow: 0 0 0 transparent;
+  --radius: 6px;
+  --elevation: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) body {
+  image-rendering: auto;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Round + thin the beveled components; equalized --border-* already
+   made the four sides a single flat color. */
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) :is(
+    .btn,
+    .btn-sm,
+    .mode-btn,
+    .input,
+    select.input,
+    .tool-btn,
+    .title-btn,
+    .panel-tab,
+    .modal,
+    .json-modal,
+    .sprite-list,
+    .anim-frames,
+    .preview-box,
+    .project-item,
+    .asset-thumb,
+    .export-preview,
+    .quicksave-toast,
+    .dialog-id,
+    .checkbox-row input[type='checkbox']
+  ) {
+  border-width: 1px;
+  border-radius: var(--radius);
+}
+
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .btn:active:not(:disabled) {
+  border-width: 1px;
+  box-shadow: none;
+  transform: translateY(1px);
+  padding: 2px 9px;
+}
+
+/* Flat scrollbars. */
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail'])
+  :is(.panel-content, .modal-body)::-webkit-scrollbar {
+  width: 10px;
+}
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail'])
+  :is(.panel-content, .modal-body)::-webkit-scrollbar-thumb {
+  border: none;
+  border-radius: 6px;
+  background: var(--border-mid);
+}
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail'])
+  :is(.panel-content, .modal-body)::-webkit-scrollbar-track {
+  border: none;
+  background: var(--bg-dark);
+}
+
+/* Soft focus ring instead of the dotted retro outline. */
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .btn:focus-visible,
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .input:focus {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+/* Toolbar buttons read as flat tiles; active tool fills with the accent. */
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .tool-btn {
+  background: var(--btn-face);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+}
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .tool-btn:hover {
+  background: var(--btn-face-hover);
+}
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .tool-btn:active,
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .tool-btn.active {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+/* Drop the retro emboss from the active nav tab. */
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) .mode-btn.active {
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* ── Modern — neutral slate + indigo ──────────────────── */
+
+:root[data-theme='modern'] {
+  --bg: #f4f5f7;
+  --bg-dark: #e9ebef;
+  --bg-light: #ffffff;
+  --text: #1f2430;
+  --text-dim: #5b6472;
+  --text-muted: #6b7280;
+  --text-disabled: #9aa2af;
+  --accent: #4f46e5;
+  --accent-light: #6366f1;
+  --accent-text: #ffffff;
+  --danger: #dc2626;
+  --input-bg: #ffffff;
+  --border-light: #e4e7ec;
+  --border-mid: #d0d5dd;
+  --border-dark: #e4e7ec;
+  --canvas-bg: #0f1017;
+  --btn-face: #ffffff;
+  --btn-face-hover: #f2f4f7;
+  --section-grad: #eef0f4;
+  --section-text: #344054;
+  --row-hover: #eef2ff;
+  --hover: #eef2ff;
+  --hover-line: #4f46e5;
+  --title-grad: linear-gradient(90deg, #4f46e5 0%, #6366f1 100%);
+  --title-text: #ffffff;
+}
+
+/* ── Linear — dark, minimal, violet accent ────────────── */
+
+:root[data-theme='linear'] {
+  --bg: #191a23;
+  --bg-dark: #131419;
+  --bg-light: #22232e;
+  --text: #e6e7ee;
+  --text-dim: #9a9cae;
+  --text-muted: #8a8c9e;
+  --text-disabled: #565868;
+  --accent: #5e6ad2;
+  --accent-light: #7c88ee;
+  --accent-text: #ffffff;
+  --danger: #eb5757;
+  --input-bg: #20212b;
+  --border-light: #2a2c39;
+  --border-mid: #363848;
+  --border-dark: #2a2c39;
+  --canvas-bg: #0c0d12;
+  --btn-face: #23242f;
+  --btn-face-hover: #2c2e3c;
+  --section-grad: #20212b;
+  --section-text: #c7c9d6;
+  --row-hover: #262735;
+  --hover: #262735;
+  --hover-line: #5e6ad2;
+  --title-grad: linear-gradient(90deg, #1e1f29 0%, #272941 100%);
+  --title-text: #e6e7ee;
+}
+
+/* ── Gmail — light, airy, red accent ──────────────────── */
+
+:root[data-theme='gmail'] {
+  --bg: #f6f8fc;
+  --bg-dark: #eaeef6;
+  --bg-light: #ffffff;
+  --text: #202124;
+  --text-dim: #5f6368;
+  --text-muted: #5f6368;
+  --text-disabled: #9aa0a6;
+  --accent: #d93025;
+  --accent-light: #ea4335;
+  --accent-text: #ffffff;
+  --danger: #c5221f;
+  --input-bg: #ffffff;
+  --border-light: #dadce0;
+  --border-mid: #c7cbd1;
+  --border-dark: #dadce0;
+  --canvas-bg: #0f1017;
+  --btn-face: #ffffff;
+  --btn-face-hover: #f1f3f4;
+  --section-grad: #ffffff;
+  --section-text: #5f6368;
+  --row-hover: #f1f3f4;
+  --hover: #fce8e6;
+  --hover-line: #d93025;
+  --title-grad: linear-gradient(180deg, #ffffff 0%, #f1f3f8 100%);
+  --title-text: #202124;
+  --radius: 8px;
+}
+
+/* Gmail keeps red as an accent, not a banner: the active nav item is a
+   soft red pill and the title bar is a light bar with a hairline base. */
+:root[data-theme='gmail'] .mode-btn.active {
+  background: var(--hover);
+  color: var(--accent);
+  font-weight: 700;
+}
+:root[data-theme='gmail'] .title-bar {
+  border-bottom: 1px solid var(--border-mid);
+  box-shadow: none;
+}
+:root[data-theme='gmail'] .title-bar__icon {
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SETTINGS PANEL (theme-agnostic — built from tokens)
+   ═══════════════════════════════════════════════════════════════ */
+
+.settings-section {
+  margin-bottom: 14px;
+}
+
+.settings-section__label {
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.theme-card {
+  text-align: left;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg);
+  color: var(--text);
+  border-radius: var(--radius);
+}
+
+.theme-card.selected {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.theme-card__preview {
+  height: 58px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.theme-card__preview-bar {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.theme-card__preview-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+}
+
+.theme-card__swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+.theme-card__chip {
+  height: 9px;
+  border-radius: 2px;
+  flex: 1;
+}
+
+.theme-card__body {
+  padding: 6px 8px;
+  border-top: 1px solid var(--border-mid);
+}
+
+.theme-card__name {
+  font-weight: bold;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.theme-card__check {
+  color: var(--accent);
+}
+
+.theme-card__desc {
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  line-height: 1.4;
 }

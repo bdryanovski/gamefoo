@@ -20736,13 +20736,13 @@
             "id": "1788628803307_dgc6qd",
             "kind": "machine",
             "machineId": "sm_mton9554_m",
+            "properties": {
+              "message": "msg_mu1qi93b_9"
+            },
             "x": 224,
             "y": 48,
             "level": 2,
-            "rotation": 90,
-            "properties": {
-              "message": "msg_mu1qi93b_9"
-            }
+            "rotation": 90
           },
           {
             "id": "1788629489580_srqdxk",
@@ -48213,12 +48213,12 @@
             "id": "1788877902006_we0vhv",
             "kind": "machine",
             "machineId": "sm_mtj4g15f_8",
-            "x": 272,
-            "y": 16,
-            "level": 2,
             "properties": {
               "message": "msg_mu1hv9cu_5"
-            }
+            },
+            "x": 272,
+            "y": 16,
+            "level": 2
           },
           {
             "id": "1788878670049_j0o9dr",
@@ -62564,5 +62564,5 @@
     "selectedMessageId": "msg_mu1qi93b_9"
   },
   "history": [],
-  "lastModified": "2026-09-14T21:12:54.406Z"
+  "lastModified": "2026-09-16T10:24:05.023Z"
 }

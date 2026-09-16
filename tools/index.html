@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GameFoo Dev Tools — Editor</title>
     <link rel="stylesheet" href="./src/retro.css" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash of the
+      // default retro chrome. Kept in sync by utils/theme.ts.
+      (function () {
+        try {
+          var t = localStorage.getItem('gamefoo-tools-theme');
+          if (t === 'modern' || t === 'linear' || t === 'gmail' || t === 'retro') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
