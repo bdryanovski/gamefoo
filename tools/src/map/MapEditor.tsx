@@ -5,7 +5,9 @@ import type { MapAction, MapToolType } from "./types";
 import { MapCanvas } from "./MapCanvas";
 import { MapPalettePanel } from "./MapPalettePanel";
 import { MapExportPanel } from "./MapExportPanel";
-import { Icon, type IconName } from "../components/Icon";
+import { Icon, type IconName, ICON } from "../components/Icon";
+import { Tooltip } from "../components/Tooltip";
+import { EditorHeader } from "../components/EditorHeader";
 
 interface Props {
   state: AppState;
@@ -18,16 +20,16 @@ interface Props {
   onOpenProjects: () => void;
 }
 
-const MAP_TOOLS: { key: MapToolType; icon: IconName; title: string }[] = [
-  { key: "select", icon: "tool-select", title: "Select (C) — click a placed object to edit its placement, orientation, state & properties" },
-  { key: "paint", icon: "tool-paint", title: "Paint (P) — place selected sprite" },
-  { key: "stream", icon: "tool-stream", title: "Stream (S) — click to toggle continuous painting; paints wherever the mouse moves" },
-  { key: "erase", icon: "tool-erase", title: "Erase (E) — remove placements" },
-  { key: "fill", icon: "tool-fill", title: "Fill (F) — set screen default tile" },
-  { key: "pick", icon: "tool-pick", title: "Pick (I) — sample a sprite/object into the paint brush" },
-  { key: "move", icon: "tool-move", title: "Move (M) — drag a placement to reposition it" },
-  { key: "text", icon: "draw", title: "Text (T) — click to drop a free-positioned text label (not grid-snapped)" },
-  { key: "pan", icon: "tool-pan", title: "Pan (H) — drag to move view (or Space)" },
+const MAP_TOOLS: { key: MapToolType; icon: IconName; label: string; shortcut: string; tip: string }[] = [
+  { key: "select", icon: "tool-select", label: "Select", shortcut: "C", tip: "Click a placed object to edit its placement, orientation, state & properties" },
+  { key: "paint", icon: "tool-paint", label: "Paint", shortcut: "P", tip: "Place the selected sprite" },
+  { key: "stream", icon: "tool-stream", label: "Stream", shortcut: "S", tip: "Toggle continuous painting; paints wherever the mouse moves" },
+  { key: "erase", icon: "tool-erase", label: "Erase", shortcut: "E", tip: "Remove placements" },
+  { key: "fill", icon: "tool-fill", label: "Fill", shortcut: "F", tip: "Set the screen default tile" },
+  { key: "pick", icon: "tool-pick", label: "Pick", shortcut: "I", tip: "Sample a sprite/object into the paint brush" },
+  { key: "move", icon: "tool-move", label: "Move", shortcut: "M", tip: "Drag a placement to reposition it" },
+  { key: "text", icon: "draw", label: "Text", shortcut: "T", tip: "Drop a free-positioned text label (not grid-snapped)" },
+  { key: "pan", icon: "tool-pan", label: "Pan", shortcut: "H", tip: "Drag to move the view (or hold Space)" },
 ];
 
 const KEY_MAP: Record<string, MapToolType> = {
@@ -132,79 +134,67 @@ export function MapEditor({
 
   return (
     <div className="app-layout">
-      {/* Title bar — shared project lifecycle */}
-      <div className="title-bar">
-        <span className="title-bar__icon"><Icon name="map-editor" size={15} /></span>
-        <span className="title-bar__name">
-          GameFoo Map Editor — {state.projectName}
-          {projectId ? "" : " (unsaved)"}
-        </span>
-        <button className="btn btn-sm title-btn" onClick={onOpenProjects}>
-          Projects
-        </button>
-        <button
-          className="btn btn-sm title-btn"
-          onClick={() => dispatch({ type: "UNDO" })}
-          disabled={state.history.length === 0}
-          title="Undo — Ctrl/Cmd+Z"
-        >
-          <Icon name="undo" size={13} /> Undo{state.history.length > 0 ? ` (${state.history.length})` : ""}
-        </button>
-        <button
-          className="btn btn-sm title-btn"
-          onClick={() => onSave("quick")}
-          disabled={saving}
-          title="QuickSave — Ctrl/Cmd+S (no export screen)"
-        >
-          QuickSave
-        </button>
-        <button
-          className="btn btn-sm title-btn"
-          onClick={() => onSave("save")}
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save"}
-        </button>
-      </div>
+      <EditorHeader
+        icon="map-editor"
+        title="Map Editor"
+        projectName={state.projectName}
+        unsaved={!projectId}
+        undoCount={state.history.length}
+        onUndo={() => dispatch({ type: "UNDO" })}
+        onOpenProjects={onOpenProjects}
+        onSave={onSave}
+        saving={saving}
+      />
 
       {/* Main area */}
       <div className="main-area">
         <div className="toolbar">
-          {MAP_TOOLS.map((t) => (
-            <button
-              key={t.key}
-              className={`tool-btn ${map.activeTool === t.key ? "active" : ""}`}
-              title={t.title}
-              onClick={() => mapDispatch({ type: "SET_TOOL", tool: t.key })}
-            >
-              <Icon name={t.icon} size={16} />
-            </button>
-          ))}
+          <div className="toolbar-group">
+            {MAP_TOOLS.map((t) => (
+              <Tooltip key={t.key} label={t.tip} shortcut={t.shortcut} side="right">
+                <button
+                  className={`tool-btn ${map.activeTool === t.key ? "active" : ""}`}
+                  onClick={() => mapDispatch({ type: "SET_TOOL", tool: t.key })}
+                  aria-label={t.label}
+                >
+                  <Icon name={t.icon} size={ICON.md} />
+                </button>
+              </Tooltip>
+            ))}
+          </div>
           <div className="toolbar-sep" />
-          <button
-            className="tool-btn"
-            title="Zoom out"
-            onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom / 1.25 })}
-          >
-            <Icon name="subtract" size={16} />
-          </button>
-          <button
-            className="tool-btn"
-            title="Reset view"
-            onClick={() => {
-              mapDispatch({ type: "SET_ZOOM", zoom: 0.5 });
-              mapDispatch({ type: "SET_PAN", x: 40, y: 40 });
-            }}
-          >
-            <Icon name="zoom-reset" size={16} />
-          </button>
-          <button
-            className="tool-btn"
-            title="Zoom in"
-            onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom * 1.25 })}
-          >
-            <Icon name="add" size={16} />
-          </button>
+          <div className="toolbar-group">
+            <Tooltip label="Zoom In" shortcut="+" side="right">
+              <button
+                className="tool-btn"
+                onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom * 1.25 })}
+                aria-label="Zoom in"
+              >
+                <Icon name="add" size={ICON.md} />
+              </button>
+            </Tooltip>
+            <Tooltip label="Zoom Out" shortcut="-" side="right">
+              <button
+                className="tool-btn"
+                onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom / 1.25 })}
+                aria-label="Zoom out"
+              >
+                <Icon name="subtract" size={ICON.md} />
+              </button>
+            </Tooltip>
+            <Tooltip label="Reset View" side="right">
+              <button
+                className="tool-btn"
+                onClick={() => {
+                  mapDispatch({ type: "SET_ZOOM", zoom: 0.5 });
+                  mapDispatch({ type: "SET_PAN", x: 40, y: 40 });
+                }}
+                aria-label="Reset view"
+              >
+                <Icon name="zoom-reset" size={ICON.md} />
+              </button>
+            </Tooltip>
+          </div>
         </div>
 
         <MapCanvas

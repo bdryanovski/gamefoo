@@ -39,6 +39,7 @@ import {
   SparkleIcon,
   ChatIcon,
   CopyIcon,
+  FolderIcon,
 } from "@proicons/react";
 
 /**
@@ -53,6 +54,7 @@ const REGISTRY = {
   character: PersonIcon,
   dialog: ChatIcon,
   copy: CopyIcon,
+  folder: FolderIcon,
   save: SaveIcon,
   undo: ArrowUndoIcon,
   "zoom-reset": ScreenSizeIcon,
@@ -89,6 +91,22 @@ const REGISTRY = {
 } as const;
 
 export type IconName = keyof typeof REGISTRY;
+
+/**
+ * The canonical icon sizes. Application code SHOULD pick from this scale
+ * instead of scattering ad-hoc pixel values, so icon weight stays uniform
+ * across the toolbar, buttons, list rows, and inline chips.
+ */
+export const ICON = {
+  /** inline chips, dense list controls */
+  xs: 11,
+  /** buttons, list rows */
+  sm: 13,
+  /** toolbar, primary actions */
+  md: 16,
+  /** empty-state / hero glyphs */
+  lg: 20,
+} as const;
 
 interface Props {
   name: IconName;

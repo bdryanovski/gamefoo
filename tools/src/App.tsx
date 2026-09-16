@@ -2,7 +2,9 @@
 import React, { useReducer, useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import type { AppState, AppAction, ProjectSnapshot, CollisionVolume } from './types';
 import { INITIAL_STATE, migrateSpriteState, sanitizeObject } from './types';
-import { Icon } from './components/Icon';
+import { Icon, ICON, type IconName } from './components/Icon';
+import { EditorHeader } from './components/EditorHeader';
+import { Tooltip } from './components/Tooltip';
 import { mapReducer } from './map/types';
 import { dialogReducer } from './dialog/types';
 import { sanitizeMachine } from './statemachine/types';
@@ -318,9 +320,20 @@ function historyReducer(state: AppState, action: AppAction): AppState {
   return { ...next, history };
 }
 
+type EditorMode = 'sprite' | 'map' | 'objects' | 'character' | 'dialog' | 'config';
+
+const MODES: { key: EditorMode; icon: IconName; label: string; tip: string }[] = [
+  { key: 'sprite', icon: 'sprite-editor', label: 'Sprite', tip: 'Slice tilemaps into sprites & animations' },
+  { key: 'map', icon: 'map-editor', label: 'Map', tip: 'Lay out screens and place tiles' },
+  { key: 'objects', icon: 'objects', label: 'Objects', tip: 'Compose game objects & state machines' },
+  { key: 'character', icon: 'character', label: 'Character', tip: 'Build directional character rigs' },
+  { key: 'dialog', icon: 'dialog', label: 'Dialog', tip: 'Author branching dialog trees' },
+  { key: 'config', icon: 'settings', label: 'Project', tip: 'Project-wide configuration' },
+];
+
 export function App() {
   const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
-  const [mode, setMode] = useState<'sprite' | 'map' | 'objects' | 'character' | 'dialog' | 'config'>(
+  const [mode, setMode] = useState<EditorMode>(
     () => {
       const saved = localStorage.getItem('gamefoo-tools-mode');
       return saved === 'map' ||
@@ -685,88 +698,60 @@ export function App() {
   return (
     <div className="app-root">
       <div className="mode-bar">
-        <button
-          className={`mode-btn ${mode === 'sprite' ? 'active' : ''}`}
-          onClick={() => setMode('sprite')}
-        >
-          <Icon name="sprite-editor" size={15} /> Sprite Editor
-        </button>
-        <button
-          className={`mode-btn ${mode === 'map' ? 'active' : ''}`}
-          onClick={() => setMode('map')}
-        >
-          <Icon name="map-editor" size={15} /> Map Editor
-        </button>
-        <button
-          className={`mode-btn ${mode === 'objects' ? 'active' : ''}`}
-          onClick={() => setMode('objects')}
-        >
-          <Icon name="objects" size={15} /> Objects
-        </button>
-        <button
-          className={`mode-btn ${mode === 'character' ? 'active' : ''}`}
-          onClick={() => setMode('character')}
-        >
-          <Icon name="character" size={15} /> Character
-        </button>
-        <button
-          className={`mode-btn ${mode === 'dialog' ? 'active' : ''}`}
-          onClick={() => setMode('dialog')}
-        >
-          <Icon name="dialog" size={15} /> Dialog Tree
-        </button>
-        <button
-          className={`mode-btn ${mode === 'config' ? 'active' : ''}`}
-          onClick={() => setMode('config')}
-        >
-          <Icon name="settings" size={15} /> Project
-        </button>
+        <div className="mode-bar__tabs">
+          {MODES.map((m) => (
+            <Tooltip key={m.key} label={m.tip} side="bottom">
+              <button
+                className={`mode-btn ${mode === m.key ? 'active' : ''}`}
+                onClick={() => setMode(m.key)}
+                aria-label={m.label}
+              >
+                <Icon name={m.icon} size={ICON.md} />
+                <span className="mode-btn__label">{m.label}</span>
+              </button>
+            </Tooltip>
+          ))}
+        </div>
         <span className="mode-bar__project">
           {state.projectName}
           {currentProjectId ? '' : ' (unsaved)'}
         </span>
-        <button
-          className="mode-btn"
-          onClick={() => setShowSettings(true)}
-          title="Settings — theme &amp; editor preferences"
-        >
-          <Icon name="settings" size={15} /> Settings
-        </button>
+        <Tooltip label="Theme & editor preferences" side="bottom">
+          <button
+            className="mode-btn"
+            onClick={() => setShowSettings(true)}
+            aria-label="Settings"
+          >
+            <Icon name="settings" size={ICON.md} />
+            <span className="mode-btn__label">Settings</span>
+          </button>
+        </Tooltip>
       </div>
       <div className="mode-content">
         {mode === 'sprite' ? (
           <div className="app-layout">
-            {/* Title bar */}
-            <div className="title-bar">
-              <span className="title-bar__icon">
-                <Icon name="sprite-editor" size={15} />
-              </span>
-              <span className="title-bar__name">GameFoo Sprite Editor — {state.projectName}</span>
-              <button
-                className="btn btn-sm title-btn"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                + Add Image
-              </button>
-              <button className="btn btn-sm title-btn" onClick={() => setShowProjects(true)}>
-                Projects
-              </button>
-              <button
-                className="btn btn-sm title-btn"
-                onClick={() => handleSave('quick')}
-                disabled={saving}
-                title="QuickSave — Ctrl/Cmd+S (no export screen)"
-              >
-                QuickSave
-              </button>
-              <button
-                className="btn btn-sm title-btn"
-                onClick={() => handleSave('save')}
-                disabled={saving}
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
-            </div>
+            <EditorHeader
+              icon="sprite-editor"
+              title="Sprite Editor"
+              projectName={state.projectName}
+              unsaved={!currentProjectId}
+              undoCount={state.history.length}
+              onUndo={() => dispatch({ type: 'UNDO' })}
+              onOpenProjects={() => setShowProjects(true)}
+              onSave={handleSave}
+              saving={saving}
+              extras={
+                <Tooltip label="Add a tilemap image to the library" side="bottom">
+                  <button
+                    className="btn btn-sm title-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                    aria-label="Add image"
+                  >
+                    <Icon name="add" size={ICON.sm} /> Add Image
+                  </button>
+                </Tooltip>
+              }
+            />
 
             <input
               ref={fileInputRef}
