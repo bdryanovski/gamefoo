@@ -23267,22 +23267,6 @@
             "level": 2
           },
           {
-            "id": "1788628968329_ldv1nf",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 48,
-            "y": 96,
-            "level": 2
-          },
-          {
-            "id": "1788628973761_belxuu",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 144,
-            "y": 96,
-            "level": 2
-          },
-          {
             "id": "1788629000777_bwuz8x",
             "kind": "sprite",
             "spriteId": "spr_mtocg7ki_0",
@@ -23997,6 +23981,14 @@
             "x": 256,
             "y": 16,
             "level": 2
+          },
+          {
+            "id": "1789563915953_v9kpa5",
+            "kind": "machine",
+            "machineId": "sm_mtj4cxon_1",
+            "x": 128,
+            "y": 96,
+            "level": 4
           }
         ]
       },
@@ -26009,14 +26001,6 @@
             "level": 0
           },
           {
-            "id": "1788294544931_zlrcgg",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 256,
-            "y": 80,
-            "level": 1
-          },
-          {
             "id": "1788294602052_qsdf7y",
             "kind": "sprite",
             "spriteId": "spr_mtj0eqh8_z",
@@ -26512,6 +26496,14 @@
             "kind": "machine",
             "machineId": "sm_mtosrpmp_3b",
             "x": 144,
+            "y": 160,
+            "level": 2
+          },
+          {
+            "id": "1789564056625_pfk50u",
+            "kind": "sprite",
+            "spriteId": "spr_mtsrxaha_0",
+            "x": 256,
             "y": 160,
             "level": 2
           }
@@ -28307,14 +28299,6 @@
             "level": 2
           },
           {
-            "id": "1788294558769_oqjcm6",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 192,
-            "y": 128,
-            "level": 1
-          },
-          {
             "id": "1788610870410_pqnt5m",
             "kind": "machine",
             "machineId": "sm_mto16yyf_1",
@@ -28774,6 +28758,14 @@
             "machineId": "sm_mu40c3yo_1",
             "x": 80,
             "y": 96,
+            "level": 2
+          },
+          {
+            "id": "1789564043446_1vo1qk",
+            "kind": "sprite",
+            "spriteId": "spr_mtsrxaha_0",
+            "x": 144,
+            "y": 176,
             "level": 2
           }
         ]
@@ -29737,38 +29729,6 @@
             "x": 208,
             "y": 32,
             "level": 2
-          },
-          {
-            "id": "1788294580612_jyy053",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 112,
-            "y": 96,
-            "level": 1
-          },
-          {
-            "id": "1788294581701_ttadhs",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 112,
-            "y": 144,
-            "level": 1
-          },
-          {
-            "id": "1788294583078_ja982h",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 192,
-            "y": 144,
-            "level": 1
-          },
-          {
-            "id": "1788294585069_iqdetg",
-            "kind": "machine",
-            "machineId": "sm_mtj4cxon_1",
-            "x": 192,
-            "y": 96,
-            "level": 1
           },
           {
             "id": "1788610611397_pcgpr3",
@@ -30874,6 +30834,22 @@
             "x": 240,
             "y": 32,
             "level": 2
+          },
+          {
+            "id": "1789563906438_73arr1",
+            "kind": "machine",
+            "machineId": "sm_mtj4cxon_1",
+            "x": 96,
+            "y": 96,
+            "level": 4
+          },
+          {
+            "id": "1789563908189_yne9j4",
+            "kind": "machine",
+            "machineId": "sm_mtj4cxon_1",
+            "x": 192,
+            "y": 96,
+            "level": 4
           }
         ]
       },
@@ -35609,30 +35585,6 @@
             "level": 1
           },
           {
-            "id": "1788613543915_3cba21",
-            "kind": "sprite",
-            "spriteId": "spr_mtj0i5n4_1z",
-            "x": 160,
-            "y": 224,
-            "level": 1
-          },
-          {
-            "id": "1788613544600_uwfwsq",
-            "kind": "sprite",
-            "spriteId": "spr_mtj0i5n4_1z",
-            "x": 176,
-            "y": 224,
-            "level": 1
-          },
-          {
-            "id": "1788613545333_pjcbsn",
-            "kind": "sprite",
-            "spriteId": "spr_mtj0i5n4_1z",
-            "x": 192,
-            "y": 224,
-            "level": 1
-          },
-          {
             "id": "1788613546134_at2tbt",
             "kind": "sprite",
             "spriteId": "spr_mtj0i5n4_1z",
@@ -36140,15 +36092,6 @@
             "rotation": 90
           },
           {
-            "id": "1788619179934_osdfpv",
-            "kind": "machine",
-            "machineId": "sm_mtj3zr93_7",
-            "x": 176,
-            "y": 224,
-            "level": 2,
-            "rotation": 180
-          },
-          {
             "id": "1788619182145_98p2by",
             "kind": "machine",
             "machineId": "sm_mtj3zr93_7",
@@ -36598,6 +36541,102 @@
             "x": 176,
             "y": 48,
             "level": 0
+          },
+          {
+            "id": "1789564157895_0jauch",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i290_1u",
+            "x": 160,
+            "y": 176,
+            "level": 1
+          },
+          {
+            "id": "1789564162918_ld55ke",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 176,
+            "y": 176,
+            "level": 1
+          },
+          {
+            "id": "1789564166258_5rfowy",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i6ox_20",
+            "x": 192,
+            "y": 176,
+            "level": 1
+          },
+          {
+            "id": "1789564175814_qqky5r",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 192,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1789564176890_3dgzgb",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 192,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1789564179947_pu0pmm",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0ia4t_25",
+            "x": 176,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1789564180589_371kzf",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0ia4t_25",
+            "x": 176,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1789564185781_lg0ri3",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 160,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1789564186641_l0l2al",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 160,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1789564199019_muu135",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i7sq_22",
+            "x": 160,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1789564207290_69jqtk",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i571_1y",
+            "x": 192,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1789564210947_fno1rp",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0ia4t_25",
+            "x": 176,
+            "y": 224,
+            "level": 1
           }
         ]
       },
@@ -39544,6 +39583,14 @@
             "x": 224,
             "y": 80,
             "level": 2
+          },
+          {
+            "id": "1789564030550_gbyifs",
+            "kind": "sprite",
+            "spriteId": "spr_mtsrxaha_0",
+            "x": 272,
+            "y": 192,
+            "level": 2
           }
         ]
       },
@@ -42019,6 +42066,62 @@
             "y": 112,
             "level": 2,
             "rotation": 90
+          },
+          {
+            "id": "1789563932095_afn2id",
+            "kind": "machine",
+            "machineId": "sm_mtj4cxon_1",
+            "x": 112,
+            "y": 96,
+            "level": 4
+          },
+          {
+            "id": "1789563955129_dm30eu",
+            "kind": "machine",
+            "machineId": "sm_mtotdk2l_1",
+            "x": 112,
+            "y": 224,
+            "level": 2
+          },
+          {
+            "id": "1789563977168_7i5um3",
+            "kind": "animation",
+            "animationId": "anim_mtonbc9d_10",
+            "x": 64,
+            "y": 176,
+            "level": 2
+          },
+          {
+            "id": "1789564081473_bj7a3d",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i0rj_1s",
+            "x": 160,
+            "y": 96,
+            "level": 1
+          },
+          {
+            "id": "1789564085086_h67snu",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i290_1u",
+            "x": 160,
+            "y": 80,
+            "level": 1
+          },
+          {
+            "id": "1789564088319_as5f9h",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i6ox_20",
+            "x": 176,
+            "y": 80,
+            "level": 1
+          },
+          {
+            "id": "1789564091311_ubng08",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i46k_1w",
+            "x": 176,
+            "y": 96,
+            "level": 1
           }
         ]
       },
@@ -47065,6 +47168,142 @@
             "x": 176,
             "y": 128,
             "level": 2
+          },
+          {
+            "id": "1789564246918_h7zw9j",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i0rj_1s",
+            "x": 16,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1789564251118_qwrfq3",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i290_1u",
+            "x": 16,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1789564255010_a1w6rj",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i5n4_1z",
+            "x": 32,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1789564259231_sumw87",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i6ox_20",
+            "x": 48,
+            "y": 192,
+            "level": 1
+          },
+          {
+            "id": "1789564263522_ah6kze",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i770_21",
+            "x": 16,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1789564266978_j66yri",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i075_1r",
+            "x": 48,
+            "y": 208,
+            "level": 1
+          },
+          {
+            "id": "1789564270860_7gu4vo",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i46k_1w",
+            "x": 48,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1789564274149_2nwitc",
+            "kind": "sprite",
+            "spriteId": "spr_mtj0i1a2_1t",
+            "x": 32,
+            "y": 224,
+            "level": 1
+          },
+          {
+            "id": "1789564303472_fmae1d",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 16,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1789564304563_idqx4a",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 32,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1789564305521_g8sfv8",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 48,
+            "y": 224,
+            "level": 0
+          },
+          {
+            "id": "1789564306413_th51mv",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 48,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1789564307433_6otarg",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 48,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1789564308280_249dzm",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 32,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1789564309140_2ycerk",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 16,
+            "y": 192,
+            "level": 0
+          },
+          {
+            "id": "1789564309964_g9w4pa",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 16,
+            "y": 208,
+            "level": 0
+          },
+          {
+            "id": "1789564310856_ppplmn",
+            "kind": "sprite",
+            "spriteId": "spr_mtocg7ki_0",
+            "x": 32,
+            "y": 208,
+            "level": 0
           }
         ]
       },
@@ -61440,8 +61679,8 @@
       }
     },
     "selected": {
-      "kind": "machine",
-      "id": "sm_mu40c3yo_1"
+      "kind": "sprite",
+      "id": "spr_mtocg7ki_0"
     },
     "selectedPlacementId": null,
     "layers": [
@@ -61466,12 +61705,12 @@
         "visible": true
       }
     ],
-    "activeLevel": 2,
-    "activeTool": "select",
-    "zoom": 0.7434070938697112,
+    "activeLevel": 1,
+    "activeTool": "paint",
+    "zoom": 0.36960471192773225,
     "pan": {
-      "x": -1292.9464452937082,
-      "y": 642.0521432142101
+      "x": -413.9036128701964,
+      "y": 284.47864412038433
     }
   },
   "dialog": {
@@ -63138,5 +63377,5 @@
     "selectedMessageId": "msg_mu1qi93b_9"
   },
   "history": [],
-  "lastModified": "2026-09-16T12:46:29.614Z"
+  "lastModified": "2026-09-16T13:12:28.964Z"
 }

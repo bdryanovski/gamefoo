@@ -68,7 +68,7 @@ const PLAYER_LEVEL = 3;
 const TRANSITION_OUT = 0.42;
 const TRANSITION_IN = 0.5;
 
-const JUMP = [-2, 7];
+const JUMP = [0, 0];
 
 /** Smooth acceleration/deceleration for the iris wipe, `0..1 → 0..1`. */
 function easeInOut(t: number): number {
