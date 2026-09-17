@@ -1,4 +1,4 @@
-import type { WorldBounds } from '../generic_types';
+import type { Box } from '../generic_types';
 import type { Collidable } from './behaviours/collidable';
 
 /**
@@ -236,12 +236,7 @@ export default class World {
    *
    * @internal
    */
-  private intersects(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): boolean {
+  private intersects(a: Collidable, boundsA: Box, b: Collidable, boundsB: Box): boolean {
     const shapeA = a.shape;
     const shapeB = b.shape;
 
@@ -268,10 +263,8 @@ export default class World {
    *
    * @internal
    */
-  private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
-    return (
-      a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
-    );
+  private aabbVSAabb(a: Box, b: Box): boolean {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
 
   /**
@@ -286,12 +279,7 @@ export default class World {
    *
    * @internal
    */
-  private circleVSCircle(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): boolean {
+  private circleVSCircle(a: Collidable, boundsA: Box, b: Collidable, boundsB: Box): boolean {
     if (a.shape.type !== 'circle' || b.shape.type !== 'circle') {
       return false;
     }
@@ -320,7 +308,7 @@ export default class World {
    *
    * @internal
    */
-  private circleVSAAabb(circle: Collidable, circleBounds: WorldBounds, rect: WorldBounds): boolean {
+  private circleVSAAabb(circle: Collidable, circleBounds: Box, rect: Box): boolean {
     if (circle.shape.type !== 'circle') {
       return false;
     }
@@ -328,8 +316,8 @@ export default class World {
     const cx = circleBounds.x + circle.shape.radius;
     const cy = circleBounds.y + circle.shape.radius;
 
-    const closestX = Math.max(rect.x, Math.min(cx, rect.x + rect.width));
-    const closestY = Math.max(rect.y, Math.min(cy, rect.y + rect.height));
+    const closestX = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
+    const closestY = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
 
     const dx = cx - closestX;
     const dy = cy - closestY;
@@ -352,20 +340,9 @@ export default class World {
    *
    * @internal
    */
-  private resolveOverlap(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): void {
-    const overlapX = Math.min(
-      boundsA.x + boundsA.width - boundsB.x,
-      boundsB.x + boundsB.width - boundsA.x,
-    );
-    const overlapY = Math.min(
-      boundsA.y + boundsA.height - boundsB.y,
-      boundsB.y + boundsB.height - boundsA.y,
-    );
+  private resolveOverlap(a: Collidable, boundsA: Box, b: Collidable, boundsB: Box): void {
+    const overlapX = Math.min(boundsA.x + boundsA.w - boundsB.x, boundsB.x + boundsB.w - boundsA.x);
+    const overlapY = Math.min(boundsA.y + boundsA.h - boundsB.y, boundsB.y + boundsB.h - boundsA.y);
 
     let pushX = 0;
     let pushY = 0;

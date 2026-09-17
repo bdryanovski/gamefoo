@@ -205,9 +205,6 @@ export type { HeuristicName, PathfinderConfig, PathNode } from './core/utils/pat
 export { PerlinNoise } from './core/utils/perlin_noise';
 // ── World / Physics ─────────────────────────────────────────────────
 export { default as World } from './core/world';
-// ── Debug ───────────────────────────────────────────────────────────
-export { GridDebugSystem } from './debug/grid_debug';
-export type { GridDebugConfig } from './debug/grid_debug_types';
 // ── Decorators ──────────────────────────────────────────────────────
 export { log } from './decorators/index';
 // ── Entities ────────────────────────────────────────────────────────
@@ -226,7 +223,6 @@ export type {
    */
   Dimension,
   Vector2,
-  WorldBounds,
 } from './generic_types';
 export { CameraSystem } from './subsystems/camera_system';
 // ── Subsystems ──────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 import type { GameObject } from '../../entities/types';
-import type { ColliderShape, CollisionInfo, WorldBounds } from '../../generic_types';
+import type { ColliderShape, CollisionInfo, Box } from '../../generic_types';
 import { Behaviour } from '../behaviour';
 import type World from '../world';
 
@@ -249,7 +249,7 @@ export class Collidable extends Behaviour<GameObject> {
    * Computes this collider's axis-aligned bounding rectangle in
    * world-space, accounting for the shape's optional offset.
    *
-   * @returns A {@link WorldBounds} rectangle.
+   * @returns A {@link Box} rectangle.
    *
    * @example
    * ```ts
@@ -257,7 +257,7 @@ export class Collidable extends Behaviour<GameObject> {
    * // { x: 100, y: 200, width: 30, height: 30 }
    * ```
    */
-  getWorldBounds(): WorldBounds {
+  getWorldBounds(): Box {
     const pos = this.owner.getPosition();
     const offset = 'offset' in this.shape && this.shape.offset ? this.shape.offset : { x: 0, y: 0 };
 
@@ -265,8 +265,8 @@ export class Collidable extends Behaviour<GameObject> {
       return {
         x: pos.x + offset.x,
         y: pos.y + offset.y,
-        width: this.shape.width,
-        height: this.shape.height,
+        w: this.shape.width,
+        h: this.shape.height,
       };
     }
 
@@ -274,8 +274,8 @@ export class Collidable extends Behaviour<GameObject> {
     return {
       x: pos.x + offset.x - r,
       y: pos.y + offset.y - r,
-      width: r * 2,
-      height: r * 2,
+      w: r * 2,
+      h: r * 2,
     };
   }
 }

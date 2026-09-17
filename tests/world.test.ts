@@ -19,7 +19,7 @@ function makeCollidable(): Collidable {
     fixed: false,
     shape: { type: 'aabb', width: 32, height: 32 },
     getOwner: () => ({ x: 0, y: 0, id: 'stub' }) as unknown as ReturnType<Collidable['getOwner']>,
-    getWorldBounds: () => ({ x: 0, y: 0, width: 32, height: 32 }),
+    getWorldBounds: () => ({ x: 0, y: 0, w: 32, h: 32 }),
     type: 'collidable',
     priority: 1,
     key: 'collidable',
