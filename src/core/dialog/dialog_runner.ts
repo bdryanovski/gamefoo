@@ -68,7 +68,7 @@ export class DialogRunner {
    */
   start(ref: string): boolean {
     const tree = this.resolveTree(ref);
-    if (tree && tree.root && tree.messages[tree.root]) {
+    if (tree?.root && tree.messages[tree.root]) {
       this.tree = tree;
       this.running = true;
       this.goto(tree.root);

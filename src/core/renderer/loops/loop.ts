@@ -91,8 +91,8 @@ export class RAFLoopDriver implements LoopDriver {
    *
    * @since 0.4.0
    */
-  start(tick: (dt: number) => void) {
-    const loop = (ts: number) => {
+  start(tick: (dt: number) => void): void {
+    const loop = (ts: number): void => {
       const dt = (ts - this.lastTime) / 1000;
       this.lastTime = ts;
       tick(dt);
@@ -106,7 +106,7 @@ export class RAFLoopDriver implements LoopDriver {
    *
    * @since 0.4.0
    */
-  stop() {
+  stop(): void {
     cancelAnimationFrame(this.handle);
   }
 }
@@ -147,7 +147,7 @@ export class IntervalLoopDriver implements LoopDriver {
    *
    * @since 0.4.0
    */
-  start(tick: (dt: number) => void) {
+  start(tick: (dt: number) => void): void {
     let last = Date.now();
     this.handle = setInterval(() => {
       const now = Date.now();
@@ -161,7 +161,7 @@ export class IntervalLoopDriver implements LoopDriver {
    *
    * @since 0.4.0
    */
-  stop() {
+  stop(): void {
     if (this.handle) {
       clearInterval(this.handle);
     }

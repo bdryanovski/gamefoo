@@ -128,7 +128,21 @@ export default class TextObject extends MapObject {
   protected override bounds(): ShaderRegion {
     const width = Math.max(1, this.text.length * this.fontSize * 0.6);
     const height = this.fontSize;
-    const x = this.align === 'center' ? this.x - width / 2 : this.align === 'right' ? this.x - width : this.x;
+    let x = this.x;
+
+    switch (this.align) {
+      case 'center': {
+        x = this.x - width / 2;
+        break;
+      }
+      case 'right': {
+        x = this.x - width;
+        break;
+      }
+      default:
+        x = this.x;
+    }
+
     return { x, y: this.y, width, height };
   }
 }
