@@ -11303,10 +11303,10 @@
             "enabled": true,
             "shape": {
               "kind": "rect",
-              "x": 1.7294921875,
-              "y": 0.4345703125,
-              "width": 12.346028645833334,
-              "height": 14.492513020833334
+              "x": 3.40234375,
+              "y": 3.2737630208333335,
+              "width": 9.230794270833334,
+              "height": 12.671875
             }
           },
           {
@@ -11315,9 +11315,9 @@
             "enabled": true,
             "shape": {
               "kind": "circle",
-              "cx": 8,
+              "cx": 7.989908854166666,
               "cy": 8,
-              "radius": 8
+              "radius": 7.5381426718412055
             }
           }
         ],
@@ -13173,7 +13173,7 @@
     "spr_mu40drm8_c"
   ],
   "selectedAnimationId": "anim_mu40ddk3_9",
-  "selectedObjectId": "obj_mto16yyf_2",
+  "selectedObjectId": "obj_mtq8ys37_b",
   "activeTool": "grid-pick",
   "zoom": 2.3394052183841674,
   "pan": {
@@ -61707,10 +61707,10 @@
     ],
     "activeLevel": 1,
     "activeTool": "paint",
-    "zoom": 0.36960471192773225,
+    "zoom": 0.646440951191053,
     "pan": {
-      "x": -413.9036128701964,
-      "y": 284.47864412038433
+      "x": -1201.0369870575544,
+      "y": 162.00012655807797
     }
   },
   "dialog": {
@@ -63377,5 +63377,5 @@
     "selectedMessageId": "msg_mu1qi93b_9"
   },
   "history": [],
-  "lastModified": "2026-09-16T13:12:28.964Z"
+  "lastModified": "2026-09-16T13:19:06.337Z"
 }

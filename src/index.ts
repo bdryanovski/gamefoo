@@ -237,3 +237,6 @@ export type { ObjectSystemConfig } from './subsystems/object_system';
 export { ObjectSystem } from './subsystems/object_system';
 export { ShaderSystem } from './subsystems/shader_system';
 export type { SubSystem } from './subsystems/types';
+
+//-- Utilities ---
+export { clone, splitPath } from './core/utils/object/object.ts';

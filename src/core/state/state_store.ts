@@ -60,7 +60,8 @@
  * @see {@link ScopedState}
  */
 
-import { clone, deleteIn, getIn, isRelated, sameValue, setIn, splitPath } from './path';
+import { clone, splitPath } from '../utils/object/object';
+import { deleteIn, getIn, isRelated, sameValue, setIn } from './path';
 import { ScopedState } from './scoped_state';
 import type {
   StateBackend,

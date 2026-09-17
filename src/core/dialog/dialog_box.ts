@@ -108,10 +108,9 @@ export class DialogBox {
       return;
     }
 
-    const surfaceW = ctx.width;
     const surfaceH = ctx.height;
-    const margin = Math.round(surfaceW * 0.04);
-    const panelW = surfaceW - margin * 2;
+    const margin = Math.round(ctx.width * 0.04);
+    const panelW = ctx.width - margin * 2;
     const x = margin;
 
     const raw = ctx.getCanvas?.();

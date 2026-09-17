@@ -15,25 +15,6 @@
 
 import type { StateData, StateValue } from './types';
 
-/**
- * Splits a dot path into its non-empty segments. `""` yields `[]` (the
- * root).
- */
-export function splitPath(path: string): string[] {
-  return path.split('.').filter((segment) => segment.length > 0);
-}
-
-/**
- * Deep-clones a JSON value, preferring the structured-clone algorithm and
- * falling back to a `JSON` round-trip on older runtimes.
- */
-export function clone<T>(value: T): T {
-  if (typeof structuredClone === 'function') {
-    return structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value)) as T;
-}
-
 /** Reads a child of an object (by key) or array (by integer index). */
 function getChild(node: StateData | StateValue[], segment: string): StateValue | undefined {
   if (Array.isArray(node)) {
