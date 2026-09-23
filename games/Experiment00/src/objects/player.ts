@@ -74,7 +74,7 @@ export class Player extends MapObject {
   }
 
   /** A slightly enlarged box used to reach nearby interactables. */
-  private interactionBox(): Rect {
+  interactionBox(): Rect {
     const reach = 6;
     return {
       x: this.x - reach,
@@ -94,10 +94,18 @@ export class Player extends MapObject {
   private readInput(): { x: number; y: number } {
     let x = 0;
     let y = 0;
-    if (this.input.isKeyDown('a') || this.input.isKeyDown('arrowleft')) x -= 1;
-    if (this.input.isKeyDown('d') || this.input.isKeyDown('arrowright')) x += 1;
-    if (this.input.isKeyDown('w') || this.input.isKeyDown('arrowup')) y -= 1;
-    if (this.input.isKeyDown('s') || this.input.isKeyDown('arrowdown')) y += 1;
+    if (this.input.isKeyDown('a') || this.input.isKeyDown('arrowleft')) {
+      x -= 1;
+    }
+    if (this.input.isKeyDown('d') || this.input.isKeyDown('arrowright')) {
+      x += 1;
+    }
+    if (this.input.isKeyDown('w') || this.input.isKeyDown('arrowup')) {
+      y -= 1;
+    }
+    if (this.input.isKeyDown('s') || this.input.isKeyDown('arrowdown')) {
+      y += 1;
+    }
     return { x, y };
   }
 
@@ -109,8 +117,12 @@ export class Player extends MapObject {
   /** Picks the FSM state that matches the current facing + moving flag. */
   private desiredState(): string {
     if (this.moving) {
-      if (this.facing === 'up') return 'Up';
-      if (this.facing === 'down') return 'Down';
+      if (this.facing === 'up') {
+        return 'Up';
+      }
+      if (this.facing === 'down') {
+        return 'Down';
+      }
       return this.facing === 'left' ? 'Left' : 'Right';
     }
     return this.facing === 'up' ? 'idle_up' : 'Idle';
@@ -124,6 +136,7 @@ export class Player extends MapObject {
    * @param deltaTime - Seconds since the previous frame.
    * @param collision - The current screen's collision world (optional).
    */
+  // oxlint-disable-next-line max-statements
   override update(deltaTime: DeltaTime, collision?: CollisionMap): void {
     const dir = this.readInput();
     this.moving = dir.x !== 0 || dir.y !== 0;
@@ -146,10 +159,15 @@ export class Player extends MapObject {
     }
 
     if (this.moving) {
-      if (dir.x < 0) this.facing = 'left';
-      else if (dir.x > 0) this.facing = 'right';
-      else if (dir.y < 0) this.facing = 'up';
-      else if (dir.y > 0) this.facing = 'down';
+      if (dir.x < 0) {
+        this.facing = 'left';
+      } else if (dir.x > 0) {
+        this.facing = 'right';
+      } else if (dir.y < 0) {
+        this.facing = 'up';
+      } else if (dir.y > 0) {
+        this.facing = 'down';
+      }
     }
 
     this.play(this.desiredState());

@@ -234,5 +234,10 @@ export { ObjectSystem } from './subsystems/object_system';
 export { ShaderSystem } from './subsystems/shader_system';
 export type { SubSystem } from './subsystems/types';
 
-//-- Utilities ---
+// ── Effects ──────────────────────────────────────────────────────
+// @since 0.5.0
+export * from './core/effects/dither/dither_fog';
+export * from './core/effects/dither/dither_light';
+export * from './core/effects/dither/dither_patterns';
+// ── Utilities ──────────────────────────────────────────────────────
 export { clone, splitPath } from './core/utils/object/object.ts';

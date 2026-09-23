@@ -20,6 +20,7 @@ import {
   VignetteShader,
   WebRenderer,
   MemoryBackend,
+  DitherFog,
 } from '../../../src/index';
 import { drawMessages, showMessage, updateMessages } from './hud';
 import { Olive } from './objects/olive';
@@ -67,8 +68,6 @@ const PLAYER_LEVEL = 3;
 // over `IN`.
 const TRANSITION_OUT = 0.42;
 const TRANSITION_IN = 0.5;
-
-const JUMP = [0, 0];
 
 /** Smooth acceleration/deceleration for the iris wipe, `0..1 → 0..1`. */
 function easeInOut(t: number): number {
@@ -132,11 +131,20 @@ const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
  */
 class MapGame extends Engine {
   private map?: MapManager;
+  /**
+   * Screen X position
+   */
   private cx = 0;
+  /**
+   * Screen Y position
+   */
   private cy = 0;
   private readonly input = new Input();
+  /**
+   * Player reference
+   */
   private player?: Player;
-  private lastSafe = { x: 0, y: 0 };
+
   private dialog?: DialogRunner;
   private readonly dialogBox = new DialogBox();
   private audio?: AudioSystem;
@@ -170,7 +178,7 @@ class MapGame extends Engine {
     elapsed: 0,
   };
   /** Draw-ready `n0`..`n9` number sprites, indexed by digit. */
-  private numberFrames: (Frame | undefined)[] = [];
+  private numberFrames: Array<Frame | undefined> = [];
   /**
    * Active 4-digit code entry for a locked door: the four current digits and
    * the box the player is editing. Freezes the world while open.
@@ -181,6 +189,8 @@ class MapGame extends Engine {
 
   /** Anonymous, per-event analytics for the whole play session. */
   private readonly telemetry = new Telemetry();
+
+  fog: DitherFog;
 
   async load(): Promise<void> {
     const loadStart = performance.now();
@@ -235,7 +245,7 @@ class MapGame extends Engine {
     // Resolve the `n0`..`n9` number sprites (for the lock UI) from the
     // project's sprite catalog: name → id → draw-ready frame.
     const spriteIdByName = new Map<string, string>(
-      ((project.sprites ?? []) as { name: string; id: string }[]).map((s) => [s.name, s.id]),
+      ((project.sprites ?? []) as Array<{ name: string; id: string }>).map((s) => [s.name, s.id]),
     );
     this.numberFrames = Array.from({ length: 10 }, (_, digit) => {
       const id = spriteIdByName.get(`n${digit}`);
@@ -272,11 +282,10 @@ class MapGame extends Engine {
     this.use(audio);
     audio.setListener(() => this.listenerPoint());
 
-    // Start on the dark chamber (its screen class extinguishes the fires),
-    // then spawn the player centred.
-    this.navigate(JUMP[0], JUMP[1]);
+    this.navigate(this.cx, this.cy);
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
+
     this.telemetry.gameLoaded(performance.now() - loadStart);
   }
 
@@ -298,7 +307,6 @@ class MapGame extends Engine {
     };
     this.player = new Player(context, this.input);
     this.player.onSpawn();
-    this.lastSafe = { x: this.player.x, y: this.player.y };
     this.map?.current?.collision.addOccupant(this.player);
   }
 
@@ -499,7 +507,6 @@ class MapGame extends Engine {
               ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
               : (SCREEN_H - PLAYER_SIZE) / 2;
             player.place(px, py);
-            this.lastSafe = { x: player.x, y: player.y };
           });
         }
       } else if (!portal.isOpening) {
@@ -597,10 +604,10 @@ class MapGame extends Engine {
     // Code entry captures all keys: arrows spin/move, E/Esc leaves.
     if (this.lockUI) {
       const lockedPortal = this.lockUI.portal;
-      if (e.key === 'ArrowUp') this.spinLockDigit(1);
-      else if (e.key === 'ArrowDown') this.spinLockDigit(-1);
-      else if (e.key === 'ArrowLeft') this.moveLockCursor(-1);
-      else if (e.key === 'ArrowRight') this.moveLockCursor(1);
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') this.spinLockDigit(1);
+      else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') this.spinLockDigit(-1);
+      else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') this.moveLockCursor(-1);
+      else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') this.moveLockCursor(1);
       else if (e.key === 'Escape' || e.key === 'e' || e.key === 'E') {
         this.telemetry.keypadDismissed(lockedPortal.id);
         this.lockUI = undefined;
@@ -611,8 +618,10 @@ class MapGame extends Engine {
     const dialog = this.dialog;
     if (dialog?.active) {
       // Modal is up: arrows move the option cursor, E/Enter confirms.
-      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') dialog.moveSelection(-1);
-      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') dialog.moveSelection(1);
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'w' || e.key === 'W')
+        dialog.moveSelection(-1);
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 's' || e.key === 'S')
+        dialog.moveSelection(1);
       else if (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter') {
         dialog.confirm();
         this.telemetry.dialogAdvance();
@@ -704,10 +713,8 @@ class MapGame extends Engine {
     player.place(Math.max(0, Math.min(maxX, player.x)), Math.max(0, Math.min(maxY, player.y)));
 
     const foot = player.footPoint();
-    if (screen.collision.isWalkable(foot.x, foot.y)) {
-      this.lastSafe = { x: player.x, y: player.y };
-    } else {
-      player.place(this.lastSafe.x, this.lastSafe.y);
+    if (!screen.collision.isWalkable(foot.x, foot.y)) {
+      player.place(player.x, player.y);
       this.telemetry.playerReset();
     }
 
@@ -761,7 +768,7 @@ class MapGame extends Engine {
     const player = this.player;
     this.map?.render(
       ctx,
-      player ? { level: PLAYER_LEVEL, render: (c) => player.render(c) } : undefined,
+      player ? { level: PLAYER_LEVEL, render: (c): void => player.render(c) } : undefined,
     );
     // Door-opening pies draw last, above every map layer, so no wall or
     // pillar hides them.
@@ -770,7 +777,6 @@ class MapGame extends Engine {
     }
     ctx.restore();
 
-    const fires = this.campfires();
     ctx.drawText(
       `screen ${this.cx},${this.cy}   WASD move · E use / open portal`,
       8,
@@ -778,6 +784,9 @@ class MapGame extends Engine {
       '#ffffff',
     );
     drawMessages(ctx, 8, 40);
+
+    // fog
+    this.fog.render();
 
     // Dialog modal on top of everything (screen space).
     if (this.dialog) this.dialogBox.render(ctx, this.dialog);
@@ -830,6 +839,27 @@ class MapGame extends Engine {
 }
 
 const game = new MapGame(renderer, { backgroundColor: '#12121c' });
-game.setup(async () => {
-  await void game.load();
+void game.setup(async () => {
+  void game.load();
+
+  console.log(game.dementions);
+
+  // Dither setup
+  game.fog = new DitherFog(game.renderer, {
+    width: game.dementions.width,
+    height: game.dementions.height,
+    color: '#08040f',
+    cellSize: 2,
+    blendSharpness: 53,
+    defaultPattern: 'bayer2',
+  });
+  //
+  // game.fog.addLight({
+  //   innerRadius: 146,
+  //   ditherRadius: 378 / 6,
+  //   pattern: 'bayer4',
+  //   followTarget: { x: game.dementions.width / 2, y: game.dementions.height / 2 },
+  //   color: '#8fd8ff',
+  //   glowAlpha: 0.15,
+  // });
 });

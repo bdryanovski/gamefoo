@@ -222,7 +222,7 @@ export class Collidable extends Behaviour<GameObject> {
     this.solid = options.solid ?? false;
     this.fixed = options.fixed ?? false;
     this.collidesWith = options.collidesWith ?? new Set();
-    this.onCollision = options.onCollision ?? (() => {});
+    this.onCollision = options.onCollision ?? ((): void => {});
   }
 
   /**

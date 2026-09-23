@@ -84,7 +84,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    *
    * @returns Font metadata object or `null`.
    */
-  get metadata() {
+  get metadata(): BitmapCatalogEntry | null {
     return Catalog.get(this.name) ?? null;
   }
 
@@ -173,7 +173,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderChar("G", 20, 40, ctx);
    * ```
    */
-  renderChar(char: string, x: number, y: number, ctx: RenderContext) {
+  renderChar(char: string, x: number, y: number, ctx: RenderContext): void {
     const canvasCtx = ctx.getCanvas?.();
 
     if (!canvasCtx) {
@@ -210,7 +210,7 @@ export default class FontBitmap extends BitmapDataRenderer {
    * font.renderText("GAME OVER", 100, 50, ctx);
    * ```
    */
-  renderText(text: string, x: number, y: number, ctx: RenderContext) {
+  renderText(text: string, x: number, y: number, ctx: RenderContext): void {
     if (!ctx.getCanvas?.()) {
       return;
     }

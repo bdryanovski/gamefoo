@@ -478,4 +478,8 @@ export class WebRenderer implements RenderContext {
   getCanvas(): CanvasRenderingContext2D {
     return this.ctx;
   }
+
+  createRadialGradient(x0, y0, r0, x1, y1, r1) {
+    return this.ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
+  }
 }

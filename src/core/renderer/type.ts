@@ -309,4 +309,9 @@ export interface RenderContext {
    * @since 0.4.0
    */
   getCanvas?(): CanvasRenderingContext2D | null;
+
+  /**
+   * @since 0.5.0
+   */
+  createRadialGradient(x0, y0, r0, x1, y1, r1): any;
 }

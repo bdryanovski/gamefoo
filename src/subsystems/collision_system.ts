@@ -61,7 +61,7 @@ export class CollisionSystem implements SubSystem {
     return this.world;
   }
 
-  update() {
+  update(): void {
     this.world.detect();
   }
 }

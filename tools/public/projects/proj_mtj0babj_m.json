@@ -26129,7 +26129,7 @@
             "machineId": "sm_mto16yyf_1",
             "properties": {
               "targetScreen": "0,5",
-              "spawn": "1,3"
+              "spawn": "2,2"
             },
             "x": 304,
             "y": 48,
@@ -28330,7 +28330,7 @@
             "machineId": "sm_mto16yyf_1",
             "properties": {
               "targetScreen": "0,6",
-              "spawn": "1,14"
+              "spawn": "2,13"
             },
             "x": 304,
             "y": 208,
@@ -61682,7 +61682,7 @@
       "kind": "sprite",
       "id": "spr_mtocg7ki_0"
     },
-    "selectedPlacementId": null,
+    "selectedPlacementId": "1788610920511_1kn5vz",
     "layers": [
       {
         "name": "base",
@@ -61705,12 +61705,12 @@
         "visible": true
       }
     ],
-    "activeLevel": 1,
-    "activeTool": "paint",
-    "zoom": 0.646440951191053,
+    "activeLevel": 2,
+    "activeTool": "select",
+    "zoom": 0.8549181579501675,
     "pan": {
-      "x": -1201.0369870575544,
-      "y": 162.00012655807797
+      "x": -1346.980233690559,
+      "y": 199.0096445101313
     }
   },
   "dialog": {
@@ -63377,5 +63377,5 @@
     "selectedMessageId": "msg_mu1qi93b_9"
   },
   "history": [],
-  "lastModified": "2026-09-16T13:19:06.337Z"
+  "lastModified": "2026-09-22T19:09:43.785Z"
 }

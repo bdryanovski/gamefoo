@@ -276,7 +276,7 @@ export default class Engine {
    *
    * @internal
    */
-  private run<K extends keyof SubSystem>(hook: K, ...args: any[]): void {
+  private run<K extends keyof SubSystem>(hook: K, ...args: unknown[]): void {
     for (const subsystem of this.subsystems) {
       if (subsystem.enabled === false) {
         continue;
@@ -362,7 +362,7 @@ export default class Engine {
    * });
    * ```
    */
-  async setup(setupFn?: () => void) {
+  async setup(setupFn?: () => void | Promise<void>): Promise<void> {
     if (this._initialized) {
       console.warn('Engine is already initialized.');
       return;
@@ -372,7 +372,7 @@ export default class Engine {
     this.clearScrean();
 
     if (typeof setupFn === 'function') {
-      setupFn();
+      await setupFn.bind(this)();
     }
 
     this._initialized = true;
@@ -401,7 +401,7 @@ export default class Engine {
    * }
    * ```
    */
-  update(_deltaTime: number) {}
+  update(_deltaTime: number): void {}
 
   /**
    * Override hook called once per frame **after** `clearScrean()` and
@@ -423,7 +423,7 @@ export default class Engine {
    * }
    * ```
    */
-  render(_ctx: RenderContext) {}
+  render(_ctx: RenderContext): void {}
 
   /**
    * Pauses the frame loop.
@@ -440,7 +440,7 @@ export default class Engine {
    * });
    * ```
    */
-  pause() {
+  pause(): void {
     this.running = false;
     this.loopDriver.stop();
   }
@@ -459,7 +459,7 @@ export default class Engine {
    * engine.clearScrean();
    * ```
    */
-  clearScrean() {
+  clearScrean(): void {
     this.ctx.clear(this.cnf.backgroundColor ?? '#000000');
   }
 
