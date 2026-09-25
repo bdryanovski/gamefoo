@@ -45,6 +45,8 @@ import { SlimeKing } from './objects/slime_king';
 
 import { Telemetry } from './telemetry';
 import { Bat } from './objects/bat';
+import { getFog, setFog } from './fog';
+import { Lanter } from './objects/lanter';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -187,10 +189,23 @@ class MapGame extends Engine {
   /** A locked door whose reminder is showing; its lock UI opens on close. */
   private pendingLock?: Portal;
 
+  // FPS diagnostic (half-second window) — delete these three fields, the
+  // block at the top of `update`, and the `drawText` in `render` once the
+  // rendering cost is settled.
+  private fpsWindow = 0;
+  private fpsFrames = 0;
+  private fps = 0;
+
   /** Anonymous, per-event analytics for the whole play session. */
   private readonly telemetry = new Telemetry();
 
-  fog: DitherFog;
+  /**
+   * The dither fog of war. Created in **world space** (320×256, the same
+   * coordinates map objects and the player live in) so every light — the
+   * player's halo, campfires, torches, chest glows, skull wisps — tracks its
+   * owner directly. Rendered inside the ×3 world-scale block, under the HUD.
+   */
+  fog?: DitherFog;
 
   async load(): Promise<void> {
     const loadStart = performance.now();
@@ -211,6 +226,7 @@ class MapGame extends Engine {
     registry.register(Goblin);
     registry.register(SlimeKing);
     registry.register(Torch);
+    registry.register(Lanter);
     registry.register(Olive);
     // Olives read/write their collected flag from the shared save store.
     Olive.useState(this.save.scope('olives'));
@@ -308,6 +324,16 @@ class MapGame extends Engine {
     this.player = new Player(context, this.input);
     this.player.onSpawn();
     this.map?.current?.collision.addOccupant(this.player);
+    // The player's own fog halo — without it the ambient fog hides the world.
+    getFog()?.addLight({
+      followTarget: this.player,
+      offsetX: PLAYER_SIZE / 2,
+      offsetY: PLAYER_SIZE / 2,
+      innerRadius: 26,
+      ditherRadius: 148,
+      strength: 1,
+      pattern: 'bayer8',
+    });
   }
 
   /** Live campfires on the active screen. */
@@ -633,6 +659,15 @@ class MapGame extends Engine {
   }
 
   override update(dt: number): void {
+    // FPS diagnostic window.
+    this.fpsWindow += dt;
+    this.fpsFrames++;
+    if (this.fpsWindow >= 0.5) {
+      this.fps = this.fpsFrames / this.fpsWindow;
+      this.fpsWindow = 0;
+      this.fpsFrames = 0;
+    }
+
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
     this.dialog?.update(dt);
@@ -699,6 +734,9 @@ class MapGame extends Engine {
         }
       }
     }
+    // Advance the fog's flicker with the world (it freezes alongside the
+    // fire glow shaders while a modal or screen-cut holds the frame).
+    this.fog?.update(dt);
     this.map?.update(dt);
     updateMessages(dt);
     const player = this.player;
@@ -775,6 +813,9 @@ class MapGame extends Engine {
     for (const portal of this.map?.current?.objectsByType(Portal) ?? []) {
       portal.renderProgress(ctx);
     }
+    // Dither fog: world space, over the map, under the HUD and dialogs. One
+    // dither cell (2 world px) reads as a 6 screen-px dot at ×3 scale.
+    this.fog?.render();
     ctx.restore();
 
     ctx.drawText(
@@ -783,10 +824,8 @@ class MapGame extends Engine {
       20,
       '#ffffff',
     );
+    ctx.drawText(`${Math.round(this.fps)} fps`, ctx.width - 64, 20, '#7dffa8');
     drawMessages(ctx, 8, 40);
-
-    // fog
-    this.fog.render();
 
     // Dialog modal on top of everything (screen space).
     if (this.dialog) this.dialogBox.render(ctx, this.dialog);
@@ -840,26 +879,21 @@ class MapGame extends Engine {
 
 const game = new MapGame(renderer, { backgroundColor: '#12121c' });
 void game.setup(async () => {
-  void game.load();
-
-  console.log(game.dementions);
-
-  // Dither setup
-  game.fog = new DitherFog(game.renderer, {
+  // Dither fog of war, authored in WORLD space (320×256 — the coordinates
+  // objects and the player already live in) so lights track their owners
+  // with no scale juggling. Published via `setFog` **before** the map loads:
+  // campfires, torches, chests and flying skulls attach their own lights in
+  // `onSpawn`, which runs while the map project streams in.
+  game.fog = new DitherFog(renderer, {
     width: game.dementions.width,
     height: game.dementions.height,
-    color: '#08040f',
-    cellSize: 2,
-    blendSharpness: 53,
+    cellSize: 0.5,
+    color: '#382910',
+    ambientCoverage: 5,
+    blendSharpness: 16,
     defaultPattern: 'bayer2',
   });
-  //
-  // game.fog.addLight({
-  //   innerRadius: 146,
-  //   ditherRadius: 378 / 6,
-  //   pattern: 'bayer4',
-  //   followTarget: { x: game.dementions.width / 2, y: game.dementions.height / 2 },
-  //   color: '#8fd8ff',
-  //   glowAlpha: 0.15,
-  // });
+  setFog(game.fog);
+
+  void game.load();
 });

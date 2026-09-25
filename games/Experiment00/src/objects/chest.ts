@@ -1,4 +1,11 @@
-import { MapObject, type Rect, type ScopedState, type WorldCollider } from '../../../../src/index';
+import {
+  DitherLight,
+  MapObject,
+  type Rect,
+  type ScopedState,
+  type WorldCollider,
+} from '../../../../src/index';
+import { getFog } from '../fog';
 
 /**
  * A chest the player opens with **E**. Authored as a two-state machine
@@ -11,6 +18,8 @@ import { MapObject, type Rect, type ScopedState, type WorldCollider } from '../.
  * zone) swaps it to the open sprite. **Opening is one-way** — a chest stays
  * open. {@link Chest.open} returns `true` only the first time, so the game
  * grants the item, plays the sound, and runs the dialog exactly once.
+ * Opening also lights a small, steady golden glow in the dither fog around
+ * the chest — the revealed treasure.
  *
  * ### Persistence
  *
@@ -36,6 +45,9 @@ export class Chest extends MapObject {
 
   /** Shared "which chests are open" state, scoped to `"chests"`. */
   private static store: ScopedState | null = null;
+
+  /** The treasure glow this chest casts into the dither fog once open. */
+  private fogLight: DitherLight | null = null;
 
   /** Binds the opened-chests state every instance reads and writes. */
   static useState(store: ScopedState | null): void {
@@ -73,18 +85,54 @@ export class Chest extends MapObject {
     if (this.id !== '' && Chest.store?.get<boolean>(this.id) === true) {
       this.play('open');
     }
+    this.attachFogLight();
+  }
+
+  override onDespawn(): void {
+    if (this.fogLight) {
+      getFog()?.removeLight(this.fogLight);
+      this.fogLight = null;
+    }
+    super.onDespawn();
   }
 
   /**
-   * Opens the chest if closed: swaps to the open sprite and records it in the
-   * shared state (so it stays open across screens and reloads). Returns `true`
-   * only on the first open.
+   * Registers the chest's treasure glow — disabled until the chest opens
+   * (a reopened-save chest spawns with it already lit).
+   */
+  private attachFogLight(): void {
+    const fog = getFog();
+    if (!fog) {
+      return;
+    }
+    const b = this.bounds();
+    this.fogLight = fog.addLight({
+      x: this.x + b.width / 2,
+      y: this.y + b.height / 2,
+      followTarget: this,
+      offsetX: b.width / 2,
+      offsetY: b.height / 2,
+      enabled: !this.isOpen,
+      innerRadius: 6,
+      ditherRadius: 48,
+      strength: 1,
+      pattern: 'bayer8',
+    });
+  }
+
+  /**
+   * Opens the chest if closed: swaps to the open sprite, lights the treasure
+   * glow, and records it in the shared state (so it stays open across screens
+   * and reloads). Returns `true` only on the first open.
    */
   open(): boolean {
     if (this.isOpen) {
       return false;
     }
     this.play('open');
+    if (this.fogLight) {
+      this.fogLight.enabled = true;
+    }
     if (this.id !== '') {
       Chest.store?.set(this.id, true);
     }

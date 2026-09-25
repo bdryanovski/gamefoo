@@ -1,4 +1,4 @@
-import { Firelight } from './base/firelight';
+import { Firelight, type FireFogLight } from './base/firelight';
 
 /**
  * Custom class bound to the "campfire" object — a burning fire the player can
@@ -12,5 +12,20 @@ import { Firelight } from './base/firelight';
  * give a room its own variant — e.g. a chamber whose fires start dead.
  */
 export class Campfire extends Firelight {
-  public static override readonly type = 'campfire';
+  static override readonly type = 'campfire';
+
+  /**
+   * A wide, warm campfire: fully clear at its core, the widest and slowest
+   * dissolve, with a lazy flame-like flicker.
+   */
+  protected override fogLightOptions(): FireFogLight {
+    return {
+      innerRadius: 16,
+      ditherRadius: 120,
+      strength: 1,
+      pattern: 'bayer8',
+      flickerAmount: 0.01,
+      flickerSpeed: 0.3,
+    };
+  }
 }

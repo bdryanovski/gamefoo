@@ -1,5 +1,7 @@
 import {
   type CollisionDefinition,
+  DitherLight,
+  type DitherLightOptions,
   GlowShader,
   type GlowConfig,
   MapObject,
@@ -9,6 +11,7 @@ import {
   shapeBounds,
   translateShape,
 } from '../../../../../src/index';
+import { getFog } from '../../fog';
 
 /** A world-space axis-aligned box. */
 /**
@@ -27,6 +30,13 @@ export interface FireEffects {
   particles: ParticleConfig;
 }
 
+/**
+ * The dither-fog light a {@link Firelight} casts while burning: radii in
+ * world px, the reveal pattern, the additive glow tint and an optional
+ * flicker. `null` (the default) opts out of the fog entirely.
+ */
+export type FireFogLight = Partial<DitherLightOptions> | null;
+
 const DEFAULT_EFFECTS: FireEffects = {
   glow: { color: '#ff8a1a', radius: 52, intensity: 0.25, pulseSpeed: 1, pulseAmount: 0.35 },
   particles: { color: '#ffcc55', rate: 6, speed: 10, spread: 6, gravity: 0.9, lifetime: 10.9 },
@@ -43,14 +53,27 @@ const DEFAULT_EFFECTS: FireEffects = {
  * `machine.initialStateId`, and the `solid` collider from `def.collisionsByState`.
  * No config file, no globals, no load-order coupling — a subclass only needs to
  * declare its registry `type` (and may override {@link Firelight.effects} to
- * tune the flame).
+ * tune the flame, or {@link Firelight.fogLight} to carve itself into the
+ * dither fog).
  *
  * @see {@link MapObjectRegistry}
  */
 export abstract class Firelight extends MapObject {
+  /** The fog light this fire cast while lit (removed on despawn). */
+  private fogLight: DitherLight | null = null;
+
   /** Glow/ember settings shown while lit. Override to tune per subclass. */
   protected effects(): FireEffects {
     return DEFAULT_EFFECTS;
+  }
+
+  /**
+   * Dither-fog light cast while lit: radii, reveal pattern, glow tint and
+   * flicker. Override to give a subclass its own fog signature; `null`
+   * keeps the fire out of the fog.
+   */
+  protected fogLightOptions(): FireFogLight {
+    return null;
   }
 
   /** Attach the flame's glow + ember effects, matched to the lit state. */
@@ -59,9 +82,39 @@ export abstract class Firelight extends MapObject {
     this.attachShader(new GlowShader(fx.glow));
     this.attachShader(new ParticleShader(fx.particles));
     this.syncEffects();
+    this.attachFogLight();
   }
 
-  /** Enable the glow/ember shaders only while lit. */
+  override onDespawn(): void {
+    if (this.fogLight) {
+      getFog()?.removeLight(this.fogLight);
+      this.fogLight = null;
+    }
+    super.onDespawn();
+  }
+
+  /** Registers this fire's dither-fog light (when the fog is up). */
+  private attachFogLight(): void {
+    const options = this.fogLightOptions();
+    const fog = getFog();
+    if (!options || !fog) {
+      return;
+    }
+    // The light follows the object's origin; the offsets centre it on the
+    // sprite so the reveal ring tracks the flame, not its corner.
+    const b = this.bounds();
+    this.fogLight = fog.addLight({
+      ...options,
+      x: this.x + b.width / 2,
+      y: this.y + b.height / 2,
+      followTarget: this,
+      offsetX: b.width / 2,
+      offsetY: b.height / 2,
+      enabled: this.lit,
+    });
+  }
+
+  /** Enable the glow/ember effects (and fog light) only while lit. */
   private syncEffects(): void {
     const glow = this.getShader('glow');
     if (glow) {
@@ -70,6 +123,9 @@ export abstract class Firelight extends MapObject {
     const embers = this.getShader('particles');
     if (embers) {
       embers.enabled = this.lit;
+    }
+    if (this.fogLight) {
+      this.fogLight.enabled = this.lit;
     }
   }
 

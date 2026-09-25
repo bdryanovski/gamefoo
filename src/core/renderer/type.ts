@@ -313,5 +313,12 @@ export interface RenderContext {
   /**
    * @since 0.5.0
    */
-  createRadialGradient(x0, y0, r0, x1, y1, r1): any;
+  createRadialGradient(
+    x0: number,
+    y0: number,
+    r0: number,
+    x1: number,
+    y1: number,
+    r1: number,
+  ): CanvasGradient;
 }

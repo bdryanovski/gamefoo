@@ -151,7 +151,9 @@ export class AmbientSporeShader extends Shader {
     const lo = min - this.margin;
     const full = span + this.margin * 2;
     let r = (v - lo) % full;
-    if (r < 0) {r += full;}
+    if (r < 0) {
+      r += full;
+    }
     return lo + r;
   }
 
