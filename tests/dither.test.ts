@@ -1,14 +1,16 @@
 /**
  * Contract: the dither fog stack.
  *
- * - `DitherPatterns` builds *correct* ordered-dither matrices (the classic
- *   Bayer 2×2 and all 16 distinct 4×4 thresholds).
+ * - `DitherPatterns` builds *correct* ordered-dither matrices: the classic
+ *   Bayer 2×2 and all 16 distinct 4×4 thresholds, the outward-ranked
+ *   cluster-dots rings, and seeded-deterministic noise.
  * - `DitherLight` clears to `1 - strength` inside `innerRadius`, back to
  *   ambient at `ditherRadius`, follows live targets, and flickers within
  *   bounds.
  * - `DitherFog` (fallback path, mock renderer) covers everything at ambient
- *   1, punches holes where a light reaches, and honours its lifecycle
- *   switches (`enabled`, `removeLight`, `clearLights`).
+ *   1, punches holes where a light reaches, dithers a partial ambient
+ *   through the default pattern, and honours its lifecycle switches
+ *   (`enabled`, `removeLight`, `clearLights`).
  */
 import { describe, expect, test } from 'vitest';
 import { DitherFog, DitherLight, DitherPatterns } from '../src/index';
@@ -87,12 +89,54 @@ describe('DitherPatterns', () => {
 
   test('get resolves names and accepts custom matrices', () => {
     expect(DitherPatterns.get('bayer8').size).toBe(8);
+    expect(DitherPatterns.get('dots4')).toEqual(DitherPatterns.generateClusterDots(4));
+    expect(DitherPatterns.get('noise8').size).toBe(8);
+    // Unknown names fall back to bayer4 rather than throwing.
+    expect(DitherPatterns.get('nope')).toEqual(DitherPatterns.generateBayer(4));
     const custom = DitherPatterns.get([
       [0, 0.9],
       [0.4, 0.6],
     ]);
     expect(custom.size).toBe(2);
     expect(custom.matrix[1]![0]).toBe(0.4);
+  });
+
+  test('clusterDots ranks thresholds outward from the centre', () => {
+    const { matrix, size } = DitherPatterns.generateClusterDots(4);
+    expect(size).toBe(4);
+    const flat = matrix.flat();
+    // A full permutation of the 16 normalised ranks.
+    expect([...flat].sort((a, b) => a - b)).toEqual(
+      Array.from({ length: 16 }, (_, i) => i / 16),
+    );
+    // The four centre-ish cells dissolve first (ranks 0..3), the corners last.
+    for (const i of [5, 6, 9, 10]) {
+      expect(flat[i]!).toBeLessThan(4 / 16);
+    }
+    for (const i of [0, 3, 12, 15]) {
+      expect(flat[i]!).toBeGreaterThanOrEqual(12 / 16);
+    }
+  });
+
+  test('noise is seeded-deterministic and bounded', () => {
+    const a = DitherPatterns.generateNoise(8, 42);
+    const again = DitherPatterns.generateNoise(8, 42);
+    const other = DitherPatterns.generateNoise(8, 7);
+    expect(a.size).toBe(8);
+    expect(a.matrix).toEqual(again.matrix);
+    expect(a.matrix).not.toEqual(other.matrix);
+    for (const v of a.matrix.flat()) {
+      expect(v).toBeGreaterThanOrEqual(0);
+      expect(v).toBeLessThan(1);
+    }
+  });
+
+  test('matrices are cached per size/seed', () => {
+    // Sharing (not rebuilding) identical matrices is what keeps many lights
+    // on one pattern cheap — same call, same object.
+    expect(DitherPatterns.generateBayer(4)).toBe(DitherPatterns.generateBayer(4));
+    expect(DitherPatterns.generateClusterDots(8)).toBe(DitherPatterns.generateClusterDots(8));
+    expect(DitherPatterns.generateNoise(8, 3)).toBe(DitherPatterns.generateNoise(8, 3));
   });
 });
 
@@ -185,6 +229,52 @@ describe('DitherFog (fallback path)', () => {
     expect(grid[0]![0]).toBe(true);
     // Not everything cleared: the fog still exists away from the light.
     expect(grid.flat().filter(Boolean).length).toBeGreaterThan(0);
+  });
+
+  test('partial ambient dithers through the default pattern', () => {
+    const recorder = new RecordingContext();
+    const fog = new DitherFog(recorder as unknown as RenderContext, {
+      width: 64,
+      height: 64,
+      cellSize: 8,
+      color: '#08040f',
+      ambientCoverage: 0.5,
+      defaultPattern: 'noise8',
+    });
+    fog.render();
+    const grid = coveredCells(recorder, 8, 8);
+    // Half-covered: strictly some solid cells, strictly some punched out.
+    const filled = grid.flat().filter(Boolean).length;
+    expect(filled).toBeGreaterThan(0);
+    expect(filled).toBeLessThan(64);
+  });
+
+  test('out-of-reach lights leave cells at pure ambient', () => {
+    const recorder = new RecordingContext();
+    const fog = new DitherFog(recorder as unknown as RenderContext, {
+      width: 64,
+      height: 64,
+      cellSize: 8,
+      color: '#08040f',
+      ambientCoverage: 0.98,
+      // 1×1 custom ambient pattern: every ambient cell sits at threshold
+      // 0.95 — above the dip an out-of-reach light's blend used to cause.
+      defaultPattern: [[0.95]],
+    });
+    // A 12px circle around (4,4): its box covers cells 0..2 × 0..2, but the
+    // circle itself misses the box's edges and corners.
+    fog.addLight({ x: 4, y: 4, innerRadius: 4, ditherRadius: 12, strength: 1, pattern: 'bayer8' });
+    fog.render();
+    const grid = coveredCells(recorder, 8, 8);
+    // Cell (0,0) — centre (4,4): inside the inner radius → cleared.
+    expect(grid[0]![0]).toBe(false);
+    // Cell (2,0) — centre (20,4): 16px away, beyond the circle but inside
+    // the box → exactly the ambient dither (0.98 > 0.95).
+    expect(grid[2]![0]).toBe(true);
+    // Cell (2,2) — box corner, ~28px away → pure ambient as well.
+    expect(grid[2]![2]).toBe(true);
+    // Far outside the box: ambient.
+    expect(grid[5]![5]).toBe(true);
   });
 
   test('enabled=false renders nothing; lights can be removed', () => {
