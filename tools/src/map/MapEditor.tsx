@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import type { AppState, AppAction } from "../types";
 import { objectMachines } from "../types";
 import type { MapAction, MapToolType } from "./types";
+import { findPlacement } from "./types";
 import { MapCanvas } from "./MapCanvas";
 import { MapPalettePanel } from "./MapPalettePanel";
 import { MapExportPanel } from "./MapExportPanel";
+import { PlacementInspector } from "./PlacementInspector";
+import type { DialogAction } from "../dialog/types";
 import { Icon, type IconName, ICON } from "../components/Icon";
 import { Tooltip } from "../components/Tooltip";
 import { EditorHeader } from "../components/EditorHeader";
@@ -13,6 +16,7 @@ interface Props {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
   mapDispatch: (a: MapAction) => void;
+  dialogDispatch: (a: DialogAction) => void;
   imageMap: Map<string, HTMLImageElement>;
   projectId: string | null;
   saving: boolean;
@@ -50,6 +54,7 @@ export function MapEditor({
   state,
   dispatch,
   mapDispatch,
+  dialogDispatch,
   imageMap,
   projectId,
   saving,
@@ -85,34 +90,31 @@ export function MapEditor({
         return;
       }
       // Placement transforms when one is selected.
-      const pid = state.map.selectedPlacementId;
+      const sel = findPlacement(state.map, state.map.selectedPlacementId);
+      const pid = sel?.placement.id ?? null;
       if (!pid || (k !== "r" && k !== "x" && k !== "y")) return;
-      for (const [key, screen] of Object.entries(state.map.screens)) {
-        const p = screen.placements.find((pl) => pl.id === pid);
-        if (!p) continue;
-        if (k === "r") {
-          mapDispatch({
-            type: "UPDATE_PLACEMENT",
-            screenKey: key,
-            id: pid,
-            updates: { rotation: ((p.rotation ?? 0) + 90) % 360 },
-          });
-        } else if (k === "x") {
-          mapDispatch({
-            type: "UPDATE_PLACEMENT",
-            screenKey: key,
-            id: pid,
-            updates: { flipX: !p.flipX },
-          });
-        } else {
-          mapDispatch({
-            type: "UPDATE_PLACEMENT",
-            screenKey: key,
-            id: pid,
-            updates: { flipY: !p.flipY },
-          });
-        }
-        return;
+      const p = sel!.placement;
+      if (k === "r") {
+        mapDispatch({
+          type: "UPDATE_PLACEMENT",
+          screenKey: sel!.screenKey,
+          id: pid,
+          updates: { rotation: ((p.rotation ?? 0) + 90) % 360 },
+        });
+      } else if (k === "x") {
+        mapDispatch({
+          type: "UPDATE_PLACEMENT",
+          screenKey: sel!.screenKey,
+          id: pid,
+          updates: { flipX: !p.flipX },
+        });
+      } else {
+        mapDispatch({
+          type: "UPDATE_PLACEMENT",
+          screenKey: sel!.screenKey,
+          id: pid,
+          updates: { flipY: !p.flipY },
+        });
       }
     };
     window.addEventListener("keydown", handleKey);
@@ -204,6 +206,18 @@ export function MapEditor({
           imageMap={imageMap}
           onStatus={setStatus}
           onActiveScreen={setActiveScreenKey}
+        />
+
+        {/* Floating in-place editor for the selected placement (objects,
+            sprites, animations, text labels) — stays over the canvas so
+            there's no tab-hopping while building the map. */}
+        <PlacementInspector
+          state={state}
+          dispatch={dispatch}
+          mapDispatch={mapDispatch}
+          dialogDispatch={dialogDispatch}
+          imageMap={imageMap}
+          onClose={() => mapDispatch({ type: "SELECT_PLACEMENT", id: null })}
         />
 
         <div className="right-panel">

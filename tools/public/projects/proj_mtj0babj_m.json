@@ -13173,7 +13173,7 @@
     "spr_mu40drm8_c"
   ],
   "selectedAnimationId": "anim_mu40ddk3_9",
-  "selectedObjectId": "obj_mtonapcq_y",
+  "selectedObjectId": "obj_mtt49mb4_l",
   "activeTool": "grid-pick",
   "zoom": 2.3394052183841674,
   "pan": {
@@ -61682,7 +61682,7 @@
       "kind": "sprite",
       "id": "spr_mtocg7ki_0"
     },
-    "selectedPlacementId": "1788610920511_1kn5vz",
+    "selectedPlacementId": null,
     "layers": [
       {
         "name": "base",
@@ -61707,10 +61707,10 @@
     ],
     "activeLevel": 2,
     "activeTool": "select",
-    "zoom": 0.8549181579501675,
+    "zoom": 1.719545781717328,
     "pan": {
-      "x": -1346.980233690559,
-      "y": 199.0096445101313
+      "x": -3333.265759141433,
+      "y": 177.78089761727318
     }
   },
   "dialog": {
@@ -61732,7 +61732,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Sign"
       },
       {
         "id": "dlg_mtomi0j6_g",
@@ -61750,7 +61751,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Sign"
       },
       {
         "id": "dlg_mton1hnd_k",
@@ -61766,7 +61768,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Sign"
       },
       {
         "id": "dlg_mtooike6_1f",
@@ -61899,7 +61902,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtoq9k8g_b",
@@ -61936,7 +61940,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Chest Dialogs"
       },
       {
         "id": "dlg_mtoqjn5v_j",
@@ -61952,7 +61957,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtoql23p_n",
@@ -61994,7 +62000,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtoqwwca_v",
@@ -62030,7 +62037,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtor0i4f_13",
@@ -62053,7 +62061,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtor3jbb_17",
@@ -62073,7 +62082,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtor5nx6_1b",
@@ -62092,7 +62102,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtor83gk_1f",
@@ -62113,7 +62124,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtorag3r_1j",
@@ -62133,7 +62145,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtord2tx_1n",
@@ -62169,7 +62182,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Chest Dialogs"
       },
       {
         "id": "dlg_mtorh2ih_1v",
@@ -62185,7 +62199,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Chest Dialogs"
       },
       {
         "id": "dlg_mtorhu8r_1z",
@@ -62201,7 +62216,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Chest Dialogs"
       },
       {
         "id": "dlg_mtorjeem_23",
@@ -62244,7 +62260,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Notes"
       },
       {
         "id": "dlg_mtorxbq3_2b",
@@ -62282,7 +62299,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsltedy_9",
@@ -62299,7 +62317,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslu14k_d",
@@ -62316,7 +62335,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslurso_h",
@@ -62333,7 +62353,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslvnee_l",
@@ -62349,7 +62370,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslw708_p",
@@ -62366,7 +62388,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslwv7g_t",
@@ -62383,7 +62406,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslxg4h_x",
@@ -62400,7 +62424,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsly62r_11",
@@ -62417,7 +62442,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtslz735_15",
@@ -62433,7 +62459,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm07e4_19",
@@ -62450,7 +62477,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm1066_1d",
@@ -62467,7 +62495,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm1tu1_1h",
@@ -62485,7 +62514,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm2u10_1l",
@@ -62502,7 +62532,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm3ihl_1p",
@@ -62520,7 +62551,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm458w_1t",
@@ -62537,7 +62569,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm4vly_1x",
@@ -62555,7 +62588,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm5w3s_21",
@@ -62572,7 +62606,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm72mp_25",
@@ -62589,7 +62624,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm7vqw_29",
@@ -62606,7 +62642,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm8ho8_2d",
@@ -62623,7 +62660,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsm96o9_2h",
@@ -62640,7 +62678,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsma4mm_2l",
@@ -62659,7 +62698,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsmtd69_2p",
@@ -62675,7 +62715,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsmu4ya_2t",
@@ -62691,7 +62732,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsmvb26_2x",
@@ -62708,7 +62750,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsmwmks_31",
@@ -62726,7 +62769,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsmy7qb_35",
@@ -62743,7 +62787,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsmzasg_39",
@@ -62760,7 +62805,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsn0uer_3d",
@@ -62776,7 +62822,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsn1xxf_3h",
@@ -62793,7 +62840,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsn304e_3l",
@@ -62810,7 +62858,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsn4ael_3p",
@@ -62827,7 +62876,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtsn5lha_3t",
@@ -62844,7 +62894,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Olives"
       },
       {
         "id": "dlg_mtssvmlb_1i",
@@ -62873,7 +62924,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Characters"
       },
       {
         "id": "dlg_mtst4xec_1m",
@@ -62995,7 +63047,8 @@
             ],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Characters"
       },
       {
         "id": "dlg_mtt5iv1i_t",
@@ -63321,7 +63374,8 @@
             ],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Characters"
       },
       {
         "id": "dlg_mtv6w3h3_3",
@@ -63353,7 +63407,8 @@
             "options": [],
             "meta": []
           }
-        ]
+        ],
+        "folder": "Sign"
       },
       {
         "id": "dlg_mu1qi93b_a",
@@ -63373,9 +63428,16 @@
         ]
       }
     ],
-    "selectedTreeId": "dlg_mu1qi93b_a",
-    "selectedMessageId": "msg_mu1qi93b_9"
+    "folders": [
+      "Olives",
+      "Notes",
+      "Characters",
+      "Chest Dialogs",
+      "Sign"
+    ],
+    "selectedTreeId": "dlg_mu1hv9cu_6",
+    "selectedMessageId": "msg_mu1hv9cu_5"
   },
   "history": [],
-  "lastModified": "2026-09-24T20:15:25.434Z"
+  "lastModified": "2026-09-25T19:30:09.898Z"
 }

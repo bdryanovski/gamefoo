@@ -8,7 +8,6 @@ import type {
   ObjectCellSource,
   ObjectLayer,
   ObjectCell,
-  CollisionVolume,
 } from "../types";
 import { makeObject, objectPixelSize, stateCollisions, stateHasOwnCollisions } from "../types";
 import type { StateMachineDef, StateNodeDef } from "../statemachine/types";
@@ -20,7 +19,8 @@ import {
 } from "../statemachine/types";
 import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
 import type { PreviewTransform } from "../components/AnimatedSpritePreview";
-import { CollisionEditor } from "../components/CollisionEditor";
+import { ObjectPropertiesEditor } from "./ObjectPropertiesEditor";
+import { ObjectCollisionEditor } from "./ObjectCollisionEditor";
 import { drawObjectLayers } from "./composition";
 import { exportObject, downloadObject } from "./objectExport";
 import { Icon } from "../components/Icon";
@@ -72,8 +72,6 @@ export function ObjectExplorer({ state, dispatch, imageMap, projectId, saving, o
   const [brush, setBrush] = useState<Brush>(null);
   const [tool, setTool] = useState<"paint" | "erase">("paint");
   const [paletteKind, setPaletteKind] = useState<"sprite" | "animation">("sprite");
-  const [newPropKey, setNewPropKey] = useState("");
-  const [newPropVal, setNewPropVal] = useState("");
   const [jsonView, setJsonView] = useState<string | null>(null);
   const [editWidth, setEditWidth] = useState<number>(() => {
     const v = Number(localStorage.getItem("gamefoo-object-edit-width"));
@@ -256,19 +254,6 @@ export function ObjectExplorer({ state, dispatch, imageMap, projectId, saving, o
   const collisionsInherited =
     !!selected && !!selectedStateId && !isIdleState && !stateHasOwnCollisions(selected, selectedStateId);
   const effectiveCollisions = selected && selectedStateId ? stateCollisions(selected, selectedStateId) : [];
-  const setStateCollisions = useCallback(
-    (vols: CollisionVolume[]) => {
-      if (!selected || !selectedStateId) return;
-      updateSelected({ collisionsByState: { ...selected.collisionsByState, [selectedStateId]: vols } });
-    },
-    [selected, selectedStateId, updateSelected],
-  );
-  const resetStateCollisions = useCallback(() => {
-    if (!selected || !selectedStateId) return;
-    const cbs = { ...selected.collisionsByState };
-    delete cbs[selectedStateId];
-    updateSelected({ collisionsByState: cbs });
-  }, [selected, selectedStateId, updateSelected]);
 
   const palette = paletteKind === "sprite" ? state.sprites : state.animations;
 
@@ -556,35 +541,15 @@ export function ObjectExplorer({ state, dispatch, imageMap, projectId, saving, o
               </div>
 
               {/* Collisions — per state, inheriting the idle/initial state */}
-              <div className="section">
-                <div className="section-title">
-                  <span>Collisions — {selState?.name ?? "—"}{collisionsInherited ? " (inherits idle)" : ""}</span>
-                  {!isIdleState && (
-                    collisionsInherited ? (
-                      <button className="btn btn-sm" title="Copy idle collisions to edit them just for this state" onClick={() => setStateCollisions(effectiveCollisions.map((c) => ({ ...c, id: uid("col") })))}>Override</button>
-                    ) : (
-                      <button className="btn btn-sm" title="Discard this state's collisions and inherit idle" onClick={resetStateCollisions}>Reset to idle</button>
-                    )
-                  )}
-                </div>
-                {collisionsInherited && (
-                  <div className="text-xs text-dim" style={{ padding: "0 4px 4px" }}>
-                    This state uses the idle collisions. Click Override to change them here.
-                  </div>
-                )}
-                <CollisionEditor
-                  key={selectedStateId ?? "none"}
-                  width={objectPixelSize(selected.grid).width}
-                  height={objectPixelSize(selected.grid).height}
-                  collisions={effectiveCollisions}
-                  layers={state.collisionLayers}
-                  onChange={setStateCollisions}
-                  dispatch={dispatch}
-                  drawBackdrop={(ctx, scale) =>
-                    drawObjectLayers(ctx, stateLayers, selected.grid.cell, spriteById, animById, imageMap, scale, () => 1)
-                  }
-                />
-              </div>
+              <ObjectCollisionEditor
+                object={selected}
+                stateId={selectedStateId}
+                layers={state.collisionLayers}
+                dispatch={dispatch}
+                spriteById={spriteById}
+                animById={animById}
+                imageMap={imageMap}
+              />
 
               {/* Selected state */}
               <div className="section">
@@ -608,30 +573,10 @@ export function ObjectExplorer({ state, dispatch, imageMap, projectId, saving, o
               {/* Custom properties */}
               <div className="section">
                 <div className="section-title">Custom Properties ({Object.keys(selected.properties).length})</div>
-                {Object.entries(selected.properties).map(([key, val]) => (
-                  <div key={key} className="field-row">
-                    <span className="field-label" style={{ minWidth: 70 }}>{key}:</span>
-                    <input type="text" className="input input-full" value={val} onChange={(e) => updateSelected({ properties: { ...selected.properties, [key]: e.target.value } })} />
-                    <button className="btn btn-sm danger" title="Remove property" style={{ padding: "0 3px", minHeight: 14 }} onClick={() => { const props = { ...selected.properties }; delete props[key]; updateSelected({ properties: props }); }}><Icon name="close" size={11} /></button>
-                  </div>
-                ))}
-                <div className="field-row mt-4">
-                  <input type="text" className="input input-sm" placeholder="key" value={newPropKey} onChange={(e) => setNewPropKey(e.target.value)} />
-                  <input type="text" className="input input-md" placeholder="value" value={newPropVal} onChange={(e) => setNewPropVal(e.target.value)} />
-                  <button
-                    className="btn btn-sm"
-                    disabled={!newPropKey.trim()}
-                    onClick={() => {
-                      const k = newPropKey.trim();
-                      if (!k) return;
-                      updateSelected({ properties: { ...selected.properties, [k]: newPropVal } });
-                      setNewPropKey("");
-                      setNewPropVal("");
-                    }}
-                  >
-                    +
-                  </button>
-                </div>
+                <ObjectPropertiesEditor
+                  properties={selected.properties}
+                  onChange={(properties) => updateSelected({ properties })}
+                />
               </div>
             </div>
           </div>

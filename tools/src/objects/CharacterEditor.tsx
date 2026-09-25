@@ -19,11 +19,7 @@ import {
   characterPreviewFrames,
 } from "./character";
 import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
-import { CollisionEditor } from "../components/CollisionEditor";
-import { drawObjectLayers } from "./composition";
-import { objectPixelSize, objectStateLayers, stateCollisions, stateHasOwnCollisions } from "../types";
-import type { CollisionVolume } from "../types";
-import { uid } from "../utils/uid";
+import { ObjectCollisionEditor } from "./ObjectCollisionEditor";
 
 interface Props {
   state: AppState;
@@ -101,24 +97,6 @@ export function CharacterEditor({
       ? collisionStateId
       : selected.machine.initialStateId
     : null;
-  const colIsIdle = !!selected && colStateId === selected.machine.initialStateId;
-  const colInherited =
-    !!selected && !!colStateId && !colIsIdle && !stateHasOwnCollisions(selected, colStateId);
-  const colEffective: CollisionVolume[] =
-    selected && colStateId ? stateCollisions(selected, colStateId) : [];
-  const setColStateCollisions = useCallback(
-    (vols: CollisionVolume[]) => {
-      if (!selected || !colStateId) return;
-      apply({ ...selected, collisionsByState: { ...selected.collisionsByState, [colStateId]: vols } });
-    },
-    [selected, colStateId, apply],
-  );
-  const resetColState = useCallback(() => {
-    if (!selected || !colStateId) return;
-    const cbs = { ...selected.collisionsByState };
-    delete cbs[colStateId];
-    apply({ ...selected, collisionsByState: cbs });
-  }, [selected, colStateId, apply]);
 
   return (
     <div className="app-layout">
@@ -329,52 +307,32 @@ export function CharacterEditor({
 
               {/* Collisions — per state, with idle fallback */}
               {colStateId && (
-                <div className="section">
-                  <div className="section-title">
-                    <span>Collisions</span>
-                    <select
-                      className="input input-sm"
-                      value={colStateId}
-                      onChange={(e) => setCollisionStateId(e.target.value)}
-                    >
-                      {selected.machine.states.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name}
-                          {s.id === selected.machine.initialStateId ? " (idle)" : ""}
-                        </option>
-                      ))}
-                    </select>
-                    {!colIsIdle &&
-                      (colInherited ? (
-                        <button
-                          className="btn btn-sm"
-                          title="Copy idle collisions to edit them just for this state"
-                          onClick={() => setColStateCollisions(colEffective.map((c) => ({ ...c, id: uid("col") })))}
-                        >
-                          Override
-                        </button>
-                      ) : (
-                        <button className="btn btn-sm" title="Discard this state's collisions and inherit idle" onClick={resetColState}>
-                          Reset to idle
-                        </button>
-                      ))}
-                  </div>
-                  {colInherited && (
-                    <div className="text-xs text-dim" style={{ padding: "0 4px 4px" }}>
-                      This state uses the idle collisions. Click Override to change them here.
+                <div className="col gap-md">
+                  <div className="section">
+                    <div className="section-title">
+                      <span>Collisions State</span>
+                      <select
+                        className="input input-sm"
+                        value={colStateId}
+                        onChange={(e) => setCollisionStateId(e.target.value)}
+                      >
+                        {selected.machine.states.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.name}
+                            {s.id === selected.machine.initialStateId ? " (idle)" : ""}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  )}
-                  <CollisionEditor
-                    key={colStateId}
-                    width={objectPixelSize(selected.grid).width}
-                    height={objectPixelSize(selected.grid).height}
-                    collisions={colEffective}
+                  </div>
+                  <ObjectCollisionEditor
+                    object={selected}
+                    stateId={colStateId}
                     layers={state.collisionLayers}
-                    onChange={setColStateCollisions}
                     dispatch={dispatch}
-                    drawBackdrop={(ctx, scale) =>
-                      drawObjectLayers(ctx, objectStateLayers(selected, colStateId), selected.grid.cell, spriteById, animById, imageMap, scale, () => 1)
-                    }
+                    spriteById={spriteById}
+                    animById={animById}
+                    imageMap={imageMap}
                   />
                 </div>
               )}

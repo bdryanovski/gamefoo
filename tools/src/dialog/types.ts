@@ -53,20 +53,53 @@ export interface DialogTree {
   /** Entry message id (null when the tree has no messages yet). */
   rootId: string | null;
   messages: DialogMessage[];
+  /**
+   * Presentation-only grouping path ("NPCs/Villagers"), max 3 levels.
+   * Never exported — message ids, links and engine consumption are
+   * unaffected by how trees are grouped in the editor sidebar.
+   */
+  folder?: string;
 }
 
 /** Dialog editor slice of the project. */
 export interface DialogState {
   trees: DialogTree[];
+  /**
+   * Explicit folder paths, in creation order. Folders exist even while
+   * empty (until deleted); grouping itself is presentation-only.
+   */
+  folders: string[];
   selectedTreeId: string | null;
   selectedMessageId: string | null;
 }
 
 export const INITIAL_DIALOG_STATE: DialogState = {
   trees: [],
+  folders: [],
   selectedTreeId: null,
   selectedMessageId: null,
 };
+
+// ── Folder path helpers ──────────────────────────────────
+
+/** Max folder nesting depth (path segments). */
+export const MAX_DIALOG_FOLDER_DEPTH = 3;
+
+/** Normalize a folder path: trimmed non-empty segments, capped at depth 3. */
+export function normalizeFolderPath(raw: string): string {
+  return raw
+    .split("/")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+    .slice(0, MAX_DIALOG_FOLDER_DEPTH)
+    .join("/");
+}
+
+/** The path of a folder's parent (null for root-level folders). */
+export function parentOf(path: string): string | null {
+  const i = path.lastIndexOf("/");
+  return i === -1 ? null : path.slice(0, i);
+}
 
 // ── Factories ────────────────────────────────────────────
 
@@ -93,10 +126,20 @@ export function makeDialogTree(name = "New dialog"): DialogTree {
 // ── Actions ──────────────────────────────────────────────
 
 export type DialogAction =
-  | { type: "ADD_TREE" }
-  | { type: "UPDATE_TREE"; id: string; updates: Partial<Pick<DialogTree, "name" | "rootId">> }
+  | { type: "ADD_TREE"; folder?: string }
+  | { type: "UPDATE_TREE"; id: string; updates: Partial<Pick<DialogTree, "name" | "rootId" | "folder">> }
   | { type: "DELETE_TREE"; id: string }
   | { type: "SELECT_TREE"; id: string | null }
+  /** Create (or make known) a folder at a normalized path. */
+  | { type: "ADD_FOLDER"; path: string }
+  /** Rename a folder's own segment, keeping its parent and depth. */
+  | { type: "RENAME_FOLDER"; path: string; name: string }
+  /** Delete a folder; its contents move up one level. */
+  | { type: "DELETE_FOLDER"; path: string }
+  /** Move one tree into a folder (null = root). */
+  | { type: "MOVE_TREE"; treeId: string; folder: string | null }
+  /** Re-parent a folder (and everything under it) into another folder (null = root). */
+  | { type: "MOVE_FOLDER"; from: string; toParent: string | null }
   | { type: "ADD_MESSAGE"; linkFromOptionId?: string }
   | {
       type: "UPDATE_MESSAGE";
@@ -143,18 +186,102 @@ function mapMessage(
   return { ...tree, messages: tree.messages.map((m) => (m.id === id ? fn(m) : m)) };
 }
 
+/**
+ * Rewrite folder memberships after a folder move/rename/delete: every
+ * path at or under `from` re-roots at `to`. With `dropExact`, the folder
+ * itself is removed and only its contents move into `to` (delete-folder
+ * semantics — children move up one level).
+ */
+function rebaseFolders(
+  state: DialogState,
+  from: string,
+  to: string,
+  opts: { dropExact?: boolean } = {},
+): DialogState {
+  const rebased = (p: string | undefined): string | undefined => {
+    if (!p) return undefined;
+    if (p === from) return opts.dropExact ? (to || undefined) : to;
+    if (p.startsWith(from + "/")) return normalizeFolderPath(`${to}/${p.slice(from.length)}`);
+    return p;
+  };
+  const folders = new Set<string>();
+  for (const f of state.folders) {
+    const next = rebased(f);
+    if (next) folders.add(next);
+  }
+  const trees = state.trees.map((t) => {
+    const next = rebased(t.folder);
+    return next === t.folder ? t : { ...t, folder: next };
+  });
+  return { ...state, folders: [...folders], trees };
+}
+
 // ── Reducer ──────────────────────────────────────────────
 
 export function dialogReducer(state: DialogState, action: DialogAction): DialogState {
   switch (action.type) {
     case "ADD_TREE": {
-      const tree = makeDialogTree(`Dialog ${state.trees.length + 1}`);
+      const folder = normalizeFolderPath(action.folder ?? "");
+      const tree: DialogTree = {
+        ...makeDialogTree(`Dialog ${state.trees.length + 1}`),
+        ...(folder ? { folder } : {}),
+      };
       return {
         ...state,
         trees: [...state.trees, tree],
         selectedTreeId: tree.id,
         selectedMessageId: tree.rootId,
       };
+    }
+
+    case "ADD_FOLDER": {
+      const path = normalizeFolderPath(action.path);
+      if (!path || state.folders.includes(path)) return state;
+      return { ...state, folders: [...state.folders, path] };
+    }
+
+    case "RENAME_FOLDER": {
+      const from = normalizeFolderPath(action.path);
+      const name = action.name.replace(/\//g, " ").trim();
+      if (!from || !name) return state;
+      const parent = parentOf(from);
+      const to = normalizeFolderPath(parent ? `${parent}/${name}` : name);
+      if (!to || to === from) return state;
+      return rebaseFolders(state, from, to);
+    }
+
+    case "DELETE_FOLDER": {
+      const path = normalizeFolderPath(action.path);
+      if (!path) return state;
+      // Children move up one level: "A/B/C" under deleted "A/B" → "A/C".
+      return rebaseFolders(state, path, parentOf(path) ?? "", { dropExact: true });
+    }
+
+    case "MOVE_TREE": {
+      const folder = action.folder ? normalizeFolderPath(action.folder) : "";
+      return {
+        ...state,
+        trees: state.trees.map((t) =>
+          t.id === action.treeId ? { ...t, folder: folder || undefined } : t,
+        ),
+      };
+    }
+
+    case "MOVE_FOLDER": {
+      const from = normalizeFolderPath(action.from);
+      if (!from) return state;
+      const name = from.slice(from.lastIndexOf("/") + 1);
+      const to = normalizeFolderPath(action.toParent ? `${action.toParent}/${name}` : name);
+      if (!to || to === from || to.startsWith(from + "/")) return state;
+      // The folder plus its deepest descendant must still fit the depth cap.
+      const tail = [
+        ...state.folders,
+        ...state.trees.map((t) => t.folder ?? ""),
+      ]
+        .filter((p) => p === from || p.startsWith(from + "/"))
+        .reduce((m, p) => Math.max(m, p.split("/").length - from.split("/").length), 0);
+      if (to.split("/").length + tail > MAX_DIALOG_FOLDER_DEPTH) return state;
+      return rebaseFolders(state, from, to);
     }
 
     case "UPDATE_TREE":
@@ -283,6 +410,32 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
   }
 }
 
+// ── Cross-tree lookups ──────────────────────────────────
+
+/** Every message across every tree, flattened as (tree, message) pairs. */
+export function allDialogMessages(
+  trees: DialogTree[],
+): { tree: DialogTree; message: DialogMessage }[] {
+  const out: { tree: DialogTree; message: DialogMessage }[] = [];
+  for (const tree of trees) {
+    for (const message of tree.messages) out.push({ tree, message });
+  }
+  return out;
+}
+
+/** The tree + message holding an id, searched across every tree. */
+export function findDialogMessage(
+  trees: DialogTree[],
+  id: string | null | undefined,
+): { tree: DialogTree; message: DialogMessage } | null {
+  if (!id) return null;
+  for (const tree of trees) {
+    const message = tree.messages.find((m) => m.id === id);
+    if (message) return { tree, message };
+  }
+  return null;
+}
+
 // ── Normalization ────────────────────────────────────────
 
 function asRecord(v: unknown): Record<string, unknown> | null {
@@ -345,11 +498,14 @@ function normalizeTree(raw: unknown): DialogTree | null {
   }));
   const rawRoot = typeof t.rootId === "string" ? t.rootId : null;
   const rootId = rawRoot && ids.has(rawRoot) ? rawRoot : (cleaned[0]?.id ?? null);
+  const folder =
+    typeof t.folder === "string" ? normalizeFolderPath(t.folder) : "";
   return {
     id: typeof t.id === "string" ? t.id : uid("dlg"),
     name: typeof t.name === "string" ? t.name : "Dialog",
     rootId,
     messages: cleaned,
+    ...(folder ? { folder } : {}),
   };
 }
 
@@ -360,6 +516,14 @@ export function sanitizeDialogState(raw: unknown): DialogState {
   const trees = Array.isArray(d.trees)
     ? d.trees.map(normalizeTree).filter((t): t is DialogTree => t != null)
     : [];
+  const folders: string[] = [];
+  if (Array.isArray(d.folders)) {
+    for (const f of d.folders) {
+      if (typeof f !== "string") continue;
+      const p = normalizeFolderPath(f);
+      if (p && !folders.includes(p)) folders.push(p);
+    }
+  }
   const treeIds = new Set(trees.map((t) => t.id));
   const selectedTreeId =
     typeof d.selectedTreeId === "string" && treeIds.has(d.selectedTreeId)
@@ -371,5 +535,5 @@ export function sanitizeDialogState(raw: unknown): DialogState {
     typeof d.selectedMessageId === "string" && msgIds.has(d.selectedMessageId)
       ? d.selectedMessageId
       : (selTree?.rootId ?? null);
-  return { trees, selectedTreeId, selectedMessageId };
+  return { trees, folders, selectedTreeId, selectedMessageId };
 }

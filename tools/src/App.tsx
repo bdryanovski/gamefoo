@@ -830,6 +830,7 @@ export function App() {
             state={state}
             dispatch={dispatch}
             mapDispatch={mapDispatch}
+            dialogDispatch={dialogDispatch}
             imageMap={imageMap}
             projectId={currentProjectId}
             saving={saving}

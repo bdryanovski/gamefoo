@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import type { AppState, AppAction } from '../types';
 import type { DialogAction, DialogMessage, DialogTree } from './types';
 import { DialogExportPanel } from './DialogExportPanel';
+import { DialogTreeList } from './DialogTreeList';
 import { Icon } from '../components/Icon';
 
 interface Props {
@@ -351,33 +352,13 @@ export function DialogEditor({
             </div>
           ) : (
             <>
-              <div className="row-between">
-                <div className="section-title">Dialogs</div>
-                <button
-                  className="btn btn-sm"
-                  title="New dialog tree"
-                  onClick={() => dialogDispatch({ type: 'ADD_TREE' })}
-                >
-                  <Icon name="add" size={12} /> Tree
-                </button>
-              </div>
-
-              <div className="col gap-sm">
-                {dialog.trees.length === 0 && (
-                  <div className="text-dim text-xs p-4">No dialog trees yet.</div>
-                )}
-                {dialog.trees.map((t) => (
-                  <div
-                    key={t.id}
-                    className={`dialog-tree-item ${t.id === dialog.selectedTreeId ? 'active' : ''}`}
-                    onClick={() => dialogDispatch({ type: 'SELECT_TREE', id: t.id })}
-                  >
-                    <Icon name="dialog" size={12} />
-                    <span className="dialog-tree-item__name">{t.name}</span>
-                    <span className="text-dim text-xs">{t.messages.length}</span>
-                  </div>
-                ))}
-              </div>
+              {/* Grouped tree list — folders are presentation-only */}
+              <DialogTreeList
+                trees={dialog.trees}
+                folders={dialog.folders}
+                selectedTreeId={dialog.selectedTreeId}
+                dialogDispatch={dialogDispatch}
+              />
 
               {tree && (
                 <>

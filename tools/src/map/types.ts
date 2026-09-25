@@ -186,6 +186,22 @@ export interface MapState {
 export const DEFAULT_LAYER_NAMES: readonly string[] = ["base", "walls", "objects"];
 export const screenKey = (x: number, y: number) => `${x},${y}`;
 
+/**
+ * Locate a placement by id across every screen. The single lookup behind
+ * the map shortcuts, palette panel and the floating placement inspector.
+ */
+export function findPlacement(
+  map: MapState,
+  id: string | null,
+): { screenKey: string; placement: MapPlacement } | null {
+  if (!id) return null;
+  for (const [key, screen] of Object.entries(map.screens)) {
+    const placement = screen.placements.find((p) => p.id === id);
+    if (placement) return { screenKey: key, placement };
+  }
+  return null;
+}
+
 export const INITIAL_MAP_STATE: MapState = {
   blockSize: 32,
   screenCols: 16,

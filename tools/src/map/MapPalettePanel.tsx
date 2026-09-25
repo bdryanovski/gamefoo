@@ -1,9 +1,10 @@
-import React, { useMemo, useCallback, useState } from "react";
-import type { AppState, AppAction, SpriteRegion, AnimationDef, GameObjectDef } from "../types";
+import React, { useMemo, useState } from "react";
+import type { AppState, AppAction, SpriteRegion, AnimationDef } from "../types";
 import { objectMachines } from "../types";
 import type { StateMachineDef } from "../statemachine/types";
-import type { MapAction, MapPlacement, TextStyle } from "./types";
-import { resolvePlacementDisplay, resolveMachineState, TEXT_FONTS, DEFAULT_TEXT_STYLE } from "./types";
+import type { MapAction } from "./types";
+import { resolveMachineState } from "./types";
+import { MachineConfigFields, TextConfigFields } from "./PlacementFields";
 import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
 import { Icon } from "../components/Icon";
 
@@ -172,160 +173,6 @@ function MachineThumb({
   );
 }
 
-/**
- * State + property editor shared by the placement editor (edits one placed
- * instance) and the palette brush (configures what new placements inherit).
- * `properties` holds only overrides; blank keys fall back to the object's.
- */
-function MachineConfigFields({
-  object,
-  stateName,
-  properties,
-  onState,
-  onProperties,
-}: {
-  object: GameObjectDef;
-  stateName?: string;
-  properties?: Record<string, string>;
-  onState: (name: string) => void;
-  onProperties: (props: Record<string, string>) => void;
-}) {
-  const keys = Object.keys(object.properties);
-  return (
-    <>
-      <div className="field-row">
-        <span className="field-label">State:</span>
-        <select
-          className="input input-sm input-full"
-          value={stateName ?? resolveMachineState(object.machine)?.name ?? ""}
-          onChange={(e) => onState(e.target.value)}
-        >
-          {object.machine.states.map((s) => (
-            <option key={s.id} value={s.name}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="section-title" style={{ marginTop: 4 }}>
-        Properties
-      </div>
-      {keys.length === 0 && (
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-          No properties on this object. Define them in the Objects tab.
-        </div>
-      )}
-      {keys.map((key) => {
-        const overridden = properties?.[key] !== undefined;
-        const value = overridden ? properties![key]! : object.properties[key]!;
-        return (
-          <div className="field-row" key={key}>
-            <span
-              className="field-label"
-              title={overridden ? "Overridden" : "Inherited from the object"}
-            >
-              {overridden ? "● " : ""}
-              {key}:
-            </span>
-            <input
-              type="text"
-              className="input input-sm input-full"
-              value={value}
-              onChange={(e) => onProperties({ ...(properties ?? {}), [key]: e.target.value })}
-            />
-            <button
-              className="btn btn-sm"
-              title="Reset to object default"
-              disabled={!overridden}
-              onClick={() => {
-                const next = { ...(properties ?? {}) };
-                delete next[key];
-                onProperties(next);
-              }}
-            >
-              ↺
-            </button>
-          </div>
-        );
-      })}
-    </>
-  );
-}
-
-/**
- * Text styling controls shared by the text brush (configures new labels) and
- * the placement editor (edits one placed label): content, font, size, colour,
- * alignment. `onChange` receives only the changed fields.
- */
-function TextConfigFields({
-  value,
-  onChange,
-}: {
-  value: TextStyle;
-  onChange: (patch: Partial<TextStyle>) => void;
-}) {
-  return (
-    <>
-      <div className="field-row">
-        <span className="field-label">Text:</span>
-        <input
-          type="text"
-          className="input input-full"
-          value={value.text}
-          onChange={(e) => onChange({ text: e.target.value })}
-        />
-      </div>
-      <div className="field-row">
-        <span className="field-label">Font:</span>
-        <select
-          className="input"
-          value={value.font}
-          onChange={(e) => onChange({ font: e.target.value })}
-        >
-          {TEXT_FONTS.map((f) => (
-            <option key={f} value={f}>
-              {f}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="field-row">
-        <span className="field-label">Size:</span>
-        <input
-          type="number"
-          className="input input-sm"
-          min={1}
-          max={512}
-          value={value.fontSize}
-          onChange={(e) =>
-            onChange({ fontSize: Math.max(1, Math.min(512, Number(e.target.value) || 1)) })
-          }
-        />
-        <span className="text-xs text-dim">px</span>
-        <span className="field-label">Color:</span>
-        <input
-          type="color"
-          className="input input-sm"
-          value={value.color}
-          onChange={(e) => onChange({ color: e.target.value })}
-        />
-      </div>
-      <div className="field-row">
-        <span className="field-label">Align:</span>
-        {(["left", "center", "right"] as const).map((a) => (
-          <button
-            key={a}
-            className={`btn btn-sm ${value.align === a ? "active" : ""}`}
-            onClick={() => onChange({ align: a })}
-          >
-            {a}
-          </button>
-        ))}
-      </div>
-    </>
-  );
-}
-
 export function MapPalettePanel({
   state,
   dispatch,
@@ -361,39 +208,9 @@ export function MapPalettePanel({
 
   const activeScreen = activeScreenKey ? map.screens[activeScreenKey] : undefined;
 
-  // Selected placement lookup (screen key + placement)
-  const selectedPlacement = useMemo(() => {
-    if (!map.selectedPlacementId) return null;
-    for (const [key, screen] of Object.entries(map.screens)) {
-      const p = screen.placements.find(
-        (pl) => pl.id === map.selectedPlacementId,
-      );
-      if (p) return { screenKey: key, placement: p };
-    }
-    return null;
-  }, [map.selectedPlacementId, map.screens]);
-
-  const selDisplay = selectedPlacement
-    ? resolvePlacementDisplay(
-      selectedPlacement.placement,
-      state.sprites,
-      state.animations,
-      objectMachines(state.objects),
-    )
-    : null;
-  const selSprite = selDisplay?.spriteId ? spriteById.get(selDisplay.spriteId) : undefined;
-
-  // For a machine placement, the object it instances (1 machine per object) —
-  // its base `properties` seed the per-placement overrides, its `machine`
-  // states drive the state selector.
-  const selMachine =
-    selectedPlacement?.placement.kind === "machine" ? selectedPlacement.placement : null;
-  const selObject = selMachine
-    ? (state.objects.find((o) => o.machine.id === selMachine.machineId) ?? null)
-    : null;
-
   // The machine currently loaded into the paint brush, and its object — the
   // palette config editor sets the state + properties new placements inherit.
+  // (A placed instance is edited in the floating placement inspector.)
   const brushMachine = map.selected?.kind === "machine" ? map.selected : null;
   const brushObject = brushMachine
     ? (state.objects.find((o) => o.machine.id === brushMachine.id) ?? null)
@@ -401,31 +218,6 @@ export function MapPalettePanel({
 
   // The text brush loaded into the palette, if any — its style seeds new labels.
   const brushText = map.selected?.kind === "text" ? map.selected : null;
-
-  const updatePlacement = useCallback(
-    (
-      updates: Partial<
-        Pick<MapPlacement, "x" | "y" | "rotation" | "flipX" | "flipY"> & {
-          stateName: string;
-          properties: Record<string, string>;
-          text: string;
-          font: string;
-          fontSize: number;
-          color: string;
-          align: "left" | "center" | "right";
-        }
-      >,
-    ) => {
-      if (!selectedPlacement) return;
-      mapDispatch({
-        type: "UPDATE_PLACEMENT",
-        screenKey: selectedPlacement.screenKey,
-        id: selectedPlacement.placement.id,
-        updates,
-      });
-    },
-    [selectedPlacement, mapDispatch],
-  );
 
   return (
     <div className="col gap-md">
@@ -444,147 +236,6 @@ export function MapPalettePanel({
           />
         </div>
       </div>
-      {/* Selected placement editor */}
-      {selectedPlacement && (
-        <div className="section">
-          <div className="section-title">
-            <span>
-              Placement: {selectedPlacement.placement.kind === "text" ? "Text label" : (selSprite?.name ?? "?")}
-            </span>
-            <button
-              className="btn btn-sm"
-              onClick={() => mapDispatch({ type: "SELECT_PLACEMENT", id: null })}
-            >
-              Deselect
-            </button>
-          </div>
-
-          <div className="field-row">
-            <span className="field-label">X:</span>
-            <input
-              type="number"
-              className="input input-sm"
-              value={selectedPlacement.placement.x}
-              onChange={(e) =>
-                updatePlacement({ x: Math.max(0, Number(e.target.value) || 0) })
-              }
-            />
-            <span className="field-label">Y:</span>
-            <input
-              type="number"
-              className="input input-sm"
-              value={selectedPlacement.placement.y}
-              onChange={(e) =>
-                updatePlacement({ y: Math.max(0, Number(e.target.value) || 0) })
-              }
-            />
-          </div>
-
-          {selMachine && selObject && (
-            <MachineConfigFields
-              object={selObject}
-              stateName={selMachine.stateName}
-              properties={selMachine.properties}
-              onState={(name) => updatePlacement({ stateName: name })}
-              onProperties={(props) => updatePlacement({ properties: props })}
-            />
-          )}
-
-          {selectedPlacement.placement.kind === "text" && (
-            <TextConfigFields
-              value={selectedPlacement.placement}
-              onChange={(patch) => updatePlacement(patch)}
-            />
-          )}
-
-          <div className="field-row">
-            <span className="field-label">Rot:</span>
-            <input
-              type="number"
-              className="input input-sm"
-              step={15}
-              value={selectedPlacement.placement.rotation ?? 0}
-              onChange={(e) =>
-                updatePlacement({ rotation: Number(e.target.value) || 0 })
-              }
-            />
-            <span className="text-xs text-dim">deg</span>
-            <button
-              className="btn btn-sm"
-              title="Rotate 90° clockwise (R)"
-              onClick={() =>
-                updatePlacement({
-                  rotation: ((selectedPlacement.placement.rotation ?? 0) + 90) % 360,
-                })
-              }
-            >
-              +90°
-            </button>
-            <button
-              className="btn btn-sm"
-              title="Reset rotation"
-              disabled={!selectedPlacement.placement.rotation}
-              onClick={() => updatePlacement({ rotation: 0 })}
-            >
-              ↺
-            </button>
-          </div>
-
-          <div className="field-row">
-            <button
-              className={`btn btn-sm ${selectedPlacement.placement.flipX ? "active" : ""}`}
-              title="Mirror horizontally (X)"
-              onClick={() =>
-                updatePlacement({ flipX: !selectedPlacement.placement.flipX })
-              }
-            >
-              ⇄ Flip X {selectedPlacement.placement.flipX ? "ON" : ""}
-            </button>
-            <button
-              className={`btn btn-sm ${selectedPlacement.placement.flipY ? "active" : ""}`}
-              title="Mirror vertically (Y)"
-              onClick={() =>
-                updatePlacement({ flipY: !selectedPlacement.placement.flipY })
-              }
-            >
-              ⇅ Flip Y {selectedPlacement.placement.flipY ? "ON" : ""}
-            </button>
-          </div>
-
-          <div className="field-row">
-            <button
-              className="btn btn-sm"
-              disabled={
-                !selectedPlacement.placement.rotation &&
-                !selectedPlacement.placement.flipX &&
-                !selectedPlacement.placement.flipY
-              }
-              onClick={() =>
-                updatePlacement({ rotation: 0, flipX: false, flipY: false })
-              }
-            >
-              Reset Transform
-            </button>
-            <button
-              className="btn btn-sm danger"
-              onClick={() =>
-                mapDispatch({
-                  type: "REMOVE_PLACEMENT",
-                  screenKey: selectedPlacement.screenKey,
-                  id: selectedPlacement.placement.id,
-                })
-              }
-            >
-              Delete
-            </button>
-          </div>
-
-          <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-            On screen {selectedPlacement.screenKey} · shortcuts: R rotate, X
-            flip X, Y flip Y · select objects with the Select tool (C)
-          </div>
-        </div>
-      )}
 
       {/* Map settings */}
       <div className="section">
@@ -900,12 +551,12 @@ export function MapPalettePanel({
             </div>
           </div>
         )}
-        {!selectedPlacement && brushMachine && brushObject && (
+        {brushMachine && brushObject && (
           <div className="section" style={{ marginTop: 4 }}>
             <div className="section-title">Placement config — {brushObject.name}</div>
             <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-              New placements you paint use this state + properties. Tune a placed
-              one later with the Pick/Move tool.
+              New placements you paint use this state + properties. Select a
+              placed one to tune it in the floating inspector.
             </div>
             <MachineConfigFields
               object={brushObject}
