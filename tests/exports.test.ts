@@ -35,6 +35,7 @@ describe('exports — classes', () => {
     'MemoryBackend',
     'MemoryStorage',
     'MonitorSystem',
+    'OutlineShader',
     'PathFollower',
     'Pathfinder',
     'PerlinNoise',

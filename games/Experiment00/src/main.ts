@@ -10,6 +10,7 @@ import {
   Input,
   MapManager,
   type MapObjectContext,
+  MapObject,
   MapObjectRegistry,
   type RenderContext,
   ScreenRegistry,
@@ -18,6 +19,7 @@ import {
   type SoundHandle,
   StateStore,
   VignetteShader,
+  OutlineShader,
   WebRenderer,
   MemoryBackend,
   DitherFog,
@@ -631,6 +633,66 @@ class MapGame extends Engine {
     }
   }
 
+  /**
+   * Keeps a white outline on exactly the interactables **E** would act on
+   * right now — doors, stalkers, the king, signs, shelves, chests, campfires
+   * — so the player can see what is in reach. Each object gets its
+   * OutlineShader lazily (once per spawn, re-attached after a screen
+   * re-entry clears it) and flips its `enabled` flag every frame.
+   */
+  private updateInteractHighlights(): void {
+    const player = this.player;
+    const screen = this.map?.current;
+    if (!player || !screen) {
+      return;
+    }
+
+    const reach = player.interactionBox();
+    const body = player.box();
+
+    // Stalkers and the king talk from the body box, not the reach zone.
+    for (const stalker of screen.objectsByType(Skeleton)) {
+      this.highlight(stalker, stalker.overlaps(body));
+    }
+    for (const stalker of screen.objectsByType(Goblin)) {
+      this.highlight(stalker, stalker.overlaps(body));
+    }
+    for (const king of screen.objectsByType(SlimeKing)) {
+      this.highlight(king, king.overlaps(body));
+    }
+    for (const sign of screen.objectsByType(Sign)) {
+      this.highlight(sign, sign.overlaps(reach));
+    }
+    for (const shelf of screen.objectsByType(Bookshelf)) {
+      this.highlight(shelf, shelf.overlaps(reach));
+    }
+    // A chest already opened no longer reacts to E.
+    for (const chest of screen.objectsByType(Chest)) {
+      this.highlight(chest, !chest.isOpen && chest.overlaps(reach));
+    }
+    // Campfires toggle within the same short radius as interact().
+    const pcx = body.x + body.width / 2;
+    const pcy = body.y + body.height / 2;
+    const campReach = 24;
+    for (const fire of this.campfires()) {
+      const b = fire.collisionBox;
+      const dx = pcx - (b.x + b.w / 2);
+      const dy = pcy - (b.y + b.h / 2);
+      this.highlight(fire, dx * dx + dy * dy <= campReach * campReach);
+    }
+  }
+
+  /**
+   * Attaches (once) and toggles the white outline shader on an interactable.
+   */
+  private highlight(obj: MapObject, on: boolean): void {
+    let outline = obj.getShader<OutlineShader>('outline');
+    if (!outline) {
+      outline = obj.attachShader(new OutlineShader({ color: '#ffffff', thickness: 1 }));
+    }
+    outline.enabled = on;
+  }
+
   private onKey(e: KeyboardEvent): void {
     // Any key is a user gesture — resume the (autoplay-suspended) audio context.
     void this.audio?.unlock();
@@ -701,6 +763,9 @@ class MapGame extends Engine {
       this.shelfAwaitingSlide.slideOpen();
       this.shelfAwaitingSlide = undefined;
     }
+
+    // Outline whatever E would act on right now — the reach hint.
+    this.updateInteractHighlights();
 
     // Feed each rat the player's box + collision so its AI can sense/flee,
     // before the screen advances the live objects (which runs their update).

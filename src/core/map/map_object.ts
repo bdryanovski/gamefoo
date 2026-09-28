@@ -201,8 +201,9 @@ export default class MapObject {
   render(ctx: RenderContext): void {
     const bounds = this.bounds();
     // Ground decals (trails, shadows) draw beneath the sprite; glow/particles
-    // and other overlays draw on top.
-    this.shaders.renderUnder(ctx, bounds);
+    // and other overlays draw on top. Both passes receive the current draw
+    // parts so silhouette effects (e.g. OutlineShader) can trace the art.
+    this.shaders.renderUnder(ctx, bounds, this.parts);
     for (const part of this.parts) {
       if (part.anim) {
         // keep the animation aligned with the object (custom classes may move it)
@@ -213,7 +214,7 @@ export default class MapObject {
         drawFrame(ctx, part.frame, this.x + part.ox, this.y + part.oy, part.transform);
       }
     }
-    this.shaders.renderOver(ctx, bounds);
+    this.shaders.renderOver(ctx, bounds, this.parts);
   }
 
   /**

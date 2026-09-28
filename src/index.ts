@@ -129,7 +129,9 @@ export { ScreenTransitionShader } from './core/shaders/screen_transition_shader'
 export type { ScreenTransitionConfig } from './core/shaders/screen_transition_shader';
 export { VignetteShader } from './core/shaders/vignette_shader';
 export type { VignetteConfig } from './core/shaders/vignette_shader';
-export type { ShaderConfig, ShaderRegion } from './core/shaders/types';
+export { OutlineShader } from './core/shaders/outline_shader';
+export type { OutlineConfig } from './core/shaders/outline_shader';
+export type { ShaderConfig, ShaderRegion, ShaderPart } from './core/shaders/types';
 // ── Map ─────────────────────────────────────────────────────────────
 /**
  * @since 0.5.0

@@ -1,7 +1,7 @@
 import type { DeltaTime } from '@/generic_types';
 import type { RenderContext } from '../renderer/type';
 import type { Shader } from './shader';
-import type { ShaderRegion } from './types';
+import type { ShaderPart, ShaderRegion } from './types';
 
 /**
  * An ordered collection of {@link Shader}s bound to a single host (a game
@@ -77,11 +77,14 @@ export class ShaderStack {
 
   /**
    * Renders every enabled shader over `region`, in insertion order.
+   *
+   * @param parts - The host's current draw parts, when the host is a map
+   *   object — forwarded to shaders that trace the host's art.
    */
-  render(ctx: RenderContext, region: ShaderRegion): void {
+  render(ctx: RenderContext, region: ShaderRegion, parts?: readonly ShaderPart[]): void {
     for (const shader of this.items) {
       if (shader.enabled) {
-        shader.render(ctx, region);
+        shader.render(ctx, region, parts);
       }
     }
   }
@@ -90,10 +93,10 @@ export class ShaderStack {
    * Renders every enabled shader whose {@link Shader.under} is `true` — the
    * host draws these beneath its sprite.
    */
-  renderUnder(ctx: RenderContext, region: ShaderRegion): void {
+  renderUnder(ctx: RenderContext, region: ShaderRegion, parts?: readonly ShaderPart[]): void {
     for (const shader of this.items) {
       if (shader.enabled && shader.under) {
-        shader.render(ctx, region);
+        shader.render(ctx, region, parts);
       }
     }
   }
@@ -102,10 +105,10 @@ export class ShaderStack {
    * Renders every enabled shader whose {@link Shader.under} is `false` — the
    * host draws these on top of its sprite.
    */
-  renderOver(ctx: RenderContext, region: ShaderRegion): void {
+  renderOver(ctx: RenderContext, region: ShaderRegion, parts?: readonly ShaderPart[]): void {
     for (const shader of this.items) {
       if (shader.enabled && !shader.under) {
-        shader.render(ctx, region);
+        shader.render(ctx, region, parts);
       }
     }
   }

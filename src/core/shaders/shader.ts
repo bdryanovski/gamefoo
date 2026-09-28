@@ -1,6 +1,6 @@
 import type { DeltaTime } from '@/generic_types';
 import type { RenderContext } from '../renderer/type';
-import type { ShaderConfig, ShaderRegion } from './types';
+import type { ShaderConfig, ShaderPart, ShaderRegion } from './types';
 
 /**
  * Base class for every screen effect ("shader").
@@ -75,8 +75,12 @@ export abstract class Shader {
    *
    * @param ctx    - The active render context.
    * @param region - The area to affect (object box or full screen).
+   * @param parts  - The host's current draw parts, when the host is a map
+   *   object — frames, offsets, transforms — so silhouette effects (e.g.
+   *   {@link OutlineShader}) can trace the host's art. Screen-level hosts
+   *   have no parts and pass nothing.
    */
-  abstract render(ctx: RenderContext, region: ShaderRegion): void;
+  abstract render(ctx: RenderContext, region: ShaderRegion, parts?: readonly ShaderPart[]): void;
 
   /**
    * The raw `CanvasRenderingContext2D`, or `null` on non-canvas renderers.

@@ -142,7 +142,7 @@
       "height": 168
     }
   ],
-  "activeImageId": "img_mul04ngi_a",
+  "activeImageId": "img_mtj0cxa0_s",
   "grid": {
     "enabled": true,
     "cellWidth": 16,
@@ -925,10 +925,10 @@
           "enabled": true,
           "shape": {
             "kind": "rect",
-            "x": 6.060221354166667,
-            "y": 5.951822916666667,
-            "width": 9.857096354166668,
-            "height": 9.9130859375
+            "x": -1.4720052083333333,
+            "y": -0.4560546875,
+            "width": 17.389322916666668,
+            "height": 16.32096354166667
           }
         }
       ]
@@ -1104,9 +1104,9 @@
           "shape": {
             "kind": "rect",
             "x": -0.08723958333333333,
-            "y": 5.806315104166667,
-            "width": 10.2607421875,
-            "height": 10.808919270833332
+            "y": 0.19563802083333334,
+            "width": 15.893880208333334,
+            "height": 16.419596354166668
           }
         }
       ]
@@ -1135,10 +1135,10 @@
           "enabled": true,
           "shape": {
             "kind": "rect",
-            "x": 7.047526041666666,
+            "x": 0.2796223958333333,
             "y": -0.22428385416666666,
-            "width": 9.681315104166668,
-            "height": 16.289388020833336
+            "width": 16.449218750000004,
+            "height": 16.1396484375
           }
         }
       ]
@@ -14270,17 +14270,17 @@
     ]
   },
   "selectedSpriteIds": [
-    "spr_mul4c5vb_t"
+    "spr_mtj0i290_1u"
   ],
   "selectedAnimationId": "anim_mul4ykvx_1f",
   "selectedObjectId": "obj_mtt49mb4_l",
   "activeTool": "select",
   "zoom": 2.2612585277781916,
   "pan": {
-    "x": -0.5115482253610253,
-    "y": 377.9498396155914
+    "x": 0,
+    "y": 0
   },
-  "activeTab": "animations",
+  "activeTab": "sprites",
   "map": {
     "blockSize": 16,
     "screenCols": 20,
@@ -64971,5 +64971,5 @@
     "selectedMessageId": "msg_mukxkf9a_2"
   },
   "history": [],
-  "lastModified": "2026-09-28T11:56:00.532Z"
+  "lastModified": "2026-09-28T12:24:59.695Z"
 }

@@ -10,6 +10,8 @@
  * @since 0.5.0
  */
 
+import type { Frame, Transform } from '../map/types';
+
 /**
  * The rectangular area a {@link Shader} affects, expressed in the same
  * coordinate space as the surrounding draw calls (logical game pixels).
@@ -22,6 +24,42 @@ export interface ShaderRegion {
   y: number;
   width: number;
   height: number;
+}
+
+/**
+ * One resolved draw unit of the host object's current state, as
+ * {@link MapObject} renders it: a static {@link Frame} or a live animation
+ * (exposed structurally — "has a current frame"), at a pixel offset from
+ * the object origin, with optional flip/rotation.
+ *
+ * Object hosts forward their parts to {@link Shader.render} so silhouette
+ * effects (e.g. {@link OutlineShader}) can trace the host's actual art.
+ * Screen-level hosts have no parts and omit them.
+ *
+ * @category Shaders
+ * @since 0.5.0
+ */
+export interface ShaderPart {
+  /**
+   * Static frame, when the part is a fixed sprite.
+   */
+  frame?: Frame;
+  /**
+   * Live animation part — only its current frame is read here.
+   */
+  anim?: { readonly frame: Frame | undefined };
+  /**
+   * Pixel offset from the host origin (`region.x`/`region.y`).
+   */
+  ox: number;
+  /**
+   * Pixel offset from the host origin.
+   */
+  oy: number;
+  /**
+   * Optional flip/rotation applied to the part.
+   */
+  transform?: Transform;
 }
 
 /**
