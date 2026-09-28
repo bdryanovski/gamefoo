@@ -23,7 +23,6 @@ describe('exports — classes', () => {
     'FontBitmap',
     'GameObjectRegister',
     'Grid',
-    'GridDebugSystem',
     'HealthKit',
     'IconBitmap',
     'Input',
