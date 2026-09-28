@@ -1,4 +1,5 @@
 // oxlint-disable max-statements curly
+import type { MapObject } from '../../../src/index';
 import {
   AmbientSporeShader,
   AudioSystem,
@@ -10,7 +11,6 @@ import {
   Input,
   MapManager,
   type MapObjectContext,
-  MapObject,
   MapObjectRegistry,
   type RenderContext,
   ScreenRegistry,
@@ -687,9 +687,7 @@ class MapGame extends Engine {
    */
   private highlight(obj: MapObject, on: boolean): void {
     let outline = obj.getShader<OutlineShader>('outline');
-    if (!outline) {
-      outline = obj.attachShader(new OutlineShader({ color: '#ffffff', thickness: 1 }));
-    }
+    outline ??= obj.attachShader(new OutlineShader({ color: '#ffffff', thickness: 1 }));
     outline.enabled = on;
   }
 
