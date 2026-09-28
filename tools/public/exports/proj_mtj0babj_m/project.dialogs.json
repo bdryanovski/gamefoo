@@ -1507,6 +1507,281 @@
           "meta": {}
         }
       }
+    },
+    "Sign 1": {
+      "id": "dlg_mukvhlro_3",
+      "name": "Sign 1",
+      "root": "msg_mukvhlro_2",
+      "messages": {
+        "msg_mukvhlro_2": {
+          "title": "One the stone",
+          "segments": [
+            "These words were cut into stone by a hand I no longer own. If they have found you, keep descending.",
+            "The corridors wear the faces of places that once held warmth. Do not trust the chambers that smell of home.",
+            "Do not trust the objects that still carry the heat of your palm. Most of all, do not trust the cold certainty",
+            "... that these wet stones have already measured your weight.",
+            "You have never walked here. At least … that is the lie the dark still lets me keep."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Sign 2": {
+      "id": "dlg_mukvop8m_7",
+      "name": "Sign 2",
+      "root": "msg_mukvop8m_6",
+      "messages": {
+        "msg_mukvop8m_6": {
+          "title": "Found something",
+          "segments": [
+            "I found a relic I once lost in another life. It should not have waited for me in this depth.",
+            "Small. Useless. A thing she would have mocked me for cradling. I pressed it back into the black mud where the roots of the dungeon drink.",
+            "If your fingers close around its shape, open them. Let it rot where the light has never reached.",
+            "Some memories do not die when buried. They grow teeth in the dark and learn the exact pressure of the hand that will one day dig them free."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Sign 3": {
+      "id": "dlg_mukvr515_b",
+      "name": "Sign 3",
+      "root": "msg_mukvr515_a",
+      "messages": {
+        "msg_mukvr515_a": {
+          "title": "Carved on the ground ",
+          "segments": [
+            "Today her voice rose from the dripping stone. ",
+            "She was never here.",
+            "I knew this, and still I followed the sound through three thresholds and back to the same cold circle. ",
+            "This place has tasted the precise flavor of what I cannot have. It wears her throat the way a snare wears soft flesh. ",
+            "If you hear her calling through the wet dark, do not answer.",
+            "The path she offers only leads you deeper into the version of yourself that already belongs to these unending halls."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Sign 4": {
+      "id": "dlg_mukvu2o5_f",
+      "name": "Sign 4",
+      "root": "msg_mukvu2o5_e",
+      "messages": {
+        "msg_mukvu2o5_e": {
+          "title": "Forgetting ",
+          "segments": [
+            "I have begun to forget why I ever crossed the first threshold.",
+            "I still carry the outline of her like a wound that will not close.",
+            "The wanting. ",
+            "The endless reaching.",
+            "But when I stretch toward the reason, something soft and wrong fills the hollow where the answer should live.",
+            "Perhaps the dungeon does not steal what we love. Perhaps it only replaces it with a hunger that keeps the feet moving downward.",
+            "There is something you must carry for me into the deeper dark. I only wish I could still remember its name."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Last sign": {
+      "id": "dlg_mukvwvtg_j",
+      "name": "Last sign",
+      "root": "msg_mukvwvtg_i",
+      "messages": {
+        "msg_mukvwvtg_i": {
+          "title": "Start",
+          "segments": [
+            "If these words have reached you, I never left.",
+            "I tried to leave a trail of ash and warning.",
+            "A map. A proof. A way back to the light.",
+            "But the stones no longer know my hand.",
+            "The chambers. The cold fires. The things I found in the black. All gone. ",
+            "Only the shape of her remains, and that is why the doors keep opening for me. If you see my shape somewhere ahead in the dripping dark, do not wake it.",
+            "Do not speak its name. Do not follow. ",
+            "You are not the first to chase a love that can never answer. You are only the one who has not yet remembered how many times you have already failed to climb back into the world where she might still exist."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "First page": {
+      "id": "dlg_mukwhsp4_n",
+      "name": "First page",
+      "root": "msg_mukwhsp4_m",
+      "messages": {
+        "msg_mukwhsp4_m": {
+          "title": "Page from journal",
+          "segments": [
+            "I told it about her once.",
+            "I was lonely.",
+            "That was my mistake. ",
+            "Now it asks about her whenever I sleep."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Crumbling book": {
+      "id": "dlg_mukwkn03_r",
+      "name": "Crumbling book",
+      "root": "msg_mukwkn03_q",
+      "messages": {
+        "msg_mukwkn03_q": {
+          "title": "Inside a book",
+          "segments": [
+            "I found an olive on the altar this morning.",
+            "Green.",
+            "Salt still clinging to the skin. I have not eaten one in years.",
+            "I do not remember bringing it here."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Carved below a bookshelf": {
+      "id": "dlg_mukwmoqw_v",
+      "name": "Carved below a bookshelf",
+      "root": "msg_mukwmoqw_u",
+      "messages": {
+        "msg_mukwmoqw_u": {
+          "title": "Carved below a bookshelf ",
+          "segments": [
+            "I heard her laugh behind me. ",
+            "I turned.",
+            "There was nothing there. Then something laughed again.",
+            "It sounded almost right."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Journal part": {
+      "id": "dlg_mukwonh2_z",
+      "name": "Journal part",
+      "root": "msg_mukwonh2_y",
+      "messages": {
+        "msg_mukwonh2_y": {
+          "title": "Journal part",
+          "segments": [
+            "I remember her telling me that everything reminded her of me.",
+            "I thought it was sweet.",
+            "I understand now.",
+            "Things remember us too."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Near a pile of bones": {
+      "id": "dlg_mukwpyhh_13",
+      "name": "Near a pile of bones",
+      "root": "msg_mukwpyhh_12",
+      "messages": {
+        "msg_mukwpyhh_12": {
+          "title": "Near a pile of bones",
+          "segments": [
+            "I found another skeleton wearing my clothes.",
+            "I searched its pockets.",
+            "There was nothing inside. Except an olive.",
+            "I began to cry. I don’t know why."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Asked": {
+      "id": "dlg_mukwrh7x_17",
+      "name": "Asked",
+      "root": "msg_mukwrh7x_16",
+      "messages": {
+        "msg_mukwrh7x_16": {
+          "title": "Written in familiar page",
+          "segments": [
+            "I asked the thing beneath the dungeon if she was still there.",
+            "It asked me which version I meant."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "On a back of a book": {
+      "id": "dlg_mukwtfna_1b",
+      "name": "On a back of a book",
+      "root": "msg_mukwtfna_1a",
+      "messages": {
+        "msg_mukwtfna_1a": {
+          "title": "On a back of a book",
+          "segments": [
+            "I thought I was afraid of forgetting her.",
+            "Then I realized something worse.",
+            "Something else remembers her now."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Empty Glass": {
+      "id": "dlg_mukx5pnp_1f",
+      "name": "Empty Glass",
+      "root": "msg_mukx5pnp_1e",
+      "messages": {
+        "msg_mukx5pnp_1e": {
+          "title": "An empty glass",
+          "segments": [
+            "Someone drank from this recently.",
+            "There are lipstick marks on the rim.",
+            "You are alone."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Book with no title": {
+      "id": "dlg_mukx8r6m_1j",
+      "name": "Book with no title",
+      "root": "msg_mukx8r6m_1i",
+      "messages": {
+        "msg_mukx8r6m_1i": {
+          "title": "A book with no title",
+          "segments": [
+            "The first page contains your handwriting.",
+            "The last page contains hers.",
+            "Everything between them has been eaten."
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
+    },
+    "Wooden Token": {
+      "id": "dlg_mukxkf9a_3",
+      "name": "Wooden Token",
+      "root": "msg_mukxkf9a_2",
+      "messages": {
+        "msg_mukxkf9a_2": {
+          "title": "A small wooden token",
+          "segments": [
+            "One one side:",
+            "\"Could be us?\"",
+            "On the other:",
+            "\"Was it?\""
+          ],
+          "options": [],
+          "meta": {}
+        }
+      }
     }
   }
 }

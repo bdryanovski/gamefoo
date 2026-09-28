@@ -37,7 +37,7 @@ import {
 } from './utils/storage';
 import { uid } from './utils/uid';
 import { exportObject } from './objects/objectExport';
-import { exportConfig } from './utils/export';
+import { exportConfig, projectBaseName } from './utils/export';
 import { exportDialogs } from './dialog/dialogExport';
 
 function reducer(state: AppState, action: AppAction): AppState {
@@ -546,7 +546,7 @@ export function App() {
   // debounced auto-save so both keep the exported object files current.
   const persistProject = useCallback(async (projId: string, s: AppState) => {
     await saveProject(projId, s);
-    const projBase = s.projectName.replace(/\s+/g, '_').toLowerCase() || 'project';
+    const projBase = projectBaseName(s.projectName);
     const files: Record<string, unknown> = {
       [`${projBase}.config.json`]: exportConfig(s),
       [`${projBase}.dialogs.json`]: exportDialogs(s),

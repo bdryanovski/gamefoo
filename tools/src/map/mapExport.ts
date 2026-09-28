@@ -1,11 +1,7 @@
 import type { AppState } from "../types";
 import { objectMachines } from "../types";
 import { screenKey, resolvePlacementDisplay } from "./types";
-import { downloadJSON } from "../utils/export";
-
-function baseNameOf(state: AppState): string {
-  return state.projectName.replace(/\s+/g, "_").toLowerCase();
-}
+import { downloadJSON, projectBaseName } from "../utils/export";
 
 /**
  * Full map export — everything needed to rebuild the map: images,
@@ -198,7 +194,7 @@ export function exportMapObjects(state: AppState): MapObjectExport[] {
 
 /** All map export files, keyed by filename — for server export. */
 export function mapExportFiles(state: AppState): Record<string, unknown> {
-  const base = baseNameOf(state);
+  const base = projectBaseName(state.projectName);
   return {
     [`${base}.map.screens.json`]: exportMapScreens(state),
     [`${base}.map.objects.json`]: exportMapObjects(state),
@@ -208,5 +204,5 @@ export function mapExportFiles(state: AppState): Record<string, unknown> {
 }
 
 export function downloadMapExport(state: AppState): void {
-  downloadJSON(exportMap(state), `${baseNameOf(state)}.map.json`);
+  downloadJSON(exportMap(state), `${projectBaseName(state.projectName)}.map.json`);
 }

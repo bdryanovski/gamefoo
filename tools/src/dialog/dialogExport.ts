@@ -1,6 +1,6 @@
 import type { AppState } from "../types";
 import type { DialogTree } from "./types";
-import { downloadJSON } from "../utils/export";
+import { downloadJSON, projectBaseName } from "../utils/export";
 
 /**
  * Dialog trees export — id-keyed so the engine can look any message up in
@@ -60,6 +60,5 @@ export function exportDialogs(state: AppState) {
 }
 
 export function downloadDialogsExport(state: AppState): void {
-  const base = state.projectName.replace(/\s+/g, "_").toLowerCase() || "project";
-  downloadJSON(exportDialogs(state), `${base}.dialogs.json`);
+  downloadJSON(exportDialogs(state), `${projectBaseName(state.projectName)}.dialogs.json`);
 }

@@ -126,15 +126,29 @@
       "name": "icons-keyboard-16x16-1bit-ansdor.png",
       "width": 192,
       "height": 112
+    },
+    {
+      "id": "img_mukzq986_6",
+      "url": "/uploads/1790584415276_surground.png",
+      "name": "surground.png",
+      "width": 208,
+      "height": 224
+    },
+    {
+      "id": "img_mul04ngi_a",
+      "url": "/uploads/1790585086905_16x16_All_Animations-Sheet.png",
+      "name": "16x16 All Animations-Sheet.png",
+      "width": 720,
+      "height": 168
     }
   ],
-  "activeImageId": "img_mtosnv6j_2w",
+  "activeImageId": "img_mul04ngi_a",
   "grid": {
     "enabled": true,
     "cellWidth": 16,
     "cellHeight": 16,
-    "offsetX": 0,
-    "offsetY": 0,
+    "offsetX": 4,
+    "offsetY": 8,
     "spacingX": 0,
     "spacingY": 0
   },
@@ -8557,6 +8571,538 @@
       "level": 0,
       "properties": {},
       "collisions": []
+    },
+    {
+      "id": "spr_mukzwaua_7",
+      "imageId": "img_mukzq986_6",
+      "name": "sprite_12_1",
+      "x": 192,
+      "y": 16,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 431,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mukzwbjc_8",
+      "imageId": "img_mukzq986_6",
+      "name": "sprite_12_0",
+      "x": 192,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 432,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul05d51_b",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_0_0",
+      "x": 4,
+      "y": 7,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 433,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul06ffe_d",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_0_1",
+      "x": 4,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 434,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul0753d_e",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_1_1",
+      "x": 28,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 435,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul07t1a_f",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_3_1",
+      "x": 52,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 436,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul088o4_g",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_4_1",
+      "x": 76,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 437,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4771g_i",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_2_3",
+      "x": 28,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 438,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul47lz7_j",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_3_3",
+      "x": 52,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 439,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul47puo_k",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_4_3",
+      "x": 76,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 440,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul49gs1_n",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_9_0",
+      "x": 148,
+      "y": 7,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 441,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4a0ps_o",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_6_1",
+      "x": 100,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 442,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4ag60_p",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_7_1",
+      "x": 123,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 443,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4ayf1_q",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_9_2",
+      "x": 148,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 444,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4behn_r",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_12_1",
+      "x": 196,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 445,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4brgc_s",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_14_2",
+      "x": 220,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 446,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4c5vb_t",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_15_1",
+      "x": 244,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 447,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4culf_u",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_13_3",
+      "x": 220,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 448,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4d6d6_v",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_15_3",
+      "x": 244,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 449,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4d8pj_w",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_16_3",
+      "x": 268,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 450,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4fdkp_y",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_24_1",
+      "x": 388,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 451,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4fpuj_z",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_26_1",
+      "x": 412,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 452,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4g3ba_10",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_27_1",
+      "x": 436,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 453,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4ggyo_11",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_28_1",
+      "x": 460,
+      "y": 31,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 454,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4hc9y_13",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_24_3",
+      "x": 388,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 455,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4hghb_14",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_25_3",
+      "x": 412,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 456,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4hq35_15",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_27_3",
+      "x": 436,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 457,
+      "level": 0,
+      "properties": {},
+      "collisions": []
+    },
+    {
+      "id": "spr_mul4htqn_16",
+      "imageId": "img_mul04ngi_a",
+      "name": "sprite_28_3",
+      "x": 460,
+      "y": 55,
+      "width": 16,
+      "height": 17,
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "tags": [],
+      "group": "",
+      "order": 458,
+      "level": 0,
+      "properties": {},
+      "collisions": []
     }
   ],
   "animations": [
@@ -9077,6 +9623,76 @@
         "spr_mu40dcad_8",
         "spr_mu40dh1t_a",
         "spr_mu40dj9w_b"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    {
+      "id": "anim_mul063c3_c",
+      "name": "me_idle",
+      "frames": [
+        "spr_mul06ffe_d",
+        "spr_mul0753d_e",
+        "spr_mul07t1a_f",
+        "spr_mul088o4_g"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    {
+      "id": "anim_mul46xss_h",
+      "name": "me_down",
+      "frames": [
+        "spr_mul088o4_g",
+        "spr_mul4771g_i",
+        "spr_mul47lz7_j",
+        "spr_mul47puo_k"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    {
+      "id": "anim_mul48i1g_l",
+      "name": "me_right        ",
+      "frames": [
+        "spr_mul4behn_r",
+        "spr_mul4culf_u",
+        "spr_mul4d6d6_v",
+        "spr_mul4d8pj_w"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    {
+      "id": "anim_mul4f4o0_x",
+      "name": "me_idle_up",
+      "frames": [
+        "spr_mul4fdkp_y",
+        "spr_mul4fpuj_z",
+        "spr_mul4g3ba_10",
+        "spr_mul4ggyo_11"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    {
+      "id": "anim_mul4h2qd_12",
+      "name": "me_up",
+      "frames": [
+        "spr_mul4hc9y_13",
+        "spr_mul4hghb_14",
+        "spr_mul4hq35_15",
+        "spr_mul4htqn_16"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    {
+      "id": "anim_mul4ykvx_1f",
+      "name": "me_idle_right",
+      "frames": [
+        "spr_mul4behn_r",
+        "spr_mul4brgc_s"
       ],
       "duration": 0.15,
       "loop": true
@@ -12784,10 +13400,10 @@
             "enabled": true,
             "shape": {
               "kind": "rect",
-              "x": 0.1778846153846154,
-              "y": 16.342307692307692,
-              "width": 47.253846153846155,
-              "height": 42.16538461538462
+              "x": 9.1778846153846,
+              "y": 43.4826923076923,
+              "width": 29,
+              "height": 14
             }
           },
           {
@@ -12807,9 +13423,21 @@
             "enabled": true,
             "shape": {
               "kind": "circle",
-              "cx": 24,
-              "cy": 32,
+              "cx": 34.808653846153845,
+              "cy": 25.134615384615387,
               "radius": 60
+            }
+          },
+          {
+            "id": "col_mul6nidd_1j",
+            "layerId": "solid",
+            "enabled": true,
+            "shape": {
+              "kind": "rect",
+              "x": 4.328846153846154,
+              "y": 41.353846153846156,
+              "width": 38.3423076923077,
+              "height": 10.745192307692307
             }
           }
         ]
@@ -13108,6 +13736,478 @@
         },
         "actions": []
       }
+    },
+    {
+      "id": "obj_mul4im4m_19",
+      "name": "me",
+      "sprites": [],
+      "animations": [
+        "anim_mul063c3_c",
+        "anim_mul4f4o0_x",
+        "anim_mul4h2qd_12",
+        "anim_mul46xss_h",
+        "anim_mul48i1g_l",
+        "anim_mul4ykvx_1f"
+      ],
+      "grid": {
+        "cols": 1,
+        "rows": 1,
+        "cell": 17
+      },
+      "layersByState": {
+        "st_idle": [
+          {
+            "id": "lyr_st_idle",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_idle",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul063c3_c"
+                }
+              }
+            ]
+          }
+        ],
+        "st_up": [
+          {
+            "id": "lyr_st_up",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_up",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul4h2qd_12"
+                }
+              }
+            ]
+          }
+        ],
+        "st_down": [
+          {
+            "id": "lyr_st_down",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_down",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul46xss_h"
+                }
+              }
+            ]
+          }
+        ],
+        "st_left": [
+          {
+            "id": "lyr_st_left",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_left",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul48i1g_l"
+                },
+                "flipX": true
+              }
+            ]
+          }
+        ],
+        "st_right": [
+          {
+            "id": "lyr_st_right",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_right",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul48i1g_l"
+                }
+              }
+            ]
+          }
+        ],
+        "st_act_mul4kjg2_1e": [
+          {
+            "id": "lyr_st_act_mul4kjg2_1e",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_act_mul4kjg2_1e",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul4f4o0_x"
+                }
+              }
+            ]
+          }
+        ],
+        "st_act_mul4ztk8_1g": [
+          {
+            "id": "lyr_st_act_mul4ztk8_1g",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_act_mul4ztk8_1g",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul4ykvx_1f"
+                }
+              }
+            ]
+          }
+        ],
+        "st_act_mul504pg_1h": [
+          {
+            "id": "lyr_st_act_mul504pg_1h",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_act_mul504pg_1h",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul4ykvx_1f"
+                },
+                "flipX": true
+              }
+            ]
+          }
+        ],
+        "st_act_mul574y3_1i": [
+          {
+            "id": "lyr_st_act_mul574y3_1i",
+            "name": "base",
+            "visible": true,
+            "cells": [
+              {
+                "id": "cell_st_act_mul574y3_1i",
+                "col": 0,
+                "row": 0,
+                "source": {
+                  "kind": "animation",
+                  "animationId": "anim_mul063c3_c"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "collisionsByState": {
+        "st_idle": [
+          {
+            "id": "col_mul4jh0y_1c",
+            "layerId": "solid",
+            "enabled": true,
+            "shape": {
+              "kind": "rect",
+              "x": 3.8125,
+              "y": 0.05143229166666696,
+              "width": 8.0986328125,
+              "height": 14.734700520833332
+            }
+          },
+          {
+            "id": "col_mul4jubt_1d",
+            "layerId": "trigger",
+            "enabled": true,
+            "shape": {
+              "kind": "circle",
+              "cx": 8,
+              "cy": 8,
+              "radius": 8
+            }
+          }
+        ]
+      },
+      "properties": {},
+      "meta": {
+        "description": "",
+        "category": "character",
+        "tags": []
+      },
+      "machine": {
+        "id": "sm_mul4im4m_18",
+        "name": "me",
+        "states": [
+          {
+            "id": "st_idle",
+            "name": "Idle",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul063c3_c"
+            },
+            "x": 240,
+            "y": 170
+          },
+          {
+            "id": "st_up",
+            "name": "Up",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul4h2qd_12"
+            },
+            "x": 240,
+            "y": 40
+          },
+          {
+            "id": "st_down",
+            "name": "Down",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul46xss_h"
+            },
+            "x": 240,
+            "y": 300
+          },
+          {
+            "id": "st_left",
+            "name": "Left",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul48i1g_l"
+            },
+            "x": 70,
+            "y": 170
+          },
+          {
+            "id": "st_right",
+            "name": "Right",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul48i1g_l"
+            },
+            "x": 410,
+            "y": 170
+          },
+          {
+            "id": "st_act_mul4kjg2_1e",
+            "name": "idle_up",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul4f4o0_x"
+            },
+            "x": 560,
+            "y": 40
+          },
+          {
+            "id": "st_act_mul4ztk8_1g",
+            "name": "idle_right",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul4ykvx_1f"
+            },
+            "x": 560,
+            "y": 110
+          },
+          {
+            "id": "st_act_mul504pg_1h",
+            "name": "idle_left",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul4ykvx_1f"
+            },
+            "x": 560,
+            "y": 180
+          },
+          {
+            "id": "st_act_mul574y3_1i",
+            "name": "idle_down",
+            "display": {
+              "kind": "animation",
+              "animationId": "anim_mul063c3_c"
+            },
+            "x": 560,
+            "y": 250
+          }
+        ],
+        "transitions": [
+          {
+            "id": "tr_st_idle_st_up",
+            "fromStateId": "st_idle",
+            "toStateId": "st_up",
+            "condition": "move_up"
+          },
+          {
+            "id": "tr_st_up_st_idle",
+            "fromStateId": "st_up",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_down",
+            "fromStateId": "st_idle",
+            "toStateId": "st_down",
+            "condition": "move_down"
+          },
+          {
+            "id": "tr_st_down_st_idle",
+            "fromStateId": "st_down",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_left",
+            "fromStateId": "st_idle",
+            "toStateId": "st_left",
+            "condition": "move_left"
+          },
+          {
+            "id": "tr_st_left_st_idle",
+            "fromStateId": "st_left",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_right",
+            "fromStateId": "st_idle",
+            "toStateId": "st_right",
+            "condition": "move_right"
+          },
+          {
+            "id": "tr_st_right_st_idle",
+            "fromStateId": "st_right",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_act_mul4kjg2_1e",
+            "fromStateId": "st_idle",
+            "toStateId": "st_act_mul4kjg2_1e",
+            "condition": "idle_up"
+          },
+          {
+            "id": "tr_st_act_mul4kjg2_1e_st_idle",
+            "fromStateId": "st_act_mul4kjg2_1e",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_act_mul4ztk8_1g",
+            "fromStateId": "st_idle",
+            "toStateId": "st_act_mul4ztk8_1g",
+            "condition": "idle_right"
+          },
+          {
+            "id": "tr_st_act_mul4ztk8_1g_st_idle",
+            "fromStateId": "st_act_mul4ztk8_1g",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_act_mul504pg_1h",
+            "fromStateId": "st_idle",
+            "toStateId": "st_act_mul504pg_1h",
+            "condition": "idle_left"
+          },
+          {
+            "id": "tr_st_act_mul504pg_1h_st_idle",
+            "fromStateId": "st_act_mul504pg_1h",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          },
+          {
+            "id": "tr_st_idle_st_act_mul574y3_1i",
+            "fromStateId": "st_idle",
+            "toStateId": "st_act_mul574y3_1i",
+            "condition": "idle_down"
+          },
+          {
+            "id": "tr_st_act_mul574y3_1i_st_idle",
+            "fromStateId": "st_act_mul574y3_1i",
+            "toStateId": "st_idle",
+            "condition": "stop"
+          }
+        ],
+        "initialStateId": "st_idle"
+      },
+      "character": {
+        "slots": {
+          "idle": {
+            "kind": "animation",
+            "id": "anim_mul063c3_c"
+          },
+          "act_mul4kjg2_1e": {
+            "kind": "animation",
+            "id": "anim_mul4f4o0_x"
+          },
+          "up": {
+            "kind": "animation",
+            "id": "anim_mul4h2qd_12"
+          },
+          "down": {
+            "kind": "animation",
+            "id": "anim_mul46xss_h"
+          },
+          "right": {
+            "kind": "animation",
+            "id": "anim_mul48i1g_l"
+          },
+          "left": {
+            "kind": "animation",
+            "id": "anim_mul48i1g_l",
+            "flipX": true
+          },
+          "act_mul4ztk8_1g": {
+            "kind": "animation",
+            "id": "anim_mul4ykvx_1f"
+          },
+          "act_mul504pg_1h": {
+            "kind": "animation",
+            "id": "anim_mul4ykvx_1f",
+            "flipX": true
+          },
+          "act_mul574y3_1i": {
+            "kind": "animation",
+            "id": "anim_mul063c3_c"
+          }
+        },
+        "actions": [
+          {
+            "id": "act_mul4kjg2_1e",
+            "name": "idle_up"
+          },
+          {
+            "id": "act_mul4ztk8_1g",
+            "name": "idle_right"
+          },
+          {
+            "id": "act_mul504pg_1h",
+            "name": "idle_left"
+          },
+          {
+            "id": "act_mul574y3_1i",
+            "name": "idle_down"
+          }
+        ]
+      }
     }
   ],
   "collisionLayers": [
@@ -13170,15 +14270,15 @@
     ]
   },
   "selectedSpriteIds": [
-    "spr_mu40drm8_c"
+    "spr_mul4c5vb_t"
   ],
-  "selectedAnimationId": "anim_mu40ddk3_9",
+  "selectedAnimationId": "anim_mul4ykvx_1f",
   "selectedObjectId": "obj_mtt49mb4_l",
-  "activeTool": "grid-pick",
-  "zoom": 2.3394052183841674,
+  "activeTool": "select",
+  "zoom": 2.2612585277781916,
   "pan": {
-    "x": 0,
-    "y": 0
+    "x": -0.5115482253610253,
+    "y": 377.9498396155914
   },
   "activeTab": "animations",
   "map": {
@@ -14865,7 +15965,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 65,
-            "y": 49,
+            "y": 113,
             "level": 2
           },
           {
@@ -14877,7 +15977,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 65,
-            "y": 65,
+            "y": 124,
             "level": 2
           },
           {
@@ -14889,7 +15989,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 66,
-            "y": 88,
+            "y": 137,
             "level": 2
           },
           {
@@ -14901,7 +16001,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 66,
-            "y": 102,
+            "y": 150,
             "level": 2
           },
           {
@@ -14912,8 +16012,8 @@
             "fontSize": 9,
             "color": "#ffffff",
             "align": "left",
-            "x": 205,
-            "y": 144,
+            "x": 209,
+            "y": 225,
             "level": 2
           }
         ]
@@ -15534,7 +16634,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 16,
-            "y": 55,
+            "y": 107,
             "level": 2
           },
           {
@@ -15546,7 +16646,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 16,
-            "y": 70,
+            "y": 120,
             "level": 2
           },
           {
@@ -15557,20 +16657,20 @@
             "fontSize": 9,
             "color": "#ffffff",
             "align": "left",
-            "x": 15,
-            "y": 102,
+            "x": 16,
+            "y": 136,
             "level": 2
           },
           {
             "id": "1789164158754_9b7tgh",
             "kind": "text",
-            "text": "you find something you swear you’ve seen before.",
+            "text": "you find something you’ve seen before.",
             "font": "monospace",
             "fontSize": 9,
             "color": "#ffffff",
             "align": "left",
-            "x": 17,
-            "y": 119,
+            "x": 16,
+            "y": 150,
             "level": 2
           },
           {
@@ -15582,7 +16682,7 @@
             "color": "#ffffff",
             "align": "left",
             "x": 209,
-            "y": 146,
+            "y": 225,
             "level": 2
           }
         ]
@@ -19754,7 +20854,7 @@
             "kind": "machine",
             "machineId": "sm_mton9554_m",
             "properties": {
-              "message": "msg_mtoqgmst_e"
+              "message": "msg_mukxkf9a_2"
             },
             "x": 192,
             "y": 112,
@@ -28246,6 +29346,9 @@
             "id": "1788293791082_guea54",
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
+            "properties": {
+              "message": "msg_mukvr515_a"
+            },
             "x": 240,
             "y": 80,
             "level": 2
@@ -30850,6 +31953,25 @@
             "x": 192,
             "y": 96,
             "level": 4
+          },
+          {
+            "id": "1790578374408_60yl09",
+            "kind": "machine",
+            "machineId": "sm_mtj4g15f_8",
+            "properties": {
+              "message": "msg_mukvop8m_6"
+            },
+            "x": 96,
+            "y": 64,
+            "level": 2
+          },
+          {
+            "id": "1790579950783_1c4l2c",
+            "kind": "machine",
+            "machineId": "sm_mtj3zr93_7",
+            "x": 64,
+            "y": 0,
+            "level": 2
           }
         ]
       },
@@ -32007,7 +33129,7 @@
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
             "properties": {
-              "message": "msg_mtor83gk_1e"
+              "message": "msg_mukvu2o5_e"
             },
             "x": 64,
             "y": 16,
@@ -32029,7 +33151,7 @@
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
             "properties": {
-              "message": "msg_mtor5nx6_1a"
+              "message": "msg_mukwhsp4_m"
             },
             "x": 224,
             "y": 16,
@@ -32468,6 +33590,15 @@
             "x": 128,
             "y": 224,
             "level": 2
+          },
+          {
+            "id": "1790579917983_cdyo1h",
+            "kind": "machine",
+            "machineId": "sm_mtj3zr93_7",
+            "x": 64,
+            "y": 160,
+            "level": 2,
+            "rotation": 90
           }
         ]
       },
@@ -33437,6 +34568,17 @@
             "x": 256,
             "y": 128,
             "level": 2
+          },
+          {
+            "id": "1790578301092_4nm6rx",
+            "kind": "machine",
+            "machineId": "sm_mtj4g15f_8",
+            "properties": {
+              "message": "msg_mukvhlro_2"
+            },
+            "x": 144,
+            "y": 96,
+            "level": 2
           }
         ]
       },
@@ -34316,6 +35458,22 @@
             "machineId": "sm_mu40c3yo_1",
             "x": 112,
             "y": 224,
+            "level": 2
+          },
+          {
+            "id": "1790579957986_qu2nei",
+            "kind": "machine",
+            "machineId": "sm_mtj3zr93_7",
+            "x": 128,
+            "y": 0,
+            "level": 2
+          },
+          {
+            "id": "1790579962099_5xe8ia",
+            "kind": "machine",
+            "machineId": "sm_mtj3zr93_7",
+            "x": 32,
+            "y": 80,
             "level": 2
           }
         ]
@@ -38570,7 +39728,7 @@
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
             "properties": {
-              "message": "msg_mtord2tx_1m"
+              "message": "msg_mukwtfna_1a"
             },
             "x": 272,
             "y": 0,
@@ -38581,7 +39739,7 @@
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
             "properties": {
-              "message": "msg_mtorag3r_1i"
+              "message": "msg_mukwonh2_y"
             },
             "x": 16,
             "y": 32,
@@ -42084,14 +43242,6 @@
             "level": 2
           },
           {
-            "id": "1789563977168_7i5um3",
-            "kind": "animation",
-            "animationId": "anim_mtonbc9d_10",
-            "x": 64,
-            "y": 176,
-            "level": 2
-          },
-          {
             "id": "1789564081473_bj7a3d",
             "kind": "sprite",
             "spriteId": "spr_mtj0i0rj_1s",
@@ -42122,6 +43272,30 @@
             "x": 176,
             "y": 96,
             "level": 1
+          },
+          {
+            "id": "1790580004545_uik9an",
+            "kind": "machine",
+            "machineId": "sm_mtj3zr93_7",
+            "x": 224,
+            "y": 32,
+            "level": 2
+          },
+          {
+            "id": "1790583028329_ab5e7i",
+            "kind": "machine",
+            "machineId": "sm_mtonapcq_x",
+            "x": 64,
+            "y": 176,
+            "level": 2
+          },
+          {
+            "id": "1790596344736_devock",
+            "kind": "machine",
+            "machineId": "sm_mtj3zr93_7",
+            "x": 112,
+            "y": 96,
+            "level": 5
           }
         ]
       },
@@ -43538,7 +44712,7 @@
             "kind": "machine",
             "machineId": "sm_mtj3r5b9_1",
             "properties": {
-              "message": "msg_mtoql23p_m"
+              "message": "msg_mukwpyhh_12"
             },
             "x": 144,
             "y": 0,
@@ -47304,6 +48478,17 @@
             "x": 32,
             "y": 208,
             "level": 0
+          },
+          {
+            "id": "1790579734610_v5smsf",
+            "kind": "machine",
+            "machineId": "sm_mtj3r5b9_1",
+            "properties": {
+              "message": "msg_mukwrh7x_16"
+            },
+            "x": 288,
+            "y": 16,
+            "level": 2
           }
         ]
       },
@@ -50673,6 +51858,17 @@
             "x": 208,
             "y": 32,
             "level": 2
+          },
+          {
+            "id": "1790580226682_puxhg9",
+            "kind": "machine",
+            "machineId": "sm_mton9554_m",
+            "properties": {
+              "message": "msg_mukx8r6m_1i"
+            },
+            "x": 256,
+            "y": 48,
+            "level": 2
           }
         ]
       },
@@ -53187,14 +54383,6 @@
             "level": 2
           },
           {
-            "id": "1788877878674_v0pac4",
-            "kind": "machine",
-            "machineId": "sm_mtopalkk_1y",
-            "x": 256,
-            "y": 208,
-            "level": 2
-          },
-          {
             "id": "1788878188002_r5imc9",
             "kind": "machine",
             "machineId": "sm_mto16yyf_1",
@@ -53237,6 +54425,17 @@
             "machineId": "sm_mu40c3yo_1",
             "x": 224,
             "y": 16,
+            "level": 2
+          },
+          {
+            "id": "1790579794452_37xn5g",
+            "kind": "machine",
+            "machineId": "sm_mtj3r5b9_1",
+            "properties": {
+              "message": "msg_mukwkn03_q"
+            },
+            "x": 208,
+            "y": 64,
             "level": 2
           }
         ]
@@ -53999,7 +55198,7 @@
             },
             "x": 144,
             "y": 80,
-            "level": 2
+            "level": 4
           },
           {
             "id": "1788899438484_8uom3w",
@@ -56977,6 +58176,28 @@
             "machineId": "sm_mu40c3yo_1",
             "x": 224,
             "y": 208,
+            "level": 2
+          },
+          {
+            "id": "1790579850606_vfry8i",
+            "kind": "machine",
+            "machineId": "sm_mtj3r5b9_1",
+            "properties": {
+              "message": "msg_mukwhsp4_m"
+            },
+            "x": 256,
+            "y": 0,
+            "level": 2
+          },
+          {
+            "id": "1790580146694_ccnp7g",
+            "kind": "machine",
+            "machineId": "sm_mton9554_m",
+            "properties": {
+              "message": "msg_mukx5pnp_1e"
+            },
+            "x": 48,
+            "y": 16,
             "level": 2
           }
         ]
@@ -61679,8 +62900,8 @@
       }
     },
     "selected": {
-      "kind": "sprite",
-      "id": "spr_mtocg7ki_0"
+      "kind": "machine",
+      "id": "sm_mtj3zr93_7"
     },
     "selectedPlacementId": null,
     "layers": [
@@ -61703,14 +62924,18 @@
       {
         "name": "pillars",
         "visible": true
+      },
+      {
+        "name": "top",
+        "visible": true
       }
     ],
-    "activeLevel": 2,
-    "activeTool": "select",
-    "zoom": 1.719545781717328,
+    "activeLevel": 5,
+    "activeTool": "paint",
+    "zoom": 0.32139540167628894,
     "pan": {
-      "x": -3333.265759141433,
-      "y": 177.78089761727318
+      "x": 12.887456073515523,
+      "y": 506.0220630358298
     }
   },
   "dialog": {
@@ -63426,6 +64651,311 @@
             "meta": []
           }
         ]
+      },
+      {
+        "id": "dlg_mukvhlro_3",
+        "name": "Sign 1",
+        "rootId": "msg_mukvhlro_2",
+        "messages": [
+          {
+            "id": "msg_mukvhlro_2",
+            "title": "One the stone",
+            "segments": [
+              "These words were cut into stone by a hand I no longer own. If they have found you, keep descending.",
+              "The corridors wear the faces of places that once held warmth. Do not trust the chambers that smell of home.",
+              "Do not trust the objects that still carry the heat of your palm. Most of all, do not trust the cold certainty",
+              "... that these wet stones have already measured your weight.",
+              "You have never walked here. At least … that is the lie the dark still lets me keep."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Dark Signs"
+      },
+      {
+        "id": "dlg_mukvop8m_7",
+        "name": "Sign 2",
+        "rootId": "msg_mukvop8m_6",
+        "messages": [
+          {
+            "id": "msg_mukvop8m_6",
+            "title": "Found something",
+            "segments": [
+              "I found a relic I once lost in another life. It should not have waited for me in this depth.",
+              "Small. Useless. A thing she would have mocked me for cradling. I pressed it back into the black mud where the roots of the dungeon drink.",
+              "If your fingers close around its shape, open them. Let it rot where the light has never reached.",
+              "Some memories do not die when buried. They grow teeth in the dark and learn the exact pressure of the hand that will one day dig them free."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Dark Signs"
+      },
+      {
+        "id": "dlg_mukvr515_b",
+        "name": "Sign 3",
+        "rootId": "msg_mukvr515_a",
+        "messages": [
+          {
+            "id": "msg_mukvr515_a",
+            "title": "Carved on the ground ",
+            "segments": [
+              "Today her voice rose from the dripping stone. ",
+              "She was never here.",
+              "I knew this, and still I followed the sound through three thresholds and back to the same cold circle. ",
+              "This place has tasted the precise flavor of what I cannot have. It wears her throat the way a snare wears soft flesh. ",
+              "If you hear her calling through the wet dark, do not answer.",
+              "The path she offers only leads you deeper into the version of yourself that already belongs to these unending halls."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Dark Signs"
+      },
+      {
+        "id": "dlg_mukvu2o5_f",
+        "name": "Sign 4",
+        "rootId": "msg_mukvu2o5_e",
+        "messages": [
+          {
+            "id": "msg_mukvu2o5_e",
+            "title": "Forgetting ",
+            "segments": [
+              "I have begun to forget why I ever crossed the first threshold.",
+              "I still carry the outline of her like a wound that will not close.",
+              "The wanting. ",
+              "The endless reaching.",
+              "But when I stretch toward the reason, something soft and wrong fills the hollow where the answer should live.",
+              "Perhaps the dungeon does not steal what we love. Perhaps it only replaces it with a hunger that keeps the feet moving downward.",
+              "There is something you must carry for me into the deeper dark. I only wish I could still remember its name."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Dark Signs"
+      },
+      {
+        "id": "dlg_mukvwvtg_j",
+        "name": "Last sign",
+        "rootId": "msg_mukvwvtg_i",
+        "messages": [
+          {
+            "id": "msg_mukvwvtg_i",
+            "title": "Start",
+            "segments": [
+              "If these words have reached you, I never left.",
+              "I tried to leave a trail of ash and warning.",
+              "A map. A proof. A way back to the light.",
+              "But the stones no longer know my hand.",
+              "The chambers. The cold fires. The things I found in the black. All gone. ",
+              "Only the shape of her remains, and that is why the doors keep opening for me. If you see my shape somewhere ahead in the dripping dark, do not wake it.",
+              "Do not speak its name. Do not follow. ",
+              "You are not the first to chase a love that can never answer. You are only the one who has not yet remembered how many times you have already failed to climb back into the world where she might still exist."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Dark Signs"
+      },
+      {
+        "id": "dlg_mukwhsp4_n",
+        "name": "First page",
+        "rootId": "msg_mukwhsp4_m",
+        "messages": [
+          {
+            "id": "msg_mukwhsp4_m",
+            "title": "Page from journal",
+            "segments": [
+              "I told it about her once.",
+              "I was lonely.",
+              "That was my mistake. ",
+              "Now it asks about her whenever I sleep."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukwkn03_r",
+        "name": "Crumbling book",
+        "rootId": "msg_mukwkn03_q",
+        "messages": [
+          {
+            "id": "msg_mukwkn03_q",
+            "title": "Inside a book",
+            "segments": [
+              "I found an olive on the altar this morning.",
+              "Green.",
+              "Salt still clinging to the skin. I have not eaten one in years.",
+              "I do not remember bringing it here."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukwmoqw_v",
+        "name": "Carved below a bookshelf",
+        "rootId": "msg_mukwmoqw_u",
+        "messages": [
+          {
+            "id": "msg_mukwmoqw_u",
+            "title": "Carved below a bookshelf ",
+            "segments": [
+              "I heard her laugh behind me. ",
+              "I turned.",
+              "There was nothing there. Then something laughed again.",
+              "It sounded almost right."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukwonh2_z",
+        "name": "Journal part",
+        "rootId": "msg_mukwonh2_y",
+        "messages": [
+          {
+            "id": "msg_mukwonh2_y",
+            "title": "Journal part",
+            "segments": [
+              "I remember her telling me that everything reminded her of me.",
+              "I thought it was sweet.",
+              "I understand now.",
+              "Things remember us too."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukwpyhh_13",
+        "name": "Near a pile of bones",
+        "rootId": "msg_mukwpyhh_12",
+        "messages": [
+          {
+            "id": "msg_mukwpyhh_12",
+            "title": "Near a pile of bones",
+            "segments": [
+              "I found another skeleton wearing my clothes.",
+              "I searched its pockets.",
+              "There was nothing inside. Except an olive.",
+              "I began to cry. I don’t know why."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukwrh7x_17",
+        "name": "Asked",
+        "rootId": "msg_mukwrh7x_16",
+        "messages": [
+          {
+            "id": "msg_mukwrh7x_16",
+            "title": "Written in familiar page",
+            "segments": [
+              "I asked the thing beneath the dungeon if she was still there.",
+              "It asked me which version I meant."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukwtfna_1b",
+        "name": "On a back of a book",
+        "rootId": "msg_mukwtfna_1a",
+        "messages": [
+          {
+            "id": "msg_mukwtfna_1a",
+            "title": "On a back of a book",
+            "segments": [
+              "I thought I was afraid of forgetting her.",
+              "Then I realized something worse.",
+              "Something else remembers her now."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Journals"
+      },
+      {
+        "id": "dlg_mukx5pnp_1f",
+        "name": "Empty Glass",
+        "rootId": "msg_mukx5pnp_1e",
+        "messages": [
+          {
+            "id": "msg_mukx5pnp_1e",
+            "title": "An empty glass",
+            "segments": [
+              "Someone drank from this recently.",
+              "There are lipstick marks on the rim.",
+              "You are alone."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Chest Dialogs"
+      },
+      {
+        "id": "dlg_mukx8r6m_1j",
+        "name": "Book with no title",
+        "rootId": "msg_mukx8r6m_1i",
+        "messages": [
+          {
+            "id": "msg_mukx8r6m_1i",
+            "title": "A book with no title",
+            "segments": [
+              "The first page contains your handwriting.",
+              "The last page contains hers.",
+              "Everything between them has been eaten."
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Characters"
+      },
+      {
+        "id": "dlg_mukxkf9a_3",
+        "name": "Wooden Token",
+        "rootId": "msg_mukxkf9a_2",
+        "messages": [
+          {
+            "id": "msg_mukxkf9a_2",
+            "title": "A small wooden token",
+            "segments": [
+              "One one side:",
+              "\"Could be us?\"",
+              "On the other:",
+              "\"Was it?\""
+            ],
+            "options": [],
+            "meta": []
+          }
+        ],
+        "folder": "Chest Dialogs"
       }
     ],
     "folders": [
@@ -63433,11 +64963,13 @@
       "Notes",
       "Characters",
       "Chest Dialogs",
-      "Sign"
+      "Sign",
+      "Dark Signs",
+      "Journals"
     ],
-    "selectedTreeId": "dlg_mu1hv9cu_6",
-    "selectedMessageId": "msg_mu1hv9cu_5"
+    "selectedTreeId": "dlg_mukxkf9a_3",
+    "selectedMessageId": "msg_mukxkf9a_2"
   },
   "history": [],
-  "lastModified": "2026-09-25T19:30:09.898Z"
+  "lastModified": "2026-09-28T11:56:00.532Z"
 }

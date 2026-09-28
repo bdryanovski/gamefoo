@@ -8,6 +8,7 @@ import {
   exportSprites,
   exportAnimations,
   exportConfig,
+  projectBaseName,
   spritesOfImage,
   projectDocument,
 } from "../utils/export";
@@ -36,7 +37,7 @@ export function SaveScreen({ state, projectId, onClose }: Props) {
   const [savedToServer, setSavedToServer] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const baseName = state.projectName.replace(/\s+/g, "_").toLowerCase();
+  const baseName = projectBaseName(state.projectName);
 
   useEffect(() => {
     const full = exportFull(state);

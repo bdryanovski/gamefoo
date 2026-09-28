@@ -1,6 +1,6 @@
 import { CRITTER_SIZE } from './ai/critter_ai';
 import { ExploreAI } from './ai/explore_ai';
-import { DitherLight } from '../../../../src/index';
+import type { DitherLight } from '../../../../src/index';
 import { getFog } from '../fog';
 
 /**

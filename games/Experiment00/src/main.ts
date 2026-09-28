@@ -57,10 +57,10 @@ const PLAYER_SIZE = 16;
 // Screen tile size (px). Portal `spawn` cells are authored in grid col/row
 // and converted to pixels with this.
 const BLOCK_SIZE = 16;
-// Time a door takes to open (seconds). The `portal_open` cue is played at
-// double rate so it finishes in this window; the pie-fill badge above the
-// door tracks the same clock and completes as the door opens.
-const PORTAL_OPEN_SECONDS = 6;
+// Time a door takes to open (seconds). The `portal_open` cue is a 12s WAV
+// played at quadruple rate so it finishes in this window; the pie-fill badge
+// above the door tracks the same clock and completes as the door opens.
+const PORTAL_OPEN_SECONDS = 3;
 // The player draws on this z-level; layers above it (e.g. the `pillars`
 // layer at level 3) occlude it, so keep it below them.
 const PLAYER_LEVEL = 3;
@@ -308,7 +308,7 @@ class MapGame extends Engine {
   /** Builds the persistent player from the loaded "player" prefab. */
   private spawnPlayer(): void {
     const assets = this.map?.assets;
-    const def = assets?.objectByName('boy');
+    const def = assets?.objectByName('me');
     if (!assets || !def) return;
     const start = def.machine.states.find((s) => s.name === 'Idle')?.id;
     const context: MapObjectContext = {
@@ -488,11 +488,18 @@ class MapGame extends Engine {
   /**
    * Starts a dialog by `ref` and, on success, records it with its trigger
    * `source` (sign, chest, slime_king, …). Returns whether a dialog opened.
+   * A `ref` that resolves to nothing logs a warning — the dialogs export
+   * is likely stale or the ref is typo'd.
    */
   private startDialog(ref: string | null, source: string): boolean {
     if (ref && this.dialog?.start(ref)) {
       this.telemetry.dialogOpen(source, ref);
       return true;
+    }
+    if (ref) {
+      console.warn(
+        `[dialog] "${ref}" from ${source} did not resolve — is the dialogs export stale?`,
+      );
     }
     return false;
   }
@@ -539,7 +546,7 @@ class MapGame extends Engine {
         // Closed door: play the open sound; it opens once the sound finishes.
         portal.beginOpening(PORTAL_OPEN_SECONDS);
         this.telemetry.portalOpen(portal.id);
-        const handle = this.audio?.playSound('portal_open', { volume: 0.4, rate: 2 });
+        const handle = this.audio?.playSound('portal_open', { volume: 0.4, rate: 4 });
         if (handle) handle.onEnded(() => portal.open());
         else portal.open();
       }

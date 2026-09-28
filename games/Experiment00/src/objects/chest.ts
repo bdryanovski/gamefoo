@@ -1,10 +1,5 @@
-import {
-  DitherLight,
-  MapObject,
-  type Rect,
-  type ScopedState,
-  type WorldCollider,
-} from '../../../../src/index';
+import type { DitherLight } from '../../../../src/index';
+import { MapObject, type Rect, type ScopedState, type WorldCollider } from '../../../../src/index';
 import { getFog } from '../fog';
 
 /**

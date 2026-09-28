@@ -1,6 +1,6 @@
 import type { AppState } from "../types";
 import { objectMachines } from "../types";
-import { downloadJSON } from "../utils/export";
+import { downloadJSON, projectBaseName } from "../utils/export";
 
 /**
  * State machines export — name-based so consumers (and re-imports) stay
@@ -62,6 +62,5 @@ export function exportStateMachines(state: AppState) {
 }
 
 export function downloadStateMachinesExport(state: AppState): void {
-  const base = state.projectName.replace(/\s+/g, "_").toLowerCase();
-  downloadJSON(exportStateMachines(state), `${base}.machines.json`);
+  downloadJSON(exportStateMachines(state), `${projectBaseName(state.projectName)}.machines.json`);
 }

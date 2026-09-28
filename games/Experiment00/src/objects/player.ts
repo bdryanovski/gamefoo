@@ -29,7 +29,7 @@ type Facing = 'down' | 'up' | 'left' | 'right';
  * the right-walk art), `Idle` = idle facing down, `idle_up` = idle facing up.
  */
 export class Player extends MapObject {
-  static override readonly type = 'boy';
+  static override readonly type = 'me';
 
   private readonly input: Input;
   private facing: Facing = 'down';
@@ -46,7 +46,7 @@ export class Player extends MapObject {
         color: '#1a1a1a',
         spacing: 6,
         life: 2,
-        size: 1,
+        size: 2,
         offset: 2,
         alpha: 0.25,
       }),
@@ -117,15 +117,42 @@ export class Player extends MapObject {
   /** Picks the FSM state that matches the current facing + moving flag. */
   private desiredState(): string {
     if (this.moving) {
-      if (this.facing === 'up') {
-        return 'Up';
+      switch (this.facing) {
+        case 'up': {
+          return 'Up';
+        }
+        case 'down': {
+          return 'Down';
+        }
+        case 'left': {
+          return 'Left';
+        }
+        case 'right': {
+          return 'Right';
+        }
+        default: {
+          return 'Idle';
+        }
       }
-      if (this.facing === 'down') {
-        return 'Down';
-      }
-      return this.facing === 'left' ? 'Left' : 'Right';
     }
-    return this.facing === 'up' ? 'idle_up' : 'Idle';
+
+    switch (this.facing) {
+      case 'up': {
+        return 'idle_up';
+      }
+      case 'down': {
+        return 'idle_down';
+      }
+      case 'left': {
+        return 'idle_left';
+      }
+      case 'right': {
+        return 'idle_right';
+      }
+      default: {
+        return 'Idle';
+      }
+    }
   }
 
   /**

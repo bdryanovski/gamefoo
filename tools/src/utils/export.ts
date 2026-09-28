@@ -328,6 +328,15 @@ export function exportProject(state: AppState): string {
   return JSON.stringify(projectDocument(state), null, 2);
 }
 
+/**
+ * Export filename base: the project name, lowercased with runs of whitespace
+ * collapsed to `_`. A blank/whitespace-only name falls back to `"project"`
+ * so exports never land in `_.…json` files that games can't find.
+ */
+export function projectBaseName(projectName: string): string {
+  return projectName.trim().replace(/\s+/g, "_").toLowerCase() || "project";
+}
+
 export function downloadJSON(data: unknown, filename: string): void {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
