@@ -101,13 +101,17 @@ export default class StateMachine<S> {
    * @returns `true` if the transition occurred, `false` if suppressed.
    */
   transition(next: S): boolean {
-    if (this._current === next) return false;
+    if (this._current === next) {
+      return false;
+    }
 
     const prev = this._current;
 
     const exits = this.exitHooks.get(prev);
     if (exits) {
-      for (const fn of exits) fn();
+      for (const fn of exits) {
+        fn();
+      }
     }
 
     this._previous = prev;
@@ -115,7 +119,9 @@ export default class StateMachine<S> {
 
     const enters = this.enterHooks.get(next);
     if (enters) {
-      for (const fn of enters) fn();
+      for (const fn of enters) {
+        fn();
+      }
     }
 
     return true;

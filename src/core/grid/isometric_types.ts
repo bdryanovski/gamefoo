@@ -58,9 +58,13 @@ export type IsoLayout = 'diamond' | 'staggered';
  * ```
  */
 export interface IsoConfig {
-  /** Full width of an isometric tile in pixels. */
+  /**
+   * Full width of an isometric tile in pixels.
+   */
   tileWidth: number;
-  /** Full height of an isometric tile in pixels. */
+  /**
+   * Full height of an isometric tile in pixels.
+   */
   tileHeight: number;
   /**
    * Screen-space offset applied to all projected coordinates.
@@ -93,9 +97,9 @@ export interface IsoConfig {
  *   minRow: 0, maxRow: 15,
  * };
  *
- * for (let r = range.minRow; r <= range.maxRow; r++) {
- *   for (let c = range.minCol; c <= range.maxCol; c++) {
- *     // render tile at (c, r)
+ * for (let row = range.minRow; row <= range.maxRow; row += 1) {
+ *   for (let col = range.minCol; col <= range.maxCol; col += 1) {
+ *     // render tile at (col, row)
  *   }
  * }
  * ```

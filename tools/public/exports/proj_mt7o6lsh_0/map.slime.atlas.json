@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Map",
+    "image": "slime.png",
+    "imageWidth": 64,
+    "imageHeight": 96,
+    "exportedAt": "2026-08-25T15:12:10.361Z"
+  },
+  "frames": {
+    "sprite_0_5": {
+      "x": 0,
+      "y": 80,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_3": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_3": {
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_3": {
+      "x": 32,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "Slime_idle": {
+      "frames": [
+        "sprite_0_5",
+        "sprite_0_3",
+        "sprite_1_3",
+        "sprite_2_3",
+        "sprite_1_3",
+        "sprite_0_3"
+      ],
+      "duration": 0.21,
+      "loop": true
+    }
+  }
+}

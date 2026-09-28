@@ -26,7 +26,7 @@ export function ProjectManager({
   const refresh = useCallback(async () => {
     setLoading(true);
     const list = await listProjects();
-    setProjects(list);
+    setProjects(list.filter((p) => p.kind !== "map"));
     setLoading(false);
   }, []);
 

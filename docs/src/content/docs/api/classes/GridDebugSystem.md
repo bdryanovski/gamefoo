@@ -2,7 +2,7 @@
 title: 'Class: GridDebugSystem'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -32,7 +32,7 @@ Each subsystem can have its own logic and state, and can interact with the engin
 new GridDebugSystem(config: GridDebugConfig): GridDebugSystem;
 ```
 
-Defined in: [debug/grid\_debug.ts:112](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L112)
+Defined in: [debug/grid\_debug.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L120)
 
 #### Parameters
 
@@ -48,32 +48,32 @@ Defined in: [debug/grid\_debug.ts:112](https://github.com/bdryanovski/gamefoo/bl
 
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="id"></a> `id` | `public` | `string` | `'grid-debug'` | Subsystem identifier. | [debug/grid\_debug.ts:59](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L59) |
-| <a id="order"></a> `order` | `public` | `number` | `90` | Execution order. `90` renders on top of most subsystems. | [debug/grid\_debug.ts:62](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L62) |
-| <a id="canvas"></a> `canvas` | `private` | `HTMLCanvasElement` \| `null` | `null` | - | [debug/grid\_debug.ts:85](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L85) |
-| <a id="canvasheight"></a> `canvasHeight` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L84) |
-| <a id="collisioncolor"></a> `collisionColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L77) |
-| <a id="configcanvas"></a> `configCanvas` | `private` | `HTMLCanvasElement` \| `undefined` | `undefined` | Stored canvas reference from config for use in init(). | [debug/grid\_debug.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L110) |
-| <a id="debugpath"></a> `debugPath` | `private` | \{ `col`: `number`; `row`: `number`; \}[] | `[]` | - | [debug/grid\_debug.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L80) |
-| <a id="fontsize"></a> `fontSize` | `private` | `number` | `undefined` | - | [debug/grid\_debug.ts:78](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L78) |
-| <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | `undefined` | - | [debug/grid\_debug.ts:64](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L64) |
-| <a id="gridcolor"></a> `gridColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:75](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L75) |
-| <a id="mouseactive"></a> `mouseActive` | `private` | `boolean` | `false` | - | [debug/grid\_debug.ts:83](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L83) |
-| <a id="mousex"></a> `mouseX` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L81) |
-| <a id="mousey"></a> `mouseY` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L82) |
-| <a id="pathcolor"></a> `pathColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L76) |
-| <a id="projection"></a> `projection` | `private` | [`IsometricProjection`](IsometricProjection.md) \| `null` | `undefined` | - | [debug/grid\_debug.ts:65](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L65) |
-| <a id="showcollisionbounds"></a> `showCollisionBounds` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L71) |
-| <a id="showcoordinates"></a> `showCoordinates` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:69](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L69) |
-| <a id="showgrid"></a> `showGrid` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L68) |
-| <a id="showpathfinding"></a> `showPathfinding` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L72) |
-| <a id="showtileinspector"></a> `showTileInspector` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L73) |
-| <a id="showworldcoordinates"></a> `showWorldCoordinates` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L70) |
-| <a id="viewh"></a> `viewH` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:91](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L91) |
-| <a id="vieww"></a> `viewW` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:90](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L90) |
-| <a id="viewx"></a> `viewX` | `private` | `number` | `0` | Cached viewport bounds for culling debug overlays. | [debug/grid\_debug.ts:88](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L88) |
-| <a id="viewy"></a> `viewY` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L89) |
-| <a id="world"></a> `world` | `private` | [`World`](World.md) \| `null` | `undefined` | - | [debug/grid\_debug.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L66) |
+| <a id="id"></a> `id` | `public` | `string` | `'grid-debug'` | Subsystem identifier. | [debug/grid\_debug.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L61) |
+| <a id="order"></a> `order` | `public` | `number` | `90` | Execution order. `90` renders on top of most subsystems. | [debug/grid\_debug.ts:66](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L66) |
+| <a id="canvas"></a> `canvas` | `private` | `HTMLCanvasElement` \| `null` | `null` | - | [debug/grid\_debug.ts:89](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L89) |
+| <a id="canvasheight"></a> `canvasHeight` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:88](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L88) |
+| <a id="collisioncolor"></a> `collisionColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:81](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L81) |
+| <a id="configcanvas"></a> `configCanvas` | `private` | `HTMLCanvasElement` \| `undefined` | `undefined` | Stored canvas reference from config for use in init(). | [debug/grid\_debug.ts:118](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L118) |
+| <a id="debugpath"></a> `debugPath` | `private` | \{ `col`: `number`; `row`: `number`; \}[] | `[]` | - | [debug/grid\_debug.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L84) |
+| <a id="fontsize"></a> `fontSize` | `private` | `number` | `undefined` | - | [debug/grid\_debug.ts:82](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L82) |
+| <a id="grid"></a> `grid` | `private` | [`Grid`](Grid.md) | `undefined` | - | [debug/grid\_debug.ts:68](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L68) |
+| <a id="gridcolor"></a> `gridColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:79](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L79) |
+| <a id="mouseactive"></a> `mouseActive` | `private` | `boolean` | `false` | - | [debug/grid\_debug.ts:87](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L87) |
+| <a id="mousex"></a> `mouseX` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:85](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L85) |
+| <a id="mousey"></a> `mouseY` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:86](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L86) |
+| <a id="pathcolor"></a> `pathColor` | `private` | `string` | `undefined` | - | [debug/grid\_debug.ts:80](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L80) |
+| <a id="projection"></a> `projection` | `private` | [`IsometricProjection`](IsometricProjection.md) \| `null` | `undefined` | - | [debug/grid\_debug.ts:69](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L69) |
+| <a id="showcollisionbounds"></a> `showCollisionBounds` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:75](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L75) |
+| <a id="showcoordinates"></a> `showCoordinates` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:73](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L73) |
+| <a id="showgrid"></a> `showGrid` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:72](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L72) |
+| <a id="showpathfinding"></a> `showPathfinding` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:76](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L76) |
+| <a id="showtileinspector"></a> `showTileInspector` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L77) |
+| <a id="showworldcoordinates"></a> `showWorldCoordinates` | `private` | `boolean` | `undefined` | - | [debug/grid\_debug.ts:74](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L74) |
+| <a id="viewh"></a> `viewH` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L97) |
+| <a id="vieww"></a> `viewW` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:96](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L96) |
+| <a id="viewx"></a> `viewX` | `private` | `number` | `0` | Cached viewport bounds for culling debug overlays. | [debug/grid\_debug.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L94) |
+| <a id="viewy"></a> `viewY` | `private` | `number` | `0` | - | [debug/grid\_debug.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L95) |
+| <a id="world"></a> `world` | `private` | [`World`](World.md) \| `null` | `undefined` | - | [debug/grid\_debug.ts:70](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L70) |
 
 ## Methods
 
@@ -83,7 +83,7 @@ Defined in: [debug/grid\_debug.ts:112](https://github.com/bdryanovski/gamefoo/bl
 destroy(): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:223](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L223)
+Defined in: [debug/grid\_debug.ts:242](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L242)
 
 Cleans up event listeners when the subsystem is destroyed.
 
@@ -107,7 +107,7 @@ Cleans up event listeners when the subsystem is destroyed.
 init(engine: Engine): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L141)
+Defined in: [debug/grid\_debug.ts:149](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L149)
 
 Called by the engine when this subsystem is attached.
 
@@ -140,12 +140,11 @@ readout.
 render(ctx: RenderContext): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:206](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L206)
+Defined in: [debug/grid\_debug.ts:211](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L211)
 
 Renders all enabled debug overlays.
 
 Only functional on canvas-backed `RenderContext` implementations.
-No-op on terminal renderers.
 
 #### Parameters
 
@@ -176,7 +175,7 @@ setDebugPath(path: {
 }[]): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:192](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L192)
+Defined in: [debug/grid\_debug.ts:198](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L198)
 
 Sets a pathfinding result to visualise.
 
@@ -213,10 +212,11 @@ setViewport(
    x: number, 
    y: number, 
    w: number, 
-   h: number): void;
+   h: number
+): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:169](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L169)
+Defined in: [debug/grid\_debug.ts:175](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L175)
 
 Sets the viewport rectangle for culling. Call once per frame
 before render with the camera's view rect.
@@ -249,7 +249,7 @@ private getCellCenter(col: number, row: number): {
 };
 ```
 
-Defined in: [debug/grid\_debug.ts:593](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L593)
+Defined in: [debug/grid\_debug.ts:604](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L604)
 
 **`Internal`**
 
@@ -273,8 +273,8 @@ Returns the screen-space center of a grid cell.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `x` | `number` | [debug/grid\_debug.ts:593](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L593) |
-| `y` | `number` | [debug/grid\_debug.ts:593](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L593) |
+| `x` | `number` | [debug/grid\_debug.ts:604](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L604) |
+| `y` | `number` | [debug/grid\_debug.ts:604](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L604) |
 
 ***
 
@@ -284,7 +284,7 @@ Returns the screen-space center of a grid cell.
 private handleMouseLeave(): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:238](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L238)
+Defined in: [debug/grid\_debug.ts:257](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L257)
 
 #### Returns
 
@@ -298,7 +298,7 @@ Defined in: [debug/grid\_debug.ts:238](https://github.com/bdryanovski/gamefoo/bl
 private handleMouseMove(e: MouseEvent): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:232](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L232)
+Defined in: [debug/grid\_debug.ts:251](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L251)
 
 #### Parameters
 
@@ -318,7 +318,7 @@ Defined in: [debug/grid\_debug.ts:232](https://github.com/bdryanovski/gamefoo/bl
 private renderCollisionBounds(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:404](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L404)
+Defined in: [debug/grid\_debug.ts:410](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L410)
 
 **`Internal`**
 
@@ -342,7 +342,7 @@ Draws outlines for all active colliders in the world.
 private renderCoordinates(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:330](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L330)
+Defined in: [debug/grid\_debug.ts:348](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L348)
 
 **`Internal`**
 
@@ -366,7 +366,7 @@ Draws `(col, row)` labels in each visible cell.
 private renderGrid(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:250](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L250)
+Defined in: [debug/grid\_debug.ts:269](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L269)
 
 **`Internal`**
 
@@ -391,7 +391,7 @@ diamond outlines for isometric.
 private renderIsometricGrid(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:291](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L291)
+Defined in: [debug/grid\_debug.ts:310](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L310)
 
 **`Internal`**
 
@@ -415,7 +415,7 @@ Draws isometric diamond outlines for each tile.
 private renderOrthogonalGrid(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:263](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L263)
+Defined in: [debug/grid\_debug.ts:282](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L282)
 
 **`Internal`**
 
@@ -439,7 +439,7 @@ Draws orthogonal grid lines.
 private renderPathfinding(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:440](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L440)
+Defined in: [debug/grid\_debug.ts:444](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L444)
 
 **`Internal`**
 
@@ -464,7 +464,7 @@ dots at each waypoint.
 private renderTileInspector(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:478](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L478)
+Defined in: [debug/grid\_debug.ts:484](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L484)
 
 **`Internal`**
 
@@ -488,7 +488,7 @@ Highlights the tile under the cursor and shows a tooltip.
 private renderWorldCoordinates(ctx: CanvasRenderingContext2D): void;
 ```
 
-Defined in: [debug/grid\_debug.ts:544](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L544)
+Defined in: [debug/grid\_debug.ts:553](https://github.com/bdryanovski/gamefoo/blob/main/src/debug/grid_debug.ts#L553)
 
 **`Internal`**
 

@@ -1,6 +1,4 @@
-import FontBitmap, {
-  type InternalBitmapFontName,
-} from '../core/fonts/font_bitmap';
+import FontBitmap, { type InternalBitmapFontName } from '../core/fonts/font_bitmap';
 import type { RenderContext } from '../core/renderer/type';
 import Entity from './entity';
 
@@ -17,13 +15,19 @@ import Entity from './entity';
  * @see {@link Entity} - parent class
  */
 export default abstract class Text extends Entity {
-  /** Bitmap font name to load internally */
+  /**
+   * Bitmap font name to load internally
+   */
   protected fontName: string;
 
-  /** BitmapFont instance used to manipulate the font */
+  /**
+   * BitmapFont instance used to manipulate the font
+   */
   protected font: FontBitmap;
 
-  /** Internal state of the text needed to be update */
+  /**
+   * Internal state of the text needed to be update
+   */
   protected text: string = '';
 
   /**
@@ -81,7 +85,6 @@ export default abstract class Text extends Entity {
   /**
    * Render the text using the BitmapFont instance.
    * On canvas: uses Path2D glyph rendering.
-   * On terminal: delegates to drawText.
    */
   override render(ctx: RenderContext): void {
     // Set fill colour for canvas path rendering

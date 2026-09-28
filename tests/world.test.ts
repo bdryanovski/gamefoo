@@ -4,7 +4,7 @@
  * Verifies that every public member exists with the correct type/shape.
  * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import type { Collidable } from '../src/core/behaviours/collidable';
 import World from '../src/core/world';
 
@@ -19,7 +19,7 @@ function makeCollidable(): Collidable {
     fixed: false,
     shape: { type: 'aabb', width: 32, height: 32 },
     getOwner: () => ({ x: 0, y: 0, id: 'stub' }) as unknown as ReturnType<Collidable['getOwner']>,
-    getWorldBounds: () => ({ x: 0, y: 0, width: 32, height: 32 }),
+    getWorldBounds: () => ({ x: 0, y: 0, w: 32, h: 32 }),
     type: 'collidable',
     priority: 1,
     key: 'collidable',

@@ -2,7 +2,7 @@
 title: 'Interface: SpriteFrame'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Interface: SpriteFrame'
 
 # Interface: SpriteFrame
 
-Defined in: [core/sprite.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L45)
+Defined in: [core/sprite.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L51)
 
 Describes the position and size of a single frame within a [Sprite](../classes/Sprite.md)
 sheet.
@@ -35,10 +35,10 @@ const frame: SpriteFrame = {
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="anchor"></a> `anchor?` | \{ `x`: `number`; `y`: `number`; \} | [core/sprite.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L50) |
-| `anchor.x` | `number` | [core/sprite.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L50) |
-| `anchor.y` | `number` | [core/sprite.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L50) |
-| <a id="height"></a> `height` | `number` | [core/sprite.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L49) |
-| <a id="width"></a> `width` | `number` | [core/sprite.ts:48](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L48) |
-| <a id="x"></a> `x` | `number` | [core/sprite.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L46) |
-| <a id="y"></a> `y` | `number` | [core/sprite.ts:47](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L47) |
+| <a id="anchor"></a> `anchor?` | \{ `x`: `number`; `y`: `number`; \} | [core/sprite.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L56) |
+| `anchor.x` | `number` | [core/sprite.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L56) |
+| `anchor.y` | `number` | [core/sprite.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L56) |
+| <a id="height"></a> `height` | `number` | [core/sprite.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L55) |
+| <a id="width"></a> `width` | `number` | [core/sprite.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L54) |
+| <a id="x"></a> `x` | `number` | [core/sprite.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L52) |
+| <a id="y"></a> `y` | `number` | [core/sprite.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/core/sprite.ts#L53) |

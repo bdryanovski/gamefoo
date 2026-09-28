@@ -1,0 +1,26 @@
+{
+  "projectName": "Untitled",
+  "imageData": null,
+  "grid": {
+    "enabled": true,
+    "cellWidth": 32,
+    "cellHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "sprites": [],
+  "animations": [],
+  "objects": [],
+  "selectedSpriteIds": [],
+  "selectedAnimationId": null,
+  "selectedObjectId": null,
+  "activeTool": "grid-pick",
+  "zoom": 2,
+  "pan": {
+    "x": 0,
+    "y": 0
+  },
+  "activeTab": "sprites"
+}

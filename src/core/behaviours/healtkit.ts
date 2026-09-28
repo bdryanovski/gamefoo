@@ -35,13 +35,19 @@ import { Behaviour } from '../behaviour';
  * @see {@link Player}    — has a convenience getter for this behaviour
  */
 export class HealthKit extends Behaviour<Entity> {
-  /** @inheritDoc */
+  /**
+   * @inheritDoc
+   */
   readonly type = 'healthkit';
 
-  /** Current health points. */
+  /**
+   * Current health points.
+   */
   private health: number;
 
-  /** Maximum health points (healing cap). */
+  /**
+   * Maximum health points (healing cap).
+   */
   private maxHP: number;
 
   /**
@@ -55,7 +61,7 @@ export class HealthKit extends Behaviour<Entity> {
   constructor(owner: Entity, health: number, maxHP?: number) {
     super(owner);
     this.health = health;
-    this.maxHP = maxHP || health;
+    this.maxHP = maxHP ?? health;
   }
 
   /**

@@ -1,0 +1,641 @@
+{
+  "projectName": "ColTest",
+  "images": [],
+  "activeImageId": null,
+  "grid": {
+    "enabled": true,
+    "cellWidth": 32,
+    "cellHeight": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "spacingX": 0,
+    "spacingY": 0
+  },
+  "sprites": [],
+  "animations": [],
+  "objects": [
+    {
+      "id": "obj_1",
+      "name": "chest",
+      "sprites": [],
+      "animations": [],
+      "grid": {
+        "cols": 2,
+        "rows": 2,
+        "cell": 32
+      },
+      "layersByState": {
+        "st_idle": [
+          {
+            "id": "lyr1",
+            "name": "base",
+            "visible": true,
+            "cells": []
+          }
+        ],
+        "st_run": [
+          {
+            "id": "lyr2",
+            "name": "base",
+            "visible": true,
+            "cells": []
+          }
+        ]
+      },
+      "collisionsByState": {
+        "st_idle": [
+          {
+            "id": "c1",
+            "layerId": "walls",
+            "enabled": true,
+            "shape": {
+              "kind": "circle",
+              "cx": 16,
+              "cy": 16,
+              "radius": 8
+            }
+          }
+        ],
+        "st_run": [
+          {
+            "id": "col_mtjz9jh3_0",
+            "layerId": "walls",
+            "enabled": true,
+            "shape": {
+              "kind": "circle",
+              "cx": 16,
+              "cy": 16,
+              "radius": 8
+            }
+          },
+          {
+            "id": "col_mtjza36j_1",
+            "layerId": "solid",
+            "enabled": true,
+            "shape": {
+              "kind": "rect",
+              "x": 16,
+              "y": 16,
+              "width": 32,
+              "height": 32
+            }
+          }
+        ]
+      },
+      "properties": {},
+      "meta": {
+        "description": "",
+        "category": "",
+        "tags": []
+      },
+      "machine": {
+        "id": "sm1",
+        "name": "chest",
+        "states": [
+          {
+            "id": "st_idle",
+            "name": "idle",
+            "display": {
+              "kind": "sprite",
+              "spriteId": null
+            },
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "st_run",
+            "name": "run",
+            "display": {
+              "kind": "sprite",
+              "spriteId": null
+            },
+            "x": 100,
+            "y": 0
+          }
+        ],
+        "transitions": [],
+        "initialStateId": "st_idle"
+      }
+    }
+  ],
+  "collisionLayers": [
+    {
+      "id": "solid",
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    {
+      "id": "vision",
+      "name": "Vision",
+      "color": "#00ff00"
+    },
+    {
+      "id": "damage",
+      "name": "Damage",
+      "color": "#d94fd9"
+    },
+    {
+      "id": "activation",
+      "name": "Activation",
+      "color": "#4ea3f2"
+    },
+    {
+      "id": "hitbox",
+      "name": "Hitbox",
+      "color": "#ff7043"
+    },
+    {
+      "id": "hurtbox",
+      "name": "Hurtbox",
+      "color": "#5ad07a"
+    },
+    {
+      "id": "trigger",
+      "name": "Trigger",
+      "color": "#26c6da"
+    },
+    {
+      "id": "pickup",
+      "name": "Pickup",
+      "color": "#ffd54f"
+    },
+    {
+      "id": "ledge",
+      "name": "Ledge",
+      "color": "#8d6e63"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "color": "#29b6f6"
+    },
+    {
+      "id": "walls",
+      "name": "Walls",
+      "color": "#ff0000"
+    }
+  ],
+  "config": {
+    "defaultLayers": [
+      "base",
+      "walls",
+      "objects"
+    ]
+  },
+  "selectedSpriteIds": [],
+  "selectedAnimationId": null,
+  "selectedObjectId": "obj_1",
+  "activeTool": "grid-pick",
+  "zoom": 2,
+  "pan": {
+    "x": 0,
+    "y": 0
+  },
+  "activeTab": "sprites",
+  "map": {
+    "blockSize": 32,
+    "screenCols": 16,
+    "screenRows": 12,
+    "defaultSpriteId": null,
+    "screens": {},
+    "selected": null,
+    "selectedPlacementId": null,
+    "layers": [
+      {
+        "name": "base",
+        "visible": true
+      },
+      {
+        "name": "walls",
+        "visible": true
+      },
+      {
+        "name": "objects",
+        "visible": true
+      }
+    ],
+    "activeLevel": 0,
+    "activeTool": "paint",
+    "zoom": 0.5,
+    "pan": {
+      "x": 40,
+      "y": 40
+    }
+  },
+  "history": [
+    {
+      "projectName": "ColTest",
+      "images": [],
+      "activeImageId": null,
+      "grid": {
+        "enabled": true,
+        "cellWidth": 32,
+        "cellHeight": 32,
+        "offsetX": 0,
+        "offsetY": 0,
+        "spacingX": 0,
+        "spacingY": 0
+      },
+      "sprites": [],
+      "animations": [],
+      "objects": [
+        {
+          "id": "obj_1",
+          "name": "chest",
+          "sprites": [],
+          "animations": [],
+          "grid": {
+            "cols": 2,
+            "rows": 2,
+            "cell": 32
+          },
+          "layersByState": {
+            "st_idle": [
+              {
+                "id": "lyr1",
+                "name": "base",
+                "visible": true,
+                "cells": []
+              }
+            ],
+            "st_run": [
+              {
+                "id": "lyr2",
+                "name": "base",
+                "visible": true,
+                "cells": []
+              }
+            ]
+          },
+          "collisionsByState": {
+            "st_idle": [
+              {
+                "id": "c1",
+                "layerId": "walls",
+                "enabled": true,
+                "shape": {
+                  "kind": "circle",
+                  "cx": 16,
+                  "cy": 16,
+                  "radius": 8
+                }
+              }
+            ]
+          },
+          "properties": {},
+          "meta": {
+            "description": "",
+            "category": "",
+            "tags": []
+          },
+          "machine": {
+            "id": "sm1",
+            "name": "chest",
+            "states": [
+              {
+                "id": "st_idle",
+                "name": "idle",
+                "display": {
+                  "kind": "sprite",
+                  "spriteId": null
+                },
+                "x": 0,
+                "y": 0
+              },
+              {
+                "id": "st_run",
+                "name": "run",
+                "display": {
+                  "kind": "sprite",
+                  "spriteId": null
+                },
+                "x": 100,
+                "y": 0
+              }
+            ],
+            "transitions": [],
+            "initialStateId": "st_idle"
+          }
+        }
+      ],
+      "collisionLayers": [
+        {
+          "id": "solid",
+          "name": "Solid",
+          "color": "#e05a5a"
+        },
+        {
+          "id": "vision",
+          "name": "Vision",
+          "color": "#00ff00"
+        },
+        {
+          "id": "damage",
+          "name": "Damage",
+          "color": "#d94fd9"
+        },
+        {
+          "id": "activation",
+          "name": "Activation",
+          "color": "#4ea3f2"
+        },
+        {
+          "id": "hitbox",
+          "name": "Hitbox",
+          "color": "#ff7043"
+        },
+        {
+          "id": "hurtbox",
+          "name": "Hurtbox",
+          "color": "#5ad07a"
+        },
+        {
+          "id": "trigger",
+          "name": "Trigger",
+          "color": "#26c6da"
+        },
+        {
+          "id": "pickup",
+          "name": "Pickup",
+          "color": "#ffd54f"
+        },
+        {
+          "id": "ledge",
+          "name": "Ledge",
+          "color": "#8d6e63"
+        },
+        {
+          "id": "water",
+          "name": "Water",
+          "color": "#29b6f6"
+        },
+        {
+          "id": "walls",
+          "name": "Walls",
+          "color": "#ff0000"
+        }
+      ],
+      "config": {
+        "defaultLayers": [
+          "base",
+          "walls",
+          "objects"
+        ]
+      },
+      "selectedSpriteIds": [],
+      "selectedAnimationId": null,
+      "selectedObjectId": "obj_1",
+      "activeTool": "grid-pick",
+      "zoom": 2,
+      "pan": {
+        "x": 0,
+        "y": 0
+      },
+      "activeTab": "sprites",
+      "map": {
+        "blockSize": 32,
+        "screenCols": 16,
+        "screenRows": 12,
+        "defaultSpriteId": null,
+        "screens": {},
+        "selected": null,
+        "selectedPlacementId": null,
+        "layers": [
+          {
+            "name": "base",
+            "visible": true
+          },
+          {
+            "name": "walls",
+            "visible": true
+          },
+          {
+            "name": "objects",
+            "visible": true
+          }
+        ],
+        "activeLevel": 0,
+        "activeTool": "paint",
+        "zoom": 0.5,
+        "pan": {
+          "x": 40,
+          "y": 40
+        }
+      }
+    },
+    {
+      "projectName": "ColTest",
+      "images": [],
+      "activeImageId": null,
+      "grid": {
+        "enabled": true,
+        "cellWidth": 32,
+        "cellHeight": 32,
+        "offsetX": 0,
+        "offsetY": 0,
+        "spacingX": 0,
+        "spacingY": 0
+      },
+      "sprites": [],
+      "animations": [],
+      "objects": [
+        {
+          "id": "obj_1",
+          "name": "chest",
+          "sprites": [],
+          "animations": [],
+          "grid": {
+            "cols": 2,
+            "rows": 2,
+            "cell": 32
+          },
+          "layersByState": {
+            "st_idle": [
+              {
+                "id": "lyr1",
+                "name": "base",
+                "visible": true,
+                "cells": []
+              }
+            ],
+            "st_run": [
+              {
+                "id": "lyr2",
+                "name": "base",
+                "visible": true,
+                "cells": []
+              }
+            ]
+          },
+          "collisionsByState": {
+            "st_idle": [
+              {
+                "id": "c1",
+                "layerId": "walls",
+                "enabled": true,
+                "shape": {
+                  "kind": "circle",
+                  "cx": 16,
+                  "cy": 16,
+                  "radius": 8
+                }
+              }
+            ],
+            "st_run": [
+              {
+                "id": "col_mtjz9jh3_0",
+                "layerId": "walls",
+                "enabled": true,
+                "shape": {
+                  "kind": "circle",
+                  "cx": 16,
+                  "cy": 16,
+                  "radius": 8
+                }
+              }
+            ]
+          },
+          "properties": {},
+          "meta": {
+            "description": "",
+            "category": "",
+            "tags": []
+          },
+          "machine": {
+            "id": "sm1",
+            "name": "chest",
+            "states": [
+              {
+                "id": "st_idle",
+                "name": "idle",
+                "display": {
+                  "kind": "sprite",
+                  "spriteId": null
+                },
+                "x": 0,
+                "y": 0
+              },
+              {
+                "id": "st_run",
+                "name": "run",
+                "display": {
+                  "kind": "sprite",
+                  "spriteId": null
+                },
+                "x": 100,
+                "y": 0
+              }
+            ],
+            "transitions": [],
+            "initialStateId": "st_idle"
+          }
+        }
+      ],
+      "collisionLayers": [
+        {
+          "id": "solid",
+          "name": "Solid",
+          "color": "#e05a5a"
+        },
+        {
+          "id": "vision",
+          "name": "Vision",
+          "color": "#00ff00"
+        },
+        {
+          "id": "damage",
+          "name": "Damage",
+          "color": "#d94fd9"
+        },
+        {
+          "id": "activation",
+          "name": "Activation",
+          "color": "#4ea3f2"
+        },
+        {
+          "id": "hitbox",
+          "name": "Hitbox",
+          "color": "#ff7043"
+        },
+        {
+          "id": "hurtbox",
+          "name": "Hurtbox",
+          "color": "#5ad07a"
+        },
+        {
+          "id": "trigger",
+          "name": "Trigger",
+          "color": "#26c6da"
+        },
+        {
+          "id": "pickup",
+          "name": "Pickup",
+          "color": "#ffd54f"
+        },
+        {
+          "id": "ledge",
+          "name": "Ledge",
+          "color": "#8d6e63"
+        },
+        {
+          "id": "water",
+          "name": "Water",
+          "color": "#29b6f6"
+        },
+        {
+          "id": "walls",
+          "name": "Walls",
+          "color": "#ff0000"
+        }
+      ],
+      "config": {
+        "defaultLayers": [
+          "base",
+          "walls",
+          "objects"
+        ]
+      },
+      "selectedSpriteIds": [],
+      "selectedAnimationId": null,
+      "selectedObjectId": "obj_1",
+      "activeTool": "grid-pick",
+      "zoom": 2,
+      "pan": {
+        "x": 0,
+        "y": 0
+      },
+      "activeTab": "sprites",
+      "map": {
+        "blockSize": 32,
+        "screenCols": 16,
+        "screenRows": 12,
+        "defaultSpriteId": null,
+        "screens": {},
+        "selected": null,
+        "selectedPlacementId": null,
+        "layers": [
+          {
+            "name": "base",
+            "visible": true
+          },
+          {
+            "name": "walls",
+            "visible": true
+          },
+          {
+            "name": "objects",
+            "visible": true
+          }
+        ],
+        "activeLevel": 0,
+        "activeTool": "paint",
+        "zoom": 0.5,
+        "pan": {
+          "x": 40,
+          "y": 40
+        }
+      }
+    }
+  ],
+  "lastModified": "2026-09-02T10:53:39.567Z"
+}

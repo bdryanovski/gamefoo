@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "pickup_items_animated.png",
+    "imageWidth": 64,
+    "imageHeight": 128
+  },
+  "frames": {
+    "sprite_0_0": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_0": {
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_1": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_1": {
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_1": {
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_2": {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_2": {
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_2": {
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_2": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_4": {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_4": {
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_4": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_4": {
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "olive": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0",
+        "sprite_3_0"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "key": {
+      "frames": [
+        "sprite_0_1",
+        "sprite_1_1",
+        "sprite_2_1",
+        "sprite_3_1"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "potion": {
+      "frames": [
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_2_2",
+        "sprite_3_2"
+      ],
+      "duration": 0.2,
+      "loop": true
+    },
+    "heart": {
+      "frames": [
+        "sprite_0_4",
+        "sprite_1_4",
+        "sprite_2_4",
+        "sprite_3_4"
+      ],
+      "duration": 0.2,
+      "loop": true
+    }
+  }
+}

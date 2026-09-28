@@ -1,0 +1,419 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "goblin",
+    "category": "character"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {
+    "message": "msg_mtorxbq3_2a"
+  },
+  "images": {
+    "goblin.png": {
+      "src": "/uploads/1788878860487_goblin.png",
+      "width": 64,
+      "height": 96
+    }
+  },
+  "frames": {
+    "sprite_0_0": {
+      "image": "goblin.png",
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "image": "goblin.png",
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "image": "goblin.png",
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_2": {
+      "image": "goblin.png",
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_2": {
+      "image": "goblin.png",
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_2": {
+      "image": "goblin.png",
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_2": {
+      "image": "goblin.png",
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_3": {
+      "image": "goblin.png",
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_3": {
+      "image": "goblin.png",
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_3": {
+      "image": "goblin.png",
+      "x": 32,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_3": {
+      "image": "goblin.png",
+      "x": 48,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "goblin_idle": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "goblin_right": {
+      "frames": [
+        "sprite_0_2",
+        "sprite_1_2",
+        "sprite_2_2",
+        "sprite_3_2"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "goblin_left": {
+      "frames": [
+        "sprite_0_3",
+        "sprite_1_3",
+        "sprite_2_3",
+        "sprite_3_3"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
+    },
+    "vision": {
+      "name": "Vision",
+      "color": "#f2c14e"
+    }
+  },
+  "states": {
+    "Idle": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "goblin_idle"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtsshvuk_1c",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8551432291666666,
+            "y": 1.1936848958333333,
+            "width": 15.277994791666666,
+            "height": 14.673502604166666
+          }
+        },
+        {
+          "id": "col_mtssi5kr_1d",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtssib0e_1e",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Up": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "goblin_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtsshvuk_1c",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8551432291666666,
+            "y": 1.1936848958333333,
+            "width": 15.277994791666666,
+            "height": 14.673502604166666
+          }
+        },
+        {
+          "id": "col_mtssi5kr_1d",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtssib0e_1e",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Down": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "goblin_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtsshvuk_1c",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8551432291666666,
+            "y": 1.1936848958333333,
+            "width": 15.277994791666666,
+            "height": 14.673502604166666
+          }
+        },
+        {
+          "id": "col_mtssi5kr_1d",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtssib0e_1e",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Left": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "goblin_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtsshvuk_1c",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8551432291666666,
+            "y": 1.1936848958333333,
+            "width": 15.277994791666666,
+            "height": 14.673502604166666
+          }
+        },
+        {
+          "id": "col_mtssi5kr_1d",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtssib0e_1e",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    },
+    "Right": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "goblin_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtsshvuk_1c",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 0.8551432291666666,
+            "y": 1.1936848958333333,
+            "width": 15.277994791666666,
+            "height": 14.673502604166666
+          }
+        },
+        {
+          "id": "col_mtssi5kr_1d",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtssib0e_1e",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 16
+          }
+        }
+      ]
+    }
+  },
+  "initial": "Idle"
+}

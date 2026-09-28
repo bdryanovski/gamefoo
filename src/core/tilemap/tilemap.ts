@@ -63,29 +63,30 @@ class WallEntity extends Entity {
    * @param width  - Width in pixels.
    * @param height - Height in pixels.
    */
-  constructor(
-    col: number,
-    row: number,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-  ) {
+  constructor(col: number, row: number, x: number, y: number, width: number, height: number) {
     super(`wall_${col}_${row}`, x, y, width, height);
   }
 
-  /** Walls are static — no update logic. */
+  /**
+   * Walls are static — no update logic.
+   */
   update(_dt: number): void {}
 
-  /** Walls are invisible — collision only, tiles draw them. */
+  /**
+   * Walls are invisible — collision only, tiles draw them.
+   */
   render(_ctx: RenderContext): void {}
 }
 
 export class TileMap {
-  /** The underlying grid storing cell data and walkability. */
+  /**
+   * The underlying grid storing cell data and walkability.
+   */
   readonly grid: Grid;
 
-  /** Ordered list of tile layers (rendered back-to-front). */
+  /**
+   * Ordered list of tile layers (rendered back-to-front).
+   */
   readonly layers: TileLayer[];
 
   /**
@@ -95,7 +96,9 @@ export class TileMap {
    */
   projection: IsometricProjection | null;
 
-  /** Name of the collision layer, if any. */
+  /**
+   * Name of the collision layer, if any.
+   */
   private collisionLayerName: string | null;
 
   /**
@@ -145,23 +148,14 @@ export class TileMap {
     viewport: { x: number; y: number; width: number; height: number },
   ): void {
     for (const layer of this.layers) {
-      if (!layer.visible) continue;
+      if (!layer.visible) {
+        continue;
+      }
 
       if (this.projection) {
-        layer.renderIsometric(
-          ctx,
-          this.projection,
-          viewport,
-          this.grid.cols,
-          this.grid.rows,
-        );
+        layer.renderIsometric(ctx, this.projection, viewport, this.grid.cols, this.grid.rows);
       } else {
-        layer.renderOrthogonal(
-          ctx,
-          this.grid.cellWidth,
-          this.grid.cellHeight,
-          viewport,
-        );
+        layer.renderOrthogonal(ctx, this.grid.cellWidth, this.grid.cellHeight, viewport);
       }
     }
   }
@@ -190,7 +184,9 @@ export class TileMap {
    */
   getTileAtScreen(screenX: number, screenY: number, layerName: string): number {
     const layer = this.layers.find((l) => l.name === layerName);
-    if (!layer) return -1;
+    if (!layer) {
+      return -1;
+    }
 
     let col: number;
     let row: number;
@@ -205,7 +201,9 @@ export class TileMap {
       row = cell.row;
     }
 
-    if (!this.grid.isInBounds(col, row)) return -1;
+    if (!this.grid.isInBounds(col, row)) {
+      return -1;
+    }
     return layer.getTile(col, row);
   }
 
@@ -231,10 +229,14 @@ export class TileMap {
    * ```
    */
   buildColliders(world: World): Entity[] {
-    if (!this.collisionLayerName) return [];
+    if (!this.collisionLayerName) {
+      return [];
+    }
 
     const layer = this.layers.find((l) => l.name === this.collisionLayerName);
-    if (!layer) return [];
+    if (!layer) {
+      return [];
+    }
 
     const entities: Entity[] = [];
     const isIso = this.projection !== null;
@@ -242,10 +244,14 @@ export class TileMap {
     for (let row = 0; row < this.grid.rows; row++) {
       for (let col = 0; col < this.grid.cols; col++) {
         const cell = this.grid.getCell(col, row);
-        if (!cell || cell.walkable) continue;
+        if (!cell || cell.walkable) {
+          continue;
+        }
 
         const tileId = layer.getTile(col, row);
-        if (tileId < 0) continue;
+        if (tileId < 0) {
+          continue;
+        }
 
         let wx: number;
         let wy: number;

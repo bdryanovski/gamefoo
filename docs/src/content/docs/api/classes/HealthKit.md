@@ -2,7 +2,7 @@
 title: 'Class: HealthKit'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -24,6 +24,8 @@ death state.
 
 ## Examples
 
+**Attaching to a player**
+
 ```ts
 import { HealthKit, Player } from "gamefoo";
 
@@ -34,6 +36,8 @@ player.healthkit?.takeDamage(25);
 console.log(player.healthkit?.getHealth());        // 75
 console.log(player.healthkit?.getHealthPercent());  // 0.75
 ```
+
+**Custom max HP**
 
 ```ts
 const hk = new HealthKit(entity, 50, 200);
@@ -59,10 +63,11 @@ console.log(hk.getHealth()); // 200 (clamped to max)
 new HealthKit(
    owner: Entity, 
    health: number, 
-   maxHP?: number): HealthKit;
+   maxHP?: number
+): HealthKit;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L55)
+Defined in: [core/behaviours/healtkit.ts:61](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L61)
 
 Creates a new health behaviour.
 
@@ -88,10 +93,10 @@ Creates a new health behaviour.
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="enabled"></a> `enabled` | `public` | `boolean` | `true` | Whether this behaviour is currently active. Disabled behaviours are skipped during both [Entity.updateBehaviours](Entity.md#updatebehaviours) and [Entity.renderBehaviours](Entity.md#renderbehaviours). | - | [`Behaviour`](Behaviour.md).[`enabled`](Behaviour.md#enabled) | [core/behaviour.ts:94](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L94) |
 | <a id="priority"></a> `priority` | `public` | `number` | `1` | Execution priority — lower numbers run first. When an entity has multiple behaviours, they are sorted by priority before each update/render pass. | - | [`Behaviour`](Behaviour.md).[`priority`](Behaviour.md#priority) | [core/behaviour.ts:84](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L84) |
-| <a id="type"></a> `type` | `readonly` | `"healthkit"` | `'healthkit'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:39](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L39) |
+| <a id="type"></a> `type` | `readonly` | `"healthkit"` | `'healthkit'` | Unique string identifier for this behaviour type. Used as the look-up key in [Entity.getBehaviour](Entity.md#getbehaviour) and [Entity.hasBehaviour](Entity.md#hasbehaviour). Must be a compile-time constant (`readonly`). **Example** `class Gravity extends Behaviour { readonly type = "gravity"; // ... }` | [`Behaviour`](Behaviour.md).[`type`](Behaviour.md#type) | - | [core/behaviours/healtkit.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L41) |
 | <a id="owner"></a> `owner` | `protected` | [`Entity`](Entity.md) | `undefined` | Reference to the entity that owns this behaviour. Available to subclasses for reading and mutating entity state. | - | [`Behaviour`](Behaviour.md).[`owner`](Behaviour.md#owner) | [core/behaviour.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L57) |
-| <a id="health"></a> `health` | `private` | `number` | `undefined` | Current health points. | - | - | [core/behaviours/healtkit.ts:42](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L42) |
-| <a id="maxhp"></a> `maxHP` | `private` | `number` | `undefined` | Maximum health points (healing cap). | - | - | [core/behaviours/healtkit.ts:45](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L45) |
+| <a id="health"></a> `health` | `private` | `number` | `undefined` | Current health points. | - | - | [core/behaviours/healtkit.ts:46](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L46) |
+| <a id="maxhp"></a> `maxHP` | `private` | `number` | `undefined` | Maximum health points (healing cap). | - | - | [core/behaviours/healtkit.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L51) |
 
 ## Accessors
 
@@ -126,7 +131,7 @@ case-insensitive.
 getHealth(): number;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:95](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L95)
+Defined in: [core/behaviours/healtkit.ts:101](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L101)
 
 Returns the current health value.
 
@@ -144,7 +149,7 @@ Current HP.
 getHealthPercent(): number;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:156](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L156)
+Defined in: [core/behaviours/healtkit.ts:162](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L162)
 
 Returns health as a normalised ratio in the range `[0, 1]`.
 
@@ -171,7 +176,7 @@ ctx.fillRect(x, y, barWidth, 8);
 getMaxHealth(): number;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:104](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L104)
+Defined in: [core/behaviours/healtkit.ts:110](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L110)
 
 Returns the maximum health cap.
 
@@ -215,7 +220,7 @@ The owning entity.
 heal(amount: number): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:86](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L86)
+Defined in: [core/behaviours/healtkit.ts:92](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L92)
 
 Increases health by the given amount, clamping at
 [HealthKit.maxHP](#maxhp).
@@ -244,7 +249,7 @@ healthkit.heal(50);
 isDead(): boolean;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:139](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L139)
+Defined in: [core/behaviours/healtkit.ts:145](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L145)
 
 Whether the entity is dead (health is zero or below).
 
@@ -320,7 +325,7 @@ optional render(ctx: RenderContext): void;
 Defined in: [core/behaviour.ts:146](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviour.ts#L146)
 
 Optional rendering hook invoked after the entity's own
-[Entity.render](Entity.md#render) call.
+[Entity.render](DynamicEntity.md#render) call.
 
 Override this to draw debug shapes, health bars, status effects, etc.
 
@@ -346,7 +351,7 @@ Override this to draw debug shapes, health bars, status effects, etc.
 setMaxHealth(value: number): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:120](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L120)
+Defined in: [core/behaviours/healtkit.ts:126](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L126)
 
 Updates the maximum health cap.
 
@@ -376,7 +381,7 @@ healthkit.setMaxHealth(150);
 takeDamage(amount: number): void;
 ```
 
-Defined in: [core/behaviours/healtkit.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L71)
+Defined in: [core/behaviours/healtkit.ts:77](https://github.com/bdryanovski/gamefoo/blob/main/src/core/behaviours/healtkit.ts#L77)
 
 Reduces health by the given amount, clamping at zero.
 
@@ -409,7 +414,7 @@ Defined in: [core/behaviour.ts:136](https://github.com/bdryanovski/gamefoo/blob/
 Called once per frame to advance this behaviour's logic.
 
 Override in subclasses that need per-frame logic. Behaviours that
-are purely reactive (collision, health, terminal render) can omit
+are purely reactive (collision, health) can omit
 this — the default is a no-op.
 
 #### Parameters

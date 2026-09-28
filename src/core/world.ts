@@ -1,4 +1,4 @@
-import type { WorldBounds } from '../generic_types';
+import type { Box } from '../generic_types';
 import type { Collidable } from './behaviours/collidable';
 
 /**
@@ -41,6 +41,12 @@ import type { Collidable } from './behaviours/collidable';
  * ```ts
  * world.detect(); // typically called by Engine.update each frame
  * ```
+ *
+ * @deprecated In favor of Map - still early on but this most likely will
+ * be removed from the core and maybe extracted as standalone extenstion or
+ * something else. There are cleaver concepts that may help you build a
+ * interactable playground from this - don't depend on it the API will change
+ * for sure
  *
  * @see {@link Collidable} — the behaviour that plugs into this world
  * @see {@link Engine}     — calls {@link World.detect} every frame
@@ -140,20 +146,28 @@ export default class World {
      *   - Providing warnings or profiling tools when performance degrades due to too many colliders
      *   - etc.
      */
-    if (this.colliders.size === 0) return;
+    if (this.colliders.size === 0) {
+      return;
+    }
 
     const list = Array.from(this.colliders);
     const len = list.length;
 
-    for (let i = 0; i < len; i++) {
-      const obj = list[i];
-      if (!obj?.enabled) continue;
+    for (let outerIndex = 0; outerIndex < len; outerIndex += 1) {
+      const obj = list[outerIndex];
+      if (!obj?.enabled) {
+        continue;
+      }
 
-      for (let j = i + 1; j < len; j++) {
-        const other = list[j];
-        if (!other?.enabled) continue;
+      for (let innerIndex = outerIndex + 1; innerIndex < len; innerIndex += 1) {
+        const other = list[innerIndex];
+        if (!other?.enabled) {
+          continue;
+        }
 
-        if (obj.layer !== other.layer) continue;
+        if (obj.layer !== other.layer) {
+          continue;
+        }
 
         const objWantOther = this.tagsOverlap(obj.collidesWith, other.tags);
         const otherWantObj = this.tagsOverlap(other.collidesWith, obj.tags);
@@ -161,7 +175,9 @@ export default class World {
         const boundsObj = obj.getWorldBounds();
         const boundsOther = other.getWorldBounds();
 
-        if (!this.intersects(obj, boundsObj, other, boundsOther)) continue;
+        if (!this.intersects(obj, boundsObj, other, boundsOther)) {
+          continue;
+        }
 
         if (obj.solid && other.solid) {
           this.resolveOverlap(obj, boundsObj, other, boundsOther);
@@ -199,7 +215,9 @@ export default class World {
    */
   private tagsOverlap(wants: Set<string>, has: Set<string>): boolean {
     for (const tag of wants) {
-      if (has.has(tag)) return true;
+      if (has.has(tag)) {
+        return true;
+      }
     }
     return false;
   }
@@ -218,12 +236,7 @@ export default class World {
    *
    * @internal
    */
-  private intersects(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): boolean {
+  private intersects(a: Collidable, boundsA: Box, b: Collidable, boundsB: Box): boolean {
     const shapeA = a.shape;
     const shapeB = b.shape;
 
@@ -250,13 +263,8 @@ export default class World {
    *
    * @internal
    */
-  private aabbVSAabb(a: WorldBounds, b: WorldBounds): boolean {
-    return (
-      a.x < b.x + b.width
-      && a.x + a.width > b.x
-      && a.y < b.y + b.height
-      && a.y + a.height > b.y
-    );
+  private aabbVSAabb(a: Box, b: Box): boolean {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
 
   /**
@@ -271,13 +279,10 @@ export default class World {
    *
    * @internal
    */
-  private circleVSCircle(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): boolean {
-    if (a.shape.type !== 'circle' || b.shape.type !== 'circle') return false;
+  private circleVSCircle(a: Collidable, boundsA: Box, b: Collidable, boundsB: Box): boolean {
+    if (a.shape.type !== 'circle' || b.shape.type !== 'circle') {
+      return false;
+    }
 
     const cx1 = boundsA.x + a.shape.radius;
     const cy1 = boundsA.y + a.shape.radius;
@@ -303,18 +308,16 @@ export default class World {
    *
    * @internal
    */
-  private circleVSAAabb(
-    circle: Collidable,
-    circleBounds: WorldBounds,
-    rect: WorldBounds,
-  ): boolean {
-    if (circle.shape.type !== 'circle') return false;
+  private circleVSAAabb(circle: Collidable, circleBounds: Box, rect: Box): boolean {
+    if (circle.shape.type !== 'circle') {
+      return false;
+    }
 
     const cx = circleBounds.x + circle.shape.radius;
     const cy = circleBounds.y + circle.shape.radius;
 
-    const closestX = Math.max(rect.x, Math.min(cx, rect.x + rect.width));
-    const closestY = Math.max(rect.y, Math.min(cy, rect.y + rect.height));
+    const closestX = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
+    const closestY = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
 
     const dx = cx - closestX;
     const dy = cy - closestY;
@@ -337,20 +340,9 @@ export default class World {
    *
    * @internal
    */
-  private resolveOverlap(
-    a: Collidable,
-    boundsA: WorldBounds,
-    b: Collidable,
-    boundsB: WorldBounds,
-  ): void {
-    const overlapX = Math.min(
-      boundsA.x + boundsA.width - boundsB.x,
-      boundsB.x + boundsB.width - boundsA.x,
-    );
-    const overlapY = Math.min(
-      boundsA.y + boundsA.height - boundsB.y,
-      boundsB.y + boundsB.height - boundsA.y,
-    );
+  private resolveOverlap(a: Collidable, boundsA: Box, b: Collidable, boundsB: Box): void {
+    const overlapX = Math.min(boundsA.x + boundsA.w - boundsB.x, boundsB.x + boundsB.w - boundsA.x);
+    const overlapY = Math.min(boundsA.y + boundsA.h - boundsB.y, boundsB.y + boundsB.h - boundsA.y);
 
     let pushX = 0;
     let pushY = 0;

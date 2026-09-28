@@ -43,11 +43,7 @@
 import { Grid } from '../grid/grid';
 import { TileLayer } from '../tilemap/tile_layer';
 import type { TileSet } from '../tilemap/tileset';
-import type {
-  BiomeRule,
-  GeneratedMapData,
-  MapGeneratorConfig,
-} from './map_generator_types';
+import type { BiomeRule, GeneratedMapData, MapGeneratorConfig } from './map_generator_types';
 import { PerlinNoise } from './perlin_noise';
 
 export class MapGenerator {
@@ -143,7 +139,7 @@ export class MapGenerator {
     const { cols, rows, biomes } = this.config;
     const totalCells = cols * rows;
 
-    const data: number[] = new Array(totalCells);
+    const data: number[] = Array.from<number>({ length: totalCells });
     const walkableMap: boolean[][] = [];
 
     for (let row = 0; row < rows; row++) {

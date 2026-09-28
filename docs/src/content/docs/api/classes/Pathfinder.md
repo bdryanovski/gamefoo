@@ -2,7 +2,7 @@
 title: 'Class: Pathfinder'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/utils/pathfinding.ts:116](https://github.com/bdryanovski/gamef
 new Pathfinder(config: PathfinderConfig): Pathfinder;
 ```
 
-Defined in: [core/utils/pathfinding.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L141)
+Defined in: [core/utils/pathfinding.ts:138](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L138)
 
 Creates a new pathfinder bound to a grid.
 
@@ -71,7 +71,7 @@ private static getHeuristic(name: HeuristicName): (a: {
 }) => number;
 ```
 
-Defined in: [core/utils/pathfinding.ts:319](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L319)
+Defined in: [core/utils/pathfinding.ts:327](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L327)
 
 **`Internal`**
 
@@ -87,30 +87,13 @@ Returns a heuristic function by name.
 
 Distance estimation function.
 
-```ts
-(a: {
-  col: number;
-  row: number;
-}, b: {
-  col: number;
-  row: number;
-}): number;
-```
-
-##### Parameters
-
-| Parameter | Type |
-| ------ | ------ |
-| `a` | \{ `col`: `number`; `row`: `number`; \} |
-| `a.col` | `number` |
-| `a.row` | `number` |
-| `b` | \{ `col`: `number`; `row`: `number`; \} |
-| `b.col` | `number` |
-| `b.row` | `number` |
-
-##### Returns
-
-`number`
+(`a`: \{
+  `col`: `number`;
+  `row`: `number`;
+\}, `b`: \{
+  `col`: `number`;
+  `row`: `number`;
+\}) => `number`
 
 ***
 
@@ -121,7 +104,8 @@ findPath(
    startCol: number, 
    startRow: number, 
    goalCol: number, 
-   goalRow: number): 
+   goalRow: number
+): 
   | {
   col: number;
   row: number;
@@ -129,7 +113,7 @@ findPath(
   | null;
 ```
 
-Defined in: [core/utils/pathfinding.ts:170](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L170)
+Defined in: [core/utils/pathfinding.ts:167](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L167)
 
 Finds the shortest path between two grid cells.
 
@@ -177,10 +161,11 @@ isReachable(
    startCol: number, 
    startRow: number, 
    goalCol: number, 
-   goalRow: number): boolean;
+   goalRow: number
+): boolean;
 ```
 
-Defined in: [core/utils/pathfinding.ts:285](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L285)
+Defined in: [core/utils/pathfinding.ts:293](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L293)
 
 Checks whether a cell is reachable from another.
 
@@ -225,7 +210,7 @@ private reconstructPath(node: PathNode): {
 }[];
 ```
 
-Defined in: [core/utils/pathfinding.ts:300](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L300)
+Defined in: [core/utils/pathfinding.ts:308](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/pathfinding.ts#L308)
 
 **`Internal`**
 

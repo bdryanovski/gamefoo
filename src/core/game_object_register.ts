@@ -94,9 +94,7 @@ export default class GameObjectRegister {
    * @returns An array of all {@link GameObject} instances in the registry.
    */
   toArray(): GameObject[] {
-    if (!this._cache) {
-      this._cache = Array.from(this.objects.values());
-    }
+    this._cache ??= Array.from(this.objects.values());
 
     return this._cache;
   }

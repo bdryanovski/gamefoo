@@ -43,17 +43,29 @@ export type HeuristicName = 'manhattan' | 'euclidean' | 'chebyshev';
  * ```
  */
 export interface PathNode {
-  /** Grid column index. */
+  /**
+   * Grid column index.
+   */
   col: number;
-  /** Grid row index. */
+  /**
+   * Grid row index.
+   */
   row: number;
-  /** Accumulated cost from the start node to this node. */
+  /**
+   * Accumulated cost from the start node to this node.
+   */
   g: number;
-  /** Heuristic estimate from this node to the goal. */
+  /**
+   * Heuristic estimate from this node to the goal.
+   */
   h: number;
-  /** Total estimated cost: `g + h`. */
+  /**
+   * Total estimated cost: `g + h`.
+   */
   f: number;
-  /** Parent node in the shortest path tree, or `null` for the start. */
+  /**
+   * Parent node in the shortest path tree, or `null` for the start.
+   */
   parent: PathNode | null;
 }
 
@@ -83,7 +95,9 @@ export interface PathNode {
  * ```
  */
 export interface PathfinderConfig {
-  /** The grid to pathfind over. Walkability is read from cells. */
+  /**
+   * The grid to pathfind over. Walkability is read from cells.
+   */
   grid: Grid;
   /**
    * Allow 8-directional movement (including diagonals).

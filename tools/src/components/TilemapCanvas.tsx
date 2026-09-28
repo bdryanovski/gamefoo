@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import type { AppState, AppAction, SpriteRegion } from "../types";
 import { uid } from "../utils/uid";
+import { Icon } from "./Icon";
 
 interface Props {
   state: AppState;
@@ -19,6 +20,40 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
   const [drawEnd, setDrawEnd] = useState<{ x: number; y: number } | null>(null);
   const [canvasSize, setCanvasSize] = useState({ w: 800, h: 600 });
   const rafRef = useRef<number>(0);
+  const [spaceHeld, setSpaceHeld] = useState(false);
+
+  // ── Space key = temporary pan mode ─────────────────────
+  useEffect(() => {
+    const isTypingTarget = (target: EventTarget | null) => {
+      const el = target as HTMLElement | null;
+      if (!el) return false;
+      return (
+        el.tagName === "INPUT" ||
+        el.tagName === "TEXTAREA" ||
+        el.tagName === "SELECT" ||
+        el.isContentEditable
+      );
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== "Space" || e.repeat) return;
+      if (isTypingTarget(e.target)) return;
+      e.preventDefault();
+      setSpaceHeld(true);
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code !== "Space") return;
+      setSpaceHeld(false);
+    };
+    const handleBlur = () => setSpaceHeld(false);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,15 +92,16 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
 
   const findSpriteAt = useCallback(
     (ix: number, iy: number): SpriteRegion | null => {
-      for (let i = state.sprites.length - 1; i >= 0; i--) {
-        const s = state.sprites[i]!;
+      const mine = state.sprites.filter((s) => s.imageId === state.activeImageId);
+      for (let i = mine.length - 1; i >= 0; i--) {
+        const s = mine[i]!;
         if (ix >= s.x && ix < s.x + s.width && iy >= s.y && iy < s.y + s.height) {
           return s;
         }
       }
       return null;
     },
-    [state.sprites],
+    [state.sprites, state.activeImageId],
   );
 
   // ── Drawing ────────────────────────────────────────────
@@ -129,20 +165,15 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         }
       }
 
-      // Sprite regions
+      // Sprite regions (active image only)
       for (const s of state.sprites) {
+        if (s.imageId !== state.activeImageId) continue;
         const selected = state.selectedSpriteIds.includes(s.id);
         ctx.fillStyle = selected ? "rgba(255,255,0,0.12)" : "rgba(0,255,0,0.08)";
         ctx.fillRect(s.x, s.y, s.width, s.height);
         ctx.strokeStyle = selected ? "#ffff00" : "#00ff00";
         ctx.lineWidth = (selected ? 2 : 1) / state.zoom;
         ctx.strokeRect(s.x, s.y, s.width, s.height);
-
-        // Label
-        const fontSize = Math.max(8, 10 / state.zoom);
-        ctx.fillStyle = selected ? "#ffff00" : "#00ff00";
-        ctx.font = `bold ${fontSize}px monospace`;
-        ctx.fillText(s.name, s.x + 2 / state.zoom, s.y - 3 / state.zoom);
 
         // Anchor marker
         if (s.anchor.x !== 0 || s.anchor.y !== 0) {
@@ -205,8 +236,8 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
       const sy = e.clientY - rect.top;
       const imgPos = screenToImage(sx, sy);
 
-      // Middle click or pan tool = pan
-      if (e.button === 1 || state.activeTool === "pan") {
+      // Middle click, pan tool, or space+drag = pan
+      if (e.button === 1 || state.activeTool === "pan" || (spaceHeld && e.button === 0)) {
         setIsPanning(true);
         setPanStart({ x: e.clientX - state.pan.x, y: e.clientY - state.pan.y });
         return;
@@ -232,7 +263,8 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
 
         // Check if there's already a sprite at this grid cell
         const existing = state.sprites.find(
-          (s) => s.x === snapped.x && s.y === snapped.y &&
+          (s) => s.imageId === state.activeImageId &&
+            s.x === snapped.x && s.y === snapped.y &&
             s.width === state.grid.cellWidth && s.height === state.grid.cellHeight,
         );
 
@@ -248,6 +280,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
           const row = Math.floor((snapped.y - g.offsetY) / (g.cellHeight + g.spacingY));
           const sprite: SpriteRegion = {
             id: uid("spr"),
+            imageId: state.activeImageId!,
             name: `sprite_${col}_${row}`,
             x: snapped.x,
             y: snapped.y,
@@ -259,6 +292,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
             order: state.sprites.length,
             level: 0,
             properties: {},
+            collisions: [],
           };
           dispatch({ type: "ADD_SPRITE", sprite });
           dispatch({ type: "SELECT_SPRITE", id: sprite.id });
@@ -272,7 +306,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         setDrawEnd(pos);
       }
     },
-    [state, dispatch, screenToImage, snapToGrid, findSpriteAt, image],
+    [state, dispatch, screenToImage, snapToGrid, findSpriteAt, image, spaceHeld],
   );
 
   const handleMouseMove = useCallback(
@@ -320,6 +354,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
         if (rw > 1 && rh > 1) {
           const sprite: SpriteRegion = {
             id: uid("spr"),
+            imageId: state.activeImageId!,
             name: `region_${state.sprites.length}`,
             x: Math.round(rx),
             y: Math.round(ry),
@@ -331,6 +366,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
             order: state.sprites.length,
             level: 0,
             properties: {},
+            collisions: [],
           };
           dispatch({ type: "ADD_SPRITE", sprite });
           dispatch({ type: "SELECT_SPRITE", id: sprite.id });
@@ -362,7 +398,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
     [state.zoom, state.pan, dispatch],
   );
 
-  const toolClass = state.activeTool === "pan"
+  const toolClass = state.activeTool === "pan" || spaceHeld
     ? `tool-pan ${isPanning ? "panning" : ""}`
     : state.activeTool === "select"
       ? "tool-select"
@@ -381,7 +417,7 @@ export function TilemapCanvas({ state, dispatch, image, onMouseMove, onUploadCli
       />
       {!image && (
         <div className="upload-overlay">
-          <div className="big-icon">▣</div>
+          <div className="big-icon"><Icon name="sprite-editor" size={48} /></div>
           <div>Drop a tilemap image here</div>
           <div>— or —</div>
           <button className="btn" onClick={onUploadClick}>
