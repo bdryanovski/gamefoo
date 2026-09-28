@@ -160,47 +160,82 @@ export default class World {
       }
 
       for (let innerIndex = outerIndex + 1; innerIndex < len; innerIndex += 1) {
-        const other = list[innerIndex];
-        if (!other?.enabled) {
-          continue;
-        }
-
-        if (obj.layer !== other.layer) {
-          continue;
-        }
-
-        const objWantOther = this.tagsOverlap(obj.collidesWith, other.tags);
-        const otherWantObj = this.tagsOverlap(other.collidesWith, obj.tags);
-
-        const boundsObj = obj.getWorldBounds();
-        const boundsOther = other.getWorldBounds();
-
-        if (!this.intersects(obj, boundsObj, other, boundsOther)) {
-          continue;
-        }
-
-        if (obj.solid && other.solid) {
-          this.resolveOverlap(obj, boundsObj, other, boundsOther);
-        }
-
-        if (objWantOther && obj.onCollision) {
-          obj.onCollision({
-            self: obj.getOwner(),
-            other: other.getOwner(),
-            selfTags: obj.tags,
-            otherTags: other.tags,
-          });
-        }
-
-        if (otherWantObj && other.onCollision) {
-          other.onCollision({
-            self: other.getOwner(),
-            other: obj.getOwner(),
-            selfTags: other.tags,
-            otherTags: obj.tags,
-          });
-        }
+        this.testPair(obj, list[innerIndex]);
       }
+    }
+  }
+
+  /**
+   * Runs one candidate collider pair through the filters, the narrow-phase
+   * test, solid resolution and the collision callbacks — steps 2 to 6 of the
+   * {@link World.detect} algorithm for a single pair.
+   *
+   * @param obj   - The collider from the outer index, already known to be
+   *   enabled.
+   * @param other - The collider from the inner index, or `undefined` for an
+   *   empty slot — which is treated as disabled.
+   *
+   * @internal
+   */
+  private testPair(obj: Collidable, other: Collidable | undefined): void {
+    if (!other?.enabled) {
+      return;
+    }
+
+    if (obj.layer !== other.layer) {
+      return;
+    }
+
+    const objWantOther = this.tagsOverlap(obj.collidesWith, other.tags);
+    const otherWantObj = this.tagsOverlap(other.collidesWith, obj.tags);
+
+    const boundsObj = obj.getWorldBounds();
+    const boundsOther = other.getWorldBounds();
+
+    if (!this.intersects(obj, boundsObj, other, boundsOther)) {
+      return;
+    }
+
+    if (obj.solid && other.solid) {
+      this.resolveOverlap(obj, boundsObj, other, boundsOther);
+    }
+
+    this.notifyPair(obj, other, objWantOther, otherWantObj);
+  }
+
+  /**
+   * Fires `onCollision` on each side of an overlapping pair that opted into
+   * the other side's tags via `collidesWith`.
+   *
+   * @param obj          - First collidable.
+   * @param other        - Second collidable.
+   * @param objWantOther - Whether `obj` is interested in `other`'s tags.
+   * @param otherWantObj - Whether `other` is interested in `obj`'s tags.
+   *
+   * @internal
+   */
+  private notifyPair(
+    obj: Collidable,
+    other: Collidable,
+    objWantOther: boolean,
+    otherWantObj: boolean,
+  ): void {
+    if (objWantOther && obj.onCollision) {
+      obj.onCollision({
+        self: obj.getOwner(),
+        other: other.getOwner(),
+        selfTags: obj.tags,
+        otherTags: other.tags,
+      });
+    }
+
+    if (otherWantObj && other.onCollision) {
+      other.onCollision({
+        self: other.getOwner(),
+        other: obj.getOwner(),
+        selfTags: other.tags,
+        otherTags: obj.tags,
+      });
     }
   }
 

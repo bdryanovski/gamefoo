@@ -131,35 +131,72 @@ export class FootstepTrailShader extends Shader {
 
   override update(deltaTime: DeltaTime): void {
     if (this.emit.width > 0) {
-      const { x, y } = this.foot();
-      if (Number.isNaN(this.prevX)) {
-        this.prevX = x;
-        this.prevY = y;
-      } else {
-        const dx = x - this.prevX;
-        const dy = y - this.prevY;
-        const dist = Math.hypot(dx, dy);
-        if (dist > TELEPORT) {
-          this.clear();
-          this.prevX = x;
-          this.prevY = y;
-        } else if (dist > 0) {
-          const inv = 1 / dist;
-          const px = -dy * inv;
-          const py = dx * inv;
-          this.since += dist;
-          while (this.since >= this.spacing && this.prints.length < this.max) {
-            this.since -= this.spacing;
-            const s = this.left ? this.offset : -this.offset;
-            this.left = !this.left;
-            this.prints.push({ x: x + px * s, y: y + py * s, age: 0, life: this.life });
-          }
-          this.prevX = x;
-          this.prevY = y;
-        }
-      }
+      this.track();
     }
 
+    this.agePrints(deltaTime);
+  }
+
+  /**
+   * Advances the trail from the host's current foot position: seeds the
+   * previous position on the first frame, resets the trail on a teleport, and
+   * otherwise drops prints and records where the object now stands.
+   */
+  private track(): void {
+    const { x, y } = this.foot();
+    if (Number.isNaN(this.prevX)) {
+      this.prevX = x;
+      this.prevY = y;
+      return;
+    }
+
+    const dx = x - this.prevX;
+    const dy = y - this.prevY;
+    const dist = Math.hypot(dx, dy);
+    if (dist > TELEPORT) {
+      this.clear();
+      this.prevX = x;
+      this.prevY = y;
+      return;
+    }
+
+    if (dist > 0) {
+      this.dropPrints(x, y, dx, dy, dist);
+      this.prevX = x;
+      this.prevY = y;
+    }
+  }
+
+  /**
+   * Drops prints behind the foot along the perpendicular of the travel
+   * direction — one every `spacing` pixels of travel, alternating the gait
+   * offset — until this frame's travel is consumed or `max` prints are live.
+   *
+   * @param x - Foot x.
+   * @param y - Foot y.
+   * @param dx - Horizontal travel since the previous foot position.
+   * @param dy - Vertical travel since the previous foot position.
+   * @param dist - Total travel distance since the previous foot position.
+   */
+  private dropPrints(x: number, y: number, dx: number, dy: number, dist: number): void {
+    const inv = 1 / dist;
+    const px = -dy * inv;
+    const py = dx * inv;
+    this.since += dist;
+    while (this.since >= this.spacing && this.prints.length < this.max) {
+      this.since -= this.spacing;
+      const s = this.left ? this.offset : -this.offset;
+      this.left = !this.left;
+      this.prints.push({ x: x + px * s, y: y + py * s, age: 0, life: this.life });
+    }
+  }
+
+  /**
+   * Ages every live print and compacts out the ones that have faded.
+   *
+   * @param deltaTime - Seconds since the previous frame.
+   */
+  private agePrints(deltaTime: DeltaTime): void {
     let write = 0;
     for (const print of this.prints) {
       print.age += deltaTime;

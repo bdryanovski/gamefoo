@@ -53,7 +53,7 @@ export default class GameObjectRegister {
    * register.register(new Crate("crate_1", 200, 150, 32, 32));
    * ```
    */
-  register(object: GameObject) {
+  register(object: GameObject): void {
     this.objects.set(object.id, object);
     this._cache = null;
   }

@@ -479,6 +479,10 @@ export class WebRenderer implements RenderContext {
     return this.ctx;
   }
 
+  // Mirrors `CanvasRenderingContext2D.createRadialGradient`; the six-parameter
+  // signature is fixed by the web platform, so an options object would break
+  // drop-in compatibility with the DOM.
+  // oxlint-disable-next-line max-params
   createRadialGradient(
     x0: number,
     y0: number,

@@ -477,7 +477,7 @@ export default class Engine {
    * engine.destroy();
    * ```
    */
-  destroy() {
+  destroy(): void {
     this.pause();
     for (let index = this.subsystems.length - 1; index >= 0; index -= 1) {
       this.subsystems[index]?.destroy?.();

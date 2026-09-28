@@ -14,6 +14,7 @@ import {
   type GameObjectDefinition,
   type MapData,
   type MapObjectContext,
+  type Placement,
   type ScreenCoordinate,
   type ScreenData,
   type StateMachineDefinition,
@@ -165,7 +166,7 @@ export default class Screen {
   private active = false;
 
   constructor(context: ScreenContext) {
-    const { data, assets, map, registry } = context;
+    const { data, assets, map } = context;
     this.coordinate = [data.x, data.y];
     this.name = screenKey(data.x, data.y);
     this.width = map.screenCols * map.blockSize;
@@ -178,6 +179,18 @@ export default class Screen {
       this.paintFill(data.defaultSpriteId ?? map.defaultSpriteId ?? null, assets, map);
     }
 
+    this.buildPlacements(data, assets, context.registry);
+  }
+
+  /**
+   * Resolves every authored placement into the layer it targets, skipping
+   * levels whose authored layer entry is hidden.
+   */
+  private buildPlacements(
+    data: ScreenData,
+    assets: AssetManager,
+    registry?: MapObjectRegistry,
+  ): void {
     for (const placement of data.placements) {
       if (this.layerDefs?.[placement.level]?.visible === false) {
         continue;
@@ -190,92 +203,140 @@ export default class Screen {
       };
 
       if (placement.kind === 'sprite') {
-        const frame = assets.frame(placement.spriteId);
-        if (frame) {
-          layer.tiles.push({ frame, x: placement.x, y: placement.y, transform });
-        }
-        const collisions = assets.spriteCollisions(placement.spriteId);
-
-        if (collisions) {
-          this.addStaticColliders(collisions, placement.x, placement.y);
-        }
-
-        if (placement.level === GROUND_LEVEL) {
-          const size = this.collision.cellSize;
-          /**
-           * TODO: this is assumption that we make - and GROUND_LEVEL is hardcoded so it's most
-           * likely limitation that we are creating for ourself
-           */
-          this.collision.setWalkable(
-            Math.floor(placement.x / size),
-            Math.floor(placement.y / size),
-          );
-        }
+        this.addSpritePlacement(layer, placement, transform, assets);
       } else if (placement.kind === 'animation') {
-        const clip = assets.clip(placement.animationId);
-
-        if (clip) {
-          layer.descriptors.push({
-            kind: 'animation',
-            clip,
-            x: placement.x,
-            y: placement.y,
-            transform,
-          });
-        }
+        this.addAnimationPlacement(layer, placement, transform, assets);
       } else if (placement.kind === 'text') {
-        const context: MapObjectContext = {
-          assets,
-          machine: TEXT_MACHINE,
-          def: TEXT_DEF,
-          properties: {},
-          x: placement.x,
-          y: placement.y,
-          level: placement.level,
-          transform,
-          id: placement.id,
-          text: {
-            text: placement.text,
-            font: placement.font,
-            fontSize: placement.fontSize,
-            color: placement.color,
-            align: placement.align,
-          },
-        };
-        layer.descriptors.push({ kind: 'object', ctor: TextObject, context });
+        this.addTextPlacement(layer, placement, transform, assets);
       } else {
-        const owner = assets.objectByMachine(placement.machineId);
-
-        if (!owner) {
-          continue;
-        }
-
-        const machine = owner.machine;
-
-        const startStateId = placement.stateName
-          ? machine.states.find((s) => s.name === placement.stateName)?.id
-          : undefined;
-
-        const context: MapObjectContext = {
-          assets,
-          machine,
-          def: owner,
-          properties: placement.properties
-            ? { ...owner.properties, ...placement.properties }
-            : owner.properties,
-          x: placement.x,
-          y: placement.y,
-          level: placement.level,
-          transform,
-          startStateId,
-          id: placement.id,
-        };
-
-        const key = owner.properties.class ?? owner.name;
-        const ctor = registry?.resolve(key) ?? MapObject;
-        layer.descriptors.push({ kind: 'object', ctor, context });
+        this.addMachinePlacement(layer, placement, transform, assets, registry);
       }
     }
+  }
+
+  /**
+   * Adds a `sprite` placement as an inert tile plus its colliders and
+   * ground-level walkability.
+   */
+  private addSpritePlacement(
+    layer: Layer,
+    placement: Extract<Placement, { kind: 'sprite' }>,
+    transform: Transform,
+    assets: AssetManager,
+  ): void {
+    const frame = assets.frame(placement.spriteId);
+    if (frame) {
+      layer.tiles.push({ frame, x: placement.x, y: placement.y, transform });
+    }
+    const collisions = assets.spriteCollisions(placement.spriteId);
+
+    if (collisions) {
+      this.addStaticColliders(collisions, placement.x, placement.y);
+    }
+
+    if (placement.level === GROUND_LEVEL) {
+      const size = this.collision.cellSize;
+      /**
+       * TODO: this is assumption that we make - and GROUND_LEVEL is hardcoded so it's most
+       * likely limitation that we are creating for ourself
+       */
+      this.collision.setWalkable(Math.floor(placement.x / size), Math.floor(placement.y / size));
+    }
+  }
+
+  /**
+   * Records an `animation` placement as a live blueprint on its layer.
+   */
+  private addAnimationPlacement(
+    layer: Layer,
+    placement: Extract<Placement, { kind: 'animation' }>,
+    transform: Transform,
+    assets: AssetManager,
+  ): void {
+    const clip = assets.clip(placement.animationId);
+
+    if (clip) {
+      layer.descriptors.push({
+        kind: 'animation',
+        clip,
+        x: placement.x,
+        y: placement.y,
+        transform,
+      });
+    }
+  }
+
+  /**
+   * Records a `text` placement as a live blueprint for a {@link TextObject}.
+   */
+  private addTextPlacement(
+    layer: Layer,
+    placement: Extract<Placement, { kind: 'text' }>,
+    transform: Transform,
+    assets: AssetManager,
+  ): void {
+    const context: MapObjectContext = {
+      assets,
+      machine: TEXT_MACHINE,
+      def: TEXT_DEF,
+      properties: {},
+      x: placement.x,
+      y: placement.y,
+      level: placement.level,
+      transform,
+      id: placement.id,
+      text: {
+        text: placement.text,
+        font: placement.font,
+        fontSize: placement.fontSize,
+        color: placement.color,
+        align: placement.align,
+      },
+    };
+    layer.descriptors.push({ kind: 'object', ctor: TextObject, context });
+  }
+
+  /**
+   * Records a `machine` placement as a live blueprint, resolving the prefab
+   * and the registry-backed class it instantiates to.
+   */
+  private addMachinePlacement(
+    layer: Layer,
+    placement: Extract<Placement, { kind: 'machine' }>,
+    transform: Transform,
+    assets: AssetManager,
+    registry?: MapObjectRegistry,
+  ): void {
+    const owner = assets.objectByMachine(placement.machineId);
+
+    if (!owner) {
+      return;
+    }
+
+    const machine = owner.machine;
+
+    const startStateId = placement.stateName
+      ? machine.states.find((s) => s.name === placement.stateName)?.id
+      : undefined;
+
+    const context: MapObjectContext = {
+      assets,
+      machine,
+      def: owner,
+      properties: placement.properties
+        ? { ...owner.properties, ...placement.properties }
+        : owner.properties,
+      x: placement.x,
+      y: placement.y,
+      level: placement.level,
+      transform,
+      startStateId,
+      id: placement.id,
+    };
+
+    const key = owner.properties.class ?? owner.name;
+    const ctor = registry?.resolve(key) ?? MapObject;
+    layer.descriptors.push({ kind: 'object', ctor, context });
   }
 
   /**

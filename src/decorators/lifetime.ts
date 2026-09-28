@@ -30,13 +30,26 @@
  * // Output: ✧ Player #1 destroyed (lived 1234ms)
  * ```
  */
-export function lifetime<T extends abstract new (...args: any[]) => any>(ctor: T): T {
+/**
+ * Any class constructor, abstract or concrete.
+ *
+ * `any` is deliberate here: a generic class decorator must accept, wrap, and
+ * re-dispatch arbitrary constructor signatures. `unknown` cannot express this —
+ * it would break the `extends` clause and the `super(...args)` spread below,
+ * since neither can be proven to accept an `unknown[]` argument list.
+ */
+// oxlint-disable-next-line typescript/no-explicit-any
+type AnyConstructor = abstract new (...args: any[]) => any;
+
+export function lifetime<T extends AnyConstructor>(ctor: T): T {
   let instanceCount = 0;
 
-  const wrapped = class extends (ctor as unknown as new (...args: any[]) => any) {
+  const wrapped = class extends (ctor as unknown as AnyConstructor) {
     private __instanceId: number;
     private __createdAt: number;
 
+    // Re-dispatches an arbitrary argument list to `super`; see {@link AnyConstructor}.
+    // oxlint-disable-next-line typescript/no-explicit-any
     constructor(...args: any[]) {
       super(...args);
 
@@ -71,7 +84,7 @@ export function lifetime<T extends abstract new (...args: any[]) => any>(ctor: T
 /**
  * Formats constructor arguments for logging.
  */
-function formatArgs(args: any[]): string {
+function formatArgs(args: unknown[]): string {
   if (args.length === 0) {
     return '';
   }
@@ -80,23 +93,27 @@ function formatArgs(args: any[]): string {
     if (arg === null) {
       return 'null';
     }
-    if (arg === undefined) {
-      return 'undefined';
+    // Every remaining `typeof` is listed, so each branch narrows to a concrete
+    // type that has a real `toString` — no blind `String(unknown)` fallback.
+    switch (typeof arg) {
+      case 'undefined':
+        return 'undefined';
+      case 'string':
+        return `"${arg}"`;
+      case 'number':
+      case 'boolean':
+      case 'bigint':
+      case 'symbol':
+      case 'function':
+        return String(arg);
+      default:
+        // `object`: JSON, with a fallback for circular references.
+        try {
+          return JSON.stringify(arg);
+        } catch {
+          return '[Object]';
+        }
     }
-    if (typeof arg === 'string') {
-      return `"${arg}"`;
-    }
-    if (typeof arg === 'number' || typeof arg === 'boolean') {
-      return String(arg);
-    }
-    if (typeof arg === 'object') {
-      try {
-        return JSON.stringify(arg);
-      } catch {
-        return '[Object]';
-      }
-    }
-    return String(arg);
   });
 
   return ` (${formatted.join(', ')})`;

@@ -9,6 +9,15 @@
 import type { ColorPalette, GeneratedPalette, HexColor } from './types';
 
 /**
+ * Rounds `v` and constrains it to the 0-255 range of a single color channel.
+ *
+ * Module scope so it is created once rather than on every `rgbToHex` call.
+ */
+function clampChannel(v: number): number {
+  return Math.max(0, Math.min(255, Math.round(v)));
+}
+
+/**
  * Converts a hex color string to RGB tuple.
  *
  * @param hex - Hex color string (with or without #)
@@ -51,11 +60,9 @@ export function hexToRgb(hex: string): [number, number, number] {
  * ```
  */
 export function rgbToHex(r: number, g: number, b: number): HexColor {
-  const clamp = (v: number) => Math.max(0, Math.min(255, Math.round(v)));
-
-  const rHex = clamp(r).toString(16).padStart(2, '0');
-  const gHex = clamp(g).toString(16).padStart(2, '0');
-  const bHex = clamp(b).toString(16).padStart(2, '0');
+  const rHex = clampChannel(r).toString(16).padStart(2, '0');
+  const gHex = clampChannel(g).toString(16).padStart(2, '0');
+  const bHex = clampChannel(b).toString(16).padStart(2, '0');
 
   return `#${rHex}${gHex}${bHex}`.toUpperCase() as HexColor;
 }

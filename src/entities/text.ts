@@ -67,7 +67,7 @@ export default abstract class Text extends Entity {
    *
    * @return void
    */
-  setText(text: string) {
+  setText(text: string): void {
     this.text = text;
 
     this.setSize(this.font.width * this.text.length, this.font.height);

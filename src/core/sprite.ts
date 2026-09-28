@@ -31,6 +31,34 @@ interface AnimationDefinition {
 }
 
 /**
+ * The subset of an Aseprite/TexturePacker atlas JSON that
+ * {@link Sprite.fromAseprite} reads. Declared here so the parsed JSON is typed
+ * instead of `any`.
+ */
+interface AtlasFrame {
+  /** Source rectangle within the sheet, in pixels. */
+  frame: { x: number; y: number; w: number; h: number };
+  /** Display duration of this frame in milliseconds. */
+  duration?: number;
+}
+
+/** An Aseprite/TexturePacker atlas JSON document. */
+interface AtlasJson {
+  frames: Record<string, AtlasFrame>;
+  meta?: {
+    frameTags?: Array<{
+      name: string;
+      /** First frame index covered by this tag. */
+      from: number;
+      /** Last frame index covered by this tag. */
+      to: number;
+      /** Playback direction; `"forward_once"` means play once, do not loop. */
+      direction?: string;
+    }>;
+  };
+}
+
+/**
  * Describes the position and size of a single frame within a {@link Sprite}
  * sheet.
  *
@@ -307,11 +335,11 @@ export default class Sprite {
 
   static async fromAseprite(imagePath: string, jsonPath: string): Promise<Sprite> {
     const [image, response] = await Promise.all([Asset.load(imagePath), fetch(jsonPath)]);
-    const data = await response.json();
+    const data = (await response.json()) as AtlasJson;
 
     const regions: Record<string, SpriteFrame> = {};
     for (const [name, entry] of Object.entries(data.frames)) {
-      const f = (entry as any).frame;
+      const f = entry.frame;
       regions[name] = { x: f.x, y: f.y, width: f.w, height: f.h };
     }
 
@@ -327,7 +355,7 @@ export default class Sprite {
         }
         animations[tag.name] = {
           frames: frameNames,
-          duration: ((data.frames[frameNames[0]!] as any)?.duration ?? 100) / 1000,
+          duration: (data.frames[frameNames[0]!]?.duration ?? 100) / 1000,
           loop: tag.direction !== 'forward_once',
         };
       }

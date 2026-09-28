@@ -38,7 +38,7 @@ export function log(
 
   const prefix = `${target.constructor.name || 'anonymous'}.${String(propertyKey)}`;
 
-  descriptor.value = function (this: unknown, ...args: unknown[]) {
+  descriptor.value = function (this: unknown, ...args: unknown[]): unknown {
     console.log(`▶ ${prefix}(${JSON.stringify(args)})`);
     const result = originalMethod.apply(this, args);
     console.log(`◀ ${prefix} →`, result);

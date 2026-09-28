@@ -56,6 +56,42 @@ const DEFAULT_THEME: Required<DialogBoxTheme> = {
 const easeOut = (t: number): number => 1 - (1 - t) * (1 - t);
 
 /**
+ * Panel geometry for one frame, measured before anything is drawn.
+ *
+ * Body height is measured from the FULL text (not the typewriter-revealed
+ * prefix) so the panel keeps a stable height while the text types in and never
+ * clips the body or the options.
+ */
+interface DialogLayout {
+  /** Raw canvas, or `null` when rendering without one. */
+  raw: CanvasRenderingContext2D | null;
+  /** Panel left edge. */
+  x: number;
+  /** Panel top edge, eased by the slide-in animation. */
+  y: number;
+  /** Panel width. */
+  panelW: number;
+  /** Panel height. */
+  panelH: number;
+  /** Left edge of the content column, inside the panel padding. */
+  innerX: number;
+  /** Panel padding. */
+  pad: number;
+  /** Height of one text line. */
+  lineH: number;
+  /** Height of the caption line. */
+  captionH: number;
+  /** Caption text, or `''` when the segment has none. */
+  caption: string;
+  /** Body text, pre-wrapped to the content width. */
+  wrapped: string;
+  /** Whether the runner is waiting on an option choice. */
+  choosing: boolean;
+  /** Number of footer lines to reserve (options, or a single caret). */
+  footerLineCount: number;
+}
+
+/**
  * A retro dialog box that slides up from the bottom of the surface, renders a
  * {@link DialogRunner}'s current segment with a typewriter caret, and lists
  * the selectable options. Pure view: it reads runner state and draws — the
@@ -108,84 +144,140 @@ export class DialogBox {
       return;
     }
 
-    const surfaceH = ctx.height;
-    const margin = Math.round(ctx.width * 0.04);
-    const panelW = ctx.width - margin * 2;
-    const x = margin;
-
-    const raw = ctx.getCanvas?.();
+    const raw = ctx.getCanvas?.() ?? null;
     if (raw) {
       raw.save();
       raw.font = `${this.fontSize}px monospace`;
       raw.textBaseline = 'top';
     }
-    const measure = (s: string): number =>
-      raw ? raw.measureText(s).width : s.length * this.fontSize * 0.6;
+    // Laid out after the font is set, so `measureText` measures in the panel's
+    // own font and the wrap width matches what is drawn.
+    const layout = this.layout(ctx, runner, raw);
 
-    const pad = Math.round(this.fontSize * 0.75);
-    const innerX = x + pad;
-    const innerW = panelW - pad * 2;
-    const lineH = Math.round(this.fontSize * 1.25);
-    const captionH = Math.round(this.fontSize * 1.35);
-    const gap = Math.round(this.fontSize * 0.5);
-
-    // Measure content from the FULL text (stable height while the typewriter
-    // runs) so the panel grows to fit body + every option and never clips.
-    const caption = this.caption(runner);
-    const wrapped = runner.fullText ? wrapText(runner.fullText, innerW, measure) : '';
-    const bodyLineCount = wrapped ? wrapped.split('\n').length : 0;
-    const choosing = runner.phase === 'choosing';
-    const footerLineCount = choosing ? runner.choices.length : 1;
-
-    const bodyH = bodyLineCount * lineH;
-    const contentH =
-      (caption ? captionH : 0) + bodyH + (bodyH > 0 ? gap : 0) + footerLineCount * lineH;
-    const minH = Math.round(surfaceH * this.minHeightRatio);
-    const maxH = Math.min(surfaceH - margin * 2, Math.round(surfaceH * this.maxHeightRatio));
-    const panelH = Math.max(minH, Math.min(maxH, contentH + pad * 2));
-
-    const shownY = surfaceH - panelH - margin;
-    const y = Math.round(surfaceH - (surfaceH - shownY) * easeOut(this.reveal));
-
-    // Panel + border.
-    ctx.fillRect(x, y, panelW, panelH, this.theme.panel);
-    ctx.strokeRect(x, y, panelW, panelH, this.theme.border);
-
-    // Caption + typewriter body, flowing from the top.
-    let cursorY = y + pad;
-    if (caption) {
-      ctx.drawText(caption, innerX, cursorY, this.theme.title);
-      cursorY += captionH;
-    }
-    if (runner.fullText) {
-      const shownChars = Math.min(runner.revealedCount, wrapped.length);
-      for (const line of wrapped.slice(0, shownChars).split('\n')) {
-        ctx.drawText(line, innerX, cursorY, this.theme.text);
-        cursorY += lineH;
-      }
-    }
-
-    // Footer anchored to the bottom: options while choosing, else a caret.
-    const footerTop = y + panelH - pad - footerLineCount * lineH;
-    if (choosing) {
-      const choices = runner.choices;
-      for (let i = 0; i < choices.length; i++) {
-        const selected = i === runner.selectedIndex;
-        const label = `${selected ? '\u25B6 ' : '  '}${choices[i]!.label}`;
-        ctx.drawText(
-          label,
-          innerX,
-          footerTop + i * lineH,
-          selected ? this.theme.optionActive : this.theme.option,
-        );
-      }
-    } else if (this.blink < 0.6) {
-      const hint = runner.phase === 'typing' ? '\u25B6 skip (E)' : '\u25BC more (E)';
-      ctx.drawText(hint, x + panelW - pad - measure(hint), footerTop, this.theme.hint);
-    }
+    this.drawPanel(ctx, layout);
+    this.drawBody(ctx, layout, runner);
+    this.drawFooter(ctx, layout, runner);
 
     if (raw) {
       raw.restore();
+    }
+  }
+
+  /** Font-derived spacing, shared by the layout and the drawing passes. */
+  private metrics(): { pad: number; lineH: number; captionH: number; gap: number } {
+    return {
+      pad: Math.round(this.fontSize * 0.75),
+      lineH: Math.round(this.fontSize * 1.25),
+      captionH: Math.round(this.fontSize * 1.35),
+      gap: Math.round(this.fontSize * 0.5),
+    };
+  }
+
+  /** Width of `s` in the panel font, estimated when there is no canvas. */
+  private measureText(raw: CanvasRenderingContext2D | null, s: string): number {
+    return raw ? raw.measureText(s).width : s.length * this.fontSize * 0.6;
+  }
+
+  /** Panel height for `contentWithPadding`, clamped to the configured ratios. */
+  private panelHeight(surfaceH: number, margin: number, contentWithPadding: number): number {
+    const minH = Math.round(surfaceH * this.minHeightRatio);
+    const maxH = Math.min(surfaceH - margin * 2, Math.round(surfaceH * this.maxHeightRatio));
+    return Math.max(minH, Math.min(maxH, contentWithPadding));
+  }
+
+  /** Measures the panel for this frame. Pure — draws nothing. */
+  private layout(
+    ctx: RenderContext,
+    runner: DialogRunner,
+    raw: CanvasRenderingContext2D | null,
+  ): DialogLayout {
+    const { pad, lineH, captionH, gap } = this.metrics();
+    const measure = (s: string): number => this.measureText(raw, s);
+    const surfaceH = ctx.height;
+    const margin = Math.round(ctx.width * 0.04);
+    const panelW = ctx.width - margin * 2;
+    const x = margin;
+    const innerX = x + pad;
+    const innerW = panelW - pad * 2;
+
+    const caption = this.caption(runner);
+    const wrapped = runner.fullText ? wrapText(runner.fullText, innerW, measure) : '';
+    // Measured from the full text, so the panel height stays stable while the
+    // typewriter reveals it.
+    const bodyH = (wrapped ? wrapped.split('\n').length : 0) * lineH;
+    const choosing = runner.phase === 'choosing';
+    const footerLineCount = choosing ? runner.choices.length : 1;
+    const contentH =
+      (caption ? captionH : 0) + bodyH + (bodyH > 0 ? gap : 0) + footerLineCount * lineH;
+    const panelH = this.panelHeight(surfaceH, margin, contentH + pad * 2);
+    const shownY = surfaceH - panelH - margin;
+    const y = Math.round(surfaceH - (surfaceH - shownY) * easeOut(this.reveal));
+
+    return {
+      raw,
+      x,
+      y,
+      panelW,
+      panelH,
+      innerX,
+      pad,
+      lineH,
+      captionH,
+      caption,
+      wrapped,
+      choosing,
+      footerLineCount,
+    };
+  }
+
+  /** Fills the panel and strokes its border. */
+  private drawPanel(ctx: RenderContext, l: DialogLayout): void {
+    ctx.fillRect(l.x, l.y, l.panelW, l.panelH, this.theme.panel);
+    ctx.strokeRect(l.x, l.y, l.panelW, l.panelH, this.theme.border);
+  }
+
+  /** Draws the caption and typewriter body, flowing from the top. */
+  private drawBody(ctx: RenderContext, l: DialogLayout, runner: DialogRunner): void {
+    let cursorY = l.y + l.pad;
+    if (l.caption) {
+      ctx.drawText(l.caption, l.innerX, cursorY, this.theme.title);
+      cursorY += l.captionH;
+    }
+    if (runner.fullText) {
+      const shownChars = Math.min(runner.revealedCount, l.wrapped.length);
+      for (const line of l.wrapped.slice(0, shownChars).split('\n')) {
+        ctx.drawText(line, l.innerX, cursorY, this.theme.text);
+        cursorY += l.lineH;
+      }
+    }
+  }
+
+  /** Footer anchored to the panel bottom: the options, or a blinking hint. */
+  private drawFooter(ctx: RenderContext, l: DialogLayout, runner: DialogRunner): void {
+    const footerTop = l.y + l.panelH - l.pad - l.footerLineCount * l.lineH;
+    if (!l.choosing) {
+      if (this.blink >= 0.6) {
+        return;
+      }
+      const hint = runner.phase === 'typing' ? '\u25B6 skip (E)' : '\u25BC more (E)';
+      ctx.drawText(
+        hint,
+        l.x + l.panelW - l.pad - this.measureText(l.raw, hint),
+        footerTop,
+        this.theme.hint,
+      );
+      return;
+    }
+    const choices = runner.choices;
+    for (let i = 0; i < choices.length; i++) {
+      const selected = i === runner.selectedIndex;
+      const label = `${selected ? '\u25B6 ' : '  '}${choices[i]!.label}`;
+      ctx.drawText(
+        label,
+        l.innerX,
+        footerTop + i * l.lineH,
+        selected ? this.theme.optionActive : this.theme.option,
+      );
     }
   }
 

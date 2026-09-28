@@ -45,6 +45,7 @@
  * @see {@link Pathfinder} — navigates the grid
  */
 import type { Vector2 } from '../../generic_types';
+import type { Rect } from '../map/types';
 import type { IsoConfig, IsoLayout, VisibleRange } from './isometric_types';
 
 export class IsometricProjection {
@@ -306,10 +307,8 @@ export class IsometricProjection {
    * The returned range is conservatively padded by one tile in every
    * direction to avoid popping at the edges.
    *
-   * @param viewX - Left edge of the viewport in screen-space.
-   * @param viewY - Top edge of the viewport in screen-space.
-   * @param viewW - Width of the viewport in pixels.
-   * @param viewH - Height of the viewport in pixels.
+   * @param view - Viewport rectangle in screen-space: `x`/`y` are the
+   *   left/top edges, `width`/`height` the pixel extents.
    * @param gridCols - Total columns in the grid (used for clamping).
    * @param gridRows - Total rows in the grid (used for clamping).
    * @returns A {@link VisibleRange} with min/max column and row.
@@ -319,10 +318,7 @@ export class IsometricProjection {
    * @example Render only visible tiles
    * ```ts
    * const view = camera.getViewRect();
-   * const range = iso.getVisibleRange(
-   *   view.x, view.y, view.width, view.height,
-   *   grid.cols, grid.rows,
-   * );
+   * const range = iso.getVisibleRange(view, grid.cols, grid.rows);
    *
    * for (let row = range.minRow; row <= range.maxRow; row += 1) {
    *   for (let col = range.minCol; col <= range.maxCol; col += 1) {
@@ -331,20 +327,13 @@ export class IsometricProjection {
    * }
    * ```
    */
-  getVisibleRange(
-    viewX: number,
-    viewY: number,
-    viewW: number,
-    viewH: number,
-    gridCols: number,
-    gridRows: number,
-  ): VisibleRange {
+  getVisibleRange(view: Rect, gridCols: number, gridRows: number): VisibleRange {
     const pad = 2;
 
-    const topLeft = this.screenToGrid(viewX, viewY);
-    const topRight = this.screenToGrid(viewX + viewW, viewY);
-    const bottomLeft = this.screenToGrid(viewX, viewY + viewH);
-    const bottomRight = this.screenToGrid(viewX + viewW, viewY + viewH);
+    const topLeft = this.screenToGrid(view.x, view.y);
+    const topRight = this.screenToGrid(view.x + view.width, view.y);
+    const bottomLeft = this.screenToGrid(view.x, view.y + view.height);
+    const bottomRight = this.screenToGrid(view.x + view.width, view.y + view.height);
 
     const minCol = Math.max(0, Math.min(topLeft.col, bottomLeft.col) - pad);
     const maxCol = Math.min(gridCols - 1, Math.max(topRight.col, bottomRight.col) + pad);

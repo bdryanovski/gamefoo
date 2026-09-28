@@ -113,6 +113,29 @@ class MinHeap {
   }
 }
 
+/**
+ * Mutable state of a single A* search.
+ *
+ * Bundled into one object so the search can be split across focused helpers
+ * without threading six arguments through each of them.
+ *
+ * @internal
+ */
+interface SearchState {
+  /** Grid width, used to flatten a `(col, row)` pair into an array index. */
+  cols: number;
+  /** `1` once a cell has been expanded, so it is never revisited. */
+  closed: Uint8Array;
+  /** Best known cost from the start to each cell. */
+  gScores: Float64Array;
+  /** Frontier of nodes still to expand, ordered by `f`. */
+  openHeap: MinHeap;
+  /** Destination cell, the target of the heuristic. */
+  goal: { col: number; row: number };
+  /** Step offsets to try from each cell: 4-way or 8-way. */
+  offsets: ReadonlyArray<[number, number]>;
+}
+
 export class Pathfinder {
   private grid: Grid;
   private allowDiagonal: boolean;
@@ -180,12 +203,41 @@ export class Pathfinder {
       return null;
     }
 
+    const state = this.initSearch(startCol, startRow, goalCol, goalRow);
+
+    while (state.openHeap.size > 0) {
+      const current = state.openHeap.pop()!;
+
+      if (current.col === goalCol && current.row === goalRow) {
+        return this.reconstructPath(current);
+      }
+
+      const idx = current.row * state.cols + current.col;
+      if (state.closed[idx]) {
+        continue;
+      }
+      state.closed[idx] = 1;
+
+      this.expandNeighbors(current, state);
+    }
+
+    return null;
+  }
+
+  /**
+   * Allocates the per-search arrays and seeds the open set with the start node.
+   */
+  private initSearch(
+    startCol: number,
+    startRow: number,
+    goalCol: number,
+    goalRow: number,
+  ): SearchState {
     const cols = this.grid.cols;
     const goal = { col: goalCol, row: goalRow };
 
     const closed = new Uint8Array(cols * this.grid.rows);
     const gScores = new Float64Array(cols * this.grid.rows).fill(Infinity);
-
     const openHeap = new MinHeap();
 
     const h0 = this.heuristicFn({ col: startCol, row: startRow }, goal);
@@ -201,72 +253,97 @@ export class Pathfinder {
     openHeap.push(startNode);
     gScores[startRow * cols + startCol] = 0;
 
-    const offsets = this.allowDiagonal ? DIR_8 : DIR_4;
+    return {
+      cols,
+      closed,
+      gScores,
+      openHeap,
+      goal,
+      offsets: this.allowDiagonal ? DIR_8 : DIR_4,
+    };
+  }
 
-    while (openHeap.size > 0) {
-      const current = openHeap.pop()!;
+  /** Offers every in-reach neighbour of `current` to the open set. */
+  private expandNeighbors(current: PathNode, state: SearchState): void {
+    for (const [dc, dr] of state.offsets) {
+      this.relaxNeighbor(current, dc, dr, state);
+    }
+  }
 
-      if (current.col === goalCol && current.row === goalRow) {
-        return this.reconstructPath(current);
-      }
+  /**
+   * Index of a walkable, not-yet-closed cell, or `null` when it is not a
+   * candidate. Note that index `0` is a valid result — callers must compare
+   * against `null` rather than testing truthiness.
+   */
+  private candidateIndex(
+    col: number,
+    row: number,
+    closed: Uint8Array,
+    cols: number,
+  ): number | null {
+    if (!this.grid.isInBounds(col, row)) {
+      return null;
+    }
+    const idx = row * cols + col;
+    if (closed[idx]) {
+      return null;
+    }
+    const cell = this.grid.getCell(col, row);
+    if (!cell?.walkable) {
+      return null;
+    }
+    return idx;
+  }
 
-      const idx = current.row * cols + current.col;
-      if (closed[idx]) {
-        continue;
-      }
-      closed[idx] = 1;
+  /**
+   * Whether a diagonal step is clear: both orthogonal cells it passes between
+   * must be walkable, so a path cannot cut the corner of a wall.
+   */
+  private diagonalIsOpen(col: number, row: number, dc: number, dr: number): boolean {
+    const adj1 = this.grid.getCell(col + dc, row);
+    const adj2 = this.grid.getCell(col, row + dr);
+    return Boolean(adj1?.walkable && adj2?.walkable);
+  }
 
-      for (const [dc, dr] of offsets) {
-        const nc = current.col + dc;
-        const nr = current.row + dr;
+  /**
+   * Relaxes the cost of stepping one cell from `current` in direction
+   * `(dc, dr)`, pushing an improved node onto the open set.
+   */
+  private relaxNeighbor(current: PathNode, dc: number, dr: number, state: SearchState): void {
+    const { cols, closed, gScores, openHeap, goal } = state;
+    const nc = current.col + dc;
+    const nr = current.row + dr;
 
-        if (!this.grid.isInBounds(nc, nr)) {
-          continue;
-        }
-
-        const nIdx = nr * cols + nc;
-        if (closed[nIdx]) {
-          continue;
-        }
-
-        const neighbor = this.grid.getCell(nc, nr);
-        if (!neighbor || !neighbor.walkable) {
-          continue;
-        }
-
-        if (this.allowDiagonal && dc !== 0 && dr !== 0) {
-          const adj1 = this.grid.getCell(current.col + dc, current.row);
-          const adj2 = this.grid.getCell(current.col, current.row + dr);
-          if (!adj1?.walkable || !adj2?.walkable) {
-            continue;
-          }
-        }
-
-        const isDiag = dc !== 0 && dr !== 0;
-        const moveCost = isDiag ? this.diagonalCost : 1;
-        const tentativeG = current.g + moveCost;
-
-        if (tentativeG >= gScores[nIdx]!) {
-          continue;
-        }
-
-        gScores[nIdx] = tentativeG;
-
-        const h = this.heuristicFn({ col: nc, row: nr }, goal);
-        const node: PathNode = {
-          col: nc,
-          row: nr,
-          g: tentativeG,
-          h,
-          f: tentativeG + h,
-          parent: current,
-        };
-
-        openHeap.push(node);
-      }
+    const nIdx = this.candidateIndex(nc, nr, closed, cols);
+    if (nIdx === null) {
+      return;
     }
 
-    return null;
+    const isDiag = dc !== 0 && dr !== 0;
+    if (isDiag && this.allowDiagonal && !this.diagonalIsOpen(current.col, current.row, dc, dr)) {
+      return;
+    }
+
+    const moveCost = isDiag ? this.diagonalCost : 1;
+    const tentativeG = current.g + moveCost;
+
+    if (tentativeG >= gScores[nIdx]!) {
+      return;
+    }
+
+    gScores[nIdx] = tentativeG;
+
+    const h = this.heuristicFn({ col: nc, row: nr }, goal);
+    const node: PathNode = {
+      col: nc,
+      row: nr,
+      g: tentativeG,
+      h,
+      f: tentativeG + h,
+      parent: current,
+    };
+
+    openHeap.push(node);
   }
 
   /**

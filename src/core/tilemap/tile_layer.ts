@@ -283,14 +283,7 @@ export class TileLayer {
       return;
     }
 
-    const range = projection.getVisibleRange(
-      viewport.x,
-      viewport.y,
-      viewport.width,
-      viewport.height,
-      gridCols,
-      gridRows,
-    );
+    const range = projection.getVisibleRange(viewport, gridCols, gridRows);
 
     const img = this.tileSet.sprite.image;
     const tw = projection.tileWidth;

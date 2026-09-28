@@ -11,6 +11,8 @@ import type {
   Frame,
   GameObjectDefinition,
   MapObjectContext,
+  ObjectCell,
+  ObjectLayer,
   StateMachineDefinition,
   StateNodeDefinition,
   Transform,
@@ -340,41 +342,65 @@ export default class MapObject {
 
     const layers = this.def.layersByState?.[state.id];
     if (layers && layers.length > 0) {
-      const cell = this.def.grid?.cell ?? 16;
-      for (const layer of layers) {
-        if (!layer.visible) {
-          continue;
-        }
-        for (const c of layer.cells) {
-          const ox = c.col * cell;
-          const oy = c.row * cell;
-          const transform: Transform = {
-            rotation: this.transform?.rotation,
-            flipX: (this.transform?.flipX ?? false) !== (c.flipX ?? false),
-            flipY: (this.transform?.flipY ?? false) !== (c.flipY ?? false),
-          };
-          if (c.source.kind === 'sprite') {
-            const frame = this.assets.frame(c.source.spriteId);
-            if (frame) {
-              this.parts.push({ frame, ox, oy, transform });
-            }
-          } else {
-            const clip = this.assets.clip(c.source.animationId);
-            if (clip) {
-              this.parts.push({
-                anim: new AnimatedObject(clip, this.x + ox, this.y + oy, transform),
-                ox,
-                oy,
-              });
-            }
-          }
-        }
-      }
+      this.addComposedParts(layers, this.def.grid?.cell ?? 16);
       return;
     }
 
     // Fallback: the state's single representative display (objects with no
     // authored composition).
+    this.addDisplayPart(state);
+  }
+
+  /**
+   * Pushes one part per cell of the state's authored composition, layer by
+   * layer (bottom→top) and skipping hidden layers.
+   */
+  private addComposedParts(layers: ObjectLayer[], cell: number): void {
+    for (const layer of layers) {
+      if (!layer.visible) {
+        continue;
+      }
+      for (const c of layer.cells) {
+        this.addCellPart(c, cell);
+      }
+    }
+  }
+
+  /**
+   * Pushes the part for one composition cell at its grid offset, combining
+   * the object's transform with the cell's own flips.
+   */
+  private addCellPart(c: ObjectCell, cell: number): void {
+    const ox = c.col * cell;
+    const oy = c.row * cell;
+    const transform: Transform = {
+      rotation: this.transform?.rotation,
+      flipX: (this.transform?.flipX ?? false) !== (c.flipX ?? false),
+      flipY: (this.transform?.flipY ?? false) !== (c.flipY ?? false),
+    };
+
+    if (c.source.kind === 'sprite') {
+      const frame = this.assets.frame(c.source.spriteId);
+      if (frame) {
+        this.parts.push({ frame, ox, oy, transform });
+      }
+    } else {
+      const clip = this.assets.clip(c.source.animationId);
+      if (clip) {
+        this.parts.push({
+          anim: new AnimatedObject(clip, this.x + ox, this.y + oy, transform),
+          ox,
+          oy,
+        });
+      }
+    }
+  }
+
+  /**
+   * Pushes the fallback part for a state with no authored composition: its
+   * single representative display, drawn at the object origin.
+   */
+  private addDisplayPart(state: StateNodeDefinition): void {
     const { display } = state;
     if (display.kind === 'sprite' && display.spriteId) {
       const frame = this.assets.frame(display.spriteId);

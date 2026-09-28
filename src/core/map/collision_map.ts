@@ -48,6 +48,23 @@ export function translateShape(shape: CollisionShape, dx: number, dy: number): C
 }
 
 /**
+ * The smallest axis-aligned box containing every one of `points`.
+ */
+function boundsOfPoints(points: ReadonlyArray<{ x: number; y: number }>): Rect {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const p of points) {
+    minX = Math.min(minX, p.x);
+    minY = Math.min(minY, p.y);
+    maxX = Math.max(maxX, p.x);
+    maxY = Math.max(maxY, p.y);
+  }
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+
+/**
  * Returns `shape` moved into world space with a placement `transform`
  * applied — flip then rotation about the object's footprint centre — so a
  * rotated/flipped object's colliders track its sprite instead of staying
@@ -84,23 +101,15 @@ export function transformShape(
     const c = project(shape.cx, shape.cy);
     return { kind: 'circle', cx: c.x, cy: c.y, radius: shape.radius };
   }
-  const corners = [
+  const x2 = shape.x + shape.width;
+  const y2 = shape.y + shape.height;
+  const bounds = boundsOfPoints([
     project(shape.x, shape.y),
-    project(shape.x + shape.width, shape.y),
-    project(shape.x + shape.width, shape.y + shape.height),
-    project(shape.x, shape.y + shape.height),
-  ];
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  for (const p of corners) {
-    minX = Math.min(minX, p.x);
-    minY = Math.min(minY, p.y);
-    maxX = Math.max(maxX, p.x);
-    maxY = Math.max(maxY, p.y);
-  }
-  return { kind: 'rect', x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+    project(x2, shape.y),
+    project(x2, y2),
+    project(shape.x, y2),
+  ]);
+  return { kind: 'rect', ...bounds };
 }
 
 function overlapAABB(a: Rect, b: Rect): boolean {
@@ -250,6 +259,58 @@ export default class CollisionMap {
   }
 
   /**
+   * Resolves a move along one axis, stopping at the nearest `solid` collider so
+   * the mover stops against a wall and slides along it rather than passing
+   * through.
+   *
+   * The whole swept path is probed (not just the destination) so thin walls
+   * cannot be tunnelled through. `box` supplies the mover's extent and its
+   * position on the *other* axis, so the probe rect covers the sweep.
+   *
+   * @returns The resolved coordinate on `axis`.
+   */
+  private resolveAxis(box: Rect, axis: 'x' | 'y', delta: number, ignore?: MapObject): number {
+    const start = axis === 'x' ? box.x : box.y;
+    if (delta === 0) {
+      return start;
+    }
+    const size = axis === 'x' ? box.width : box.height;
+    const limit0 = start + delta;
+    const probe: Rect =
+      axis === 'x'
+        ? {
+            x: Math.min(start, limit0),
+            y: box.y,
+            width: Math.abs(delta) + size,
+            height: box.height,
+          }
+        : {
+            x: box.x,
+            y: Math.min(start, limit0),
+            width: box.width,
+            height: Math.abs(delta) + size,
+          };
+    let limit = limit0;
+    for (const collider of this.query(probe, 'solid', ignore)) {
+      const b = collider.bounds;
+      const lo = axis === 'x' ? b.x : b.y;
+      const hi = axis === 'x' ? b.x + b.width : b.y + b.height;
+      if (delta > 0) {
+        if (hi <= start) {
+          continue; // behind the mover
+        }
+        limit = Math.min(limit, lo - size);
+      } else {
+        if (lo >= start + size) {
+          continue;
+        }
+        limit = Math.max(limit, hi);
+      }
+    }
+    return limit;
+  }
+
+  /**
    * Slides `box` by `(dx, dy)`, stopping at any `solid` collider (axis by
    * axis, so it slides along walls). Returns the resolved top-left position.
    *
@@ -259,50 +320,10 @@ export default class CollisionMap {
    * @param ignore - An owner to skip (usually the mover itself).
    */
   resolve(box: Rect, dx: number, dy: number, ignore?: MapObject): { x: number; y: number } {
-    let x = box.x;
-    let y = box.y;
-    const w = box.width;
-    const h = box.height;
-
-    if (dx !== 0) {
-      let limit = x + dx;
-      // Probe the whole swept path so thin walls can't be tunnelled through.
-      const probe: Rect = { x: Math.min(x, limit), y, width: Math.abs(dx) + w, height: h };
-      for (const collider of this.query(probe, 'solid', ignore)) {
-        const b = collider.bounds;
-        if (dx > 0) {
-          if (b.x + b.width <= x) {
-            continue; // behind the mover
-          }
-          limit = Math.min(limit, b.x - w);
-        } else {
-          if (b.x >= x + w) {
-            continue;
-          }
-          limit = Math.max(limit, b.x + b.width);
-        }
-      }
-      x = limit;
-    }
-    if (dy !== 0) {
-      let limit = y + dy;
-      const probe: Rect = { x, y: Math.min(y, limit), width: w, height: Math.abs(dy) + h };
-      for (const collider of this.query(probe, 'solid', ignore)) {
-        const b = collider.bounds;
-        if (dy > 0) {
-          if (b.y + b.height <= y) {
-            continue;
-          }
-          limit = Math.min(limit, b.y - h);
-        } else {
-          if (b.y >= y + h) {
-            continue;
-          }
-          limit = Math.max(limit, b.y + b.height);
-        }
-      }
-      y = limit;
-    }
+    const x = this.resolveAxis(box, 'x', dx, ignore);
+    // The Y sweep is probed against the already-resolved X, matching the
+    // axis-by-axis order (X first, then Y) of a sliding move.
+    const y = this.resolveAxis({ ...box, x }, 'y', dy, ignore);
     return { x, y };
   }
 

@@ -375,19 +375,31 @@ export class MonitorSystem implements SubSystem {
     }
 
     if (this._showGraph) {
-      const canvasCtx = ctx.getCanvas?.();
-      if (canvasCtx && this.frames.length >= 1) {
-        canvasCtx.strokeStyle = '#fff';
-        canvasCtx.beginPath();
-        for (let frameIndex = 0; frameIndex < this.frames.length; frameIndex += 1) {
-          const x = this.x + frameIndex;
-          const y = yOffset + 60 - (this.frames[frameIndex] ?? 0);
-          canvasCtx.lineTo(x, y);
-        }
-        canvasCtx.stroke();
-      }
+      this.renderGraph(ctx, yOffset);
     }
 
     ctx.restore();
+  }
+
+  /**
+   * Renders the FPS graph as a one-pixel-per-sample polyline.
+   *
+   * @param ctx - Render context
+   * @param yOffset - Y position of the graph's top edge
+   *
+   * @internal
+   */
+  private renderGraph(ctx: RenderContext, yOffset: number): void {
+    const canvasCtx = ctx.getCanvas?.();
+    if (canvasCtx && this.frames.length >= 1) {
+      canvasCtx.strokeStyle = '#fff';
+      canvasCtx.beginPath();
+      for (let frameIndex = 0; frameIndex < this.frames.length; frameIndex += 1) {
+        const x = this.x + frameIndex;
+        const y = yOffset + 60 - (this.frames[frameIndex] ?? 0);
+        canvasCtx.lineTo(x, y);
+      }
+      canvasCtx.stroke();
+    }
   }
 }

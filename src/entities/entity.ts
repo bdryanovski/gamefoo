@@ -136,7 +136,7 @@ export default abstract class Entity extends Node {
    * const renderers = entity.getBehavioursByType(SpriteRender);
    * ```
    */
-  getBehavioursByType<T extends Behaviour>(type: new (...args: any[]) => T): T[] {
+  getBehavioursByType<T extends Behaviour>(type: new (...args: never[]) => T): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 

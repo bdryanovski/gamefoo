@@ -54,7 +54,7 @@ export default class IconBitmap extends BitmapDataRenderer {
    *
    * @returns Icon metadata object or `null`.
    */
-  get metadata() {
+  get metadata(): BitmapCatalogEntry | null {
     return Catalog.get(this.name) ?? null;
   }
 
@@ -97,7 +97,7 @@ export default class IconBitmap extends BitmapDataRenderer {
    * icon.renderIcon("heart", 20, 40, ctx);
    * ```
    */
-  renderIcon(icon: string, x: number, y: number, ctx: RenderContext) {
+  renderIcon(icon: string, x: number, y: number, ctx: RenderContext): void {
     const charData = this.getIconBitmask(icon);
     if (charData === null) {
       return;

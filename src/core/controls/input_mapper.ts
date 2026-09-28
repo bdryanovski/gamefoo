@@ -29,6 +29,21 @@ const DEFAULT_OPTIONS: Required<InputMapperOptions> = {
 };
 
 /**
+ * Scales a direction vector down so its magnitude never exceeds 1.
+ *
+ * @param x - Horizontal component.
+ * @param y - Vertical component.
+ * @returns The normalized direction.
+ */
+function normalizeDirection(x: number, y: number): { x: number; y: number } {
+  const magnitude = Math.sqrt(x * x + y * y);
+  if (magnitude > 1) {
+    return { x: x / magnitude, y: y / magnitude };
+  }
+  return { x, y };
+}
+
+/**
  * Maps raw input to semantic actions using a control scheme.
  *
  * InputMapper provides a high-level API for querying input based on
@@ -277,6 +292,20 @@ export class InputMapper {
    * ```
    */
   getDirection(): { x: number; y: number } {
+    // Digital inputs first, then let the analog stick override them
+    const digital = this.getDigitalDirection();
+    const steered = this.applyAnalogStick(digital);
+
+    // Normalize diagonal movement
+    return normalizeDirection(steered.x, steered.y);
+  }
+
+  /**
+   * Reads the digital (d-pad) directional actions into a raw direction.
+   *
+   * @returns Raw direction components, each -1, 0, or 1.
+   */
+  private getDigitalDirection(): { x: number; y: number } {
     let x = 0;
     let y = 0;
 
@@ -294,29 +323,32 @@ export class InputMapper {
       y += 1;
     }
 
-    // Check analog stick directly (for smoother movement)
-    const gamepad = this.input.getGamepad(this.options.gamepadIndex);
-    if (gamepad) {
-      const axisX = gamepad.axes[0] ?? 0;
-      const axisY = gamepad.axes[1] ?? 0;
-
-      // Apply deadzone
-      if (Math.abs(axisX) > this.options.deadzone) {
-        x = axisX;
-      }
-      if (Math.abs(axisY) > this.options.deadzone) {
-        y = axisY;
-      }
-    }
-
-    // Normalize diagonal movement
-    const magnitude = Math.sqrt(x * x + y * y);
-    if (magnitude > 1) {
-      x /= magnitude;
-      y /= magnitude;
-    }
-
     return { x, y };
+  }
+
+  /**
+   * Overlays the gamepad analog stick on top of a raw direction.
+   *
+   * Axes outside the deadzone replace the corresponding digital axis;
+   * axes inside it leave the digital value untouched.
+   *
+   * @param digital - Direction from the digital inputs.
+   * @returns The direction with analog values applied.
+   */
+  private applyAnalogStick(digital: { x: number; y: number }): { x: number; y: number } {
+    const gamepad = this.input.getGamepad(this.options.gamepadIndex);
+    if (!gamepad) {
+      return digital;
+    }
+
+    const axisX = gamepad.axes[0] ?? 0;
+    const axisY = gamepad.axes[1] ?? 0;
+
+    // Apply deadzone
+    return {
+      x: Math.abs(axisX) > this.options.deadzone ? axisX : digital.x,
+      y: Math.abs(axisY) > this.options.deadzone ? axisY : digital.y,
+    };
   }
 
   /**
