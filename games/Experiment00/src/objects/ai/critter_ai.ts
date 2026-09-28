@@ -72,7 +72,12 @@ export abstract class CritterAI extends MapObject {
       return hit.bounds;
     }
     const c = this.center();
-    return { x: c.x - DEFAULT_ZONE, y: c.y - DEFAULT_ZONE, width: DEFAULT_ZONE * 2, height: DEFAULT_ZONE * 2 };
+    return {
+      x: c.x - DEFAULT_ZONE,
+      y: c.y - DEFAULT_ZONE,
+      width: DEFAULT_ZONE * 2,
+      height: DEFAULT_ZONE * 2,
+    };
   }
 
   /** True when the sensed player overlaps `box`. */
@@ -82,7 +87,10 @@ export abstract class CritterAI extends MapObject {
       return false;
     }
     return (
-      box.x < t.x + t.width && box.x + box.width > t.x && box.y < t.y + t.height && box.y + box.height > t.y
+      box.x < t.x + t.width &&
+      box.x + box.width > t.x &&
+      box.y < t.y + t.height &&
+      box.y + box.height > t.y
     );
   }
 

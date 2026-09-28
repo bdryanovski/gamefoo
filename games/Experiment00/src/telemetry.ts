@@ -33,8 +33,7 @@ const MIXPANEL_TOKEN = (import.meta.env.MIX_PANEL as string | undefined)?.trim()
  * un-initialised and {@link Telemetry.emit} short-circuits, so no sink (Mixpanel,
  * `endpoint`, `forward`) sees an event.
  */
-const ENABLED: boolean =
-  import.meta.env.PROD && import.meta.env.VERCEL_ENV === 'production';
+const ENABLED: boolean = import.meta.env.PROD && import.meta.env.VERCEL_ENV === 'production';
 
 /** True once {@link ensureMixpanel} has successfully initialised the SDK. */
 let mixpanelReady = false;

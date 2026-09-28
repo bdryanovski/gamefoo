@@ -10,7 +10,6 @@ import {
   Engine,
   Input,
   MapManager,
-  type MapObjectContext,
   MapObjectRegistry,
   type RenderContext,
   ScreenRegistry,
@@ -47,7 +46,7 @@ import { SlimeKing } from './objects/slime_king';
 
 import { Telemetry } from './telemetry';
 import { Bat } from './objects/bat';
-import { getFog, setFog } from './fog';
+import { setFog } from './fog';
 import { Lanter } from './objects/lanter';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
@@ -55,10 +54,11 @@ import { Lanter } from './objects/lanter';
 const SCREEN_W = 320;
 const SCREEN_H = 256;
 const SCALE = 3;
-const PLAYER_SIZE = 16;
 // Screen tile size (px). Portal `spawn` cells are authored in grid col/row
 // and converted to pixels with this.
 const BLOCK_SIZE = 16;
+// How close the player must stand to toggle a campfire (px, centre to centre).
+const CAMP_REACH = 24;
 // Time a door takes to open (seconds). The `portal_open` cue is a 12s WAV
 // played at quadruple rate so it finishes in this window; the pie-fill badge
 // above the door tracks the same clock and completes as the door opens.
@@ -298,7 +298,7 @@ class MapGame extends Engine {
     await audio.load(audioProject, { resolve: (d) => resolveAudio(d.file) });
     this.audio = audio;
     this.use(audio);
-    audio.setListener(() => this.listenerPoint());
+    audio.setListener(() => this.player?.center() ?? { x: 0, y: 0 });
 
     this.navigate(this.cx, this.cy);
     this.spawnPlayer();
@@ -310,32 +310,17 @@ class MapGame extends Engine {
   /** Builds the persistent player from the loaded "player" prefab. */
   private spawnPlayer(): void {
     const assets = this.map?.assets;
-    const def = assets?.objectByName('me');
-    if (!assets || !def) return;
-    const start = def.machine.states.find((s) => s.name === 'Idle')?.id;
-    const context: MapObjectContext = {
-      assets,
-      machine: def.machine,
-      def,
-      properties: def.properties,
-      x: (SCREEN_W - PLAYER_SIZE) / 2,
-      y: (SCREEN_H - PLAYER_SIZE) / 2,
+    if (!assets) return;
+    const player = Player.spawn(assets, this.input, {
+      width: SCREEN_W,
+      height: SCREEN_H,
       level: PLAYER_LEVEL,
-      startStateId: start ?? def.machine.initialStateId ?? undefined,
-    };
-    this.player = new Player(context, this.input);
-    this.player.onSpawn();
-    this.map?.current?.collision.addOccupant(this.player);
-    // The player's own fog halo — without it the ambient fog hides the world.
-    getFog()?.addLight({
-      followTarget: this.player,
-      offsetX: PLAYER_SIZE / 2,
-      offsetY: PLAYER_SIZE / 2,
-      innerRadius: 26,
-      ditherRadius: 148,
-      strength: 1,
-      pattern: 'bayer8',
     });
+    if (!player) return;
+    this.player = player;
+    // The player's own fog halo and shaders are attached by `onSpawn` itself.
+    player.onSpawn();
+    this.map?.current?.collision.addOccupant(player);
   }
 
   /** Live campfires on the active screen. */
@@ -434,13 +419,6 @@ class MapGame extends Engine {
     }
   }
 
-  /** Point (screen px) the world is heard from — the player's centre. */
-  private listenerPoint(): { x: number; y: number } {
-    const p = this.player;
-    if (!p) return { x: 0, y: 0 };
-    return { x: p.x + PLAYER_SIZE / 2, y: p.y + PLAYER_SIZE / 2 };
-  }
-
   /** Crossfades to the ambient bed configured for the current screen. */
   private updateBackground(): void {
     const id = AUDIO.backgroundByScreen[`${this.cx},${this.cy}`];
@@ -535,13 +513,16 @@ class MapGame extends Engine {
             if (!this.navigate(target.x, target.y)) return;
             // Author-set spawn cell (grid col/row) → pixels, clamped so the
             // player stays on-screen; falls back to centre when unset.
-            const px = spawn
-              ? Math.max(0, Math.min(SCREEN_W - PLAYER_SIZE, spawn.col * BLOCK_SIZE))
-              : (SCREEN_W - PLAYER_SIZE) / 2;
-            const py = spawn
-              ? Math.max(0, Math.min(SCREEN_H - PLAYER_SIZE, spawn.row * BLOCK_SIZE))
-              : (SCREEN_H - PLAYER_SIZE) / 2;
-            player.place(px, py);
+            if (spawn) {
+              player.placeClamped(
+                spawn.col * BLOCK_SIZE,
+                spawn.row * BLOCK_SIZE,
+                SCREEN_W,
+                SCREEN_H,
+              );
+            } else {
+              player.placeAtCentre(SCREEN_W, SCREEN_H);
+            }
           });
         }
       } else if (!portal.isOpening) {
@@ -617,19 +598,10 @@ class MapGame extends Engine {
     }
 
     // Campfires: toggle the nearest within reach.
-    const p = player.box();
-    const pcx = p.x + p.width / 2;
-    const pcy = p.y + p.height / 2;
-    const reach = 24;
-    for (const fire of this.campfires()) {
-      const b = fire.collisionBox;
-      const dx = pcx - (b.x + b.w / 2);
-      const dy = pcy - (b.y + b.h / 2);
-      if (dx * dx + dy * dy <= reach * reach) {
-        fire.toggle();
-        this.telemetry.campfireToggle(fire.id, fire.lit);
-        break;
-      }
+    const fire = this.campfires().find((f) => this.isCampfireInReach(f));
+    if (fire) {
+      fire.toggle();
+      this.telemetry.campfireToggle(fire.id, fire.lit);
     }
   }
 
@@ -671,14 +643,8 @@ class MapGame extends Engine {
       this.highlight(chest, !chest.isOpen && chest.overlaps(reach));
     }
     // Campfires toggle within the same short radius as interact().
-    const pcx = body.x + body.width / 2;
-    const pcy = body.y + body.height / 2;
-    const campReach = 24;
     for (const fire of this.campfires()) {
-      const b = fire.collisionBox;
-      const dx = pcx - (b.x + b.w / 2);
-      const dy = pcy - (b.y + b.h / 2);
-      this.highlight(fire, dx * dx + dy * dy <= campReach * campReach);
+      this.highlight(fire, this.isCampfireInReach(fire));
     }
   }
 
@@ -689,6 +655,16 @@ class MapGame extends Engine {
     let outline = obj.getShader<OutlineShader>('outline');
     outline ??= obj.attachShader(new OutlineShader({ color: '#ffffff', thickness: 1 }));
     outline.enabled = on;
+  }
+
+  /** Whether `fire` is close enough to the player to be lit or doused. */
+  private isCampfireInReach(fire: Campfire): boolean {
+    const centre = this.player?.center();
+    if (!centre) return false;
+    const b = fire.collisionBox;
+    const dx = centre.x - (b.x + b.w / 2);
+    const dy = centre.y - (b.y + b.h / 2);
+    return dx * dx + dy * dy <= CAMP_REACH * CAMP_REACH;
   }
 
   private onKey(e: KeyboardEvent): void {
@@ -816,13 +792,11 @@ class MapGame extends Engine {
 
     // Screens no longer hand off at their edges — portals are the only exit,
     // so keep the player inside the current screen's bounds.
-    const maxX = SCREEN_W - PLAYER_SIZE;
-    const maxY = SCREEN_H - PLAYER_SIZE;
-    player.place(Math.max(0, Math.min(maxX, player.x)), Math.max(0, Math.min(maxY, player.y)));
+    player.clampToBounds(SCREEN_W, SCREEN_H);
 
-    const foot = player.footPoint();
-    if (!screen.collision.isWalkable(foot.x, foot.y)) {
-      player.place(player.x, player.y);
+    // A resolved slide can leave the player standing inside a wall; report it
+    // so the session analytics can see how often it happens.
+    if (player.isStuckInGeometry(screen.collision)) {
       this.telemetry.playerReset();
     }
 

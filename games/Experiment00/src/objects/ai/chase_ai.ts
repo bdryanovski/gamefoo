@@ -65,7 +65,10 @@ export abstract class ChaseAI extends CritterAI {
   overlaps(box: Rect): boolean {
     const a = this.zoneBounds('activation');
     return (
-      box.x < a.x + a.width && box.x + box.width > a.x && box.y < a.y + a.height && box.y + box.height > a.y
+      box.x < a.x + a.width &&
+      box.x + box.width > a.x &&
+      box.y < a.y + a.height &&
+      box.y + box.height > a.y
     );
   }
 

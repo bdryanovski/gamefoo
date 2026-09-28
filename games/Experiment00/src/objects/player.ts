@@ -1,5 +1,5 @@
 import type { DeltaTime } from '../../../../src/generic_types';
-import type { Input } from '../../../../src/index';
+import type { AssetManager, DitherLight, Input, Vector2 } from '../../../../src/index';
 import {
   type CollisionMap,
   FootstepTrailShader,
@@ -8,11 +8,22 @@ import {
   type MapObjectContext,
   type Rect,
 } from '../../../../src/index';
+import { getFog } from '../fog';
 
 const SIZE = 16;
 const SPEED = 64; // px/s
 
 type Facing = 'down' | 'up' | 'left' | 'right';
+
+/** Where a freshly spawned player starts: centred in a screen, at a z-level. */
+export interface PlayerSpawn {
+  /** Screen width in world pixels. */
+  width: number;
+  /** Screen height in world pixels. */
+  height: number;
+  /** Z-level the player is drawn on; layers above it occlude it. */
+  level: number;
+}
 
 /**
  * The playable character, bound to the "player" object and driven by its
@@ -34,10 +45,51 @@ export class Player extends MapObject {
   private readonly input: Input;
   private facing: Facing = 'down';
   private moving = false;
+  /** This player's own dither-fog halo, released again on despawn. */
+  private fogLight: DitherLight | null = null;
 
   constructor(ctx: MapObjectContext, input: Input) {
     super(ctx);
     this.input = input;
+  }
+
+  /**
+   * Builds the persistent player from this class's own prefab, centred in
+   * `spawn`.
+   *
+   * Unlike map placements the player is owned by the game rather than a
+   * {@link Screen}, so it is constructed by hand and survives screen changes.
+   * The starting animation state is settled by {@link Player.onSpawn}, which
+   * plays `Idle`, so no `startStateId` is needed here.
+   *
+   * @param assets - Catalog holding the prefab and resolving its frames.
+   * @param input - Keyboard source driving movement.
+   * @param spawn - Screen box to centre in, plus the z-level to draw at.
+   * @returns The player, or `null` when the prefab is missing from `assets`.
+   *
+   * @example
+   * ```ts
+   * const player = Player.spawn(map.assets, input, { width: 320, height: 256, level: 3 });
+   * player?.onSpawn();
+   * ```
+   */
+  static spawn(assets: AssetManager, input: Input, spawn: PlayerSpawn): Player | null {
+    const def = assets.objectByName(Player.type);
+    if (!def) {
+      return null;
+    }
+    return new Player(
+      {
+        assets,
+        machine: def.machine,
+        def,
+        properties: def.properties,
+        x: (spawn.width - SIZE) / 2,
+        y: (spawn.height - SIZE) / 2,
+        level: spawn.level,
+      },
+      input,
+    );
   }
 
   override onSpawn(): void {
@@ -61,11 +113,42 @@ export class Player extends MapObject {
       }),
     );
     this.play('Idle');
+    this.attachFogLight();
+  }
+
+  override onDespawn(): void {
+    if (this.fogLight) {
+      getFog()?.removeLight(this.fogLight);
+      this.fogLight = null;
+    }
+    super.onDespawn();
+  }
+
+  /**
+   * Registers this player's dither-fog halo (when the fog is up). Without it
+   * the ambient fog hides the world around the character.
+   */
+  private attachFogLight(): void {
+    this.fogLight =
+      getFog()?.addLight({
+        followTarget: this,
+        offsetX: SIZE / 2,
+        offsetY: SIZE / 2,
+        innerRadius: 26,
+        ditherRadius: 148,
+        strength: 1,
+        pattern: 'bayer8',
+      }) ?? null;
   }
 
   /** The player's world-space collision/footprint box. */
   box(): Rect {
     return { x: this.x, y: this.y, width: SIZE, height: SIZE };
+  }
+
+  /** Centre point of the footprint — where the player is in the world. */
+  center(): Vector2 {
+    return { x: this.x + SIZE / 2, y: this.y + SIZE / 2 };
   }
 
   /** Whether the player moved on the last update — drives footstep audio. */
@@ -90,6 +173,37 @@ export class Player extends MapObject {
     this.y = y;
   }
 
+  /** Teleports the player to the centre of a `width`×`height` screen. */
+  placeAtCentre(width: number, height: number): void {
+    this.place((width - SIZE) / 2, (height - SIZE) / 2);
+  }
+
+  /**
+   * Teleports the player to `(x, y)`, pulled back inside the screen so the
+   * whole sprite stays visible when an authored spawn sits in a border tile.
+   */
+  placeClamped(x: number, y: number, width: number, height: number): void {
+    this.place(Math.max(0, Math.min(width - SIZE, x)), Math.max(0, Math.min(height - SIZE, y)));
+  }
+
+  /**
+   * Pulls the player back inside the screen bounds, in place. Screens no
+   * longer hand off at their edges — portals are the only exit — so the player
+   * is kept on-screen after every move.
+   */
+  clampToBounds(width: number, height: number): void {
+    this.placeClamped(this.x, this.y, width, height);
+  }
+
+  /**
+   * Whether the player is standing in geometry, judged by its foot point: a
+   * resolved slide can leave it embedded in a wall or over a pit.
+   */
+  isStuckInGeometry(collision: CollisionMap): boolean {
+    const foot = this.footPoint();
+    return !collision.isWalkable(foot.x, foot.y);
+  }
+
   /** Reads the current movement intent from the keyboard, `-1..1` per axis. */
   private readInput(): { x: number; y: number } {
     let x = 0;
@@ -109,8 +223,8 @@ export class Player extends MapObject {
     return { x, y };
   }
 
-  /** Centre-bottom "foot" point, used for ground/fall checks. */
-  footPoint(): { x: number; y: number } {
+  /** Centre-bottom "foot" point, used for the walkable-ground check. */
+  private footPoint(): Vector2 {
     return { x: this.x + SIZE / 2, y: this.y + SIZE - 2 };
   }
 
