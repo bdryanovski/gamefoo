@@ -22,16 +22,38 @@ const USER_KEY = 'experiment00:user';
  */
 const MIXPANEL_TOKEN = (import.meta.env.MIX_PANEL as string | undefined)?.trim();
 
+/**
+ * Whether this build records telemetry at all.
+ *
+ * `import.meta.env.PROD` is `false` under the dev server, and `VERCEL_ENV` is
+ * substituted at build time by `vite.config.ts` — it is `'production'` only for
+ * `vercel deploy --prod`. Both must hold, so a dev server, a local
+ * `vite build`/`vite preview`, and Vercel *preview* deployments all send
+ * nothing; only the production deployment does. `ensureMixpanel` then stays
+ * un-initialised and {@link Telemetry.emit} short-circuits, so no sink (Mixpanel,
+ * `endpoint`, `forward`) sees an event.
+ */
+const ENABLED: boolean =
+  import.meta.env.PROD && import.meta.env.VERCEL_ENV === 'production';
+
 /** True once {@link ensureMixpanel} has successfully initialised the SDK. */
 let mixpanelReady = false;
 
 /**
  * Idempotently initialises the Mixpanel browser SDK. Returns whether Mixpanel
- * is usable — `false` when no `MIX_PANEL` token is configured.
+ * is usable — `false` when telemetry is disabled for this build or when no
+ * `MIX_PANEL` token is configured.
  */
 function ensureMixpanel(): boolean {
-  if (mixpanelReady) return true;
-  if (!MIXPANEL_TOKEN) return false;
+  if (mixpanelReady) {
+    return true;
+  }
+  if (!ENABLED) {
+    return false;
+  }
+  if (!MIXPANEL_TOKEN) {
+    return false;
+  }
   mixpanel.init(MIXPANEL_TOKEN, {
     // EU data residency — this project lives on Mixpanel's EU cluster, so
     // ingestion MUST target the EU host (the default routes to US and
@@ -162,10 +184,12 @@ export class Telemetry {
    */
   identify(userId: string, traits?: Props): void {
     this.userId = userId;
-    try {
-      localStorage.setItem(USER_KEY, userId);
-    } catch {
-      // storage unavailable (private mode) — identity holds for this session.
+    if (ENABLED) {
+      try {
+        localStorage.setItem(USER_KEY, userId);
+      } catch {
+        // storage unavailable (private mode) — identity holds for this session.
+      }
     }
     if (mixpanelReady) {
       mixpanel.identify(userId);
@@ -306,8 +330,14 @@ export class Telemetry {
   /**
    * Stamps identity + journey context onto `props` and fans the event to every
    * configured sink (Mixpanel, then `endpoint`, then `forward`).
+   *
+   * A no-op unless this is a production build, so a dev/preview run never
+   * sends a message from any sink.
    */
   private emit(name: string, props?: Props): void {
+    if (!ENABLED) {
+      return;
+    }
     this.seq += 1;
     const event: TelemetryEvent = {
       name,
@@ -351,8 +381,15 @@ function uuid(): string {
   return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
 }
 
-/** Reads (or creates and persists) the stable anonymous device id. */
+/**
+ * Reads (or creates and persists) the stable anonymous device id. Nothing is
+ * persisted when telemetry is disabled for this build, so dev runs leave no
+ * analytics state in `localStorage`.
+ */
 function readOrCreateUid(): string {
+  if (!ENABLED) {
+    return uuid();
+  }
   try {
     const existing = localStorage.getItem(UID_KEY);
     if (existing) {

@@ -87,6 +87,16 @@ export default defineConfig({
   // default `VITE_` prefix. Vite inlines matching vars from `.env.local` (dev)
   // and `process.env` (Vercel build) into `import.meta.env`.
   envPrefix: ['VITE_', 'MIX_PANEL'],
+  // Telemetry is production-only, and the runtime gates it on
+  // `import.meta.env.PROD && import.meta.env.VERCEL_ENV === 'production'`.
+  // `VERCEL_ENV` is a Vercel-provided build variable, so it is substituted here
+  // rather than exposed wholesale (adding `VERCEL_` to `envPrefix` would inline
+  // every Vercel var, tokens included, into client code). Vite supplies `PROD`
+  // itself; the runtime requires both, so only `vercel deploy --prod` records
+  // events — dev, `vite build`/`vite preview`, and Vercel previews send nothing.
+  define: {
+    'import.meta.env.VERCEL_ENV': JSON.stringify(process.env.VERCEL_ENV),
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,
