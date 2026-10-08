@@ -1,14 +1,13 @@
 import type { RenderContext } from '../renderer/type';
 import StateMachine from '../state_machine';
-import AnimatedObject from './animated_object';
 import type AssetManager from './asset_manager';
-import { drawFrame } from './draw';
+import type DrawNode from './draw_node';
+import FrameNode from './frame_node';
+import AnimatedObject from './animated_object';
 import { shapeBounds, transformShape, type WorldCollider } from './collision_map';
-import type { Shader } from '../shaders/shader';
-import { ShaderStack } from '../shaders/shader_stack';
-import type { ShaderRegion } from '../shaders/types';
+import ShaderHost from '../shaders/shader_host';
+import type { ShaderPart } from '../shaders/types';
 import type {
-  Frame,
   GameObjectDefinition,
   MapObjectContext,
   ObjectCell,
@@ -20,18 +19,6 @@ import type {
 import type { DeltaTime } from '@/generic_types';
 
 /**
- * A resolved draw unit of the current state: a static frame or a live
- * animation, positioned at a pixel offset from the object origin.
- */
-interface Part {
-  frame?: Frame;
-  anim?: AnimatedObject;
-  ox: number;
-  oy: number;
-  transform?: Transform;
-}
-
-/**
  * Base class for every placed object driven by a {@link StateMachineDefinition}
  * (chests, torches, switches, enemies).
  *
@@ -40,6 +27,11 @@ interface Part {
  * draws/advances it — so an unsubclassed `MapObject` already works. Custom
  * classes extend this to own the machine: add timers, fire conditions in
  * {@link MapObject.interact | interact}, and override the lifecycle hooks.
+ *
+ * A state's art resolves into a list of {@link DrawNode} parts — one per
+ * visible cell of its authored composition, each anchored to this object —
+ * which the object advances and draws as one unit, handing them to shaders
+ * that trace its silhouette.
  *
  * Instances are created when their screen becomes active and disposed when
  * it is left (see {@link Screen}); {@link MapObject.onDespawn | onDespawn}
@@ -64,21 +56,14 @@ interface Part {
  *
  * @see {@link MapObjectRegistry}
  * @see {@link StateMachine}
+ * @see {@link ShaderHost} — the position + shader base this builds on
  */
-export default class MapObject {
+export default class MapObject extends ShaderHost {
   /**
    * Registry key. Override in subclasses; falls back to the object name.
    */
   static readonly type?: string;
 
-  /**
-   * Pixel X within the screen.
-   */
-  x: number;
-  /**
-   * Pixel Y within the screen.
-   */
-  y: number;
   /**
    * Z-layer this object lives on.
    */
@@ -114,20 +99,15 @@ export default class MapObject {
 
   private readonly transform?: Transform;
   /**
-   * Resolved draw parts for the current state — each visible composition cell
-   * as a static frame or a live animation with its pixel offset. Parts stack
-   * bottom→top, so a layered state (e.g. `base` + `door`) renders in full.
+   * The current state's draw parts — each visible composition cell as a
+   * static frame or a live animation, anchored to this object at its cell's
+   * pixel offset. Parts stack bottom→top, so a layered state (e.g. `base` +
+   * `door`) renders in full.
    */
-  private parts: Part[] = [];
-
-  /**
-   * Screen effects attached to this object (glow, particles, …).
-   */
-  private readonly shaders = new ShaderStack();
+  private parts: DrawNode[] = [];
 
   constructor(ctx: MapObjectContext) {
-    this.x = ctx.x;
-    this.y = ctx.y;
+    super({ x: ctx.x, y: ctx.y });
     this.level = ctx.level;
     this.id = ctx.id ?? '';
     this.def = ctx.def;
@@ -183,68 +163,29 @@ export default class MapObject {
    * Called once when the object's screen is left; disposes the FSM.
    */
   onDespawn(): void {
-    this.shaders.clear();
+    this.clearShaders();
     this.fsm.destroy();
   }
 
   /**
-   * Advances the current animation, if any.
+   * Advances the current state's animations, if any.
    */
-  update(_deltaTime: DeltaTime): void {
+  update(deltaTime: DeltaTime): void {
     for (const part of this.parts) {
-      part.anim?.update(_deltaTime);
+      part.update(deltaTime);
     }
-    this.shaders.update(_deltaTime);
+    this.updateShaders(deltaTime);
   }
 
   /**
-   * Draws the current state's display.
+   * Draws the current state's parts, between the under and over shader passes.
    */
   render(ctx: RenderContext): void {
-    const bounds = this.bounds();
-    // Ground decals (trails, shadows) draw beneath the sprite; glow/particles
-    // and other overlays draw on top. Both passes receive the current draw
-    // parts so silhouette effects (e.g. OutlineShader) can trace the art.
-    this.shaders.renderUnder(ctx, bounds, this.parts);
-    for (const part of this.parts) {
-      if (part.anim) {
-        // keep the animation aligned with the object (custom classes may move it)
-        part.anim.x = this.x + part.ox;
-        part.anim.y = this.y + part.oy;
-        part.anim.render(ctx);
-      } else if (part.frame) {
-        drawFrame(ctx, part.frame, this.x + part.ox, this.y + part.oy, part.transform);
+    this.renderShaders(ctx, () => {
+      for (const part of this.parts) {
+        part.render(ctx);
       }
-    }
-    this.shaders.renderOver(ctx, bounds, this.parts);
-  }
-
-  /**
-   * Attaches a screen shader to this object; returns it for configuration.
-   */
-  attachShader<T extends Shader>(shader: T): T {
-    return this.shaders.attach(shader);
-  }
-
-  /**
-   * The attached shader with `type`, or `undefined`.
-   */
-  getShader<T extends Shader>(type: string): T | undefined {
-    return this.shaders.get<T>(type);
-  }
-
-  /**
-   * Whether a shader with `type` is attached.
-   */
-  hasShader(type: string): boolean {
-    return this.shaders.has(type);
-  }
-
-  /**
-   * Detaches the shader with `type`, if present.
-   */
-  detachShader(type: string): void {
-    this.shaders.detach(type);
+    });
   }
 
   /**
@@ -268,10 +209,7 @@ export default class MapObject {
   protected collidersForState(stateId: string): WorldCollider[] {
     const defs = this.def.collisionsByState?.[stateId] ?? [];
     const out: WorldCollider[] = [];
-    const grid = this.def.grid;
-    const footprint = grid
-      ? { width: grid.cols * grid.cell, height: grid.rows * grid.cell }
-      : { width: 16, height: 16 };
+    const footprint = this.footprint;
     for (const collision of defs) {
       if (collision.enabled === false) {
         continue;
@@ -280,20 +218,6 @@ export default class MapObject {
       out.push({ layer: collision.layerId, shape, bounds: shapeBounds(shape), owner: this });
     }
     return out;
-  }
-
-  /**
-   * The object's bounding box, used as the region passed to shaders.
-   */
-  protected bounds(): ShaderRegion {
-    const grid = this.def.grid;
-    if (grid) {
-      return { x: this.x, y: this.y, width: grid.cols * grid.cell, height: grid.rows * grid.cell };
-    }
-    const frame = this.parts[0]?.anim?.frame ?? this.parts[0]?.frame;
-    const width = frame?.sw ?? 16;
-    const height = frame?.sh ?? 16;
-    return { x: this.x, y: this.y, width, height };
   }
 
   /**
@@ -335,6 +259,29 @@ export default class MapObject {
   }
 
   /**
+   * The parts of the current state, so silhouette shaders can trace this
+   * object's art rather than its bounding box.
+   */
+  protected override shaderParts(): readonly ShaderPart[] {
+    return this.parts;
+  }
+
+  /**
+   * The centre that a placement transform rotates colliders about — the
+   * authored composition grid, or a nominal cell when the prefab has no grid.
+   *
+   * Deliberately not {@link Node.getSize}: a gridless object's draw bounds grow
+   * to its sprite, but its collider pivot stays on the nominal cell, so
+   * rotating an ungridded prefab keeps its authored collision geometry.
+   */
+  private get footprint(): { width: number; height: number } {
+    const grid = this.def.grid;
+    return grid
+      ? { width: grid.cols * grid.cell, height: grid.rows * grid.cell }
+      : { width: 16, height: 16 };
+  }
+
+  /**
    * Resolves a state's `display` into a frame or a fresh animation.
    */
   private applyState(state: StateNodeDefinition): void {
@@ -343,12 +290,28 @@ export default class MapObject {
     const layers = this.def.layersByState?.[state.id];
     if (layers && layers.length > 0) {
       this.addComposedParts(layers, this.def.grid?.cell ?? 16);
-      return;
+    } else {
+      // Fallback: the state's single representative display (objects with no
+      // authored composition).
+      this.addDisplayPart(state);
     }
 
-    // Fallback: the state's single representative display (objects with no
-    // authored composition).
-    this.addDisplayPart(state);
+    const [width, height] = this.stateSize();
+    this.setSize(width, height);
+  }
+
+  /**
+   * The size the current state draws at — its composition grid, else its first
+   * part's frame, else a nominal cell for a state with neither. Keeps the
+   * object's {@link ShaderHost.bounds | bounds} in step with its art.
+   */
+  private stateSize(): [number, number] {
+    const grid = this.def.grid;
+    if (grid) {
+      return [grid.cols * grid.cell, grid.rows * grid.cell];
+    }
+    const frame = this.parts[0]?.frame;
+    return [frame?.sw ?? 16, frame?.sh ?? 16];
   }
 
   /**
@@ -382,16 +345,12 @@ export default class MapObject {
     if (c.source.kind === 'sprite') {
       const frame = this.assets.frame(c.source.spriteId);
       if (frame) {
-        this.parts.push({ frame, ox, oy, transform });
+        this.parts.push(new FrameNode(this, ox, oy, frame, transform));
       }
     } else {
       const clip = this.assets.clip(c.source.animationId);
       if (clip) {
-        this.parts.push({
-          anim: new AnimatedObject(clip, this.x + ox, this.y + oy, transform),
-          ox,
-          oy,
-        });
+        this.parts.push(new AnimatedObject(clip, this, ox, oy, transform));
       }
     }
   }
@@ -405,16 +364,12 @@ export default class MapObject {
     if (display.kind === 'sprite' && display.spriteId) {
       const frame = this.assets.frame(display.spriteId);
       if (frame) {
-        this.parts.push({ frame, ox: 0, oy: 0, transform: this.transform });
+        this.parts.push(new FrameNode(this, 0, 0, frame, this.transform));
       }
     } else if (display.kind === 'animation' && display.animationId) {
       const clip = this.assets.clip(display.animationId);
       if (clip) {
-        this.parts.push({
-          anim: new AnimatedObject(clip, this.x, this.y, this.transform),
-          ox: 0,
-          oy: 0,
-        });
+        this.parts.push(new AnimatedObject(clip, this, 0, 0, this.transform));
       }
     }
   }

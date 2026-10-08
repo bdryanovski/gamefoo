@@ -48,6 +48,13 @@ const def: GameObjectDefinition = {
 };
 
 function drawsFor(startStateId: string): Array<{ tag: number; dx: number; dy: number }> {
+  return drawsForObject(startStateId, (obj) => obj);
+}
+
+function drawsForObject(
+  startStateId: string,
+  prepare: (obj: MapObject) => MapObject,
+): Array<{ tag: number; dx: number; dy: number }> {
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,
@@ -58,7 +65,7 @@ function drawsFor(startStateId: string): Array<{ tag: number; dx: number; dy: nu
     level: 0,
     startStateId,
   };
-  const obj = new MapObject(ctx);
+  const obj = prepare(new MapObject(ctx));
   const draws: Array<{ tag: number; dx: number; dy: number }> = [];
   const rctx = {
     drawSprite: (_img: unknown, sx: number, _sy: number, _sw: number, _sh: number, dx: number, dy: number) =>
@@ -83,5 +90,19 @@ describe('MapObject composition', () => {
 
   test('renders a single-layer state as just that cell', () => {
     expect(drawsFor('st_open')).toEqual([{ tag: 1, dx: 100, dy: 50 }]);
+  });
+
+  test('parts follow the object after it moves', () => {
+    // A part is anchored to its host, not to an absolute position: moving the
+    // object must carry every cell with it, offsets intact.
+    const moved = drawsForObject('st_close', (obj) => {
+      obj.x += 40;
+      obj.y -= 10;
+      return obj;
+    });
+    expect(moved).toEqual([
+      { tag: 1, dx: 140, dy: 40 },
+      { tag: 2, dx: 140, dy: 56 },
+    ]);
   });
 });

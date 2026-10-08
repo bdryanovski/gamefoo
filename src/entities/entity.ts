@@ -1,9 +1,6 @@
 import type { Behaviour } from '../core/behaviour';
 import type { RenderContext } from '../core/renderer/type';
-import Node from './node';
-import type { Shader } from '../core/shaders/shader';
-import { ShaderStack } from '../core/shaders/shader_stack';
-import type { ShaderRegion } from '../core/shaders/types';
+import ShaderHost from '../core/shaders/shader_host';
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -15,6 +12,8 @@ import type { ShaderRegion } from '../core/shaders/types';
  *   {@link Entity.size | size} with convenient `x`/`y` accessors.
  * - **Behaviour system** — attach, detach, query, and bulk-update
  *   {@link Behaviour} instances that compose an entity's logic.
+ * - **Screen effects** — the keyed shader API and the `under`/over render
+ *   sandwich inherited from {@link ShaderHost}.
  *
  * Subclasses must implement {@link Entity.update} and
  * {@link Entity.render}.
@@ -53,8 +52,9 @@ import type { ShaderRegion } from '../core/shaders/types';
  * @see {@link DynamicEntity} — extends Entity with velocity / speed
  * @see {@link Player}        — concrete player entity
  * @see {@link Behaviour}     — composable logic units
+ * @see {@link ShaderHost}    — the position + shader base Entity builds on
  */
-export default abstract class Entity extends Node {
+export default abstract class Entity extends ShaderHost {
   /**
    * Unique identifier for this entity.
    *
@@ -74,13 +74,6 @@ export default abstract class Entity extends Node {
    * a behaviour is attached or detached.
    */
   private _sortedBehaviors: Behaviour[] | null = null;
-
-  /**
-   * Screen effects attached to this entity (glow, particles, …).
-   *
-   * @since 0.5.0
-   */
-  private readonly shaderStack = new ShaderStack();
 
   /**
    * Creates a new entity.
@@ -247,73 +240,5 @@ export default abstract class Entity extends Node {
         behavior.render(ctx);
       }
     }
-  }
-
-  /**
-   * Attaches a screen shader to this entity and returns it.
-   *
-   * Effects render when the subclass calls {@link Entity.renderShaders} and
-   * advance when it calls {@link Entity.updateShaders} — mirroring the
-   * behaviour update/render hooks.
-   *
-   * @since 0.5.0
-   *
-   * @param shader - The shader to attach.
-   */
-  attachShader<T extends Shader>(shader: T): T {
-    return this.shaderStack.attach(shader);
-  }
-
-  /**
-   * The attached shader with `type`, or `undefined`.
-   *
-   * @since 0.5.0
-   */
-  getShader<T extends Shader>(type: string): T | undefined {
-    return this.shaderStack.get<T>(type);
-  }
-
-  /**
-   * Whether a shader with `type` is attached.
-   *
-   * @since 0.5.0
-   */
-  hasShader(type: string): boolean {
-    return this.shaderStack.has(type);
-  }
-
-  /**
-   * Detaches the shader with `type`, if present.
-   *
-   * @since 0.5.0
-   */
-  detachShader(type: string): void {
-    this.shaderStack.detach(type);
-  }
-
-  /**
-   * Advances every enabled shader. Call from a subclass's `update`, next to
-   * {@link Entity.updateBehaviours}.
-   *
-   * @since 0.5.0
-   *
-   * @param deltaTime - Seconds elapsed since the previous frame.
-   */
-  protected updateShaders(deltaTime: number): void {
-    this.shaderStack.update(deltaTime);
-  }
-
-  /**
-   * Renders every enabled shader over this entity's bounding box. Call from
-   * a subclass's `render`, next to {@link Entity.renderBehaviours}.
-   *
-   * @since 0.5.0
-   *
-   * @param ctx - The rendering context.
-   */
-  protected renderShaders(ctx: RenderContext): void {
-    const size = this.getSize();
-    const region: ShaderRegion = { x: this.x, y: this.y, width: size.width, height: size.height };
-    this.shaderStack.render(ctx, region);
   }
 }

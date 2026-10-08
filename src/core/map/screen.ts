@@ -1,4 +1,5 @@
 import type { RenderContext } from '../renderer/type';
+import type Node from '@/entities/node';
 import AnimatedObject from './animated_object';
 import type AssetManager from './asset_manager';
 import { drawFrame } from './draw';
@@ -77,7 +78,7 @@ type LiveDescriptor =
 interface Layer {
   tiles: Tile[];
   descriptors: LiveDescriptor[];
-  instances: Array<AnimatedObject | MapObject>;
+  instances: Node[];
 }
 
 /**
@@ -369,7 +370,7 @@ export default class Screen {
       for (const descriptor of layer.descriptors) {
         if (descriptor.kind === 'animation') {
           layer.instances.push(
-            new AnimatedObject(descriptor.clip, descriptor.x, descriptor.y, descriptor.transform),
+            AnimatedObject.at(descriptor.clip, descriptor.x, descriptor.y, descriptor.transform),
           );
         } else {
           const instance = new descriptor.ctor(descriptor.context);

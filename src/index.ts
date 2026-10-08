@@ -117,6 +117,7 @@ export * from './core/renderer/objects/bitmap_animator';
  */
 export { Shader } from './core/shaders/shader';
 export { ShaderStack } from './core/shaders/shader_stack';
+export { default as ShaderHost } from './core/shaders/shader_host';
 export { GlowShader } from './core/shaders/glow_shader';
 export type { GlowConfig } from './core/shaders/glow_shader';
 export { ParticleShader } from './core/shaders/particle_shader';
@@ -142,6 +143,8 @@ export { default as Screen } from './core/map/screen';
 export type { ScreenConstructor, ScreenContext } from './core/map/screen';
 export { default as ScreenRegistry } from './core/map/screen_registry';
 export { default as AnimatedObject } from './core/map/animated_object';
+export { default as DrawNode } from './core/map/draw_node';
+export { default as FrameNode } from './core/map/frame_node';
 export { default as MapObject } from './core/map/map_object';
 export { default as TextObject } from './core/map/text_object';
 export type { MapObjectConstructor } from './core/map/map_object';
