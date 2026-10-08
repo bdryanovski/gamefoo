@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UI Framework — GameFoo Demo</title>
+    <link rel="stylesheet" href="../shared.css" />
+    <style>
+      body {
+        background: #0d0d1a;
+        color: #ccc;
+        font-family: 'Courier New', monospace;
+      }
+      h1 {
+        color: #7fdbca;
+        letter-spacing: 2px;
+      }
+      #game-container {
+        border-radius: 4px;
+        box-shadow: 0 0 30px rgba(100, 180, 255, 0.08);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>UI Framework</h1>
+    <div id="game-container">
+      <canvas id="game"></canvas>
+    </div>
+    <script type="module" src="./ui-demo.ts"></script>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 title: 'Interface: LoopDriver'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,13 +10,13 @@ title: 'Interface: LoopDriver'
 
 # Interface: LoopDriver
 
-Defined in: [core/renderer/loops/loop.ts:25](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L25)
+Defined in: [core/renderer/loops/loop.ts:23](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L23)
 
 Abstraction over the mechanism that drives the game loop.
 
 The engine delegates frame scheduling to a `LoopDriver` so that the
 same `Engine` class can run in both browser (`requestAnimationFrame`)
-and terminal / server (`setInterval` / Bun timer) environments.
+and server (`setInterval` / Bun timer) environments.
 
 Pass a driver via EngineConfig.loopDriver:
 
@@ -24,7 +24,6 @@ Pass a driver via EngineConfig.loopDriver:
 // Browser (default — no need to pass):
 const engine = new Engine(renderer);
 
-// Terminal:
 const engine = new Engine(renderer, {
   loopDriver: new IntervalLoopDriver(30),
 });
@@ -36,8 +35,7 @@ const engine = new Engine(renderer, {
 
 ## See
 
- - [RAFLoopDriver](../classes/RAFLoopDriver.md)      — browser `requestAnimationFrame` driver
- - [IntervalLoopDriver](../classes/IntervalLoopDriver.md) — `setInterval`-based driver for terminals
+[RAFLoopDriver](../classes/RAFLoopDriver.md)      — browser `requestAnimationFrame` driver
 
 ## Methods
 
@@ -47,7 +45,7 @@ const engine = new Engine(renderer, {
 start(tick: (dt: number) => void): void;
 ```
 
-Defined in: [core/renderer/loops/loop.ts:43](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L43)
+Defined in: [core/renderer/loops/loop.ts:41](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L41)
 
 Starts the frame loop.
 
@@ -84,7 +82,7 @@ driver.start((dt) => {
 stop(): void;
 ```
 
-Defined in: [core/renderer/loops/loop.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L53)
+Defined in: [core/renderer/loops/loop.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/renderer/loops/loop.ts#L51)
 
 Stops the frame loop.
 

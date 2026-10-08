@@ -2,7 +2,7 @@
 title: 'Interface: Demension'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Interface: Demension'
 
 # Interface: Demension
 
-Defined in: [generic\_types.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L51)
+Defined in: [generic\_types.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L55)
 
 An object representin 2D demensions of anything
 
@@ -20,6 +20,8 @@ An object representin 2D demensions of anything
 
 ## Example
 
+**Basic set**
+
 ```ts
 const Size: Demension = { width: 32, height: 32 };
 ```
@@ -28,5 +30,5 @@ const Size: Demension = { width: 32, height: 32 };
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `number` | [generic\_types.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L53) |
-| <a id="width"></a> `width` | `number` | [generic\_types.ts:52](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L52) |
+| <a id="height"></a> `height` | `number` | [generic\_types.ts:57](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L57) |
+| <a id="width"></a> `width` | `number` | [generic\_types.ts:56](https://github.com/bdryanovski/gamefoo/blob/main/src/generic_types.ts#L56) |

@@ -29,9 +29,13 @@
  * ```
  */
 export interface BiomeRule {
-  /** Human-readable biome name for debugging. */
+  /**
+   * Human-readable biome name for debugging.
+   */
   name: string;
-  /** Tile ID to assign when this rule matches. */
+  /**
+   * Tile ID to assign when this rule matches.
+   */
   tileId: number;
   /**
    * Lower noise threshold (inclusive). Noise values in `[-1, 1]`.
@@ -42,7 +46,9 @@ export interface BiomeRule {
    * `1.0` (e.g. `1.01`) for the highest biome to ensure coverage.
    */
   maxNoise: number;
-  /** Whether entities can traverse tiles in this biome. */
+  /**
+   * Whether entities can traverse tiles in this biome.
+   */
   walkable: boolean;
 }
 
@@ -81,9 +87,13 @@ export interface BiomeRule {
  * ```
  */
 export interface MapGeneratorConfig {
-  /** Number of tile columns to generate. */
+  /**
+   * Number of tile columns to generate.
+   */
   cols: number;
-  /** Number of tile rows to generate. */
+  /**
+   * Number of tile rows to generate.
+   */
   rows: number;
   /**
    * Seed for the Perlin noise generator. Identical seeds produce
@@ -138,8 +148,12 @@ export interface MapGeneratorConfig {
  * ```
  */
 export interface GeneratedMapData {
-  /** Flat row-major tile ID array (length = cols × rows). */
+  /**
+   * Flat row-major tile ID array (length = cols × rows).
+   */
   data: number[];
-  /** 2D walkability map indexed `[row][col]`. */
+  /**
+   * 2D walkability map indexed `[row][col]`.
+   */
   walkableMap: boolean[][];
 }

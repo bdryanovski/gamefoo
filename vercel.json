@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "pnpm -C games/Experiment00 install --frozen-lockfile",
+  "buildCommand": "pnpm -C games/Experiment00 build",
+  "outputDirectory": "games/Experiment00/dist"
+}

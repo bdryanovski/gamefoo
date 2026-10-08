@@ -1,0 +1,15 @@
+# The game deploy needs only the engine (src/), the game
+# (games/Experiment00/), and the editor's published project data
+# (tools/public/ — staged into dist by the game's vite build).
+# Everything else is local-only weight: the docs site, the engine
+# demos, the test suite, and the editor's own app.
+docs
+web_demos
+tests
+scripts
+tools/src
+tools/server.ts
+tools/package.json
+tools/index.html
+tools/vite.config.ts
+tools/tsconfig.json

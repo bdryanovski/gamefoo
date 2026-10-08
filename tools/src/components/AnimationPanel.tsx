@@ -1,22 +1,25 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import type { AppState, AppAction, AnimationDef, SpriteRegion } from "../types";
 import { uid } from "../utils/uid";
+import { Icon } from "./Icon";
 
 interface Props {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
   image: HTMLImageElement | null;
+  /** All loaded library images — frames may come from any of them. */
+  imageMap: Map<string, HTMLImageElement>;
 }
 
 function FrameThumb({
   sprite,
-  image,
+  imageMap,
   index,
   selected,
   onClick,
 }: {
   sprite: SpriteRegion;
-  image: HTMLImageElement | null;
+  imageMap: Map<string, HTMLImageElement>;
   index: number;
   selected: boolean;
   onClick: () => void;
@@ -25,13 +28,15 @@ function FrameThumb({
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas || !image) return;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     canvas.width = 28;
     canvas.height = 28;
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, 28, 28);
+    const image = imageMap.get(sprite.imageId);
+    if (!image || !image.complete) return;
     const scale = Math.min(28 / sprite.width, 28 / sprite.height);
     const dw = sprite.width * scale;
     const dh = sprite.height * scale;
@@ -40,7 +45,7 @@ function FrameThumb({
       sprite.x, sprite.y, sprite.width, sprite.height,
       (28 - dw) / 2, (28 - dh) / 2, dw, dh,
     );
-  }, [sprite, image]);
+  }, [sprite, imageMap]);
 
   return (
     <div className={`anim-frame-thumb ${selected ? "selected" : ""}`} onClick={onClick}>
@@ -53,11 +58,11 @@ function FrameThumb({
 function AnimPreview({
   anim,
   sprites,
-  image,
+  imageMap,
 }: {
   anim: AnimationDef;
   sprites: SpriteRegion[];
-  image: HTMLImageElement | null;
+  imageMap: Map<string, HTMLImageElement>;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [frameIndex, setFrameIndex] = useState(0);
@@ -73,7 +78,7 @@ function AnimPreview({
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas || !image) return;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -85,6 +90,8 @@ function AnimPreview({
       ctx.clearRect(0, 0, 64, 64);
       return;
     }
+    const image = imageMap.get(sprite.imageId);
+    if (!image || !image.complete) return;
 
     const maxDim = 64;
     const scale = Math.min(maxDim / sprite.width, maxDim / sprite.height, 4);
@@ -95,7 +102,7 @@ function AnimPreview({
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, dw, dh);
     ctx.drawImage(image, sprite.x, sprite.y, sprite.width, sprite.height, 0, 0, dw, dh);
-  }, [frameIndex, anim, image, spriteMap]);
+  }, [frameIndex, anim, imageMap, spriteMap]);
 
   return (
     <div className="preview-box" style={{ minHeight: 72 }}>
@@ -104,7 +111,7 @@ function AnimPreview({
   );
 }
 
-export function AnimationPanel({ state, dispatch, image }: Props) {
+export function AnimationPanel({ state, dispatch, imageMap }: Props) {
   const spriteMap = new Map(state.sprites.map((s) => [s.id, s]));
   const selectedAnim = state.animations.find((a) => a.id === state.selectedAnimationId) ?? null;
   const [editName, setEditName] = useState("");
@@ -289,7 +296,7 @@ export function AnimationPanel({ state, dispatch, image }: Props) {
                   <div key={`${fid}-${i}`} style={{ position: "relative" }}>
                     <FrameThumb
                       sprite={sprite}
-                      image={image}
+                      imageMap={imageMap}
                       index={i}
                       selected={false}
                       onClick={() => {}}
@@ -301,14 +308,14 @@ export function AnimationPanel({ state, dispatch, image }: Props) {
                         disabled={i === 0}
                         style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
                       >
-                        ◀
+                        <Icon name="prev" size={11} />
                       </button>
                       <button
                         className="btn btn-sm danger"
                         onClick={() => removeFrame(i)}
                         style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
                       >
-                        ✕
+                        <Icon name="close" size={11} />
                       </button>
                       <button
                         className="btn btn-sm"
@@ -316,7 +323,7 @@ export function AnimationPanel({ state, dispatch, image }: Props) {
                         disabled={i === selectedAnim.frames.length - 1}
                         style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
                       >
-                        ▶
+                        <Icon name="next" size={11} />
                       </button>
                     </div>
                   </div>
@@ -328,7 +335,7 @@ export function AnimationPanel({ state, dispatch, image }: Props) {
           {/* Live preview */}
           <div className="mt-4">
             <div className="section-title">Preview</div>
-            <AnimPreview anim={selectedAnim} sprites={state.sprites} image={image} />
+            <AnimPreview anim={selectedAnim} sprites={state.sprites} imageMap={imageMap} />
             <div className="text-xs text-dim mt-4" style={{ textAlign: "center" }}>
               {selectedAnim.frames.length > 0
                 ? `${selectedAnim.frames.length} frames @ ${selectedAnim.duration}s = ${(selectedAnim.frames.length * selectedAnim.duration).toFixed(2)}s total`

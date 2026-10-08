@@ -4,7 +4,7 @@
  * Verifies that every public member exists with the correct type/shape.
  * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import { IsometricProjection } from '../src/core/grid/isometric';
 
 describe('IsometricProjection', () => {
@@ -67,7 +67,7 @@ describe('IsometricProjection', () => {
   });
 
   test('getVisibleRange() — returns { minCol, maxCol, minRow, maxRow }', () => {
-    const r = iso.getVisibleRange(0, 0, 800, 600, 10, 10);
+    const r = iso.getVisibleRange({ x: 0, y: 0, width: 800, height: 600 }, 10, 10);
     expect(typeof r.minCol).toBe('number');
     expect(typeof r.maxCol).toBe('number');
     expect(typeof r.minRow).toBe('number');

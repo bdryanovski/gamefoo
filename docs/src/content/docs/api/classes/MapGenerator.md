@@ -2,7 +2,7 @@
 title: 'Class: MapGenerator'
 ---
 
-[**@dryanovski/gamefoo v0.3.0**](../README.md)
+[**@dryanovski/gamefoo v0.4.0**](../README.md)
 
 ***
 
@@ -10,7 +10,7 @@ title: 'Class: MapGenerator'
 
 # Class: MapGenerator
 
-Defined in: [core/utils/map\_generator.ts:53](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L53)
+Defined in: [core/utils/map\_generator.ts:49](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L49)
 
 ## Constructors
 
@@ -20,7 +20,7 @@ Defined in: [core/utils/map\_generator.ts:53](https://github.com/bdryanovski/gam
 new MapGenerator(config: MapGeneratorConfig): MapGenerator;
 ```
 
-Defined in: [core/utils/map\_generator.ts:75](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L75)
+Defined in: [core/utils/map\_generator.ts:71](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L71)
 
 Creates a new map generator.
 
@@ -54,8 +54,8 @@ const gen = new MapGenerator({
 
 | Property | Modifier | Type | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="config"></a> `config` | `private` | [`MapGeneratorConfig`](../interfaces/MapGeneratorConfig.md) | [core/utils/map\_generator.ts:55](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L55) |
-| <a id="noise"></a> `noise` | `private` | [`PerlinNoise`](PerlinNoise.md) | [core/utils/map\_generator.ts:54](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L54) |
+| <a id="config"></a> `config` | `private` | [`MapGeneratorConfig`](../interfaces/MapGeneratorConfig.md) | [core/utils/map\_generator.ts:51](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L51) |
+| <a id="noise"></a> `noise` | `private` | [`PerlinNoise`](PerlinNoise.md) | [core/utils/map\_generator.ts:50](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L50) |
 
 ## Methods
 
@@ -66,13 +66,14 @@ buildLayer(
    tileSet: TileSet, 
    layerName: string, 
    cellWidth?: number, 
-   cellHeight?: number): {
+   cellHeight?: number
+): {
   grid: Grid;
   layer: TileLayer;
 };
 ```
 
-Defined in: [core/utils/map\_generator.ts:190](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L190)
+Defined in: [core/utils/map\_generator.ts:186](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L186)
 
 Convenience method that generates a complete [Grid](Grid.md) and
 [TileLayer](TileLayer.md) from the configured parameters.
@@ -102,8 +103,8 @@ An object with the populated `grid` and `layer`.
 
 | Name | Type | Defined in |
 | ------ | ------ | ------ |
-| `grid` | [`Grid`](Grid.md) | [core/utils/map\_generator.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L195) |
-| `layer` | [`TileLayer`](TileLayer.md) | [core/utils/map\_generator.ts:195](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L195) |
+| `grid` | [`Grid`](Grid.md) | [core/utils/map\_generator.ts:191](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L191) |
+| `layer` | [`TileLayer`](TileLayer.md) | [core/utils/map\_generator.ts:191](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L191) |
 
 #### Since
 
@@ -129,7 +130,7 @@ const tilemap = new TileMap({
 generateNoiseMap(): Float64Array;
 ```
 
-Defined in: [core/utils/map\_generator.ts:97](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L97)
+Defined in: [core/utils/map\_generator.ts:93](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L93)
 
 Generates a raw 2D noise map.
 
@@ -162,7 +163,7 @@ console.log("Elevation at (5,10):", elevation);
 generateTileData(): GeneratedMapData;
 ```
 
-Defined in: [core/utils/map\_generator.ts:141](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L141)
+Defined in: [core/utils/map\_generator.ts:137](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L137)
 
 Generates tile IDs and walkability data by applying biome rules
 to the noise map.
@@ -199,7 +200,7 @@ const { data, walkableMap } = generator.generateTileData();
 private findBiome(noiseValue: number, biomes: BiomeRule[]): BiomeRule;
 ```
 
-Defined in: [core/utils/map\_generator.ts:231](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L231)
+Defined in: [core/utils/map\_generator.ts:227](https://github.com/bdryanovski/gamefoo/blob/main/src/core/utils/map_generator.ts#L227)
 
 **`Internal`**
 

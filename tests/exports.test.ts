@@ -4,33 +4,39 @@
  * One test per exported name. Fails if a symbol is removed or renamed.
  * Add a new test here whenever a new export is added to src/index.ts.
  */
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vitest';
 import * as Gamefoo from '../src/index';
 
 describe('exports — classes', () => {
   const classes = [
     'Asset',
+    'AudioLibrary',
+    'AudioSystem',
     'Behaviour',
     'Camera',
     'Collidable',
     'Control',
+    'DrawNode',
     'DynamicEntity',
     'Engine',
     'EnhancedCamera',
     'Entity',
     'FontBitmap',
+    'FrameNode',
     'GameObjectRegister',
     'Grid',
-    'GridDebugSystem',
     'HealthKit',
     'IconBitmap',
     'Input',
     'IntervalLoopDriver',
     'IsometricCameraSystem',
     'IsometricProjection',
+    'LocalStorageBackend',
     'MapGenerator',
+    'MemoryBackend',
+    'MemoryStorage',
     'MonitorSystem',
-    'ObjectSystem',
+    'OutlineShader',
     'PathFollower',
     'Pathfinder',
     'PerlinNoise',
@@ -38,13 +44,23 @@ describe('exports — classes', () => {
     'RAFLoopDriver',
     'CameraSystem',
     'CollisionSystem',
+    'Shader',
+    'ShaderHost',
+    'ShaderStack',
+    'GlowShader',
+    'ParticleShader',
+    'VignetteShader',
+    'ScreenRegistry',
+    'ScopedState',
+    'ShaderSystem',
+    'SoundHandle',
+    'SoundSequence',
     'Sprite',
     'SpriteRender',
     'StateMachine',
+    'StateStore',
+    'StorageBackend',
     'Text',
-    'TerminalInputDriver',
-    'TerminalRender',
-    'TerminalRenderContext',
     'TileLayer',
     'TileMap',
     'TilemapSystem',
@@ -61,7 +77,7 @@ describe('exports — classes', () => {
 });
 
 describe('exports — functions', () => {
-  const fns = ['createBunLoop', 'log'] as const;
+  const fns = ['log'] as const;
 
   for (const name of fns) {
     test(name, () => {
