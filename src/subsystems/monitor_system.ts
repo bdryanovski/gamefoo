@@ -57,6 +57,12 @@ export interface MonitorSystemOptions {
    * Show FPS graph (default: true)
    */
   graph?: boolean;
+
+  /**
+   * Show memory graphy
+   * @since 0.5.0
+   */
+  memoryGraph?: boolean;
   /**
    * Show FPS counter (default: true)
    */
@@ -121,6 +127,11 @@ export class MonitorSystem implements SubSystem {
    * Show FPS graph
    */
   private _showGraph: boolean = true;
+
+  /**
+   * Show the Memory graph over time
+   */
+  private _showMemoryGraph: boolean = false;
   /**
    * Show FPS counter
    */
@@ -129,6 +140,8 @@ export class MonitorSystem implements SubSystem {
    * Show memory usage
    */
   private _showMemory: boolean = true;
+
+  private _memoryHistory: number[] = [];
   /**
    * Show grid overlay
    */
@@ -149,6 +162,7 @@ export class MonitorSystem implements SubSystem {
 
   constructor(options: MonitorSystemOptions = {}) {
     this._showGraph = options.graph ?? true;
+    this._showMemoryGraph = options.memoryGraph ?? false;
     this._showFps = options.showFps ?? true;
     this._showMemory = options.showMemory ?? true;
     this._showGrid = options.showGrid ?? false;
@@ -165,12 +179,18 @@ export class MonitorSystem implements SubSystem {
   /**
    * Whether to show FPS counter.
    *
+   * @deprecated
+   *
    * @since 0.5.0
    */
   get showFps(): boolean {
     return this._showFps;
   }
 
+  /**
+   * @deprecated
+   * @since 0.5.0
+   */
   set showFps(value: boolean) {
     this._showFps = value;
   }
@@ -178,12 +198,18 @@ export class MonitorSystem implements SubSystem {
   /**
    * Whether to show FPS graph.
    *
+   * @deprecated
+   *
    * @since 0.5.0
    */
   get showGraph(): boolean {
     return this._showGraph;
   }
 
+  /**
+   * @deprecated
+   * @since 0.5.0
+   */
   set showGraph(value: boolean) {
     this._showGraph = value;
   }
@@ -191,12 +217,17 @@ export class MonitorSystem implements SubSystem {
   /**
    * Whether to show memory usage.
    *
+   * @deprecated
+   *
    * @since 0.5.0
    */
   get showMemory(): boolean {
     return this._showMemory;
   }
 
+  /**
+   * @deprecated
+   */
   set showMemory(value: boolean) {
     this._showMemory = value;
   }
@@ -210,6 +241,10 @@ export class MonitorSystem implements SubSystem {
     return this._showGrid;
   }
 
+  /**
+   * @deprecated
+   * @since 0.5.0
+   */
   set showGrid(value: boolean) {
     this._showGrid = value;
   }
@@ -219,11 +254,16 @@ export class MonitorSystem implements SubSystem {
    * Setting a numeric value automatically enables the grid.
    *
    * @since 0.5.0
+   * @deprecated
    */
   get gridSize(): GridSize {
     return this._gridSize;
   }
 
+  /**
+   * @deprecated
+   * @since 0.5.0
+   */
   set gridSize(value: GridSize) {
     this._gridSize = value;
     // If setting a numeric grid size, enable grid
@@ -236,18 +276,24 @@ export class MonitorSystem implements SubSystem {
    * Grid overlay color.
    *
    * @defaultValue '#333333'
+   * @deprecated
    * @since 0.5.0
    */
   get gridColor(): string {
     return this._gridColor;
   }
 
+  /**
+   * @deprecated
+   */
   set gridColor(value: string) {
     this._gridColor = value;
   }
 
   /**
    * Current FPS value (read-only).
+   *
+   * @deprecated
    *
    * @since 0.5.0
    */
@@ -259,6 +305,7 @@ export class MonitorSystem implements SubSystem {
    * Current memory usage in MB (read-only).
    *
    * @since 0.5.0
+   * @deprecated
    */
   get currentMemory(): number {
     return this.memory;
@@ -286,16 +333,21 @@ export class MonitorSystem implements SubSystem {
     if (this.timer >= 1.0) {
       this.fps = this.frameCount / this.timer;
       this.frameCount = 0;
+
       this.timer = 0;
 
       this.frames.push(this.fps);
       if (this.frames.length > 60) {
         this.frames.shift();
       }
-    }
 
-    if (performance.memory) {
-      this.memory = performance.memory.usedJSHeapSize / 1048576;
+      if (performance.memory) {
+        this.memory = performance.memory.usedJSHeapSize / 1048576;
+        this._memoryHistory.push(this.memory);
+        if (this._memoryHistory.length > 60) {
+          this._memoryHistory.shift();
+        }
+      }
     }
   }
 
@@ -378,6 +430,10 @@ export class MonitorSystem implements SubSystem {
       this.renderGraph(ctx, yOffset);
     }
 
+    if (this._showMemoryGraph) {
+      this.renderGraphMemory(ctx, this.y);
+    }
+
     ctx.restore();
   }
 
@@ -397,6 +453,28 @@ export class MonitorSystem implements SubSystem {
       for (let frameIndex = 0; frameIndex < this.frames.length; frameIndex += 1) {
         const x = this.x + frameIndex;
         const y = yOffset + 60 - (this.frames[frameIndex] ?? 0);
+        canvasCtx.lineTo(x, y);
+      }
+      canvasCtx.stroke();
+    }
+  }
+
+  /**
+   * Renders the Memory graph as a one-pixel-per-sample polyline.
+   *
+   * @param ctx - Render context
+   * @param yOffset - Y position of the graph's top edge
+   *
+   * @internal
+   */
+  private renderGraphMemory(ctx: RenderContext, yOffset: number): void {
+    const canvasCtx = ctx.getCanvas?.();
+    if (canvasCtx && this._memoryHistory.length >= 1) {
+      canvasCtx.strokeStyle = 'red';
+      canvasCtx.beginPath();
+      for (let index = 0; index < this._memoryHistory.length; index += 1) {
+        const x = this.x + index;
+        const y = yOffset + 60 - (this._memoryHistory[index] ?? 0);
         canvasCtx.lineTo(x, y);
       }
       canvasCtx.stroke();

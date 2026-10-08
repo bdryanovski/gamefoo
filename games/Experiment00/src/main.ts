@@ -22,6 +22,7 @@ import {
   WebRenderer,
   MemoryBackend,
   DitherFog,
+  MonitorSystem,
 } from '../../../src/index';
 import { drawMessages, showMessage, updateMessages } from './hud';
 import { Olive } from './objects/olive';
@@ -190,13 +191,6 @@ class MapGame extends Engine {
   private lockUI?: { portal: Portal; digits: number[]; cursor: number };
   /** A locked door whose reminder is showing; its lock UI opens on close. */
   private pendingLock?: Portal;
-
-  // FPS diagnostic (half-second window) — delete these three fields, the
-  // block at the top of `update`, and the `drawText` in `render` once the
-  // rendering cost is settled.
-  private fpsWindow = 0;
-  private fpsFrames = 0;
-  private fps = 0;
 
   /** Anonymous, per-event analytics for the whole play session. */
   private readonly telemetry = new Telemetry();
@@ -702,15 +696,6 @@ class MapGame extends Engine {
   }
 
   override update(dt: number): void {
-    // FPS diagnostic window.
-    this.fpsWindow += dt;
-    this.fpsFrames++;
-    if (this.fpsWindow >= 0.5) {
-      this.fps = this.fpsFrames / this.fpsWindow;
-      this.fpsWindow = 0;
-      this.fpsFrames = 0;
-    }
-
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
     this.dialog?.update(dt);
@@ -868,7 +853,6 @@ class MapGame extends Engine {
       20,
       '#ffffff',
     );
-    ctx.drawText(`${Math.round(this.fps)} fps`, ctx.width - 64, 20, '#7dffa8');
     drawMessages(ctx, 8, 40);
 
     // Dialog modal on top of everything (screen space).
@@ -941,3 +925,14 @@ void game.setup(async () => {
 
   void game.load();
 });
+
+game.use(
+  new MonitorSystem({
+    graph: false,
+    showFps: true,
+    showMemory: true,
+    memoryGraph: false,
+    x: game.dementions.width - 100,
+    y: 80,
+  }),
+);

@@ -44,7 +44,7 @@ export class HeaderScreen extends RoomScreen {
   /** Left edge of the banner, in screen pixels. */
   headerX = 40;
   /** Top edge of the banner, in screen pixels. */
-  headerY = 30;
+  headerY = 40;
   /** Width of one art cell, in screen pixels. */
   cellWidth = 3;
   /** Height of one art cell, in screen pixels. */
