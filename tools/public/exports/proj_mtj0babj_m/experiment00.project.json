@@ -7281,181 +7281,112 @@
     {
       "id": "anim_mtj0k1kz_2g",
       "name": "campfire",
-      "frames": [
-        "spr_mtj0ga2u_18",
-        "spr_mtj0gf6u_19",
-        "spr_mtj0gi8y_1a",
-        "spr_mtj0gkvi_1b"
-      ],
+      "frames": ["spr_mtj0ga2u_18", "spr_mtj0gf6u_19", "spr_mtj0gi8y_1a", "spr_mtj0gkvi_1b"],
       "duration": 0.2,
       "loop": true
     },
     {
       "id": "anim_mtj40fkl_a",
       "name": "light",
-      "frames": [
-        "spr_mtj0guvr_1c",
-        "spr_mtj0gvhq_1d",
-        "spr_mtj0gvu7_1e",
-        "spr_mtj0gw8k_1f"
-      ],
+      "frames": ["spr_mtj0guvr_1c", "spr_mtj0gvhq_1d", "spr_mtj0gvu7_1e", "spr_mtj0gw8k_1f"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjxtzww_k",
       "name": "p_idle_front",
-      "frames": [
-        "spr_mtjxt3ib_2",
-        "spr_mtjxt4az_3"
-      ],
+      "frames": ["spr_mtjxt3ib_2", "spr_mtjxt4az_3"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjxyxgy_l",
       "name": "p_idle_back",
-      "frames": [
-        "spr_mtjxt66t_6",
-        "spr_mtjxt5jw_5"
-      ],
+      "frames": ["spr_mtjxt66t_6", "spr_mtjxt5jw_5"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjxzq73_m",
       "name": "p_idle_right",
-      "frames": [
-        "spr_mtjxt6sq_7",
-        "spr_mtjxt4yc_4"
-      ],
+      "frames": ["spr_mtjxt6sq_7", "spr_mtjxt4yc_4"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjy1d4h_n",
       "name": "p_walk_front",
-      "frames": [
-        "spr_mtjxtev3_8",
-        "spr_mtjxtfm5_9",
-        "spr_mtjxtg81_a",
-        "spr_mtjxtgss_b"
-      ],
+      "frames": ["spr_mtjxtev3_8", "spr_mtjxtfm5_9", "spr_mtjxtg81_a", "spr_mtjxtgss_b"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjy1xpn_o",
       "name": "p_walk_right",
-      "frames": [
-        "spr_mtjxtjb2_f",
-        "spr_mtjxtioa_e",
-        "spr_mtjxti08_d",
-        "spr_mtjxthir_c"
-      ],
+      "frames": ["spr_mtjxtjb2_f", "spr_mtjxtioa_e", "spr_mtjxti08_d", "spr_mtjxthir_c"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjy2i8w_p",
       "name": "p_walk_back",
-      "frames": [
-        "spr_mtjxtjtu_g",
-        "spr_mtjxtkbl_h",
-        "spr_mtjxtktl_i",
-        "spr_mtjxtlef_j"
-      ],
+      "frames": ["spr_mtjxtjtu_g", "spr_mtjxtkbl_h", "spr_mtjxtktl_i", "spr_mtjxtlef_j"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjyr1hk_c",
       "name": "p_dead_front",
-      "frames": [
-        "spr_mtjyn1dy_1",
-        "spr_mtjyn23e_2",
-        "spr_mtjyn2wi_3"
-      ],
+      "frames": ["spr_mtjyn1dy_1", "spr_mtjyn23e_2", "spr_mtjyn2wi_3"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjyrs0y_d",
       "name": "p_dead_right",
-      "frames": [
-        "spr_mtjyn3i3_4",
-        "spr_mtjyn3xz_5",
-        "spr_mtjyn4x9_6"
-      ],
+      "frames": ["spr_mtjyn3i3_4", "spr_mtjyn3xz_5", "spr_mtjyn4x9_6"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtjyt05b_g",
       "name": "p_dead_back",
-      "frames": [
-        "spr_mtjyqb1g_9",
-        "spr_mtjyqc4o_a",
-        "spr_mtjyql7q_b"
-      ],
+      "frames": ["spr_mtjyqb1g_9", "spr_mtjyqc4o_a", "spr_mtjyql7q_b"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtk2m78y_i",
       "name": "olive",
-      "frames": [
-        "spr_mtk2m1t1_e",
-        "spr_mtk2m2ip_f",
-        "spr_mtk2m2wl_g",
-        "spr_mtk2m3gy_h"
-      ],
+      "frames": ["spr_mtk2m1t1_e", "spr_mtk2m2ip_f", "spr_mtk2m2wl_g", "spr_mtk2m3gy_h"],
       "duration": 0.2,
       "loop": true
     },
     {
       "id": "anim_mtk2mzve_j",
       "name": "key",
-      "frames": [
-        "spr_mtk2n3vp_k",
-        "spr_mtk2n7us_l",
-        "spr_mtk2n9rd_m",
-        "spr_mtk2nhsv_n"
-      ],
+      "frames": ["spr_mtk2n3vp_k", "spr_mtk2n7us_l", "spr_mtk2n9rd_m", "spr_mtk2nhsv_n"],
       "duration": 0.2,
       "loop": true
     },
     {
       "id": "anim_mtk2nvny_o",
       "name": "potion",
-      "frames": [
-        "spr_mtk2nz71_p",
-        "spr_mtk2o2np_q",
-        "spr_mtk2o4w9_r",
-        "spr_mtk2o6zn_s"
-      ],
+      "frames": ["spr_mtk2nz71_p", "spr_mtk2o2np_q", "spr_mtk2o4w9_r", "spr_mtk2o6zn_s"],
       "duration": 0.2,
       "loop": true
     },
     {
       "id": "anim_mtk2on03_u",
       "name": "heart",
-      "frames": [
-        "spr_mtk2olqq_t",
-        "spr_mtk2oqt0_v",
-        "spr_mtk2osvb_w",
-        "spr_mtk2ouma_x"
-      ],
+      "frames": ["spr_mtk2olqq_t", "spr_mtk2oqt0_v", "spr_mtk2osvb_w", "spr_mtk2ouma_x"],
       "duration": 0.2,
       "loop": true
     },
     {
       "id": "anim_mtonbc9d_10",
       "name": "lanter",
-      "frames": [
-        "spr_mtj0h0j4_1j",
-        "spr_mtj0h0z6_1k"
-      ],
+      "frames": ["spr_mtj0h0j4_1j", "spr_mtj0h0z6_1k"],
       "duration": 0.15,
       "loop": true
     },
@@ -7488,20 +7419,14 @@
     {
       "id": "anim_mtos9am0_2t",
       "name": "rat_idle",
-      "frames": [
-        "spr_mtos8ccs_2k",
-        "spr_mtos8hlh_2l"
-      ],
+      "frames": ["spr_mtos8ccs_2k", "spr_mtos8hlh_2l"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtosocfz_2z",
       "name": "slime_idle",
-      "frames": [
-        "spr_mtosoayz_2y",
-        "spr_mtosoh1p_30"
-      ],
+      "frames": ["spr_mtosoayz_2y", "spr_mtosoh1p_30"],
       "duration": 0.2,
       "loop": true
     },
@@ -7534,57 +7459,35 @@
     {
       "id": "anim_mtpfkxti_x",
       "name": "b_front_idle",
-      "frames": [
-        "spr_mtpfk7u9_1"
-      ],
+      "frames": ["spr_mtpfk7u9_1"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtpfmdlr_y",
       "name": "b_down",
-      "frames": [
-        "spr_mtpfk7u9_1",
-        "spr_mtpfk89l_2",
-        "spr_mtpfk8o7_3",
-        "spr_mtpfk931_4"
-      ],
+      "frames": ["spr_mtpfk7u9_1", "spr_mtpfk89l_2", "spr_mtpfk8o7_3", "spr_mtpfk931_4"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtpfn8nm_z",
       "name": "b_up",
-      "frames": [
-        "spr_mtpfki88_k",
-        "spr_mtpfkhuq_j",
-        "spr_mtpfkhff_i",
-        "spr_mtpfkgzl_h"
-      ],
+      "frames": ["spr_mtpfki88_k", "spr_mtpfkhuq_j", "spr_mtpfkhff_i", "spr_mtpfkgzl_h"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtpfo3v5_10",
       "name": "b_right",
-      "frames": [
-        "spr_mtpfkm2f_s",
-        "spr_mtpfkljp_r",
-        "spr_mtpfkkzh_q",
-        "spr_mtpfkkjz_p"
-      ],
+      "frames": ["spr_mtpfkm2f_s", "spr_mtpfkljp_r", "spr_mtpfkkzh_q", "spr_mtpfkkjz_p"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtpfoojy_11",
       "name": "b_left",
-      "frames": [
-        "spr_mtpfkchm_c",
-        "spr_mtpfkc2i_b",
-        "spr_mtpfkbp6_a",
-        "spr_mtpfkbb7_9"
-      ],
+      "frames": ["spr_mtpfkchm_c", "spr_mtpfkc2i_b", "spr_mtpfkbp6_a", "spr_mtpfkbb7_9"],
       "duration": 0.15,
       "loop": true
     },
@@ -7604,22 +7507,14 @@
     {
       "id": "anim_mtq8xiek_2",
       "name": "ghost_right",
-      "frames": [
-        "spr_mtq8xgei_1",
-        "spr_mtq8xoan_3",
-        "spr_mtq8xqor_4"
-      ],
+      "frames": ["spr_mtq8xgei_1", "spr_mtq8xoan_3", "spr_mtq8xqor_4"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtq8y7nr_6",
       "name": "ghost_left",
-      "frames": [
-        "spr_mtq8y5iv_5",
-        "spr_mtq8ycfa_7",
-        "spr_mtq8yf7a_8"
-      ],
+      "frames": ["spr_mtq8y5iv_5", "spr_mtq8ycfa_7", "spr_mtq8yf7a_8"],
       "duration": 0.15,
       "loop": true
     },
@@ -7640,36 +7535,21 @@
     {
       "id": "anim_mtq9835p_k",
       "name": "flying_skull_idle",
-      "frames": [
-        "spr_mtq97wuy_j",
-        "spr_mtq98a49_l",
-        "spr_mtq98cg2_m",
-        "spr_mtq98ess_n"
-      ],
+      "frames": ["spr_mtq97wuy_j", "spr_mtq98a49_l", "spr_mtq98cg2_m", "spr_mtq98ess_n"],
       "duration": 0.21,
       "loop": true
     },
     {
       "id": "anim_mtq996ar_o",
       "name": "flying_skull_right",
-      "frames": [
-        "spr_mtq97wuy_j",
-        "spr_mtq98a49_l",
-        "spr_mtq98cg2_m",
-        "spr_mtq98ess_n"
-      ],
+      "frames": ["spr_mtq97wuy_j", "spr_mtq98a49_l", "spr_mtq98cg2_m", "spr_mtq98ess_n"],
       "duration": 0.15,
       "loop": true
     },
     {
       "id": "anim_mtq99wc9_q",
       "name": "flyinf_skull_left",
-      "frames": [
-        "spr_mtq99tq6_p",
-        "spr_mtq9a24s_r",
-        "spr_mtq9a4nk_s",
-        "spr_mtq9a6nq_t"
-      ],
+      "frames": ["spr_mtq99tq6_p", "spr_mtq9a24s_r", "spr_mtq9a4nk_s", "spr_mtq9a6nq_t"],
       "duration": 0.15,
       "loop": true
     }
@@ -7678,12 +7558,8 @@
     {
       "id": "obj_mtj0n13q_2l",
       "name": "campfire",
-      "sprites": [
-        "spr_mtj0ehvq_v"
-      ],
-      "animations": [
-        "anim_mtj0k1kz_2g"
-      ],
+      "sprites": ["spr_mtj0ehvq_v"],
+      "animations": ["anim_mtj0k1kz_2g"],
       "grid": {
         "cols": 1,
         "rows": 2,
@@ -7783,9 +7659,7 @@
     {
       "id": "obj_mtj3r5b9_2",
       "name": "shelf",
-      "sprites": [
-        "spr_mtj0f7f7_14"
-      ],
+      "sprites": ["spr_mtj0f7f7_14"],
       "animations": [],
       "grid": {
         "cols": 1,
@@ -7870,9 +7744,7 @@
       "id": "obj_mtj3zr93_8",
       "name": "light",
       "sprites": [],
-      "animations": [
-        "anim_mtj40fkl_a"
-      ],
+      "animations": ["anim_mtj40fkl_a"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -7929,9 +7801,7 @@
     {
       "id": "obj_mtj4cxon_2",
       "name": "pillar",
-      "sprites": [
-        "spr_mtj0fr1h_15"
-      ],
+      "sprites": ["spr_mtj0fr1h_15"],
       "animations": [],
       "grid": {
         "cols": 1,
@@ -8002,9 +7872,7 @@
     {
       "id": "obj_mtj4g15f_9",
       "name": "sign",
-      "sprites": [
-        "spr_mtj0g33q_17"
-      ],
+      "sprites": ["spr_mtj0g33q_17"],
       "animations": [],
       "grid": {
         "cols": 1,
@@ -8635,10 +8503,7 @@
     {
       "id": "obj_mto16yyf_2",
       "name": "portal",
-      "sprites": [
-        "spr_mtj0if1s_27",
-        "spr_mtj0j7za_2f"
-      ],
+      "sprites": ["spr_mtj0if1s_27", "spr_mtj0j7za_2f"],
       "animations": [],
       "grid": {
         "cols": 1,
@@ -8768,10 +8633,7 @@
     {
       "id": "obj_mton9554_n",
       "name": "chest",
-      "sprites": [
-        "spr_mtj0gwol_1g",
-        "spr_mtj0gxgm_1i"
-      ],
+      "sprites": ["spr_mtj0gwol_1g", "spr_mtj0gxgm_1i"],
       "animations": [],
       "grid": {
         "cols": 1,
@@ -8884,9 +8746,7 @@
       "id": "obj_mtonapcq_y",
       "name": "lanter",
       "sprites": [],
-      "animations": [
-        "anim_mtonbc9d_10"
-      ],
+      "animations": ["anim_mtonbc9d_10"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -8957,9 +8817,7 @@
       "id": "obj_mtopalkk_1z",
       "name": "olive",
       "sprites": [],
-      "animations": [
-        "anim_mtk2m78y_i"
-      ],
+      "animations": ["anim_mtk2m78y_i"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -9031,11 +8889,7 @@
       "id": "obj_mtos91le_2r",
       "name": "rat",
       "sprites": [],
-      "animations": [
-        "anim_mtos9am0_2t",
-        "anim_mtos84k1_2j",
-        "anim_mtos66i6_2d"
-      ],
+      "animations": ["anim_mtos9am0_2t", "anim_mtos84k1_2j", "anim_mtos66i6_2d"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -9302,11 +9156,7 @@
       "id": "obj_mtosrpmp_3c",
       "name": "slime",
       "sprites": [],
-      "animations": [
-        "anim_mtosocfz_2z",
-        "anim_mtosotgl_31",
-        "anim_mtosqdop_35"
-      ],
+      "animations": ["anim_mtosocfz_2z", "anim_mtosotgl_31", "anim_mtosqdop_35"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -9572,11 +9422,7 @@
     {
       "id": "obj_mtotdk2l_2",
       "name": "jar",
-      "sprites": [
-        "spr_mtj0ej8r_w",
-        "spr_mtj0ekhu_x",
-        "spr_mtj0em0k_y"
-      ],
+      "sprites": ["spr_mtj0ej8r_w", "spr_mtj0ekhu_x", "spr_mtj0em0k_y"],
       "animations": [],
       "grid": {
         "cols": 1,
@@ -10038,11 +9884,7 @@
       "id": "obj_mtq8ys37_b",
       "name": "ghost",
       "sprites": [],
-      "animations": [
-        "anim_mtq8z5po_d",
-        "anim_mtq8y7nr_6",
-        "anim_mtq8xiek_2"
-      ],
+      "animations": ["anim_mtq8z5po_d", "anim_mtq8y7nr_6", "anim_mtq8xiek_2"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -10309,11 +10151,7 @@
       "id": "obj_mtq9aeo7_w",
       "name": "flying_skull",
       "sprites": [],
-      "animations": [
-        "anim_mtq9835p_k",
-        "anim_mtq996ar_o",
-        "anim_mtq99wc9_q"
-      ],
+      "animations": ["anim_mtq9835p_k", "anim_mtq996ar_o", "anim_mtq99wc9_q"],
       "grid": {
         "cols": 1,
         "rows": 1,
@@ -10630,15 +10468,9 @@
     }
   ],
   "config": {
-    "defaultLayers": [
-      "base",
-      "walls",
-      "objects"
-    ]
+    "defaultLayers": ["base", "walls", "objects"]
   },
-  "selectedSpriteIds": [
-    "spr_mtq9a6nq_t"
-  ],
+  "selectedSpriteIds": ["spr_mtq9a6nq_t"],
   "selectedAnimationId": "anim_mtq99wc9_q",
   "selectedObjectId": "obj_mtq9aeo7_w",
   "activeTool": "grid-pick",
@@ -39580,9 +39412,7 @@
           {
             "id": "msg_mton1hnd_j",
             "title": "Hey",
-            "segments": [
-              "Not this way, dummy!"
-            ],
+            "segments": ["Not this way, dummy!"],
             "options": [],
             "meta": []
           }
@@ -39768,9 +39598,7 @@
           {
             "id": "msg_mtoqjn5v_i",
             "title": "Campfire",
-            "segments": [
-              "Everything reminds me of her"
-            ],
+            "segments": ["Everything reminds me of her"],
             "options": [],
             "meta": []
           }
@@ -39985,9 +39813,7 @@
           {
             "id": "msg_mtorg8k9_1q",
             "title": "Found a magnet",
-            "segments": [
-              "You were supposed to bring this ..."
-            ],
+            "segments": ["You were supposed to bring this ..."],
             "options": [],
             "meta": []
           }
@@ -40001,9 +39827,7 @@
           {
             "id": "msg_mtorh2ih_1u",
             "title": "Found Coffee ",
-            "segments": [
-              "Before everything else"
-            ],
+            "segments": ["Before everything else"],
             "options": [],
             "meta": []
           }
@@ -40017,9 +39841,7 @@
           {
             "id": "msg_mtorhu8r_1y",
             "title": "Found Tiny Bear",
-            "segments": [
-              "You found a tiny bear, sweet dreams ..."
-            ],
+            "segments": ["You found a tiny bear, sweet dreams ..."],
             "options": [],
             "meta": []
           }

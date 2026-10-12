@@ -176,11 +176,7 @@
     }
   ],
   "config": {
-    "defaultLayers": [
-      "base",
-      "walls",
-      "objects"
-    ]
+    "defaultLayers": ["base", "walls", "objects"]
   },
   "selectedSpriteIds": [],
   "selectedAnimationId": null,
@@ -376,11 +372,7 @@
         }
       ],
       "config": {
-        "defaultLayers": [
-          "base",
-          "walls",
-          "objects"
-        ]
+        "defaultLayers": ["base", "walls", "objects"]
       },
       "selectedSpriteIds": [],
       "selectedAnimationId": null,
@@ -589,11 +581,7 @@
         }
       ],
       "config": {
-        "defaultLayers": [
-          "base",
-          "walls",
-          "objects"
-        ]
+        "defaultLayers": ["base", "walls", "objects"]
       },
       "selectedSpriteIds": [],
       "selectedAnimationId": null,

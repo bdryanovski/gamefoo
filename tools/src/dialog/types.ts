@@ -1,4 +1,4 @@
-import { uid } from "../utils/uid";
+import { uid } from '../utils/uid';
 
 /**
  * Dialog Tree definitions — part of the unified project.
@@ -88,90 +88,91 @@ export const MAX_DIALOG_FOLDER_DEPTH = 3;
 /** Normalize a folder path: trimmed non-empty segments, capped at depth 3. */
 export function normalizeFolderPath(raw: string): string {
   return raw
-    .split("/")
+    .split('/')
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
     .slice(0, MAX_DIALOG_FOLDER_DEPTH)
-    .join("/");
+    .join('/');
 }
 
 /** The path of a folder's parent (null for root-level folders). */
 export function parentOf(path: string): string | null {
-  const i = path.lastIndexOf("/");
+  const i = path.lastIndexOf('/');
   return i === -1 ? null : path.slice(0, i);
 }
 
 // ── Factories ────────────────────────────────────────────
 
-export function makeDialogMessage(title = "New message"): DialogMessage {
+export function makeDialogMessage(title = 'New message'): DialogMessage {
   return {
-    id: uid("msg"),
+    id: uid('msg'),
     title,
-    segments: [""],
+    segments: [''],
     options: [],
     meta: [],
   };
 }
 
 export function makeDialogOption(targetId: string | null = null): DialogOption {
-  return { id: uid("opt"), label: "Option", targetId };
+  return { id: uid('opt'), label: 'Option', targetId };
 }
 
 /** A fresh tree with one root message. */
-export function makeDialogTree(name = "New dialog"): DialogTree {
-  const root = makeDialogMessage("Start");
-  return { id: uid("dlg"), name, rootId: root.id, messages: [root] };
+export function makeDialogTree(name = 'New dialog'): DialogTree {
+  const root = makeDialogMessage('Start');
+  return { id: uid('dlg'), name, rootId: root.id, messages: [root] };
 }
 
 // ── Actions ──────────────────────────────────────────────
 
 export type DialogAction =
-  | { type: "ADD_TREE"; folder?: string }
-  | { type: "UPDATE_TREE"; id: string; updates: Partial<Pick<DialogTree, "name" | "rootId" | "folder">> }
-  | { type: "DELETE_TREE"; id: string }
-  | { type: "SELECT_TREE"; id: string | null }
-  /** Create (or make known) a folder at a normalized path. */
-  | { type: "ADD_FOLDER"; path: string }
-  /** Rename a folder's own segment, keeping its parent and depth. */
-  | { type: "RENAME_FOLDER"; path: string; name: string }
-  /** Delete a folder; its contents move up one level. */
-  | { type: "DELETE_FOLDER"; path: string }
-  /** Move one tree into a folder (null = root). */
-  | { type: "MOVE_TREE"; treeId: string; folder: string | null }
-  /** Re-parent a folder (and everything under it) into another folder (null = root). */
-  | { type: "MOVE_FOLDER"; from: string; toParent: string | null }
-  | { type: "ADD_MESSAGE"; linkFromOptionId?: string }
+  | { type: 'ADD_TREE'; folder?: string }
   | {
-      type: "UPDATE_MESSAGE";
+      type: 'UPDATE_TREE';
       id: string;
-      updates: Partial<Pick<DialogMessage, "title" | "segments">>;
+      updates: Partial<Pick<DialogTree, 'name' | 'rootId' | 'folder'>>;
     }
-  | { type: "DELETE_MESSAGE"; id: string }
-  | { type: "SELECT_MESSAGE"; id: string | null }
-  | { type: "ADD_OPTION"; messageId: string }
+  | { type: 'DELETE_TREE'; id: string }
+  | { type: 'SELECT_TREE'; id: string | null }
+  /** Create (or make known) a folder at a normalized path. */
+  | { type: 'ADD_FOLDER'; path: string }
+  /** Rename a folder's own segment, keeping its parent and depth. */
+  | { type: 'RENAME_FOLDER'; path: string; name: string }
+  /** Delete a folder; its contents move up one level. */
+  | { type: 'DELETE_FOLDER'; path: string }
+  /** Move one tree into a folder (null = root). */
+  | { type: 'MOVE_TREE'; treeId: string; folder: string | null }
+  /** Re-parent a folder (and everything under it) into another folder (null = root). */
+  | { type: 'MOVE_FOLDER'; from: string; toParent: string | null }
+  | { type: 'ADD_MESSAGE'; linkFromOptionId?: string }
   | {
-      type: "UPDATE_OPTION";
+      type: 'UPDATE_MESSAGE';
+      id: string;
+      updates: Partial<Pick<DialogMessage, 'title' | 'segments'>>;
+    }
+  | { type: 'DELETE_MESSAGE'; id: string }
+  | { type: 'SELECT_MESSAGE'; id: string | null }
+  | { type: 'ADD_OPTION'; messageId: string }
+  | {
+      type: 'UPDATE_OPTION';
       messageId: string;
       optionId: string;
-      updates: Partial<Pick<DialogOption, "label" | "targetId">>;
+      updates: Partial<Pick<DialogOption, 'label' | 'targetId'>>;
     }
-  | { type: "DELETE_OPTION"; messageId: string; optionId: string }
-  | { type: "ADD_META"; messageId: string }
+  | { type: 'DELETE_OPTION'; messageId: string; optionId: string }
+  | { type: 'ADD_META'; messageId: string }
   | {
-      type: "UPDATE_META";
+      type: 'UPDATE_META';
       messageId: string;
       index: number;
       updates: Partial<DialogMetaEntry>;
     }
-  | { type: "DELETE_META"; messageId: string; index: number };
+  | { type: 'DELETE_META'; messageId: string; index: number };
 
 // ── Tree helpers ─────────────────────────────────────────
 
-function updateSelectedTree(
-  state: DialogState,
-  fn: (tree: DialogTree) => DialogTree,
-): DialogState {
-  if (!state.selectedTreeId) return state;
+function updateSelectedTree(state: DialogState, fn: (tree: DialogTree) => DialogTree): DialogState {
+  if (!state.selectedTreeId) {return state;}
   return {
     ...state,
     trees: state.trees.map((t) => (t.id === state.selectedTreeId ? fn(t) : t)),
@@ -199,15 +200,15 @@ function rebaseFolders(
   opts: { dropExact?: boolean } = {},
 ): DialogState {
   const rebased = (p: string | undefined): string | undefined => {
-    if (!p) return undefined;
-    if (p === from) return opts.dropExact ? (to || undefined) : to;
-    if (p.startsWith(from + "/")) return normalizeFolderPath(`${to}/${p.slice(from.length)}`);
+    if (!p) {return undefined;}
+    if (p === from) {return opts.dropExact ? to || undefined : to;}
+    if (p.startsWith(`${from  }/`)) {return normalizeFolderPath(`${to}/${p.slice(from.length)}`);}
     return p;
   };
   const folders = new Set<string>();
   for (const f of state.folders) {
     const next = rebased(f);
-    if (next) folders.add(next);
+    if (next) {folders.add(next);}
   }
   const trees = state.trees.map((t) => {
     const next = rebased(t.folder);
@@ -220,8 +221,8 @@ function rebaseFolders(
 
 export function dialogReducer(state: DialogState, action: DialogAction): DialogState {
   switch (action.type) {
-    case "ADD_TREE": {
-      const folder = normalizeFolderPath(action.folder ?? "");
+    case 'ADD_TREE': {
+      const folder = normalizeFolderPath(action.folder ?? '');
       const tree: DialogTree = {
         ...makeDialogTree(`Dialog ${state.trees.length + 1}`),
         ...(folder ? { folder } : {}),
@@ -234,31 +235,31 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
       };
     }
 
-    case "ADD_FOLDER": {
+    case 'ADD_FOLDER': {
       const path = normalizeFolderPath(action.path);
-      if (!path || state.folders.includes(path)) return state;
+      if (!path || state.folders.includes(path)) {return state;}
       return { ...state, folders: [...state.folders, path] };
     }
 
-    case "RENAME_FOLDER": {
+    case 'RENAME_FOLDER': {
       const from = normalizeFolderPath(action.path);
-      const name = action.name.replace(/\//g, " ").trim();
-      if (!from || !name) return state;
+      const name = action.name.replace(/\//g, ' ').trim();
+      if (!from || !name) {return state;}
       const parent = parentOf(from);
       const to = normalizeFolderPath(parent ? `${parent}/${name}` : name);
-      if (!to || to === from) return state;
+      if (!to || to === from) {return state;}
       return rebaseFolders(state, from, to);
     }
 
-    case "DELETE_FOLDER": {
+    case 'DELETE_FOLDER': {
       const path = normalizeFolderPath(action.path);
-      if (!path) return state;
+      if (!path) {return state;}
       // Children move up one level: "A/B/C" under deleted "A/B" → "A/C".
-      return rebaseFolders(state, path, parentOf(path) ?? "", { dropExact: true });
+      return rebaseFolders(state, path, parentOf(path) ?? '', { dropExact: true });
     }
 
-    case "MOVE_TREE": {
-      const folder = action.folder ? normalizeFolderPath(action.folder) : "";
+    case 'MOVE_TREE': {
+      const folder = action.folder ? normalizeFolderPath(action.folder) : '';
       return {
         ...state,
         trees: state.trees.map((t) =>
@@ -267,30 +268,27 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
       };
     }
 
-    case "MOVE_FOLDER": {
+    case 'MOVE_FOLDER': {
       const from = normalizeFolderPath(action.from);
-      if (!from) return state;
-      const name = from.slice(from.lastIndexOf("/") + 1);
+      if (!from) {return state;}
+      const name = from.slice(from.lastIndexOf('/') + 1);
       const to = normalizeFolderPath(action.toParent ? `${action.toParent}/${name}` : name);
-      if (!to || to === from || to.startsWith(from + "/")) return state;
+      if (!to || to === from || to.startsWith(`${from  }/`)) {return state;}
       // The folder plus its deepest descendant must still fit the depth cap.
-      const tail = [
-        ...state.folders,
-        ...state.trees.map((t) => t.folder ?? ""),
-      ]
-        .filter((p) => p === from || p.startsWith(from + "/"))
-        .reduce((m, p) => Math.max(m, p.split("/").length - from.split("/").length), 0);
-      if (to.split("/").length + tail > MAX_DIALOG_FOLDER_DEPTH) return state;
+      const tail = [...state.folders, ...state.trees.map((t) => t.folder ?? '')]
+        .filter((p) => p === from || p.startsWith(`${from  }/`))
+        .reduce((m, p) => Math.max(m, p.split('/').length - from.split('/').length), 0);
+      if (to.split('/').length + tail > MAX_DIALOG_FOLDER_DEPTH) {return state;}
       return rebaseFolders(state, from, to);
     }
 
-    case "UPDATE_TREE":
+    case 'UPDATE_TREE':
       return {
         ...state,
         trees: state.trees.map((t) => (t.id === action.id ? { ...t, ...action.updates } : t)),
       };
 
-    case "DELETE_TREE": {
+    case 'DELETE_TREE': {
       const trees = state.trees.filter((t) => t.id !== action.id);
       const selectedTreeId =
         state.selectedTreeId === action.id ? (trees[0]?.id ?? null) : state.selectedTreeId;
@@ -301,7 +299,7 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
       return { ...state, trees, selectedTreeId, selectedMessageId };
     }
 
-    case "SELECT_TREE": {
+    case 'SELECT_TREE': {
       const tree = state.trees.find((t) => t.id === action.id) ?? null;
       return {
         ...state,
@@ -310,11 +308,11 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
       };
     }
 
-    case "SELECT_MESSAGE":
+    case 'SELECT_MESSAGE':
       return { ...state, selectedMessageId: action.id };
 
-    case "ADD_MESSAGE": {
-      if (!state.selectedTreeId) return state;
+    case 'ADD_MESSAGE': {
+      if (!state.selectedTreeId) {return state;}
       const message = makeDialogMessage(`Message`);
       const next = updateSelectedTree(state, (tree) => {
         const messages = [...tree.messages, message];
@@ -334,12 +332,12 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
       return { ...next, selectedMessageId: message.id };
     }
 
-    case "UPDATE_MESSAGE":
+    case 'UPDATE_MESSAGE':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.id, (m) => ({ ...m, ...action.updates })),
       );
 
-    case "DELETE_MESSAGE":
+    case 'DELETE_MESSAGE':
       return updateSelectedTree(state, (tree) => {
         const messages = tree.messages
           .filter((m) => m.id !== action.id)
@@ -350,12 +348,11 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
               o.targetId === action.id ? { ...o, targetId: null } : o,
             ),
           }));
-        const rootId =
-          tree.rootId === action.id ? (messages[0]?.id ?? null) : tree.rootId;
+        const rootId = tree.rootId === action.id ? (messages[0]?.id ?? null) : tree.rootId;
         return { ...tree, messages, rootId };
       });
 
-    case "ADD_OPTION":
+    case 'ADD_OPTION':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.messageId, (m) => ({
           ...m,
@@ -363,7 +360,7 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
         })),
       );
 
-    case "UPDATE_OPTION":
+    case 'UPDATE_OPTION':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.messageId, (m) => ({
           ...m,
@@ -373,7 +370,7 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
         })),
       );
 
-    case "DELETE_OPTION":
+    case 'DELETE_OPTION':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.messageId, (m) => ({
           ...m,
@@ -381,15 +378,15 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
         })),
       );
 
-    case "ADD_META":
+    case 'ADD_META':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.messageId, (m) => ({
           ...m,
-          meta: [...m.meta, { key: "", value: "" }],
+          meta: [...m.meta, { key: '', value: '' }],
         })),
       );
 
-    case "UPDATE_META":
+    case 'UPDATE_META':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.messageId, (m) => ({
           ...m,
@@ -397,7 +394,7 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
         })),
       );
 
-    case "DELETE_META":
+    case 'DELETE_META':
       return updateSelectedTree(state, (tree) =>
         mapMessage(tree, action.messageId, (m) => ({
           ...m,
@@ -415,10 +412,10 @@ export function dialogReducer(state: DialogState, action: DialogAction): DialogS
 /** Every message across every tree, flattened as (tree, message) pairs. */
 export function allDialogMessages(
   trees: DialogTree[],
-): { tree: DialogTree; message: DialogMessage }[] {
-  const out: { tree: DialogTree; message: DialogMessage }[] = [];
+): Array<{ tree: DialogTree; message: DialogMessage }> {
+  const out: Array<{ tree: DialogTree; message: DialogMessage }> = [];
   for (const tree of trees) {
-    for (const message of tree.messages) out.push({ tree, message });
+    for (const message of tree.messages) {out.push({ tree, message });}
   }
   return out;
 }
@@ -428,10 +425,10 @@ export function findDialogMessage(
   trees: DialogTree[],
   id: string | null | undefined,
 ): { tree: DialogTree; message: DialogMessage } | null {
-  if (!id) return null;
+  if (!id) {return null;}
   for (const tree of trees) {
     const message = tree.messages.find((m) => m.id === id);
-    if (message) return { tree, message };
+    if (message) {return { tree, message };}
   }
   return null;
 }
@@ -439,40 +436,40 @@ export function findDialogMessage(
 // ── Normalization ────────────────────────────────────────
 
 function asRecord(v: unknown): Record<string, unknown> | null {
-  return v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
+  return v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
 }
 
 function normalizeOption(raw: unknown): DialogOption | null {
   const o = asRecord(raw);
-  if (!o) return null;
+  if (!o) {return null;}
   return {
-    id: typeof o.id === "string" ? o.id : uid("opt"),
-    label: typeof o.label === "string" ? o.label : "Option",
-    targetId: typeof o.targetId === "string" ? o.targetId : null,
+    id: typeof o.id === 'string' ? o.id : uid('opt'),
+    label: typeof o.label === 'string' ? o.label : 'Option',
+    targetId: typeof o.targetId === 'string' ? o.targetId : null,
   };
 }
 
 function normalizeMeta(raw: unknown): DialogMetaEntry | null {
   const e = asRecord(raw);
-  if (!e) return null;
+  if (!e) {return null;}
   return {
-    key: typeof e.key === "string" ? e.key : "",
-    value: typeof e.value === "string" ? e.value : "",
+    key: typeof e.key === 'string' ? e.key : '',
+    value: typeof e.value === 'string' ? e.value : '',
   };
 }
 
 function normalizeMessage(raw: unknown): DialogMessage | null {
   const m = asRecord(raw);
-  if (!m) return null;
+  if (!m) {return null;}
   const segments = Array.isArray(m.segments)
-    ? m.segments.filter((s): s is string => typeof s === "string")
-    : typeof m.text === "string"
+    ? m.segments.filter((s): s is string => typeof s === 'string')
+    : typeof m.text === 'string'
       ? [m.text]
-      : [""];
+      : [''];
   return {
-    id: typeof m.id === "string" ? m.id : uid("msg"),
-    title: typeof m.title === "string" ? m.title : "Message",
-    segments: segments.length > 0 ? segments : [""],
+    id: typeof m.id === 'string' ? m.id : uid('msg'),
+    title: typeof m.title === 'string' ? m.title : 'Message',
+    segments: segments.length > 0 ? segments : [''],
     options: Array.isArray(m.options)
       ? m.options.map(normalizeOption).filter((o): o is DialogOption => o != null)
       : [],
@@ -484,7 +481,7 @@ function normalizeMessage(raw: unknown): DialogMessage | null {
 
 function normalizeTree(raw: unknown): DialogTree | null {
   const t = asRecord(raw);
-  if (!t) return null;
+  if (!t) {return null;}
   const messages = Array.isArray(t.messages)
     ? t.messages.map(normalizeMessage).filter((m): m is DialogMessage => m != null)
     : [];
@@ -496,13 +493,12 @@ function normalizeTree(raw: unknown): DialogTree | null {
       o.targetId && !ids.has(o.targetId) ? { ...o, targetId: null } : o,
     ),
   }));
-  const rawRoot = typeof t.rootId === "string" ? t.rootId : null;
+  const rawRoot = typeof t.rootId === 'string' ? t.rootId : null;
   const rootId = rawRoot && ids.has(rawRoot) ? rawRoot : (cleaned[0]?.id ?? null);
-  const folder =
-    typeof t.folder === "string" ? normalizeFolderPath(t.folder) : "";
+  const folder = typeof t.folder === 'string' ? normalizeFolderPath(t.folder) : '';
   return {
-    id: typeof t.id === "string" ? t.id : uid("dlg"),
-    name: typeof t.name === "string" ? t.name : "Dialog",
+    id: typeof t.id === 'string' ? t.id : uid('dlg'),
+    name: typeof t.name === 'string' ? t.name : 'Dialog',
     rootId,
     messages: cleaned,
     ...(folder ? { folder } : {}),
@@ -512,27 +508,27 @@ function normalizeTree(raw: unknown): DialogTree | null {
 /** Coerce persisted/imported dialog data to the current shape. */
 export function sanitizeDialogState(raw: unknown): DialogState {
   const d = asRecord(raw);
-  if (!d) return { ...INITIAL_DIALOG_STATE };
+  if (!d) {return { ...INITIAL_DIALOG_STATE };}
   const trees = Array.isArray(d.trees)
     ? d.trees.map(normalizeTree).filter((t): t is DialogTree => t != null)
     : [];
   const folders: string[] = [];
   if (Array.isArray(d.folders)) {
     for (const f of d.folders) {
-      if (typeof f !== "string") continue;
+      if (typeof f !== 'string') {continue;}
       const p = normalizeFolderPath(f);
-      if (p && !folders.includes(p)) folders.push(p);
+      if (p && !folders.includes(p)) {folders.push(p);}
     }
   }
   const treeIds = new Set(trees.map((t) => t.id));
   const selectedTreeId =
-    typeof d.selectedTreeId === "string" && treeIds.has(d.selectedTreeId)
+    typeof d.selectedTreeId === 'string' && treeIds.has(d.selectedTreeId)
       ? d.selectedTreeId
       : (trees[0]?.id ?? null);
   const selTree = trees.find((t) => t.id === selectedTreeId);
   const msgIds = new Set(selTree?.messages.map((m) => m.id) ?? []);
   const selectedMessageId =
-    typeof d.selectedMessageId === "string" && msgIds.has(d.selectedMessageId)
+    typeof d.selectedMessageId === 'string' && msgIds.has(d.selectedMessageId)
       ? d.selectedMessageId
       : (selTree?.rootId ?? null);
   return { trees, folders, selectedTreeId, selectedMessageId };

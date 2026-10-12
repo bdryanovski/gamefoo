@@ -29,32 +29,17 @@
   },
   "animations": {
     "rat_left": {
-      "frames": [
-        5,
-        4,
-        12,
-        13,
-        14
-      ],
+      "frames": [5, 4, 12, 13, 14],
       "duration": 0.15,
       "loop": true
     },
     "rat_right": {
-      "frames": [
-        0,
-        1,
-        8,
-        9,
-        10
-      ],
+      "frames": [0, 1, 8, 9, 10],
       "duration": 0.15,
       "loop": true
     },
     "rat_idle": {
-      "frames": [
-        0,
-        1
-      ],
+      "frames": [0, 1],
       "duration": 0.15,
       "loop": true
     }

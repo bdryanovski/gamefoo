@@ -1,6 +1,6 @@
-import React from "react";
-import { Icon } from "./Icon";
-import { THEMES, type ThemeId } from "../utils/theme";
+import React from 'react';
+import { Icon } from './Icon';
+import { THEMES, type ThemeId } from '../utils/theme';
 
 interface Props {
   theme: ThemeId;
@@ -30,7 +30,7 @@ export function SettingsPanel({ theme, onSelect, onClose }: Props) {
                 return (
                   <div
                     key={t.id}
-                    className={`theme-card raised ${selected ? "selected" : ""}`}
+                    className={`theme-card raised ${selected ? 'selected' : ''}`}
                     onClick={() => onSelect(t.id)}
                   >
                     <div className="theme-card__preview" style={{ background: t.preview.surface }}>
@@ -45,8 +45,14 @@ export function SettingsPanel({ theme, onSelect, onClose }: Props) {
                           className="theme-card__swatch"
                           style={{ background: t.preview.accent }}
                         />
-                        <div className="theme-card__chip" style={{ background: t.preview.ink, opacity: 0.35 }} />
-                        <div className="theme-card__chip" style={{ background: t.preview.ink, opacity: 0.2 }} />
+                        <div
+                          className="theme-card__chip"
+                          style={{ background: t.preview.ink, opacity: 0.35 }}
+                        />
+                        <div
+                          className="theme-card__chip"
+                          style={{ background: t.preview.ink, opacity: 0.2 }}
+                        />
                       </div>
                     </div>
                     <div className="theme-card__body">

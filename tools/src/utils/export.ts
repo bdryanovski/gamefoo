@@ -1,6 +1,15 @@
-import type { AppState, ProjectSnapshot, LibraryImage, SpriteRegion, AnimationDef, GameObjectDef, CollisionVolume, CollisionLayerDef } from "../types";
-import type { ObjectExport } from "../objects/objectExport";
-import { exportObject } from "../objects/objectExport";
+import type {
+  AppState,
+  ProjectSnapshot,
+  LibraryImage,
+  SpriteRegion,
+  AnimationDef,
+  GameObjectDef,
+  CollisionVolume,
+  CollisionLayerDef,
+} from '../types';
+import type { ObjectExport } from '../objects/objectExport';
+import { exportObject } from '../objects/objectExport';
 
 /**
  * Atlas export format — compatible with Sprite.fromAtlas().
@@ -20,13 +29,16 @@ export interface AtlasExport {
     imageWidth: number;
     imageHeight: number;
   };
-  frames: Record<string, { x: number; y: number; width: number; height: number; anchor?: { x: number; y: number } }>;
+  frames: Record<
+    string,
+    { x: number; y: number; width: number; height: number; anchor?: { x: number; y: number } }
+  >;
   animations: Record<string, { frames: string[]; duration: number; loop: boolean }>;
 }
 
 /** Grid export format — compatible with Sprite.fromGrid(). */
 export interface GridExport {
-  meta: AtlasExport["meta"];
+  meta: AtlasExport['meta'];
   grid: {
     frameWidth: number;
     frameHeight: number;
@@ -49,36 +61,42 @@ export interface FullExport {
   images: Array<{ id: string; name: string; url: string; width: number; height: number }>;
   /** Project-wide collision layer registry (name + colour per layer). */
   collisionLayers: CollisionLayerDef[];
-  grid?: GridExport["grid"];
-  frames: Record<string, AtlasExport["frames"][string] & { image: string }>;
-  animations: AtlasExport["animations"];
-  objects: Record<string, {
-    sprites: string[];
-    animations: string[];
-    properties: Record<string, string>;
-    category: string;
-    description: string;
-    tags: string[];
-    grid: ObjectExport["grid"];
-    collisionLayers: ObjectExport["collisionLayers"];
-    states: ObjectExport["states"];
-    initial: string | null;
-  }>;
-  spriteMetadata: Record<string, {
-    image: string;
-    tags: string[];
-    group: string;
-    order: number;
-    level: number;
-    properties: Record<string, string>;
-    collisions?: CollisionVolume[];
-  }>;
+  grid?: GridExport['grid'];
+  frames: Record<string, AtlasExport['frames'][string] & { image: string }>;
+  animations: AtlasExport['animations'];
+  objects: Record<
+    string,
+    {
+      sprites: string[];
+      animations: string[];
+      properties: Record<string, string>;
+      category: string;
+      description: string;
+      tags: string[];
+      grid: ObjectExport['grid'];
+      collisionLayers: ObjectExport['collisionLayers'];
+      states: ObjectExport['states'];
+      initial: string | null;
+    }
+  >;
+  spriteMetadata: Record<
+    string,
+    {
+      image: string;
+      tags: string[];
+      group: string;
+      order: number;
+      level: number;
+      properties: Record<string, string>;
+      collisions?: CollisionVolume[];
+    }
+  >;
 }
 
-function buildMeta(state: AppState, image: LibraryImage): AtlasExport["meta"] {
+function buildMeta(state: AppState, image: LibraryImage): AtlasExport['meta'] {
   return {
-    version: "1.0",
-    tool: "gamefoo-tilemap-editor",
+    version: '1.0',
+    tool: 'gamefoo-tilemap-editor',
     projectName: state.projectName,
     image: image.name,
     imageWidth: image.width,
@@ -86,10 +104,10 @@ function buildMeta(state: AppState, image: LibraryImage): AtlasExport["meta"] {
   };
 }
 
-function buildFrames(sprites: SpriteRegion[]): AtlasExport["frames"] {
-  const frames: AtlasExport["frames"] = {};
+function buildFrames(sprites: SpriteRegion[]): AtlasExport['frames'] {
+  const frames: AtlasExport['frames'] = {};
   for (const s of sprites) {
-    const frame: AtlasExport["frames"][string] = {
+    const frame: AtlasExport['frames'][string] = {
       x: s.x,
       y: s.y,
       width: s.width,
@@ -106,14 +124,12 @@ function buildFrames(sprites: SpriteRegion[]): AtlasExport["frames"] {
 function buildAnimations(
   animations: AnimationDef[],
   sprites: SpriteRegion[],
-): AtlasExport["animations"] {
+): AtlasExport['animations'] {
   const spriteMap = new Map(sprites.map((s) => [s.id, s]));
-  const result: AtlasExport["animations"] = {};
+  const result: AtlasExport['animations'] = {};
   for (const a of animations) {
     result[a.name] = {
-      frames: a.frames
-        .map((fid) => spriteMap.get(fid)?.name)
-        .filter((n): n is string => n != null),
+      frames: a.frames.map((fid) => spriteMap.get(fid)?.name).filter((n): n is string => n != null),
       duration: a.duration,
       loop: a.loop,
     };
@@ -125,7 +141,7 @@ function buildAnimations(
 function targetImage(state: AppState): LibraryImage | null {
   if (state.activeImageId) {
     const img = state.images.find((i) => i.id === state.activeImageId);
-    if (img) return img;
+    if (img) {return img;}
   }
   return (
     state.images.find((i) => state.sprites.some((s) => s.imageId === i.id)) ??
@@ -146,9 +162,7 @@ export function exportAtlasForImage(state: AppState, image: LibraryImage): Atlas
     meta: buildMeta(state, image),
     frames: buildFrames(sprites),
     animations: buildAnimations(
-      state.animations.filter((a) =>
-        a.frames.some((fid) => sprites.some((s) => s.id === fid)),
-      ),
+      state.animations.filter((a) => a.frames.some((fid) => sprites.some((s) => s.id === fid))),
       sprites,
     ),
   };
@@ -167,15 +181,16 @@ export function exportGridForImage(state: AppState, image: LibraryImage): GridEx
   const namedFrames: Record<string, number> = {};
 
   for (const s of sprites) {
-    if (!g.enabled) continue;
+    if (!g.enabled) {continue;}
     const col = Math.round((s.x - g.offsetX) / (g.cellWidth + g.spacingX));
     const row = Math.round((s.y - g.offsetY) / (g.cellHeight + g.spacingY));
-    const cols = Math.floor((image.width - g.offsetX + g.spacingX) / (g.cellWidth + g.spacingX)) || 1;
+    const cols =
+      Math.floor((image.width - g.offsetX + g.spacingX) / (g.cellWidth + g.spacingX)) || 1;
     namedFrames[s.name] = row * cols + col;
   }
 
   const spriteMap = new Map(sprites.map((s) => [s.id, s]));
-  const animations: GridExport["animations"] = {};
+  const animations: GridExport['animations'] = {};
   for (const a of state.animations) {
     const frames = a.frames
       .map((fid) => {
@@ -183,7 +198,7 @@ export function exportGridForImage(state: AppState, image: LibraryImage): GridEx
         return s ? (namedFrames[s.name] ?? -1) : -1;
       })
       .filter((n) => n >= 0);
-    if (frames.length === 0) continue;
+    if (frames.length === 0) {continue;}
     animations[a.name] = { frames, duration: a.duration, loop: a.loop };
   }
 
@@ -203,7 +218,9 @@ export function exportGridForImage(state: AppState, image: LibraryImage): GridEx
 }
 
 /** Minimal export: sprite name → { x, y, width, height } — across ALL images. */
-export function exportSprites(state: AppState): Record<string, { x: number; y: number; width: number; height: number }> {
+export function exportSprites(
+  state: AppState,
+): Record<string, { x: number; y: number; width: number; height: number }> {
   const result: Record<string, { x: number; y: number; width: number; height: number }> = {};
   for (const s of state.sprites) {
     result[s.name] = { x: s.x, y: s.y, width: s.width, height: s.height };
@@ -212,12 +229,14 @@ export function exportSprites(state: AppState): Record<string, { x: number; y: n
 }
 
 /** Animations only: ordered frame names (by sprite name) + timing + loop. */
-export function exportAnimations(state: AppState): Record<string, { frames: string[]; duration: number; loop: boolean }> {
+export function exportAnimations(
+  state: AppState,
+): Record<string, { frames: string[]; duration: number; loop: boolean }> {
   return buildAnimations(state.animations, state.sprites);
 }
 
 export function exportFull(state: AppState): FullExport {
-  const objects: FullExport["objects"] = {};
+  const objects: FullExport['objects'] = {};
   const spriteMap = new Map(state.sprites.map((s) => [s.id, s]));
   const animMap = new Map(state.animations.map((a) => [a.id, a]));
   const imageNames = new Map(state.images.map((i) => [i.id, i.name]));
@@ -242,16 +261,16 @@ export function exportFull(state: AppState): FullExport {
     };
   }
 
-  const frames: FullExport["frames"] = {};
-  const spriteMetadata: FullExport["spriteMetadata"] = {};
+  const frames: FullExport['frames'] = {};
+  const spriteMetadata: FullExport['spriteMetadata'] = {};
   for (const s of state.sprites) {
     const frame = buildFrames([s])[s.name]!;
     frames[s.name] = {
       ...frame,
-      image: imageNames.get(s.imageId) ?? "",
+      image: imageNames.get(s.imageId) ?? '',
     };
     spriteMetadata[s.name] = {
-      image: imageNames.get(s.imageId) ?? "",
+      image: imageNames.get(s.imageId) ?? '',
       tags: [...s.tags],
       group: s.group,
       order: s.order,
@@ -265,8 +284,8 @@ export function exportFull(state: AppState): FullExport {
 
   const result: FullExport = {
     meta: {
-      version: "1.0",
-      tool: "gamefoo-tilemap-editor",
+      version: '1.0',
+      tool: 'gamefoo-tilemap-editor',
       projectName: state.projectName,
     },
     images: state.images.map((i) => ({
@@ -304,8 +323,8 @@ export function exportFull(state: AppState): FullExport {
 export function exportConfig(state: AppState) {
   return {
     meta: {
-      version: "1.0",
-      tool: "gamefoo-project-config",
+      version: '1.0',
+      tool: 'gamefoo-project-config',
       projectName: state.projectName,
     },
     defaultLayers: [...state.config.defaultLayers],
@@ -334,13 +353,13 @@ export function exportProject(state: AppState): string {
  * so exports never land in `_.…json` files that games can't find.
  */
 export function projectBaseName(projectName: string): string {
-  return projectName.trim().replace(/\s+/g, "_").toLowerCase() || "project";
+  return projectName.trim().replace(/\s+/g, '_').toLowerCase() || 'project';
 }
 
 export function downloadJSON(data: unknown, filename: string): void {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);

@@ -69,15 +69,15 @@ jobs:
           echo "" >> codestyle-report.md
           echo "## Summary" >> codestyle-report.md
           echo "" >> codestyle-report.md
-          
+
           # Run checks and capture output
           pnpm run lint:codestyle > codestyle-output.txt 2>&1 || true
-          
+
           # Append output to report
           echo '```' >> codestyle-report.md
           cat codestyle-output.txt >> codestyle-report.md
           echo '```' >> codestyle-report.md
-          
+
           # Display report
           cat codestyle-report.md
 
@@ -95,7 +95,7 @@ jobs:
           script: |
             const fs = require('fs');
             const report = fs.readFileSync('codestyle-report.md', 'utf8');
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

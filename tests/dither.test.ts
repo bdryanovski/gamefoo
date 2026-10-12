@@ -12,7 +12,7 @@
  *   through the default pattern, and honours its lifecycle switches
  *   (`enabled`, `removeLight`, `clearLights`).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { DitherFog, DitherLight, DitherPatterns } from '../src/index';
 import type { RenderContext } from '../src/index';
 
@@ -53,7 +53,9 @@ const context = (): RenderContext => new RecordingContext() as unknown as Render
 
 /** Marks the fallback run-rects onto a cell grid; `true` = solid fog. */
 function coveredCells(recorder: RecordingContext, cols: number, rows: number): boolean[][] {
-  const grid = Array.from({ length: rows }, () => Array.from<boolean>({ length: cols }).fill(false));
+  const grid = Array.from({ length: rows }, () =>
+    Array.from<boolean>({ length: cols }).fill(false),
+  );
   for (const [x, y, w, h, color] of recorder.rects) {
     expect(color).toBe('#08040f');
     const cellW = w / 8;
@@ -106,9 +108,7 @@ describe('DitherPatterns', () => {
     expect(size).toBe(4);
     const flat = matrix.flat();
     // A full permutation of the 16 normalised ranks.
-    expect([...flat].sort((a, b) => a - b)).toEqual(
-      Array.from({ length: 16 }, (_, i) => i / 16),
-    );
+    expect([...flat].sort((a, b) => a - b)).toEqual(Array.from({ length: 16 }, (_, i) => i / 16));
     // The four centre-ish cells dissolve first (ranks 0..3), the corners last.
     for (const i of [5, 6, 9, 10]) {
       expect(flat[i]!).toBeLessThan(4 / 16);

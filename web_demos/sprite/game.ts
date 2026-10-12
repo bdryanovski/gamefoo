@@ -11,15 +11,15 @@ import {
   Sprite,
   SpriteRender,
   WebRenderer,
-} from "../../src/index";
+} from '../../src/index';
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 const TILE = 48;
 
-const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H);
 const engine = new Engine(renderer, {
-  backgroundColor: "#1a1a2e",
+  backgroundColor: '#1a1a2e',
 });
 
 const input = new Input();
@@ -46,9 +46,9 @@ class Label extends DynamicEntity {
   }
   override update(_dt: number): void {}
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
-    c.fillStyle = "#6666aa";
-    c.font = "bold 8px monospace";
+    const c = ctx.getCanvas!()!;
+    c.fillStyle = '#6666aa';
+    c.font = 'bold 8px monospace';
     c.fillText(this.text, this.x, this.y);
   }
 }
@@ -58,7 +58,7 @@ class Hero extends Player {
   private sr?: SpriteRender;
 
   constructor(x: number, y: number) {
-    super("hero", x, y, TILE, TILE);
+    super('hero', x, y, TILE, TILE);
   }
 
   bindSprite(sr: SpriteRender): void {
@@ -71,28 +71,28 @@ class Hero extends Player {
     this.x = Math.max(0, Math.min(CANVAS_W - TILE, this.x));
     this.y = Math.max(0, Math.min(CANVAS_H - TILE, this.y));
 
-    if (!this.sr) return;
+    if (!this.sr) {return;}
 
-    const left = input.isKeyDown("a") || input.isKeyDown("arrowleft");
-    const right = input.isKeyDown("d") || input.isKeyDown("arrowright");
-    const up = input.isKeyDown("w") || input.isKeyDown("arrowup");
-    const down = input.isKeyDown("s") || input.isKeyDown("arrowdown");
+    const left = input.isKeyDown('a') || input.isKeyDown('arrowleft');
+    const right = input.isKeyDown('d') || input.isKeyDown('arrowright');
+    const up = input.isKeyDown('w') || input.isKeyDown('arrowup');
+    const down = input.isKeyDown('s') || input.isKeyDown('arrowdown');
 
     if (left) {
-      this.sr.play("walk_side");
+      this.sr.play('walk_side');
       this.sr.setFlipX(true);
     } else if (right) {
-      this.sr.play("walk_side");
+      this.sr.play('walk_side');
       this.sr.setFlipX(false);
     } else if (up) {
       this.sr.setFlipX(false);
-      this.sr.play("walk_up");
+      this.sr.play('walk_up');
     } else if (down) {
       this.sr.setFlipX(false);
-      this.sr.play("walk_down");
+      this.sr.play('walk_down');
     } else {
       this.sr.setFlipX(false);
-      this.sr.play("idle");
+      this.sr.play('idle');
     }
   }
 
@@ -107,7 +107,7 @@ hero.attachBehaviour(new Control(hero, input));
 engine.setup(async () => {
   const objects: Entity[] = [];
 
-  const image = await Asset.load("/sprite/assets/tiles.png");
+  const image = await Asset.load('/sprite/assets/tiles.png');
   const cols = Math.floor(image.width / 16);
 
   /** Convert tile column/row to flat frame index. */
@@ -117,7 +117,7 @@ engine.setup(async () => {
   //  1 · STATIC SPRITES — single-frame, no animation
   // ═══════════════════════════════════════════════════════════
 
-  objects.push(new Label("lbl-s", "1 · Static Sprites", 30, 35));
+  objects.push(new Label('lbl-s', '1 · Static Sprites', 30, 35));
 
   const staticTiles = [
     { col: 0, row: 0 },
@@ -136,7 +136,7 @@ engine.setup(async () => {
     });
     const sr = new SpriteRender(entity, sheet);
     entity.attachBehaviour(sr);
-    sr.play("idle");
+    sr.play('idle');
     objects.push(entity);
   }
 
@@ -144,7 +144,7 @@ engine.setup(async () => {
   //  2 · ANIMATED SPRITES — looping at different speeds
   // ═══════════════════════════════════════════════════════════
 
-  objects.push(new Label("lbl-a", "2 · Animated Sprites (looping at different speeds)", 30, 150));
+  objects.push(new Label('lbl-a', '2 · Animated Sprites (looping at different speeds)', 30, 150));
 
   const animDefs = [
     { frames: [f(0, 0), f(1, 0), f(2, 0), f(3, 0)], dur: 0.4 },
@@ -163,7 +163,7 @@ engine.setup(async () => {
     });
     const sr = new SpriteRender(entity, sheet);
     entity.attachBehaviour(sr);
-    sr.play("loop");
+    sr.play('loop');
     objects.push(entity);
 
     objects.push(new Label(`lbl-d${i}`, `${a.dur}s`, x + 12, 160 + TILE + 16));
@@ -173,7 +173,14 @@ engine.setup(async () => {
   //  3 · PLAYER — key press changes animation + flipX demo
   // ═══════════════════════════════════════════════════════════
 
-  objects.push(new Label("lbl-p", "3 · Player (WASD / Arrows — animation changes direction, flipX for left)", 30, 310));
+  objects.push(
+    new Label(
+      'lbl-p',
+      '3 · Player (WASD / Arrows — animation changes direction, flipX for left)',
+      30,
+      310,
+    ),
+  );
 
   const heroSheet = new Sprite(image, 16, 16, {
     idle: { frames: [f(104, 0)], duration: 1, loop: true },
@@ -197,7 +204,7 @@ engine.setup(async () => {
   const sr = new SpriteRender(hero, heroSheet);
   hero.attachBehaviour(sr);
   hero.bindSprite(sr);
-  sr.play("idle");
+  sr.play('idle');
 
   engine.use(new ObjectSystem([hero, ...objects] as any));
 });

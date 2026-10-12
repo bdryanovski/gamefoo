@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from "react";
-import type { AppState, AppAction, SpriteRegion, AnimationDef } from "../types";
-import { objectMachines } from "../types";
-import type { StateMachineDef } from "../statemachine/types";
-import type { MapAction } from "./types";
-import { resolveMachineState } from "./types";
-import { MachineConfigFields, TextConfigFields } from "./PlacementFields";
-import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
-import { Icon } from "../components/Icon";
+import React, { useMemo, useState } from 'react';
+import type { AppState, AppAction, SpriteRegion, AnimationDef } from '../types';
+import { objectMachines } from '../types';
+import type { StateMachineDef } from '../statemachine/types';
+import type { MapAction } from './types';
+import { resolveMachineState } from './types';
+import { MachineConfigFields, TextConfigFields } from './PlacementFields';
+import { AnimatedSpritePreview } from '../components/AnimatedSpritePreview';
+import { Icon } from '../components/Icon';
 
 interface Props {
   state: AppState;
@@ -34,23 +34,23 @@ function ThumbShell({
 }) {
   return (
     <div
-      className={`asset-thumb ${selected ? "selected" : ""}`}
+      className={`asset-thumb ${selected ? 'selected' : ''}`}
       title={title}
       onClick={onClick}
-      style={{ position: "relative" }}
+      style={{ position: 'relative' }}
     >
       {children}
       {badge && (
         <span
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 1,
             right: 3,
             fontSize: 9,
             lineHeight: 1,
-            color: "#00ff66",
-            textShadow: "0 0 2px #000",
-            pointerEvents: "none",
+            color: '#00ff66',
+            textShadow: '0 0 2px #000',
+            pointerEvents: 'none',
           }}
         >
           {badge}
@@ -73,10 +73,7 @@ function SpriteThumb({
   title: string;
   onClick: () => void;
 }) {
-  const spriteById = React.useMemo(
-    () => new Map([[sprite.id, sprite]]),
-    [sprite],
-  );
+  const spriteById = React.useMemo(() => new Map([[sprite.id, sprite]]), [sprite]);
   return (
     <ThumbShell selected={selected} title={title} onClick={onClick}>
       <AnimatedSpritePreview
@@ -146,15 +143,20 @@ function MachineThumb({
   let duration = 0.15;
   let badge: React.ReactNode = <Icon name="settings" size={9} />;
   if (st) {
-    if (st.display.kind === "sprite" && st.display.spriteId) {
+    if (st.display.kind === 'sprite' && st.display.spriteId) {
       frames = [st.display.spriteId];
-    } else if (st.display.kind === "animation" && st.display.animationId) {
+    } else if (st.display.kind === 'animation' && st.display.animationId) {
       const animationId = st.display.animationId;
       const anim = animations.find((a) => a.id === animationId);
       if (anim && anim.frames.length > 0) {
         frames = anim.frames;
         duration = anim.duration;
-        badge = (<><Icon name="settings" size={9} /><Icon name="play" size={9} /></>);
+        badge = (
+          <>
+            <Icon name="settings" size={9} />
+            <Icon name="play" size={9} />
+          </>
+        );
       }
     }
   }
@@ -182,23 +184,20 @@ export function MapPalettePanel({
 }: Props) {
   const map = state.map;
   const [dragLayer, setDragLayer] = useState<number | null>(null);
-  const spriteById = useMemo(
-    () => new Map(state.sprites.map((s) => [s.id, s])),
-    [state.sprites],
-  );
+  const spriteById = useMemo(() => new Map(state.sprites.map((s) => [s.id, s])), [state.sprites]);
   const imageNames = useMemo(
     () => new Map(state.images.map((i) => [i.id, i.name])),
     [state.images],
   );
 
-  const selectedSpriteId = map.selected?.kind === "sprite" ? map.selected.id : null;
+  const selectedSpriteId = map.selected?.kind === 'sprite' ? map.selected.id : null;
   const selectedSprite = selectedSpriteId ? spriteById.get(selectedSpriteId) : undefined;
 
   // Group sprites: explicit sprite.group, else the source image name.
   const groups = useMemo(() => {
     const g = new Map<string, SpriteRegion[]>();
     for (const s of [...state.sprites].sort((a, b) => a.order - b.order)) {
-      const key = s.group || imageNames.get(s.imageId) || "ungrouped";
+      const key = s.group || imageNames.get(s.imageId) || 'ungrouped';
       const list = g.get(key) ?? [];
       list.push(s);
       g.set(key, list);
@@ -211,13 +210,13 @@ export function MapPalettePanel({
   // The machine currently loaded into the paint brush, and its object — the
   // palette config editor sets the state + properties new placements inherit.
   // (A placed instance is edited in the floating placement inspector.)
-  const brushMachine = map.selected?.kind === "machine" ? map.selected : null;
+  const brushMachine = map.selected?.kind === 'machine' ? map.selected : null;
   const brushObject = brushMachine
     ? (state.objects.find((o) => o.machine.id === brushMachine.id) ?? null)
     : null;
 
   // The text brush loaded into the palette, if any — its style seeds new labels.
-  const brushText = map.selected?.kind === "text" ? map.selected : null;
+  const brushText = map.selected?.kind === 'text' ? map.selected : null;
 
   return (
     <div className="col gap-md">
@@ -230,9 +229,7 @@ export function MapPalettePanel({
             type="text"
             className="input input-full"
             value={state.projectName}
-            onChange={(e) =>
-              dispatch({ type: "SET_PROJECT_NAME", name: e.target.value })
-            }
+            onChange={(e) => dispatch({ type: 'SET_PROJECT_NAME', name: e.target.value })}
           />
         </div>
       </div>
@@ -250,7 +247,7 @@ export function MapPalettePanel({
             value={map.blockSize}
             onChange={(e) =>
               mapDispatch({
-                type: "SET_MAP_SETTINGS",
+                type: 'SET_MAP_SETTINGS',
                 blockSize: Math.max(4, Math.min(256, Number(e.target.value) || 4)),
               })
             }
@@ -267,7 +264,7 @@ export function MapPalettePanel({
             value={map.screenCols}
             onChange={(e) =>
               mapDispatch({
-                type: "SET_MAP_SETTINGS",
+                type: 'SET_MAP_SETTINGS',
                 screenCols: Math.max(1, Math.min(256, Number(e.target.value) || 1)),
               })
             }
@@ -281,7 +278,7 @@ export function MapPalettePanel({
             value={map.screenRows}
             onChange={(e) =>
               mapDispatch({
-                type: "SET_MAP_SETTINGS",
+                type: 'SET_MAP_SETTINGS',
                 screenRows: Math.max(1, Math.min(256, Number(e.target.value) || 1)),
               })
             }
@@ -289,10 +286,12 @@ export function MapPalettePanel({
         </div>
         <div className="section-title" style={{ marginTop: 4 }}>
           <span>Layers ({map.layers.length})</span>
-          <button className="btn btn-sm" onClick={() => mapDispatch({ type: "ADD_LAYER" })}>+ Layer</button>
+          <button className="btn btn-sm" onClick={() => mapDispatch({ type: 'ADD_LAYER' })}>
+            + Layer
+          </button>
         </div>
         <div className="active-layer-banner">
-          Placing on: <b>{map.layers[map.activeLevel]?.name ?? "?"}</b>
+          Placing on: <b>{map.layers[map.activeLevel]?.name ?? '?'}</b>
           <span className="text-dim"> (layer {map.activeLevel})</span>
         </div>
         {[...map.layers]
@@ -301,54 +300,64 @@ export function MapPalettePanel({
           .map(({ l, i }) => (
             <div
               key={i}
-              className={`object-layer-row ${map.activeLevel === i ? "selected" : ""} ${dragLayer === i ? "dragging" : ""}`}
+              className={`object-layer-row ${map.activeLevel === i ? 'selected' : ''} ${dragLayer === i ? 'dragging' : ''}`}
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => {
-                if (dragLayer !== null && dragLayer !== i) mapDispatch({ type: "MOVE_LAYER", from: dragLayer, to: i });
+                if (dragLayer !== null && dragLayer !== i)
+                  {mapDispatch({ type: 'MOVE_LAYER', from: dragLayer, to: i });}
                 setDragLayer(null);
               }}
-              onClick={() => mapDispatch({ type: "SET_ACTIVE_LEVEL", level: i })}
+              onClick={() => mapDispatch({ type: 'SET_ACTIVE_LEVEL', level: i })}
             >
               <span
                 className="text-xs text-dim layer-grip"
                 title="Drag to reorder"
                 draggable
-                onDragStart={(e) => { e.stopPropagation(); setDragLayer(i); }}
+                onDragStart={(e) => {
+                  e.stopPropagation();
+                  setDragLayer(i);
+                }}
                 onDragEnd={() => setDragLayer(null)}
               >
                 <Icon name="grip" size={12} />
               </span>
-              <span className="text-xs" style={{ minWidth: 12, textAlign: "center" }}>{map.activeLevel === i ? <Icon name="play" size={11} /> : i}</span>
+              <span className="text-xs" style={{ minWidth: 12, textAlign: 'center' }}>
+                {map.activeLevel === i ? <Icon name="play" size={11} /> : i}
+              </span>
               <input
                 type="text"
                 className="input input-full"
                 value={l.name}
                 onClick={(e) => e.stopPropagation()}
-                onChange={(e) => mapDispatch({ type: "RENAME_LAYER", level: i, name: e.target.value })}
+                onChange={(e) =>
+                  mapDispatch({ type: 'RENAME_LAYER', level: i, name: e.target.value })
+                }
               />
               <button
-                className={`btn btn-sm ${l.visible ? "active" : ""}`}
-                title={l.visible ? "Visible — click to hide" : "Hidden — click to show"}
-                onClick={(e) => { e.stopPropagation(); mapDispatch({ type: "SET_LAYER_VISIBLE", level: i, visible: !l.visible }); }}
+                className={`btn btn-sm ${l.visible ? 'active' : ''}`}
+                title={l.visible ? 'Visible — click to hide' : 'Hidden — click to show'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  mapDispatch({ type: 'SET_LAYER_VISIBLE', level: i, visible: !l.visible });
+                }}
               >
                 {l.visible ? <Icon name="eye" size={13} /> : <Icon name="eye-off" size={13} />}
               </button>
             </div>
           ))}
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-          Screen = {map.screenCols * map.blockSize}×
-          {map.screenRows * map.blockSize}px ({map.screenCols}×
-          {map.screenRows} blocks). Screens: (x,y) — x grows ↓, y grows →.
+        <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+          Screen = {map.screenCols * map.blockSize}×{map.screenRows * map.blockSize}px (
+          {map.screenCols}×{map.screenRows} blocks). Screens: (x,y) — x grows ↓, y grows →.
         </div>
       </div>
 
       {/* Default tile for new screens */}
       <div className="section">
         <div className="section-title">Default Tile (new screens)</div>
-        <div className="text-xs" style={{ padding: "2px 4px" }}>
+        <div className="text-xs" style={{ padding: '2px 4px' }}>
           {map.defaultSpriteId
-            ? `Current: ${spriteById.get(map.defaultSpriteId)?.name ?? "?"}`
-            : "None — new screens start empty"}
+            ? `Current: ${spriteById.get(map.defaultSpriteId)?.name ?? '?'}`
+            : 'None — new screens start empty'}
         </div>
         <div className="row gap-sm" style={{ padding: 4 }}>
           <button
@@ -356,7 +365,7 @@ export function MapPalettePanel({
             disabled={!selectedSpriteId}
             onClick={() =>
               mapDispatch({
-                type: "SET_MAP_DEFAULT",
+                type: 'SET_MAP_DEFAULT',
                 spriteId: selectedSpriteId,
               })
             }
@@ -366,7 +375,7 @@ export function MapPalettePanel({
           <button
             className="btn btn-sm"
             disabled={!map.defaultSpriteId}
-            onClick={() => mapDispatch({ type: "SET_MAP_DEFAULT", spriteId: null })}
+            onClick={() => mapDispatch({ type: 'SET_MAP_DEFAULT', spriteId: null })}
           >
             Clear
           </button>
@@ -375,23 +384,24 @@ export function MapPalettePanel({
 
       {/* Active screen */}
       <div className="section">
-        <div className="section-title">Screen {activeScreenKey ?? "—"}</div>
-        <div className="text-xs" style={{ padding: "2px 4px" }}>
+        <div className="section-title">Screen {activeScreenKey ?? '—'}</div>
+        <div className="text-xs" style={{ padding: '2px 4px' }}>
           {activeScreen
-            ? `Fill: ${activeScreen.defaultSpriteId
-              ? spriteById.get(activeScreen.defaultSpriteId)?.name ?? "?"
-              : "none"
-            } · ${activeScreen.placements.length} placements`
-            : "Click a screen on the map to select it (Fill tool sets its tile)"}
+            ? `Fill: ${
+                activeScreen.defaultSpriteId
+                  ? (spriteById.get(activeScreen.defaultSpriteId)?.name ?? '?')
+                  : 'none'
+              } · ${activeScreen.placements.length} placements`
+            : 'Click a screen on the map to select it (Fill tool sets its tile)'}
         </div>
-        <div className="row gap-sm" style={{ padding: 4, flexWrap: "wrap" }}>
+        <div className="row gap-sm" style={{ padding: 4, flexWrap: 'wrap' }}>
           <button
             className="btn btn-sm"
             disabled={!activeScreen || !selectedSpriteId}
             onClick={() =>
               activeScreen &&
               mapDispatch({
-                type: "SET_SCREEN_DEFAULT",
+                type: 'SET_SCREEN_DEFAULT',
                 x: activeScreen.x,
                 y: activeScreen.y,
                 spriteId: selectedSpriteId,
@@ -406,7 +416,7 @@ export function MapPalettePanel({
             onClick={() =>
               activeScreen &&
               mapDispatch({
-                type: "SET_SCREEN_DEFAULT",
+                type: 'SET_SCREEN_DEFAULT',
                 x: activeScreen.x,
                 y: activeScreen.y,
                 spriteId: null,
@@ -421,7 +431,7 @@ export function MapPalettePanel({
             onClick={() =>
               activeScreen &&
               mapDispatch({
-                type: "CLEAR_SCREEN",
+                type: 'CLEAR_SCREEN',
                 x: activeScreen.x,
                 y: activeScreen.y,
               })
@@ -436,7 +446,7 @@ export function MapPalettePanel({
               activeScreen &&
               confirm(`Delete screen (${activeScreen.x},${activeScreen.y})?`) &&
               mapDispatch({
-                type: "REMOVE_SCREEN",
+                type: 'REMOVE_SCREEN',
                 x: activeScreen.x,
                 y: activeScreen.y,
               })
@@ -458,19 +468,18 @@ export function MapPalettePanel({
           </div>
         )}
         {state.animations.length > 0 && (
-          <div style={{ padding: "4px 0" }}>
-            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+          <div style={{ padding: '4px 0' }}>
+            <div className="text-xs text-dim" style={{ padding: '2px 0' }}>
               Animations ({state.animations.length})
             </div>
             <div className="asset-grid">
               {state.animations.map((a) => {
-                const sel =
-                  map.selected?.kind === "animation" && map.selected.id === a.id;
+                const sel = map.selected?.kind === 'animation' && map.selected.id === a.id;
                 return (
                   <div
                     key={a.id}
                     className="col"
-                    style={{ alignItems: "center", gap: 2, width: THUMB + 8 }}
+                    style={{ alignItems: 'center', gap: 2, width: THUMB + 8 }}
                   >
                     <FramePreview
                       frames={a.frames}
@@ -482,8 +491,8 @@ export function MapPalettePanel({
                       title={`${a.name} (${a.frames.length} frames)`}
                       onClick={() =>
                         mapDispatch({
-                          type: "SELECT_PALETTE",
-                          selection: sel ? null : { kind: "animation", id: a.id },
+                          type: 'SELECT_PALETTE',
+                          selection: sel ? null : { kind: 'animation', id: a.id },
                         })
                       }
                     />
@@ -491,9 +500,9 @@ export function MapPalettePanel({
                       className="text-xs text-dim"
                       style={{
                         maxWidth: THUMB + 8,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {a.name}
@@ -505,20 +514,19 @@ export function MapPalettePanel({
           </div>
         )}
         {objectMachines(state.objects).length > 0 && (
-          <div style={{ padding: "4px 0" }}>
-            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+          <div style={{ padding: '4px 0' }}>
+            <div className="text-xs text-dim" style={{ padding: '2px 0' }}>
               State Machines ({objectMachines(state.objects).length})
             </div>
             <div className="asset-grid">
               {objectMachines(state.objects).map((mch) => {
-                const sel =
-                  map.selected?.kind === "machine" && map.selected.id === mch.id;
+                const sel = map.selected?.kind === 'machine' && map.selected.id === mch.id;
                 const initial = resolveMachineState(mch);
                 return (
                   <div
                     key={mch.id}
                     className="col"
-                    style={{ alignItems: "center", gap: 2, width: THUMB + 8 }}
+                    style={{ alignItems: 'center', gap: 2, width: THUMB + 8 }}
                   >
                     <MachineThumb
                       machine={mch}
@@ -526,11 +534,11 @@ export function MapPalettePanel({
                       spriteById={spriteById}
                       imageMap={imageMap}
                       selected={sel}
-                      title={`${mch.name}${initial ? ` — ${initial.name}` : ""}`}
+                      title={`${mch.name}${initial ? ` — ${initial.name}` : ''}`}
                       onClick={() =>
                         mapDispatch({
-                          type: "SELECT_PALETTE",
-                          selection: sel ? null : { kind: "machine", id: mch.id },
+                          type: 'SELECT_PALETTE',
+                          selection: sel ? null : { kind: 'machine', id: mch.id },
                         })
                       }
                     />
@@ -538,9 +546,9 @@ export function MapPalettePanel({
                       className="text-xs text-dim"
                       style={{
                         maxWidth: THUMB + 8,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {mch.name}
@@ -554,9 +562,9 @@ export function MapPalettePanel({
         {brushMachine && brushObject && (
           <div className="section" style={{ marginTop: 4 }}>
             <div className="section-title">Placement config — {brushObject.name}</div>
-            <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-              New placements you paint use this state + properties. Select a
-              placed one to tune it in the floating inspector.
+            <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+              New placements you paint use this state + properties. Select a placed one to tune it
+              in the floating inspector.
             </div>
             <MachineConfigFields
               object={brushObject}
@@ -564,13 +572,13 @@ export function MapPalettePanel({
               properties={brushMachine.properties}
               onState={(name) =>
                 mapDispatch({
-                  type: "SELECT_PALETTE",
+                  type: 'SELECT_PALETTE',
                   selection: { ...brushMachine, stateName: name },
                 })
               }
               onProperties={(props) =>
                 mapDispatch({
-                  type: "SELECT_PALETTE",
+                  type: 'SELECT_PALETTE',
                   selection: { ...brushMachine, properties: props },
                 })
               }
@@ -582,17 +590,17 @@ export function MapPalettePanel({
       {/* Text palette — styled labels rendered by the engine's TextObject */}
       <div className="section">
         <div className="section-title">Text</div>
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-          Pick the <b>Text tool (T)</b>, set the style below, then click anywhere on
-          a screen — the label lands at the exact pixel (not grid-snapped). The
-          engine renders each as a TextObject you can move or animate at runtime.
+        <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+          Pick the <b>Text tool (T)</b>, set the style below, then click anywhere on a screen — the
+          label lands at the exact pixel (not grid-snapped). The engine renders each as a TextObject
+          you can move or animate at runtime.
         </div>
         <div className="row gap-sm" style={{ padding: 4 }}>
           <button
-            className={`btn btn-sm ${map.activeTool === "text" ? "active" : ""}`}
-            onClick={() => mapDispatch({ type: "SET_TOOL", tool: "text" })}
+            className={`btn btn-sm ${map.activeTool === 'text' ? 'active' : ''}`}
+            onClick={() => mapDispatch({ type: 'SET_TOOL', tool: 'text' })}
           >
-            {map.activeTool === "text" ? "Text tool active" : "Use Text tool"}
+            {map.activeTool === 'text' ? 'Text tool active' : 'Use Text tool'}
           </button>
         </div>
         {brushText && (
@@ -600,7 +608,7 @@ export function MapPalettePanel({
             value={brushText}
             onChange={(patch) =>
               mapDispatch({
-                type: "SELECT_PALETTE",
+                type: 'SELECT_PALETTE',
                 selection: { ...brushText, ...patch },
               })
             }
@@ -614,13 +622,13 @@ export function MapPalettePanel({
         </div>
         {state.sprites.length === 0 && (
           <div className="text-xs text-dim" style={{ padding: 4 }}>
-            No sprites yet. Switch to the Sprite Editor, add images and cut
-            sprites — they appear here automatically.
+            No sprites yet. Switch to the Sprite Editor, add images and cut sprites — they appear
+            here automatically.
           </div>
         )}
         {groups.map(([group, sprites]) => (
-          <div key={group} style={{ padding: "4px 0" }}>
-            <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+          <div key={group} style={{ padding: '4px 0' }}>
+            <div className="text-xs text-dim" style={{ padding: '2px 0' }}>
               {group} ({sprites.length})
             </div>
             <div className="asset-grid">
@@ -629,15 +637,15 @@ export function MapPalettePanel({
                   key={s.id}
                   sprite={s}
                   imageMap={imageMap}
-                  selected={map.selected?.kind === "sprite" && map.selected.id === s.id}
+                  selected={map.selected?.kind === 'sprite' && map.selected.id === s.id}
                   title={`${s.name} (${s.width}×${s.height})`}
                   onClick={() =>
                     mapDispatch({
-                      type: "SELECT_PALETTE",
+                      type: 'SELECT_PALETTE',
                       selection:
-                        map.selected?.kind === "sprite" && map.selected.id === s.id
+                        map.selected?.kind === 'sprite' && map.selected.id === s.id
                           ? null
-                          : { kind: "sprite", id: s.id },
+                          : { kind: 'sprite', id: s.id },
                     })
                   }
                 />
@@ -646,13 +654,11 @@ export function MapPalettePanel({
           </div>
         ))}
         {selectedSprite && (
-          <div className="text-xs" style={{ padding: "4px 4px 0" }}>
-            Selected: {selectedSprite.name} ({selectedSprite.width}×
-            {selectedSprite.height}px)
+          <div className="text-xs" style={{ padding: '4px 4px 0' }}>
+            Selected: {selectedSprite.name} ({selectedSprite.width}×{selectedSprite.height}px)
           </div>
         )}
       </div>
-
     </div>
   );
 }

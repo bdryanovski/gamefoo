@@ -3,7 +3,7 @@
  * message's segments with a typewriter, then presenting options. Following an
  * option jumps by id; a dead end (no options / null target) ends the dialog.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { DialogRunner } from '../src/core/dialog/dialog_runner';
 import type { DialogDocument } from '../src/core/dialog/types';
 

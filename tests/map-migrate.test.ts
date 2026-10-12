@@ -4,7 +4,7 @@
  * every load; if it drops overrides, placed instances silently revert to the
  * object def's defaults (the "portal properties reset to 0,0" bug).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { migrateMapState } from '../tools/src/map/types';
 import type { MachinePlacement } from '../tools/src/map/types';
 

@@ -5,29 +5,25 @@ import type {
   AnimationDef,
   ObjectLayer,
   ObjectCell,
-} from "../types";
-import { makeObject } from "../types";
-import type {
-  StateMachineDef,
-  StateNodeDef,
-  StateTransitionDef,
-} from "../statemachine/types";
-import { uid } from "../utils/uid";
+} from '../types';
+import { makeObject } from '../types';
+import type { StateMachineDef, StateNodeDef, StateTransitionDef } from '../statemachine/types';
+import { uid } from '../utils/uid';
 
 /** Standard character slots, in display + graph-layout order. */
-export const STANDARD_SLOTS: {
+export const STANDARD_SLOTS: Array<{
   key: string;
   label: string;
   condition: string;
-}[] = [
-    { key: "idle", label: "Idle", condition: "idle" },
-    { key: "up", label: "Up", condition: "move_up" },
-    { key: "down", label: "Down", condition: "move_down" },
-    { key: "left", label: "Left", condition: "move_left" },
-    { key: "right", label: "Right", condition: "move_right" },
-    { key: "sideways", label: "Sideways", condition: "move_side" },
-    { key: "death", label: "Death", condition: "die" },
-  ];
+}> = [
+  { key: 'idle', label: 'Idle', condition: 'idle' },
+  { key: 'up', label: 'Up', condition: 'move_up' },
+  { key: 'down', label: 'Down', condition: 'move_down' },
+  { key: 'left', label: 'Left', condition: 'move_left' },
+  { key: 'right', label: 'Right', condition: 'move_right' },
+  { key: 'sideways', label: 'Sideways', condition: 'move_side' },
+  { key: 'death', label: 'Death', condition: 'die' },
+];
 
 /** Fixed graph positions per standard slot (idle is the hub). */
 const LAYOUT: Record<string, [number, number]> = {
@@ -57,14 +53,20 @@ function emptyConfig(o: GameObjectDef): CharacterConfig {
 
 /** Snake-case a user action name into a machine condition token. */
 function conditionToken(name: string): string {
-  return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "action";
+  return (
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '') || 'action'
+  );
 }
 
-function slotDisplay(slot: CharacterSlot | undefined): StateNodeDef["display"] {
-  if (!slot) return { kind: "sprite", spriteId: null };
-  return slot.kind === "sprite"
-    ? { kind: "sprite", spriteId: slot.id }
-    : { kind: "animation", animationId: slot.id };
+function slotDisplay(slot: CharacterSlot | undefined): StateNodeDef['display'] {
+  if (!slot) {return { kind: 'sprite', spriteId: null };}
+  return slot.kind === 'sprite'
+    ? { kind: 'sprite', spriteId: slot.id }
+    : { kind: 'animation', animationId: slot.id };
 }
 
 /**
@@ -78,7 +80,7 @@ export function regenerateMachine(o: GameObjectDef): StateMachineDef {
   const prev = new Map(o.machine.states.map((s) => [s.id, s]));
   const states: StateNodeDef[] = [];
   const transitions: StateTransitionDef[] = [];
-  const idleId = "st_idle";
+  const idleId = 'st_idle';
 
   const node = (
     key: string,
@@ -100,23 +102,23 @@ export function regenerateMachine(o: GameObjectDef): StateMachineDef {
     transitions.push({ id: `tr_${from}_${to}`, fromStateId: from, toStateId: to, condition });
 
   // Idle hub is always present.
-  states.push(node("idle", "Idle", config.slots["idle"], LAYOUT.idle!));
+  states.push(node('idle', 'Idle', config.slots['idle'], LAYOUT.idle!));
 
   for (const { key, label } of STANDARD_SLOTS) {
-    if (key === "idle") continue;
+    if (key === 'idle') {continue;}
     const slot = config.slots[key];
-    if (!slot) continue;
+    if (!slot) {continue;}
     states.push(node(key, label, slot, LAYOUT[key]!));
     edge(idleId, `st_${key}`, CONDITION[key]!);
-    edge(`st_${key}`, idleId, "stop");
+    edge(`st_${key}`, idleId, 'stop');
   }
 
   config.actions.forEach((a, i) => {
     const slot = config.slots[a.id];
-    if (!slot) return;
+    if (!slot) {return;}
     states.push(node(a.id, a.name, slot, [560, 40 + i * 70]));
     edge(idleId, `st_${a.id}`, conditionToken(a.name));
-    edge(`st_${a.id}`, idleId, "stop");
+    edge(`st_${a.id}`, idleId, 'stop');
   });
 
   return {
@@ -134,7 +136,10 @@ function slotCell(stateId: string, slot: CharacterSlot): ObjectCell {
     id: `cell_${stateId}`,
     col: 0,
     row: 0,
-    source: slot.kind === "sprite" ? { kind: "sprite", spriteId: slot.id } : { kind: "animation", animationId: slot.id },
+    source:
+      slot.kind === 'sprite'
+        ? { kind: 'sprite', spriteId: slot.id }
+        : { kind: 'animation', animationId: slot.id },
     ...(slot.flipX ? { flipX: true } : {}),
     ...(slot.flipY ? { flipY: true } : {}),
     ...(slot.rotation ? { rotation: slot.rotation } : {}),
@@ -151,9 +156,9 @@ export function regenerateCharacter(o: GameObjectDef): GameObjectDef {
   const config = emptyConfig(o);
   const layersByState: Record<string, ObjectLayer[]> = {};
   for (const s of machine.states) {
-    const slot = config.slots[s.id.replace(/^st_/, "")];
+    const slot = config.slots[s.id.replace(/^st_/, '')];
     layersByState[s.id] = [
-      { id: `lyr_${s.id}`, name: "base", visible: true, cells: slot ? [slotCell(s.id, slot)] : [] },
+      { id: `lyr_${s.id}`, name: 'base', visible: true, cells: slot ? [slotCell(s.id, slot)] : [] },
     ];
   }
   return { ...o, machine, layersByState };
@@ -164,25 +169,19 @@ export function makeCharacter(name: string): GameObjectDef {
   const base = makeObject(name);
   const withConfig: GameObjectDef = {
     ...base,
-    meta: { ...base.meta, category: "character" },
+    meta: { ...base.meta, category: 'character' },
     character: { slots: {}, actions: [] },
   };
   return regenerateCharacter(withConfig);
 }
 
 /** Assign a slot to a sprite/animation, attach the asset, regenerate. */
-export function assignSlot(
-  o: GameObjectDef,
-  key: string,
-  slot: CharacterSlot,
-): GameObjectDef {
+export function assignSlot(o: GameObjectDef, key: string, slot: CharacterSlot): GameObjectDef {
   const config = emptyConfig(o);
   const sprites =
-    slot.kind === "sprite" && !o.sprites.includes(slot.id)
-      ? [...o.sprites, slot.id]
-      : o.sprites;
+    slot.kind === 'sprite' && !o.sprites.includes(slot.id) ? [...o.sprites, slot.id] : o.sprites;
   const animations =
-    slot.kind === "animation" && !o.animations.includes(slot.id)
+    slot.kind === 'animation' && !o.animations.includes(slot.id)
       ? [...o.animations, slot.id]
       : o.animations;
   const withConfig: GameObjectDef = {
@@ -208,17 +207,13 @@ export function addAction(o: GameObjectDef, name: string): GameObjectDef {
     ...o,
     character: {
       ...config,
-      actions: [...config.actions, { id: uid("act"), name }],
+      actions: [...config.actions, { id: uid('act'), name }],
     },
   };
   return regenerateCharacter(withConfig);
 }
 
-export function renameAction(
-  o: GameObjectDef,
-  actionId: string,
-  name: string,
-): GameObjectDef {
+export function renameAction(o: GameObjectDef, actionId: string, name: string): GameObjectDef {
   const config = emptyConfig(o);
   const withConfig: GameObjectDef = {
     ...o,
@@ -249,21 +244,27 @@ export function removeAction(o: GameObjectDef, actionId: string): GameObjectDef 
 export function characterPreviewFrames(
   o: GameObjectDef,
   animById: Map<string, AnimationDef>,
-): { frames: string[]; duration: number; transform?: { flipX?: boolean; flipY?: boolean; rotation?: number } } {
+): {
+  frames: string[];
+  duration: number;
+  transform?: { flipX?: boolean; flipY?: boolean; rotation?: number };
+} {
   const config = o.character;
   if (config) {
     const ordered = [
-      config.slots["idle"],
+      config.slots['idle'],
       ...STANDARD_SLOTS.map((s) => config.slots[s.key]),
       ...config.actions.map((a) => config.slots[a.id]),
     ];
     const pick = ordered.find((s): s is CharacterSlot => s != null);
     if (pick) {
       const transform =
-        pick.flipX || pick.flipY || pick.rotation ? { flipX: pick.flipX, flipY: pick.flipY, rotation: pick.rotation } : undefined;
-      if (pick.kind === "sprite") return { frames: [pick.id], duration: 0, transform };
+        pick.flipX || pick.flipY || pick.rotation
+          ? { flipX: pick.flipX, flipY: pick.flipY, rotation: pick.rotation }
+          : undefined;
+      if (pick.kind === 'sprite') {return { frames: [pick.id], duration: 0, transform };}
       const a = animById.get(pick.id);
-      if (a && a.frames.length > 0) return { frames: a.frames, duration: a.duration, transform };
+      if (a && a.frames.length > 0) {return { frames: a.frames, duration: a.duration, transform };}
     }
   }
   return { frames: [], duration: 0 };

@@ -24,14 +24,7 @@
   },
   "animations": {
     "Slime_idle": {
-      "frames": [
-        20,
-        12,
-        13,
-        14,
-        13,
-        12
-      ],
+      "frames": [20, 12, 13, 14, 13, 12],
       "duration": 0.21,
       "loop": true
     }

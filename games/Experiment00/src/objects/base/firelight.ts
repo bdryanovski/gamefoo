@@ -1,6 +1,7 @@
+import type {
+  DitherLight} from '../../../../../src/index';
 import {
   type CollisionDefinition,
-  DitherLight,
   type DitherLightOptions,
   GlowShader,
   type GlowConfig,

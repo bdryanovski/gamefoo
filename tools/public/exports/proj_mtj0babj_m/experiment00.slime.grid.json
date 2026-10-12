@@ -28,32 +28,17 @@
   },
   "animations": {
     "slime_idle": {
-      "frames": [
-        0,
-        1
-      ],
+      "frames": [0, 1],
       "duration": 0.2,
       "loop": true
     },
     "slime_right": {
-      "frames": [
-        8,
-        9,
-        8,
-        9,
-        8
-      ],
+      "frames": [8, 9, 8, 9, 8],
       "duration": 0.2,
       "loop": true
     },
     "slime_left": {
-      "frames": [
-        4,
-        5,
-        12,
-        13,
-        12
-      ],
+      "frames": [4, 5, 12, 13, 12],
       "duration": 0.15,
       "loop": true
     }

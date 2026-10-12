@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   PhotoIcon,
   MapIcon,
@@ -40,7 +40,7 @@ import {
   ChatIcon,
   CopyIcon,
   FolderIcon,
-} from "@proicons/react";
+} from '@proicons/react';
 
 /**
  * The single boundary to the icon library. Application code references
@@ -48,8 +48,8 @@ import {
  * whole set can be re-pointed at a different library by editing this map.
  */
 const REGISTRY = {
-  "sprite-editor": PhotoIcon,
-  "map-editor": MapIcon,
+  'sprite-editor': PhotoIcon,
+  'map-editor': MapIcon,
   objects: CubeIcon,
   character: PersonIcon,
   dialog: ChatIcon,
@@ -57,19 +57,19 @@ const REGISTRY = {
   folder: FolderIcon,
   save: SaveIcon,
   undo: ArrowUndoIcon,
-  "zoom-reset": ScreenSizeIcon,
-  "tool-select": CursorIcon,
-  "tool-grid": GridIcon,
-  "tool-stream": Paintbrush2SparkleIcon,
-  "tool-region": RectangleWideIcon,
-  "tool-pan": HandIcon,
-  "tool-paint": PaintbrushIcon,
-  "tool-erase": EraserIcon,
-  "tool-fill": PaintBucketIcon,
-  "tool-pick": EyedropperIcon,
-  "tool-move": ArrowMoveIcon,
+  'zoom-reset': ScreenSizeIcon,
+  'tool-select': CursorIcon,
+  'tool-grid': GridIcon,
+  'tool-stream': Paintbrush2SparkleIcon,
+  'tool-region': RectangleWideIcon,
+  'tool-pan': HandIcon,
+  'tool-paint': PaintbrushIcon,
+  'tool-erase': EraserIcon,
+  'tool-fill': PaintBucketIcon,
+  'tool-pick': EyedropperIcon,
+  'tool-move': ArrowMoveIcon,
   eye: EyeIcon,
-  "eye-off": EyeOffIcon,
+  'eye-off': EyeOffIcon,
   grip: SquareDragIcon,
   delete: DeleteIcon,
   close: CancelIcon,
@@ -84,9 +84,9 @@ const REGISTRY = {
   subtract: SubtractIcon,
   layers: LayersIcon,
   settings: SettingsIcon,
-  "shape-circle": CircleIcon,
-  "shape-box": SquareIcon,
-  "shape-custom": TriangleIcon,
+  'shape-circle': CircleIcon,
+  'shape-box': SquareIcon,
+  'shape-custom': TriangleIcon,
   sparkle: SparkleIcon,
 } as const;
 
@@ -125,11 +125,11 @@ export function Icon({ name, size = 14, className, title, color }: Props) {
     <Glyph
       size={size}
       color={color}
-      className={`pi-icon${className ? ` ${className}` : ""}`}
+      className={`pi-icon${className ? ` ${className}` : ''}`}
       aria-hidden={title ? undefined : true}
     />
   );
-  if (!title) return svg;
+  if (!title) {return svg;}
   return (
     <span className="pi-icon-wrap" title={title}>
       {svg}

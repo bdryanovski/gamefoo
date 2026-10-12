@@ -47,9 +47,7 @@
       "messages": {
         "msg_mton1hnd_j": {
           "title": "Hey",
-          "segments": [
-            "Not this way, dummy!"
-          ],
+          "segments": ["Not this way, dummy!"],
           "options": [],
           "meta": {}
         }
@@ -129,9 +127,7 @@
         },
         "msg_mtuhlh8h_1": {
           "title": "Message",
-          "segments": [
-            ""
-          ],
+          "segments": [""],
           "options": [],
           "meta": {}
         }
@@ -199,10 +195,7 @@
       "messages": {
         "msg_mu1qi93b_9": {
           "title": "Empty",
-          "segments": [
-            "Empty.",
-            "Yet somehow, you were expecting her to leave something here."
-          ],
+          "segments": ["Empty.", "Yet somehow, you were expecting her to leave something here."],
           "options": [],
           "meta": {}
         }
@@ -215,9 +208,7 @@
       "messages": {
         "msg_mtoqjn5v_i": {
           "title": "Note",
-          "segments": [
-            "Everything reminds me of her"
-          ],
+          "segments": ["Everything reminds me of her"],
           "options": [],
           "meta": {}
         }
@@ -421,9 +412,7 @@
       "messages": {
         "msg_mtorg8k9_1q": {
           "title": "Found a magnet",
-          "segments": [
-            "You were supposed to bring this ..."
-          ],
+          "segments": ["You were supposed to bring this ..."],
           "options": [],
           "meta": {}
         }
@@ -436,9 +425,7 @@
       "messages": {
         "msg_mtorh2ih_1u": {
           "title": "Found Coffee ",
-          "segments": [
-            "Before everything else"
-          ],
+          "segments": ["Before everything else"],
           "options": [],
           "meta": {}
         }
@@ -451,9 +438,7 @@
       "messages": {
         "msg_mtorhu8r_1y": {
           "title": "Found Tiny Bear",
-          "segments": [
-            "You found a tiny bear, sweet dreams ..."
-          ],
+          "segments": ["You found a tiny bear, sweet dreams ..."],
           "options": [],
           "meta": {}
         }
@@ -527,10 +512,7 @@
       "messages": {
         "msg_mtslnnkc_2": {
           "title": "Olive",
-          "segments": [
-            "An olive.",
-            "You have no idea why you’re collecting these."
-          ],
+          "segments": ["An olive.", "You have no idea why you’re collecting these."],
           "options": [],
           "meta": {}
         }
@@ -543,10 +525,7 @@
       "messages": {
         "msg_mtsltedy_8": {
           "title": "Olive",
-          "segments": [
-            "Another one.",
-            "This is starting to feel deliberate."
-          ],
+          "segments": ["Another one.", "This is starting to feel deliberate."],
           "options": [],
           "meta": {}
         }
@@ -559,10 +538,7 @@
       "messages": {
         "msg_mtslu14k_c": {
           "title": "Olive",
-          "segments": [
-            "Three olives.",
-            "Apparently this is how a bond begins."
-          ],
+          "segments": ["Three olives.", "Apparently this is how a bond begins."],
           "options": [],
           "meta": {}
         }
@@ -591,9 +567,7 @@
       "messages": {
         "msg_mtslvnee_k": {
           "title": "Olive",
-          "segments": [
-            "At some point, you stopped asking why."
-          ],
+          "segments": ["At some point, you stopped asking why."],
           "options": [],
           "meta": {}
         }
@@ -622,10 +596,7 @@
       "messages": {
         "msg_mtslwv7g_s": {
           "title": "Olive",
-          "segments": [
-            "You find yourself counting them.",
-            "You don’t remember when you started."
-          ],
+          "segments": ["You find yourself counting them.", "You don’t remember when you started."],
           "options": [],
           "meta": {}
         }
@@ -670,9 +641,7 @@
       "messages": {
         "msg_mtslz735_14": {
           "title": "Olive",
-          "segments": [
-            "A completely unreasonable amount of olives."
-          ],
+          "segments": ["A completely unreasonable amount of olives."],
           "options": [],
           "meta": {}
         }
@@ -734,10 +703,7 @@
       "messages": {
         "msg_mtsm2u10_1k": {
           "title": "Olive",
-          "segments": [
-            "The olive is warm.",
-            "You don’t remember it being warm."
-          ],
+          "segments": ["The olive is warm.", "You don’t remember it being warm."],
           "options": [],
           "meta": {}
         }
@@ -767,10 +733,7 @@
       "messages": {
         "msg_mtsm458w_1s": {
           "title": "Start",
-          "segments": [
-            "Twenty olives.",
-            "You have crossed the point where this is a joke."
-          ],
+          "segments": ["Twenty olives.", "You have crossed the point where this is a joke."],
           "options": [],
           "meta": {}
         }
@@ -832,10 +795,7 @@
       "messages": {
         "msg_mtsm7vqw_28": {
           "title": "Olive",
-          "segments": [
-            "You pick up the olive.",
-            "For a second, the dungeon feels less empty."
-          ],
+          "segments": ["You pick up the olive.", "For a second, the dungeon feels less empty."],
           "options": [],
           "meta": {}
         }
@@ -864,10 +824,7 @@
       "messages": {
         "msg_mtsm96o9_2g": {
           "title": "Olive",
-          "segments": [
-            "Where is the last one ?",
-            "You already know where it is right ?"
-          ],
+          "segments": ["Where is the last one ?", "You already know where it is right ?"],
           "options": [],
           "meta": {}
         }
@@ -898,9 +855,7 @@
       "messages": {
         "msg_mtsmtd69_2o": {
           "title": "Olive",
-          "segments": [
-            "Now even an olive feels like a piece of her."
-          ],
+          "segments": ["Now even an olive feels like a piece of her."],
           "options": [],
           "meta": {}
         }
@@ -978,9 +933,7 @@
       "messages": {
         "msg_mtsn0uer_3c": {
           "title": "Olive ",
-          "segments": [
-            "Maybe love is remembering things that should have been forgettable."
-          ],
+          "segments": ["Maybe love is remembering things that should have been forgettable."],
           "options": [],
           "meta": {}
         }
@@ -1009,10 +962,7 @@
       "messages": {
         "msg_mtsn304e_3k": {
           "title": "Olive",
-          "segments": [
-            "You remember her teasing you about olives.",
-            "You remember smiling."
-          ],
+          "segments": ["You remember her teasing you about olives.", "You remember smiling."],
           "options": [],
           "meta": {}
         }
@@ -1041,10 +991,7 @@
       "messages": {
         "msg_mtsn5lha_3s": {
           "title": "Olive",
-          "segments": [
-            "You smile before you remember why.",
-            "Then you remember."
-          ],
+          "segments": ["You smile before you remember why.", "Then you remember."],
           "options": [],
           "meta": {}
         }
@@ -1162,9 +1109,7 @@
         },
         "msg_mtujmn1b_9": {
           "title": "Message",
-          "segments": [
-            "What other questions you have ?"
-          ],
+          "segments": ["What other questions you have ?"],
           "options": [
             {
               "label": "What were you looking for ?",
@@ -1194,10 +1139,7 @@
       "messages": {
         "msg_mtt5iv1i_s": {
           "title": "Strange",
-          "segments": [
-            "Strange I feel some wind ...",
-            "The shelf start to move ..."
-          ],
+          "segments": ["Strange I feel some wind ...", "The shelf start to move ..."],
           "options": [],
           "meta": {}
         }
@@ -1225,9 +1167,7 @@
         },
         "msg_mtujtw50_p": {
           "title": "Ask me",
-          "segments": [
-            "I'm here to answer ..."
-          ],
+          "segments": ["I'm here to answer ..."],
           "options": [
             {
               "label": "Who are you ?",
@@ -1485,9 +1425,7 @@
       "messages": {
         "msg_mtv6w3h3_2": {
           "title": "Locked",
-          "segments": [
-            "It seems this door is locked"
-          ],
+          "segments": ["It seems this door is locked"],
           "options": [],
           "meta": {}
         }
@@ -1500,9 +1438,7 @@
       "messages": {
         "msg_mu1hv9cu_5": {
           "title": "Password",
-          "segments": [
-            "Written on the sign \"1608\" what is that?"
-          ],
+          "segments": ["Written on the sign \"1608\" what is that?"],
           "options": [],
           "meta": {}
         }
@@ -1772,12 +1708,7 @@
       "messages": {
         "msg_mukxkf9a_2": {
           "title": "A small wooden token",
-          "segments": [
-            "One one side:",
-            "\"Could be us?\"",
-            "On the other:",
-            "\"Was it?\""
-          ],
+          "segments": ["One one side:", "\"Could be us?\"", "On the other:", "\"Was it?\""],
           "options": [],
           "meta": {}
         }

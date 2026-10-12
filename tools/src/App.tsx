@@ -291,9 +291,9 @@ const DIALOG_VIEW: Record<string, true> = {
 
 /** Does this action mutate the document (and so belong in undo history)? */
 function isRecordable(action: AppAction): boolean {
-  if (VIEW_ACTIONS[action.type]) return false;
-  if (action.type === 'MAP') return !MAP_VIEW[action.action.type];
-  if (action.type === 'DIALOG') return !DIALOG_VIEW[action.action.type];
+  if (VIEW_ACTIONS[action.type]) {return false;}
+  if (action.type === 'MAP') {return !MAP_VIEW[action.action.type];}
+  if (action.type === 'DIALOG') {return !DIALOG_VIEW[action.action.type];}
   return true;
 }
 
@@ -310,41 +310,54 @@ function snapshotOf(state: AppState): ProjectSnapshot {
  */
 function historyReducer(state: AppState, action: AppAction): AppState {
   if (action.type === 'UNDO') {
-    if (state.history.length === 0) return state;
+    if (state.history.length === 0) {return state;}
     const prev = state.history[state.history.length - 1]!;
     return { ...prev, history: state.history.slice(0, -1) };
   }
   const next = reducer(state, action);
-  if (next === state || !isRecordable(action)) return next;
+  if (next === state || !isRecordable(action)) {return next;}
   const history = [...state.history, snapshotOf(state)].slice(-HISTORY_CAP);
   return { ...next, history };
 }
 
 type EditorMode = 'sprite' | 'map' | 'objects' | 'character' | 'dialog' | 'config';
 
-const MODES: { key: EditorMode; icon: IconName; label: string; tip: string }[] = [
-  { key: 'sprite', icon: 'sprite-editor', label: 'Sprite', tip: 'Slice tilemaps into sprites & animations' },
+const MODES: Array<{ key: EditorMode; icon: IconName; label: string; tip: string }> = [
+  {
+    key: 'sprite',
+    icon: 'sprite-editor',
+    label: 'Sprite',
+    tip: 'Slice tilemaps into sprites & animations',
+  },
   { key: 'map', icon: 'map-editor', label: 'Map', tip: 'Lay out screens and place tiles' },
-  { key: 'objects', icon: 'objects', label: 'Objects', tip: 'Compose game objects & state machines' },
-  { key: 'character', icon: 'character', label: 'Character', tip: 'Build directional character rigs' },
+  {
+    key: 'objects',
+    icon: 'objects',
+    label: 'Objects',
+    tip: 'Compose game objects & state machines',
+  },
+  {
+    key: 'character',
+    icon: 'character',
+    label: 'Character',
+    tip: 'Build directional character rigs',
+  },
   { key: 'dialog', icon: 'dialog', label: 'Dialog', tip: 'Author branching dialog trees' },
   { key: 'config', icon: 'settings', label: 'Project', tip: 'Project-wide configuration' },
 ];
 
 export function App() {
   const [state, dispatch] = useReducer(historyReducer, INITIAL_STATE);
-  const [mode, setMode] = useState<EditorMode>(
-    () => {
-      const saved = localStorage.getItem('gamefoo-tools-mode');
-      return saved === 'map' ||
-        saved === 'objects' ||
-        saved === 'character' ||
-        saved === 'dialog' ||
-        saved === 'config'
-        ? saved
-        : 'sprite';
-    },
-  );
+  const [mode, setMode] = useState<EditorMode>(() => {
+    const saved = localStorage.getItem('gamefoo-tools-mode');
+    return saved === 'map' ||
+      saved === 'objects' ||
+      saved === 'character' ||
+      saved === 'dialog' ||
+      saved === 'config'
+      ? saved
+      : 'sprite';
+  });
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [currentProjectId, setCurrentProjectId] = useState<string | null>(() => getProjectId());
   const [showProjects, setShowProjects] = useState(false);
@@ -366,10 +379,10 @@ export function App() {
     const next = new Map(imageMap);
     let changed = false;
     for (const img of state.images) {
-      if (next.has(img.id)) continue;
+      if (next.has(img.id)) {continue;}
       const el = new Image();
       el.onload = () => {
-        if (!cancelled) setImageMap((m) => new Map(m).set(img.id, el));
+        if (!cancelled) {setImageMap((m) => new Map(m).set(img.id, el));}
       };
       el.src = img.url;
       next.set(img.id, el);
@@ -381,7 +394,7 @@ export function App() {
         changed = true;
       }
     }
-    if (changed && !cancelled) setImageMap(next);
+    if (changed && !cancelled) {setImageMap(next);}
     return () => {
       cancelled = true;
     };
@@ -429,9 +442,9 @@ export function App() {
           // server unreachable — fall back to the local cache
         }
       }
-      if (cancelled) return;
+      if (cancelled) {return;}
       const saved = loadStateFromLocal();
-      if (saved) dispatch({ type: 'LOAD_PROJECT', state: migrateSpriteState(saved) });
+      if (saved) {dispatch({ type: 'LOAD_PROJECT', state: migrateSpriteState(saved) });}
       setInitialized(true);
     })();
     return () => {
@@ -442,7 +455,7 @@ export function App() {
   // ── Auto-save to localStorage (debounced) ──────────────
 
   useEffect(() => {
-    if (!initialized) return;
+    if (!initialized) {return;}
     const timeout = setTimeout(() => {
       saveStateToLocal(state);
     }, 300);
@@ -488,9 +501,9 @@ export function App() {
   // ── Upload images ──────────────────────────────────────
 
   const handleUploadImages = useCallback(async (files: FileList | File[] | null) => {
-    if (!files) return;
+    if (!files) {return;}
     for (const file of Array.from(files)) {
-      if (!file.type.startsWith('image/')) continue;
+      if (!file.type.startsWith('image/')) {continue;}
       try {
         const { path, name } = await uploadImage(file);
         const img = new Image();
@@ -510,8 +523,8 @@ export function App() {
             height: img.height,
           },
         });
-      } catch (e) {
-        console.error('Upload failed:', file.name, e);
+      } catch (error) {
+        console.error('Upload failed:', file.name, error);
       }
     }
   }, []);
@@ -530,7 +543,7 @@ export function App() {
     const handleDrop = (e: DragEvent) => {
       e.preventDefault();
       const files = e.dataTransfer?.files;
-      if (files && files.length > 0) handleUploadImages(files);
+      if (files && files.length > 0) {handleUploadImages(files);}
     };
     const handleDragOver = (e: DragEvent) => e.preventDefault();
     window.addEventListener('drop', handleDrop);
@@ -577,9 +590,9 @@ export function App() {
           // QuickSave — silent confirmation
           setQuickSavedAt(Date.now());
         }
-      } catch (e) {
-        console.error('Save failed:', e);
-        alert(`Failed to save project to server.\n\n${e instanceof Error ? e.message : String(e)}`);
+      } catch (error) {
+        console.error('Save failed:', error);
+        alert(`Failed to save project to server.\n\n${error instanceof Error ? error.message : String(error)}`);
       } finally {
         setSaving(false);
       }
@@ -593,7 +606,7 @@ export function App() {
   const [flashQuickSaved, setFlashQuickSaved] = useState(false);
 
   useEffect(() => {
-    if (quickSavedAt === null) return;
+    if (quickSavedAt === null) {return;}
     setFlashQuickSaved(true);
     const t = setTimeout(() => setFlashQuickSaved(false), 1500);
     return () => clearTimeout(t);
@@ -604,18 +617,18 @@ export function App() {
   // loses unsaved work. The payload excludes undo history, so it is small
   // enough to write on every change.
   useEffect(() => {
-    if (!initialized) return;
+    if (!initialized) {return;}
     const pid = currentProjectId;
-    if (!pid || lastSavedStateRef.current === state) return;
+    if (!pid || lastSavedStateRef.current === state) {return;}
     const timeout = setTimeout(() => {
-      if (savingRef.current) return;
+      if (savingRef.current) {return;}
       setSaving(true);
       persistProject(pid, state)
         .then(() => {
           lastSavedStateRef.current = state;
           setQuickSavedAt(Date.now());
         })
-        .catch((e) => console.error('Auto-save failed:', e))
+        .catch((error) => console.error('Auto-save failed:', error))
         .finally(() => setSaving(false));
     }, 1500);
     return () => clearTimeout(timeout);
@@ -651,7 +664,7 @@ export function App() {
 
   const handleImportFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {return;}
     e.target.value = '';
 
     const reader = new FileReader();
@@ -659,7 +672,7 @@ export function App() {
       try {
         const raw = JSON.parse(reader.result as string);
         // Legacy map project files (kind: "map") — load just the map slice.
-        if (raw && raw.kind === 'map') {
+        if (raw?.kind === 'map') {
           const data = migrateSpriteState({
             projectName: raw.projectName ?? 'Imported Map',
             map: raw,
@@ -679,7 +692,7 @@ export function App() {
           const img = data.images[i]!;
           if (img.url.startsWith('data:')) {
             const serverPath = await reuploadDataUrl(img.url, img.name || 'imported.png');
-            if (serverPath) img.url = serverPath;
+            if (serverPath) {img.url = serverPath;}
           }
         }
 
@@ -717,11 +730,7 @@ export function App() {
           {currentProjectId ? '' : ' (unsaved)'}
         </span>
         <Tooltip label="Theme & editor preferences" side="bottom">
-          <button
-            className="mode-btn"
-            onClick={() => setShowSettings(true)}
-            aria-label="Settings"
-          >
+          <button className="mode-btn" onClick={() => setShowSettings(true)} aria-label="Settings">
             <Icon name="settings" size={ICON.md} />
             <span className="mode-btn__label">Settings</span>
           </button>
@@ -897,11 +906,7 @@ export function App() {
         />
       )}
       {showSettings && (
-        <SettingsPanel
-          theme={theme}
-          onSelect={setTheme}
-          onClose={() => setShowSettings(false)}
-        />
+        <SettingsPanel theme={theme} onSelect={setTheme} onClose={() => setShowSettings(false)} />
       )}
 
       {/* QuickSave toast */}

@@ -1,6 +1,6 @@
-import type { AppState } from "../types";
-import type { DialogTree } from "./types";
-import { downloadJSON, projectBaseName } from "../utils/export";
+import type { AppState } from '../types';
+import type { DialogTree } from './types';
+import { downloadJSON, projectBaseName } from '../utils/export';
 
 /**
  * Dialog trees export — id-keyed so the engine can look any message up in
@@ -21,7 +21,7 @@ export interface DialogTreeExport {
     {
       title: string;
       segments: string[];
-      options: { label: string; target: string | null }[];
+      options: Array<{ label: string; target: string | null }>;
       meta: Record<string, string>;
     }
   >;
@@ -49,13 +49,11 @@ export function exportDialogTree(tree: DialogTree): DialogTreeExport {
 export function exportDialogs(state: AppState) {
   return {
     meta: {
-      version: "1.0",
-      tool: "gamefoo-dialog-editor",
+      version: '1.0',
+      tool: 'gamefoo-dialog-editor',
       projectName: state.projectName,
     },
-    trees: Object.fromEntries(
-      state.dialog.trees.map((t) => [t.name, exportDialogTree(t)]),
-    ),
+    trees: Object.fromEntries(state.dialog.trees.map((t) => [t.name, exportDialogTree(t)])),
   };
 }
 

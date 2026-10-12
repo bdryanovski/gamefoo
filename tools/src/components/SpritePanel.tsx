@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useCallback, useMemo } from "react";
-import type { AppState, AppAction, SpriteRegion } from "../types";
-import { AnimatedSpritePreview } from "./AnimatedSpritePreview";
-import { CollisionEditor } from "./CollisionEditor";
+import React, { useRef, useEffect, useCallback, useMemo } from 'react';
+import type { AppState, AppAction, SpriteRegion } from '../types';
+import { AnimatedSpritePreview } from './AnimatedSpritePreview';
+import { CollisionEditor } from './CollisionEditor';
 
 interface Props {
   state: AppState;
@@ -9,29 +9,21 @@ interface Props {
   image: HTMLImageElement | null;
 }
 
-
 export function SpritePanel({ state, dispatch, image }: Props) {
-  const activeSprites = state.sprites.filter(
-    (s) => s.imageId === state.activeImageId,
-  );
-  const selected = activeSprites.find((s) =>
-    state.selectedSpriteIds.includes(s.id),
-  );
+  const activeSprites = state.sprites.filter((s) => s.imageId === state.activeImageId);
+  const selected = activeSprites.find((s) => state.selectedSpriteIds.includes(s.id));
 
   const updateSelected = useCallback(
     (updates: Partial<SpriteRegion>) => {
-      if (!selected) return;
-      dispatch({ type: "UPDATE_SPRITE", id: selected.id, updates });
+      if (!selected) {return;}
+      dispatch({ type: 'UPDATE_SPRITE', id: selected.id, updates });
     },
     [selected, dispatch],
   );
 
   // Preview maps for the shared AnimatedSpritePreview. All active
   // sprites share the active image, so a single-entry image map suffices.
-  const spriteById = useMemo(
-    () => new Map(activeSprites.map((s) => [s.id, s])),
-    [activeSprites],
-  );
+  const spriteById = useMemo(() => new Map(activeSprites.map((s) => [s.id, s])), [activeSprites]);
   const previewImageMap = useMemo(
     () =>
       state.activeImageId && image
@@ -50,7 +42,7 @@ export function SpritePanel({ state, dispatch, image }: Props) {
             <input
               type="checkbox"
               checked={state.grid.enabled}
-              onChange={(e) => dispatch({ type: "SET_GRID", grid: { enabled: e.target.checked } })}
+              onChange={(e) => dispatch({ type: 'SET_GRID', grid: { enabled: e.target.checked } })}
             />
             Enable Grid
           </label>
@@ -64,7 +56,9 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                 className="input input-sm"
                 value={state.grid.cellWidth}
                 min={1}
-                onChange={(e) => dispatch({ type: "SET_GRID", grid: { cellWidth: +e.target.value || 1 } })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_GRID', grid: { cellWidth: +e.target.value || 1 } })
+                }
               />
               <span className="field-label">H:</span>
               <input
@@ -72,7 +66,9 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                 className="input input-sm"
                 value={state.grid.cellHeight}
                 min={1}
-                onChange={(e) => dispatch({ type: "SET_GRID", grid: { cellHeight: +e.target.value || 1 } })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_GRID', grid: { cellHeight: +e.target.value || 1 } })
+                }
               />
             </div>
             <div className="field-row">
@@ -82,7 +78,9 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                 className="input input-sm"
                 value={state.grid.offsetX}
                 min={0}
-                onChange={(e) => dispatch({ type: "SET_GRID", grid: { offsetX: +e.target.value || 0 } })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_GRID', grid: { offsetX: +e.target.value || 0 } })
+                }
               />
               <span className="field-label">Y:</span>
               <input
@@ -90,7 +88,9 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                 className="input input-sm"
                 value={state.grid.offsetY}
                 min={0}
-                onChange={(e) => dispatch({ type: "SET_GRID", grid: { offsetY: +e.target.value || 0 } })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_GRID', grid: { offsetY: +e.target.value || 0 } })
+                }
               />
             </div>
             <div className="field-row">
@@ -100,7 +100,9 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                 className="input input-sm"
                 value={state.grid.spacingX}
                 min={0}
-                onChange={(e) => dispatch({ type: "SET_GRID", grid: { spacingX: +e.target.value || 0 } })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_GRID', grid: { spacingX: +e.target.value || 0 } })
+                }
               />
               <span className="field-label">Y:</span>
               <input
@@ -108,7 +110,9 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                 className="input input-sm"
                 value={state.grid.spacingY}
                 min={0}
-                onChange={(e) => dispatch({ type: "SET_GRID", grid: { spacingY: +e.target.value || 0 } })}
+                onChange={(e) =>
+                  dispatch({ type: 'SET_GRID', grid: { spacingY: +e.target.value || 0 } })
+                }
               />
             </div>
           </>
@@ -120,17 +124,14 @@ export function SpritePanel({ state, dispatch, image }: Props) {
         <div className="section-title">
           <span>
             Sprites ({activeSprites.length}
-            {state.sprites.length !== activeSprites.length
-              ? ` of ${state.sprites.length}`
-              : ""}
-            )
+            {state.sprites.length !== activeSprites.length ? ` of ${state.sprites.length}` : ''})
           </span>
           {state.selectedSpriteIds.length > 0 && (
             <button
               className="btn btn-sm danger"
               onClick={() => {
                 for (const id of state.selectedSpriteIds) {
-                  dispatch({ type: "DELETE_SPRITE", id });
+                  dispatch({ type: 'DELETE_SPRITE', id });
                 }
               }}
             >
@@ -146,24 +147,20 @@ export function SpritePanel({ state, dispatch, image }: Props) {
           )}
           {state.sprites.length > 0 && activeSprites.length === 0 && (
             <div className="p-4 text-dim text-xs">
-              No sprites on this image. Select it in the Images tab and cut
-              sprites with Grid Pick (G) or Region (R).
+              No sprites on this image. Select it in the Images tab and cut sprites with Grid Pick
+              (G) or Region (R).
             </div>
           )}
           <div className="asset-grid">
             {activeSprites.map((s) => {
               const sel = state.selectedSpriteIds.includes(s.id);
               return (
-                <div
-                  key={s.id}
-                  className="col"
-                  style={{ alignItems: "center", gap: 2, width: 48 }}
-                >
+                <div key={s.id} className="col" style={{ alignItems: 'center', gap: 2, width: 48 }}>
                   <div
-                    className={`asset-thumb ${sel ? "selected" : ""}`}
-                    title={`${s.name} — ${s.width}×${s.height}${s.group ? ` · ${s.group}` : ""}`}
+                    className={`asset-thumb ${sel ? 'selected' : ''}`}
+                    title={`${s.name} — ${s.width}×${s.height}${s.group ? ` · ${s.group}` : ''}`}
                     onClick={(e) =>
-                      dispatch({ type: "SELECT_SPRITE", id: s.id, multi: e.shiftKey })
+                      dispatch({ type: 'SELECT_SPRITE', id: s.id, multi: e.shiftKey })
                     }
                   >
                     <AnimatedSpritePreview
@@ -174,12 +171,12 @@ export function SpritePanel({ state, dispatch, image }: Props) {
                     />
                   </div>
                   <span
-                    className={`text-xs ${sel ? "" : "text-dim"}`}
+                    className={`text-xs ${sel ? '' : 'text-dim'}`}
                     style={{
                       maxWidth: 48,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     {s.name}
@@ -244,14 +241,18 @@ export function SpritePanel({ state, dispatch, image }: Props) {
               type="number"
               className="input input-sm"
               value={selected.anchor.x}
-              onChange={(e) => updateSelected({ anchor: { ...selected.anchor, x: +e.target.value } })}
+              onChange={(e) =>
+                updateSelected({ anchor: { ...selected.anchor, x: +e.target.value } })
+              }
             />
             <span className="field-label">Y:</span>
             <input
               type="number"
               className="input input-sm"
               value={selected.anchor.y}
-              onChange={(e) => updateSelected({ anchor: { ...selected.anchor, y: +e.target.value } })}
+              onChange={(e) =>
+                updateSelected({ anchor: { ...selected.anchor, y: +e.target.value } })
+              }
             />
           </div>
           <div className="field-row">
@@ -284,12 +285,12 @@ export function SpritePanel({ state, dispatch, image }: Props) {
             <input
               type="text"
               className="input input-full"
-              value={selected.tags.join(", ")}
+              value={selected.tags.join(', ')}
               placeholder="tag1, tag2"
               onChange={(e) =>
                 updateSelected({
                   tags: e.target.value
-                    .split(",")
+                    .split(',')
                     .map((t) => t.trim())
                     .filter(Boolean),
                 })
@@ -343,9 +344,9 @@ function SpritePreview({ sprite, image }: { sprite: SpriteRegion; image: HTMLIma
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!canvas) {return;}
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {return;}
 
     const maxDim = 72;
     const scale = Math.min(maxDim / sprite.width, maxDim / sprite.height, 4);

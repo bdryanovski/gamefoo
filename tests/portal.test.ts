@@ -2,7 +2,7 @@
  * Contract: the Portal demo class reads its open/target/trigger from the
  * placed object's state + properties, so map-authored data drives travel.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { Portal } from '../games/Experiment00/src/objects/portal';
 import { StateStore } from '../src/core/state/state_store';
 import type AssetManager from '../src/core/map/asset_manager';
@@ -52,8 +52,8 @@ function makePortal(opts: {
 }): Portal {
   const def = portalDef(opts.activation ?? true);
   const properties: Record<string, string> = {};
-  if (opts.targetScreen !== undefined) properties.targetScreen = opts.targetScreen;
-  if (opts.spawn !== undefined) properties.spawn = opts.spawn;
+  if (opts.targetScreen !== undefined) {properties.targetScreen = opts.targetScreen;}
+  if (opts.spawn !== undefined) {properties.spawn = opts.spawn;}
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,

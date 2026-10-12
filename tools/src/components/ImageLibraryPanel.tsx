@@ -1,7 +1,7 @@
-import React, { useRef, useCallback } from "react";
-import type { AppState, AppAction } from "../types";
-import { uploadImage } from "../utils/storage";
-import { uid } from "../utils/uid";
+import React, { useRef, useCallback } from 'react';
+import type { AppState, AppAction } from '../types';
+import { uploadImage } from '../utils/storage';
+import { uid } from '../utils/uid';
 
 interface Props {
   state: AppState;
@@ -15,32 +15,32 @@ export function ImageLibraryPanel({ state, dispatch }: Props) {
 
   const handleFiles = useCallback(
     async (files: FileList | null) => {
-      if (!files || files.length === 0) return;
+      if (!files || files.length === 0) {return;}
       setUploading(true);
       try {
         for (const file of Array.from(files)) {
-          if (!file.type.startsWith("image/")) continue;
+          if (!file.type.startsWith('image/')) {continue;}
           try {
             const { path, name } = await uploadImage(file);
             const img = new Image();
             await new Promise<void>((resolve, reject) => {
               img.onload = () => resolve();
-              img.onerror = () => reject(new Error("load failed"));
+              img.onerror = () => reject(new Error('load failed'));
               img.src = path;
             });
             dispatch({
-              type: "ADD_IMAGE",
+              type: 'ADD_IMAGE',
               activate: !state.activeImageId,
               image: {
-                id: uid("img"),
+                id: uid('img'),
                 url: path,
                 name,
                 width: img.width,
                 height: img.height,
               },
             });
-          } catch (e) {
-            console.error("Failed to import image:", file.name, e);
+          } catch (error) {
+            console.error('Failed to import image:', file.name, error);
           }
         }
       } finally {
@@ -63,7 +63,7 @@ export function ImageLibraryPanel({ state, dispatch }: Props) {
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? "Adding..." : "+ Add Image"}
+            {uploading ? 'Adding...' : '+ Add Image'}
           </button>
         </div>
         <input
@@ -74,14 +74,14 @@ export function ImageLibraryPanel({ state, dispatch }: Props) {
           className="hidden"
           onChange={(e) => {
             handleFiles(e.target.files);
-            e.target.value = "";
+            e.target.value = '';
           }}
         />
 
         {state.images.length === 0 && (
           <div className="p-4 text-dim text-xs">
-            No images. Add tileset sheets — cut sprites from them in the
-            Sprites tab, then paint with those sprites in the Map Editor.
+            No images. Add tileset sheets — cut sprites from them in the Sprites tab, then paint
+            with those sprites in the Map Editor.
           </div>
         )}
 
@@ -90,14 +90,10 @@ export function ImageLibraryPanel({ state, dispatch }: Props) {
           return (
             <div
               key={img.id}
-              className={`image-item ${active ? "selected" : ""}`}
-              onClick={() => dispatch({ type: "SET_ACTIVE_IMAGE", imageId: img.id })}
+              className={`image-item ${active ? 'selected' : ''}`}
+              onClick={() => dispatch({ type: 'SET_ACTIVE_IMAGE', imageId: img.id })}
             >
-              <img
-                src={img.url}
-                alt={img.name}
-                className="image-item__thumb"
-              />
+              <img src={img.url} alt={img.name} className="image-item__thumb" />
               <div className="image-item__info">
                 <div className="image-item__name">{img.name}</div>
                 <div className="image-item__meta">
@@ -110,12 +106,8 @@ export function ImageLibraryPanel({ state, dispatch }: Props) {
                 title="Remove image and all its sprites"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (
-                    confirm(
-                      `Remove "${img.name}" and its ${spriteCountOf(img.id)} sprite(s)?`,
-                    )
-                  ) {
-                    dispatch({ type: "REMOVE_IMAGE", imageId: img.id });
+                  if (confirm(`Remove "${img.name}" and its ${spriteCountOf(img.id)} sprite(s)?`)) {
+                    dispatch({ type: 'REMOVE_IMAGE', imageId: img.id });
                   }
                 }}
               >
@@ -131,13 +123,11 @@ export function ImageLibraryPanel({ state, dispatch }: Props) {
         <div className="text-xs text-dim" style={{ padding: 4 }}>
           <div>1. Add one or more tileset/spritesheet images.</div>
           <div>
-            2. Select an image and cut sprites with Grid Pick (G) or Region
-            (R) on the canvas.
+            2. Select an image and cut sprites with Grid Pick (G) or Region (R) on the canvas.
           </div>
           <div>3. Group sprites into animations and game objects.</div>
           <div>
-            4. Switch to the Map Editor — every sprite is available in the
-            palette to build screens.
+            4. Switch to the Map Editor — every sprite is available in the palette to build screens.
           </div>
         </div>
       </div>

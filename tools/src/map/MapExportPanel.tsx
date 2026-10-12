@@ -1,66 +1,56 @@
-import React, { useState, useMemo, useCallback } from "react";
-import type { AppState } from "../types";
-import {
-  exportMap,
-  exportMapScreens,
-  exportMapObjects,
-  mapExportFiles,
-} from "./mapExport";
-import { downloadJSON } from "../utils/export";
-import { exportProjectFiles } from "../utils/storage";
+import React, { useState, useMemo, useCallback } from 'react';
+import type { AppState } from '../types';
+import { exportMap, exportMapScreens, exportMapObjects, mapExportFiles } from './mapExport';
+import { downloadJSON } from '../utils/export';
+import { exportProjectFiles } from '../utils/storage';
 
 interface Props {
   state: AppState;
   projectId: string | null;
 }
 
-type MapExportFormat = "screens" | "objects" | "full" | "project";
+type MapExportFormat = 'screens' | 'objects' | 'full' | 'project';
 
-const FORMAT_INFO: Record<
-  MapExportFormat,
-  { label: string; desc: string; ext: string }
-> = {
+const FORMAT_INFO: Record<MapExportFormat, { label: string; desc: string; ext: string }> = {
   screens: {
-    label: "Screens (simple)",
+    label: 'Screens (simple)',
     desc: 'Screens keyed "x,y" → fill + tiles by sprite NAME. Minimal, for custom wrappers.',
-    ext: ".map.screens.json",
+    ext: '.map.screens.json',
   },
   objects: {
-    label: "Objects (world space)",
-    desc: "Flat list of placements: name, screen, local + world px, size, source rect, z-order. For entity spawners.",
-    ext: ".map.objects.json",
+    label: 'Objects (world space)',
+    desc: 'Flat list of placements: name, screen, local + world px, size, source rect, z-order. For entity spawners.',
+    ext: '.map.objects.json',
   },
   full: {
-    label: "Full Map",
-    desc: "Everything: images, sprites, screens, defaults, placements. ID-based with names.",
-    ext: ".map.json",
+    label: 'Full Map',
+    desc: 'Everything: images, sprites, screens, defaults, placements. ID-based with names.',
+    ext: '.map.json',
   },
   project: {
-    label: "Project File",
-    desc: "Full editor state. Re-import into the editor. Not for engine use.",
-    ext: ".map.project.json",
+    label: 'Project File',
+    desc: 'Full editor state. Re-import into the editor. Not for engine use.',
+    ext: '.map.project.json',
   },
 };
 
 export function MapExportPanel({ state, projectId }: Props) {
-  const [format, setFormat] = useState<MapExportFormat>("screens");
+  const [format, setFormat] = useState<MapExportFormat>('screens');
   const [saving, setSaving] = useState(false);
-  const [savedPaths, setSavedPaths] = useState<Record<string, string> | null>(
-    null,
-  );
+  const [savedPaths, setSavedPaths] = useState<Record<string, string> | null>(null);
 
-  const baseName = state.projectName.replace(/\s+/g, "_").toLowerCase();
+  const baseName = state.projectName.replace(/\s+/g, '_').toLowerCase();
   const map = state.map;
 
   const data = useMemo(() => {
     switch (format) {
-      case "screens":
+      case 'screens':
         return exportMapScreens(state);
-      case "objects":
+      case 'objects':
         return exportMapObjects(state);
-      case "full":
+      case 'full':
         return exportMap(state);
-      case "project":
+      case 'project':
         return state;
     }
   }, [format, state]);
@@ -76,24 +66,21 @@ export function MapExportPanel({ state, projectId }: Props) {
   }, [preview]);
 
   const handleSaveToServer = useCallback(async () => {
-    if (!projectId) return;
+    if (!projectId) {return;}
     setSaving(true);
     try {
       const paths = await exportProjectFiles(projectId, mapExportFiles(state));
       setSavedPaths(paths);
-    } catch (e) {
-      console.error("Export failed:", e);
-      alert("Failed to save export files to server");
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Failed to save export files to server');
     } finally {
       setSaving(false);
     }
   }, [projectId, state]);
 
   const screenCount = Object.keys(map.screens).length;
-  const placementCount = Object.values(map.screens).reduce(
-    (n, s) => n + s.placements.length,
-    0,
-  );
+  const placementCount = Object.values(map.screens).reduce((n, s) => n + s.placements.length, 0);
 
   return (
     <div className="col gap-md">
@@ -108,7 +95,7 @@ export function MapExportPanel({ state, projectId }: Props) {
                 name="map-format"
                 checked={format === f}
                 onChange={() => setFormat(f)}
-                style={{ appearance: "auto", width: 13, height: 13 }}
+                style={{ appearance: 'auto', width: 13, height: 13 }}
               />
               <div>
                 <div className="text-sm">{FORMAT_INFO[f].label}</div>
@@ -128,8 +115,7 @@ export function MapExportPanel({ state, projectId }: Props) {
           <div>Sprites (library): {state.sprites.length}</div>
           <div>Images (library): {state.images.length}</div>
           <div>
-            Screen: {map.screenCols}×{map.screenRows} blocks ·{" "}
-            {map.blockSize}px blocks
+            Screen: {map.screenCols}×{map.screenRows} blocks · {map.blockSize}px blocks
           </div>
         </div>
       </div>
@@ -151,19 +137,19 @@ export function MapExportPanel({ state, projectId }: Props) {
         </div>
         <button
           className="btn"
-          style={{ width: "100%", marginTop: 4 }}
+          style={{ width: '100%', marginTop: 4 }}
           onClick={handleSaveToServer}
           disabled={!projectId || saving || screenCount === 0}
           title={
             projectId
-              ? "Write all 4 export files to public/exports/{projectId}/"
-              : "Save the project first (title bar Save)"
+              ? 'Write all 4 export files to public/exports/{projectId}/'
+              : 'Save the project first (title bar Save)'
           }
         >
-          {saving ? "Saving..." : "Save Export Files to Server"}
+          {saving ? 'Saving...' : 'Save Export Files to Server'}
         </button>
         {!projectId && (
-          <div className="text-xs text-dim" style={{ padding: "2px 0" }}>
+          <div className="text-xs text-dim" style={{ padding: '2px 0' }}>
             Save the project first to enable server export.
           </div>
         )}
@@ -172,7 +158,7 @@ export function MapExportPanel({ state, projectId }: Props) {
       {savedPaths && (
         <div className="section">
           <div className="section-title">Saved to Server</div>
-          <div className="text-xs" style={{ padding: 4, wordBreak: "break-all" }}>
+          <div className="text-xs" style={{ padding: 4, wordBreak: 'break-all' }}>
             {Object.entries(savedPaths).map(([filename, path]) => (
               <div key={filename}>
                 <a href={path} target="_blank" rel="noreferrer">

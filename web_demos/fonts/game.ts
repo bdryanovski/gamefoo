@@ -85,7 +85,7 @@ class TypeWriter extends Text {
 
 class KeyboardLayoutText extends Text {
   constructor(font: InternalBitmapFontName, position: Vector2) {
-    super('KeyboardLayoutText' + font, font);
+    super(`KeyboardLayoutText${  font}`, font);
     this.x = position.x;
     this.y = position.y;
   }
@@ -144,12 +144,12 @@ class HUD extends Entity {
     if (_rawCtx) {
       _rawCtx.fillStyle = '#FFFFFF';
     }
-    font3x5.renderText(font3x5.metadata?.chars + '', 10, 200, ctx);
-    font5x5.renderText(font5x5.metadata?.chars + '', 10, 210, ctx);
-    font4x6.renderText(font4x6.metadata?.chars + '', 10, 220, ctx);
-    font6x8.renderText(font6x8.metadata?.chars + '', 10, 230, ctx);
-    font8x13.renderText(font8x13.metadata?.chars + '', 10, 240, ctx);
-    font8x8.renderText(font8x8.metadata?.chars + '', 10, 260, ctx);
+    font3x5.renderText(`${font3x5.metadata?.chars  }`, 10, 200, ctx);
+    font5x5.renderText(`${font5x5.metadata?.chars  }`, 10, 210, ctx);
+    font4x6.renderText(`${font4x6.metadata?.chars  }`, 10, 220, ctx);
+    font6x8.renderText(`${font6x8.metadata?.chars  }`, 10, 230, ctx);
+    font8x13.renderText(`${font8x13.metadata?.chars  }`, 10, 240, ctx);
+    font8x8.renderText(`${font8x8.metadata?.chars  }`, 10, 260, ctx);
   }
 }
 

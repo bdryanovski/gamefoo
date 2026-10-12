@@ -1,5 +1,5 @@
-import { uid } from "../utils/uid";
-import type { AnimationDef, SpriteRegion } from "../types";
+import { uid } from '../utils/uid';
+import type { AnimationDef, SpriteRegion } from '../types';
 
 /**
  * State Machine definitions — part of the unified project.
@@ -15,8 +15,8 @@ export interface StateNodeDef {
   name: string;
   /** What this state renders: one static sprite, or an animation. */
   display:
-  | { kind: "sprite"; spriteId: string | null }
-  | { kind: "animation"; animationId: string | null };
+    | { kind: 'sprite'; spriteId: string | null }
+    | { kind: 'animation'; animationId: string | null };
   /** Editor graph position. */
   x: number;
   y: number;
@@ -40,18 +40,18 @@ export interface StateMachineDef {
 
 export function makeState(name: string, x: number, y: number): StateNodeDef {
   return {
-    id: uid("st"),
+    id: uid('st'),
     name,
-    display: { kind: "sprite", spriteId: null },
+    display: { kind: 'sprite', spriteId: null },
     x,
     y,
   };
 }
 
 export function makeStateMachine(name: string): StateMachineDef {
-  const first = makeState("state_0", 80, 80);
+  const first = makeState('state_0', 80, 80);
   return {
-    id: uid("sm"),
+    id: uid('sm'),
     name,
     states: [first],
     transitions: [],
@@ -60,10 +60,7 @@ export function makeStateMachine(name: string): StateMachineDef {
 }
 
 /** Add a state; the first state added becomes the machine's initial. */
-export function smAddState(
-  m: StateMachineDef,
-  state: StateNodeDef,
-): StateMachineDef {
+export function smAddState(m: StateMachineDef, state: StateNodeDef): StateMachineDef {
   return {
     ...m,
     states: [...m.states, state],
@@ -74,7 +71,7 @@ export function smAddState(
 export function smUpdateState(
   m: StateMachineDef,
   id: string,
-  updates: Partial<Pick<StateNodeDef, "name" | "display" | "x" | "y">>,
+  updates: Partial<Pick<StateNodeDef, 'name' | 'display' | 'x' | 'y'>>,
 ): StateMachineDef {
   return {
     ...m,
@@ -92,8 +89,7 @@ export function smRemoveState(m: StateMachineDef, id: string): StateMachineDef {
     transitions: m.transitions.filter(
       (t) => stateIds.has(t.fromStateId) && stateIds.has(t.toStateId),
     ),
-    initialStateId:
-      m.initialStateId === id ? (states[0]?.id ?? null) : m.initialStateId,
+    initialStateId: m.initialStateId === id ? (states[0]?.id ?? null) : m.initialStateId,
   };
 }
 
@@ -107,22 +103,15 @@ export function smAddTransition(
 export function smUpdateTransition(
   m: StateMachineDef,
   id: string,
-  updates: Partial<
-    Pick<StateTransitionDef, "fromStateId" | "toStateId" | "condition">
-  >,
+  updates: Partial<Pick<StateTransitionDef, 'fromStateId' | 'toStateId' | 'condition'>>,
 ): StateMachineDef {
   return {
     ...m,
-    transitions: m.transitions.map((t) =>
-      t.id === id ? { ...t, ...updates } : t,
-    ),
+    transitions: m.transitions.map((t) => (t.id === id ? { ...t, ...updates } : t)),
   };
 }
 
-export function smRemoveTransition(
-  m: StateMachineDef,
-  id: string,
-): StateMachineDef {
+export function smRemoveTransition(m: StateMachineDef, id: string): StateMachineDef {
   return { ...m, transitions: m.transitions.filter((t) => t.id !== id) };
 }
 
@@ -137,23 +126,23 @@ export function sanitizeMachine(
   const states = (m.states ?? []).map((st) => ({
     ...st,
     display:
-      st.display?.kind === "animation"
+      st.display?.kind === 'animation'
         ? {
-          kind: "animation" as const,
-          animationId:
-            st.display.animationId && animIds.has(st.display.animationId)
-              ? st.display.animationId
-              : null,
-        }
+            kind: 'animation' as const,
+            animationId:
+              st.display.animationId && animIds.has(st.display.animationId)
+                ? st.display.animationId
+                : null,
+          }
         : {
-          kind: "sprite" as const,
-          spriteId:
-            st.display?.kind === "sprite" &&
+            kind: 'sprite' as const,
+            spriteId:
+              st.display?.kind === 'sprite' &&
               st.display.spriteId &&
               spriteIds.has(st.display.spriteId)
-              ? st.display.spriteId
-              : null,
-        },
+                ? st.display.spriteId
+                : null,
+          },
   }));
   const stateIds = new Set(states.map((s) => s.id));
   return {

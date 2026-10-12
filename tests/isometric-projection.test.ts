@@ -4,7 +4,7 @@
  * Verifies that every public member exists with the correct type/shape.
  * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { IsometricProjection } from '../src/core/grid/isometric';
 
 describe('IsometricProjection', () => {

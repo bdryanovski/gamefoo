@@ -1,15 +1,14 @@
-import React, { useRef, useEffect, useCallback, useState } from "react";
-import type {
-  MapState,
-  MapAction,
-  MapPlacement,
-  PaletteSelection,
-  TextPlacement,
-} from "./types";
-import { screenKey, resolvePlacementDisplay, resolveMachineState, DEFAULT_TEXT_STYLE } from "./types";
-import type { AppState, SpriteRegion } from "../types";
-import { objectMachines } from "../types";
-import { Icon } from "../components/Icon";
+import React, { useRef, useEffect, useCallback, useState } from 'react';
+import type { MapState, MapAction, MapPlacement, PaletteSelection, TextPlacement } from './types';
+import {
+  screenKey,
+  resolvePlacementDisplay,
+  resolveMachineState,
+  DEFAULT_TEXT_STYLE,
+} from './types';
+import type { AppState, SpriteRegion } from '../types';
+import { objectMachines } from '../types';
+import { Icon } from '../components/Icon';
 
 /** World-space gap between screens (px in image space). */
 const GAP = 16;
@@ -19,15 +18,12 @@ interface Props {
   map: MapState;
   mapDispatch: (a: MapAction) => void;
   imageMap: Map<string, HTMLImageElement>;
-  onStatus: (s: {
-    screenKey: string | null;
-    block: { col: number; row: number } | null;
-  }) => void;
+  onStatus: (s: { screenKey: string | null; block: { col: number; row: number } | null }) => void;
   onActiveScreen: (key: string | null) => void;
 }
 
 interface ScreenRect {
-  screen: MapState["screens"][string];
+  screen: MapState['screens'][string];
   wx: number;
   wy: number;
   w: number;
@@ -39,14 +35,7 @@ interface DisplayRef {
   animationId: string | null;
 }
 
-export function MapCanvas({
-  state,
-  map,
-  mapDispatch,
-  imageMap,
-  onStatus,
-  onActiveScreen,
-}: Props) {
+export function MapCanvas({ state, map, mapDispatch, imageMap, onStatus, onActiveScreen }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ w: 800, h: 600 });
@@ -54,18 +43,11 @@ export function MapCanvas({
 
   const spriteById = new Map(state.sprites.map((s) => [s.id, s]));
   const animById = new Map(state.animations.map((a) => [a.id, a]));
-  const machineById = new Map(
-    objectMachines(state.objects).map((m) => [m.id, m]),
-  );
+  const machineById = new Map(objectMachines(state.objects).map((m) => [m.id, m]));
 
   const displayOf = useCallback(
     (p: MapPlacement): DisplayRef =>
-      resolvePlacementDisplay(
-        p,
-        state.sprites,
-        state.animations,
-        objectMachines(state.objects),
-      ),
+      resolvePlacementDisplay(p, state.sprites, state.animations, objectMachines(state.objects)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [state.sprites, state.animations, state.objects],
   );
@@ -80,23 +62,19 @@ export function MapCanvas({
   );
 
   /** Approx text box (world px, top-left) for hit-testing and outlines. */
-  const textBox = useCallback(
-    (p: TextPlacement | Omit<TextPlacement, "id" | "kind">) => {
-      const width = Math.max(1, p.text.length * p.fontSize * 0.6);
-      const height = p.fontSize;
-      const ox =
-        p.align === "center" ? p.x - width / 2 : p.align === "right" ? p.x - width : p.x;
-      return { ox, oy: p.y, width, height };
-    },
-    [],
-  );
+  const textBox = useCallback((p: TextPlacement | Omit<TextPlacement, 'id' | 'kind'>) => {
+    const width = Math.max(1, p.text.length * p.fontSize * 0.6);
+    const height = p.fontSize;
+    const ox = p.align === 'center' ? p.x - width / 2 : p.align === 'right' ? p.x - width : p.x;
+    return { ox, oy: p.y, width, height };
+  }, []);
 
   /** Local top-left box + size for any placement (null when undrawable). */
   const boxOf = useCallback(
     (p: MapPlacement): { ox: number; oy: number; width: number; height: number } | null => {
-      if (p.kind === "text") return textBox(p);
+      if (p.kind === 'text') {return textBox(p);}
       const sprite = sizeSpriteOf(p);
-      if (!sprite) return null;
+      if (!sprite) {return null;}
       return { ox: p.x, oy: p.y, width: sprite.width, height: sprite.height };
     },
     [sizeSpriteOf, textBox],
@@ -183,7 +161,7 @@ export function MapCanvas({
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container) {return;}
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
@@ -199,36 +177,39 @@ export function MapCanvas({
   useEffect(() => {
     const isTypingTarget = (target: EventTarget | null) => {
       const el = target as HTMLElement | null;
-      if (!el) return false;
+      if (!el) {return false;}
       return (
-        el.tagName === "INPUT" ||
-        el.tagName === "TEXTAREA" ||
-        el.tagName === "SELECT" ||
+        el.tagName === 'INPUT' ||
+        el.tagName === 'TEXTAREA' ||
+        el.tagName === 'SELECT' ||
         el.isContentEditable
       );
     };
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setStreaming(false);
         lastStreamCellRef.current = null;
       }
-      if (e.code !== "Space" || e.repeat) return;
-      if (isTypingTarget(e.target)) return;
+      if (e.code !== 'Space' || e.repeat) {return;}
+      if (isTypingTarget(e.target)) {return;}
       e.preventDefault();
       setSpaceHeld(true);
     };
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code !== "Space") return;
+      if (e.code !== 'Space') {return;}
       setSpaceHeld(false);
     };
-    const handleBlur = () => { setSpaceHeld(false); setStreaming(false); };
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    window.addEventListener("blur", handleBlur);
+    const handleBlur = () => {
+      setSpaceHeld(false);
+      setStreaming(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
     };
   }, []);
 
@@ -238,8 +219,8 @@ export function MapCanvas({
   const hasAnimatedPlacements = React.useMemo(() => {
     for (const s of Object.values(map.screens)) {
       for (const p of s.placements) {
-        if (!levelVisible(p.level)) continue;
-        if (displayOf(p).animationId) return true;
+        if (!levelVisible(p.level)) {continue;}
+        if (displayOf(p).animationId) {return true;}
       }
     }
     return false;
@@ -247,7 +228,7 @@ export function MapCanvas({
   }, [map.screens, map.layers, map.activeLevel, state.animations, state.objects, displayOf]);
 
   useEffect(() => {
-    if (!hasAnimatedPlacements) return;
+    if (!hasAnimatedPlacements) {return;}
     let raf = 0;
     const loop = (t: number) => {
       setTick(t);
@@ -261,14 +242,14 @@ export function MapCanvas({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!canvas) {return;}
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {return;}
 
     const frameIndexOf = (animationId: string | null): number => {
-      if (!animationId) return -1;
+      if (!animationId) {return -1;}
       const anim = animById.get(animationId);
-      if (!anim || anim.frames.length === 0 || anim.duration <= 0) return -1;
+      if (!anim || anim.frames.length === 0 || anim.duration <= 0) {return -1;}
       return Math.floor(tick / 1000 / anim.duration) % anim.frames.length;
     };
 
@@ -279,16 +260,13 @@ export function MapCanvas({
       alpha = 1,
       transform?: { rotation?: number; flipX?: boolean; flipY?: boolean },
     ) => {
-      if (!spriteId) return;
+      if (!spriteId) {return;}
       const sprite = spriteById.get(spriteId);
-      if (!sprite) return;
+      if (!sprite) {return;}
       const img = imageMap.get(sprite.imageId);
-      if (!img || !img.complete) return;
+      if (!img || !img.complete) {return;}
       ctx.globalAlpha = alpha;
-      if (
-        transform &&
-        (transform.rotation || transform.flipX || transform.flipY)
-      ) {
+      if (transform && (transform.rotation || transform.flipX || transform.flipY)) {
         ctx.save();
         ctx.translate(dx + sprite.width / 2, dy + sprite.height / 2);
         if (transform.rotation) {
@@ -299,15 +277,27 @@ export function MapCanvas({
         }
         ctx.drawImage(
           img,
-          sprite.x, sprite.y, sprite.width, sprite.height,
-          -sprite.width / 2, -sprite.height / 2, sprite.width, sprite.height,
+          sprite.x,
+          sprite.y,
+          sprite.width,
+          sprite.height,
+          -sprite.width / 2,
+          -sprite.height / 2,
+          sprite.width,
+          sprite.height,
         );
         ctx.restore();
       } else {
         ctx.drawImage(
           img,
-          sprite.x, sprite.y, sprite.width, sprite.height,
-          dx, dy, sprite.width, sprite.height,
+          sprite.x,
+          sprite.y,
+          sprite.width,
+          sprite.height,
+          dx,
+          dy,
+          sprite.width,
+          sprite.height,
         );
       }
       ctx.globalAlpha = 1;
@@ -317,17 +307,17 @@ export function MapCanvas({
      *  their current state; a ▶ badge marks animated objects. */
     const drawPlacement = (p: MapPlacement, alpha = 1) => {
       // Text placement: draw the styled string directly.
-      if (p.kind === "text") {
+      if (p.kind === 'text') {
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.fillStyle = p.color;
         ctx.font = `${p.fontSize}px ${p.font}`;
         ctx.textAlign = p.align;
-        ctx.textBaseline = "top";
+        ctx.textBaseline = 'top';
         if (p.rotation || p.flipX || p.flipY) {
           ctx.translate(p.x, p.y);
-          if (p.rotation) ctx.rotate((p.rotation * Math.PI) / 180);
-          if (p.flipX || p.flipY) ctx.scale(p.flipX ? -1 : 1, p.flipY ? -1 : 1);
+          if (p.rotation) {ctx.rotate((p.rotation * Math.PI) / 180);}
+          if (p.flipX || p.flipY) {ctx.scale(p.flipX ? -1 : 1, p.flipY ? -1 : 1);}
           ctx.fillText(p.text, 0, 0);
         } else {
           ctx.fillText(p.text, p.x, p.y);
@@ -337,16 +327,16 @@ export function MapCanvas({
       }
       // Machine placement: composite every visible cell of its current state
       // (e.g. a portal's `base` + `door`), each at its grid offset.
-      if (p.kind === "machine") {
+      if (p.kind === 'machine') {
         const obj = state.objects.find((o) => o.machine.id === p.machineId);
         const st = obj ? resolveMachineState(obj.machine, p.stateName) : null;
         if (obj && st) {
           const cell = obj.grid.cell;
           for (const layer of obj.layersByState[st.id] ?? []) {
-            if (!layer.visible) continue;
+            if (!layer.visible) {continue;}
             for (const c of layer.cells) {
               let spriteId: string | null = null;
-              if (c.source.kind === "sprite") {
+              if (c.source.kind === 'sprite') {
                 spriteId = c.source.spriteId;
               } else {
                 const anim = animById.get(c.source.animationId);
@@ -361,11 +351,11 @@ export function MapCanvas({
             }
           }
           const w = obj.grid.cols * cell;
-          ctx.fillStyle = "#00ff66";
+          ctx.fillStyle = '#00ff66';
           ctx.font = `bold ${Math.max(7, 9 / map.zoom)}px monospace`;
-          ctx.textBaseline = "top";
-          ctx.fillText("▶", p.x + w - 8 / map.zoom, p.y + 1 / map.zoom);
-          ctx.textBaseline = "alphabetic";
+          ctx.textBaseline = 'top';
+          ctx.fillText('▶', p.x + w - 8 / map.zoom, p.y + 1 / map.zoom);
+          ctx.textBaseline = 'alphabetic';
           return;
         }
       }
@@ -385,11 +375,11 @@ export function MapCanvas({
       if (d.animationId) {
         const sprite = spriteId ? spriteById.get(spriteId) : null;
         const w = sprite?.width ?? map.blockSize;
-        ctx.fillStyle = "#00ff66";
+        ctx.fillStyle = '#00ff66';
         ctx.font = `bold ${Math.max(7, 9 / map.zoom)}px monospace`;
-        ctx.textBaseline = "top";
-        ctx.fillText("▶", p.x + w - 8 / map.zoom, p.y + 1 / map.zoom);
-        ctx.textBaseline = "alphabetic";
+        ctx.textBaseline = 'top';
+        ctx.fillText('▶', p.x + w - 8 / map.zoom, p.y + 1 / map.zoom);
+        ctx.textBaseline = 'alphabetic';
       }
     };
 
@@ -420,9 +410,9 @@ export function MapCanvas({
             }
           }
         } else {
-          ctx.fillStyle = "#20203a";
+          ctx.fillStyle = '#20203a';
           ctx.fillRect(0, 0, r.w, r.h);
-          ctx.strokeStyle = "#3a3a5a";
+          ctx.strokeStyle = '#3a3a5a';
           ctx.lineWidth = 1;
           const step = map.blockSize * 2;
           for (let gy = 0; gy < r.h; gy += step) {
@@ -440,7 +430,7 @@ export function MapCanvas({
         }
 
         // Block grid
-        ctx.strokeStyle = "rgba(255,255,255,0.06)";
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
         ctx.lineWidth = 1 / map.zoom;
         for (let gx = 0; gx <= r.w; gx += map.blockSize) {
           ctx.beginPath();
@@ -461,12 +451,10 @@ export function MapCanvas({
         ctx.beginPath();
         ctx.rect(0, 0, r.w, r.h);
         ctx.clip();
-        const sorted = [...r.screen.placements].sort(
-          (a, b) => a.level - b.level,
-        );
+        const sorted = [...r.screen.placements].sort((a, b) => a.level - b.level);
         for (const p of sorted) {
-          if (movePreview && p.id === movePreview.id) continue;
-          if (!levelVisible(p.level)) continue;
+          if (movePreview && p.id === movePreview.id) {continue;}
+          if (!levelVisible(p.level)) {continue;}
           const alpha = alphaForLevel(p.level);
           drawPlacement(p, alpha);
         }
@@ -474,18 +462,17 @@ export function MapCanvas({
         // Layer badge on each screen (top-right): "L:all" when every layer
         // is visible, else the active layer's name.
         const allVisible = map.layers.every((l) => l.visible);
-        const badge = allVisible ? "L:all" : `L:${map.layers[map.activeLevel]?.name ?? map.activeLevel}`;
-        ctx.fillStyle = "#00ff66";
+        const badge = allVisible
+          ? 'L:all'
+          : `L:${map.layers[map.activeLevel]?.name ?? map.activeLevel}`;
+        ctx.fillStyle = '#00ff66';
         ctx.font = `bold ${Math.max(9, 10 / map.zoom)}px monospace`;
-        ctx.textBaseline = "top";
+        ctx.textBaseline = 'top';
         ctx.fillText(badge, r.w - (badge.length * 6 + 6) / map.zoom, 3 / map.zoom);
-        ctx.textBaseline = "alphabetic";
+        ctx.textBaseline = 'alphabetic';
 
         // Move-tool preview: ghost of the dragged placement
-        if (
-          movePreview &&
-          movePreview.screenKey === screenKey(r.screen.x, r.screen.y)
-        ) {
+        if (movePreview && movePreview.screenKey === screenKey(r.screen.x, r.screen.y)) {
           let mw = map.blockSize;
           let mh = map.blockSize;
           let mox = movePreview.x;
@@ -497,27 +484,22 @@ export function MapCanvas({
             mh = b.height;
             mox = b.ox;
             moy = b.oy;
-            drawPlacement({ ...movePreview.text, id: movePreview.id, x: movePreview.x, y: movePreview.y }, 0.6);
+            drawPlacement(
+              { ...movePreview.text, id: movePreview.id, x: movePreview.x, y: movePreview.y },
+              0.6,
+            );
           } else {
-            const mpSprite = movePreview.spriteId
-              ? spriteById.get(movePreview.spriteId)
-              : null;
+            const mpSprite = movePreview.spriteId ? spriteById.get(movePreview.spriteId) : null;
             mw = mpSprite?.width ?? map.blockSize;
             mh = mpSprite?.height ?? map.blockSize;
-            drawSprite(
-              movePreview.spriteId,
-              movePreview.x,
-              movePreview.y,
-              0.6,
-              movePreview,
-            );
+            drawSprite(movePreview.spriteId, movePreview.x, movePreview.y, 0.6, movePreview);
           }
           ctx.save();
           ctx.translate(mox + mw / 2, moy + mh / 2);
           if (movePreview.rotation) {
             ctx.rotate((movePreview.rotation * Math.PI) / 180);
           }
-          ctx.strokeStyle = movePreview.valid ? "#ffff00" : "#ff4444";
+          ctx.strokeStyle = movePreview.valid ? '#ffff00' : '#ff4444';
           ctx.lineWidth = 2 / map.zoom;
           ctx.strokeRect(-mw / 2, -mh / 2, mw, mh);
           ctx.restore();
@@ -526,10 +508,8 @@ export function MapCanvas({
         // Selected-placement outline (edit indicator)
         const selPlacement =
           map.selectedPlacementId &&
-            r.screen.placements.some((p) => p.id === map.selectedPlacementId)
-            ? r.screen.placements.find(
-              (p) => p.id === map.selectedPlacementId,
-            )
+          r.screen.placements.some((p) => p.id === map.selectedPlacementId)
+            ? r.screen.placements.find((p) => p.id === map.selectedPlacementId)
             : null;
         if (
           selPlacement &&
@@ -546,7 +526,7 @@ export function MapCanvas({
           if (selPlacement.rotation) {
             ctx.rotate((selPlacement.rotation * Math.PI) / 180);
           }
-          ctx.strokeStyle = "#00ffff";
+          ctx.strokeStyle = '#00ffff';
           ctx.lineWidth = 1.5 / map.zoom;
           ctx.setLineDash([4 / map.zoom, 3 / map.zoom]);
           ctx.strokeRect(-sw / 2, -sh / 2, sw, sh);
@@ -558,22 +538,15 @@ export function MapCanvas({
         if (
           hover &&
           hover.screenKey === screenKey(r.screen.x, r.screen.y) &&
-          (map.activeTool === "paint" || map.activeTool === "stream") &&
+          (map.activeTool === 'paint' || map.activeTool === 'stream') &&
           map.selected
         ) {
           const col = Math.floor(hover.localX / map.blockSize);
           const row = Math.floor(hover.localY / map.blockSize);
           const ghost = resolveSelectionDisplay(map.selected);
-          const gSprite = ghost?.spriteId
-            ? spriteById.get(ghost.spriteId)
-            : null;
+          const gSprite = ghost?.spriteId ? spriteById.get(ghost.spriteId) : null;
           if (gSprite) {
-            drawSprite(
-              ghost?.spriteId ?? null,
-              col * map.blockSize,
-              row * map.blockSize,
-              0.5,
-            );
+            drawSprite(ghost?.spriteId ?? null, col * map.blockSize, row * map.blockSize, 0.5);
           }
         }
 
@@ -581,13 +554,13 @@ export function MapCanvas({
         if (
           hover &&
           hover.screenKey === screenKey(r.screen.x, r.screen.y) &&
-          map.activeTool === "text"
+          map.activeTool === 'text'
         ) {
-          const style = map.selected?.kind === "text" ? map.selected : DEFAULT_TEXT_STYLE;
+          const style = map.selected?.kind === 'text' ? map.selected : DEFAULT_TEXT_STYLE;
           drawPlacement(
             {
-              id: "ghost",
-              kind: "text",
+              id: 'ghost',
+              kind: 'text',
               ...style,
               x: Math.round(hover.localX),
               y: Math.round(hover.localY),
@@ -600,9 +573,8 @@ export function MapCanvas({
         ctx.restore();
 
         // Screen border + hovered highlight
-        const isHovered =
-          hover && hover.screenKey === screenKey(r.screen.x, r.screen.y);
-        ctx.strokeStyle = isHovered ? "#ffff00" : "#00ff00";
+        const isHovered = hover && hover.screenKey === screenKey(r.screen.x, r.screen.y);
+        ctx.strokeStyle = isHovered ? '#ffff00' : '#00ff00';
         ctx.lineWidth = (isHovered ? 2 : 1) / map.zoom;
         ctx.save();
         ctx.translate(sx, sy);
@@ -610,9 +582,9 @@ export function MapCanvas({
         ctx.strokeRect(0, 0, r.w, r.h);
 
         // Coordinate label in the gap above the screen
-        ctx.fillStyle = "#00ff00";
+        ctx.fillStyle = '#00ff00';
         ctx.font = `bold ${Math.max(10, 11 / map.zoom)}px monospace`;
-        ctx.textBaseline = "bottom";
+        ctx.textBaseline = 'bottom';
         ctx.fillText(`${r.screen.x},${r.screen.y}`, 0, -4 / map.zoom);
         ctx.restore();
       }
@@ -635,25 +607,21 @@ export function MapCanvas({
   /** Resolve a palette selection to its display (for ghost preview). */
   const resolveSelectionDisplay = useCallback(
     (sel: PaletteSelection): DisplayRef | null => {
-      if (!sel) return null;
-      if (sel.kind === "sprite") return { spriteId: sel.id, animationId: null };
-      if (sel.kind === "animation") {
+      if (!sel) {return null;}
+      if (sel.kind === 'sprite') {return { spriteId: sel.id, animationId: null };}
+      if (sel.kind === 'animation') {
         const anim = animById.get(sel.id);
         return { spriteId: anim?.frames[0] ?? null, animationId: sel.id };
       }
-      if (sel.kind === "text") return null;
+      if (sel.kind === 'text') {return null;}
       const machine = machineById.get(sel.id);
-      if (!machine) return null;
-      const st =
-        machine.states.find((s) => s.id === machine.initialStateId) ??
-        machine.states[0];
-      if (!st) return null;
-      if (st.display.kind === "sprite") {
+      if (!machine) {return null;}
+      const st = machine.states.find((s) => s.id === machine.initialStateId) ?? machine.states[0];
+      if (!st) {return null;}
+      if (st.display.kind === 'sprite') {
         return { spriteId: st.display.spriteId, animationId: null };
       }
-      const anim = st.display.animationId
-        ? animById.get(st.display.animationId)
-        : undefined;
+      const anim = st.display.animationId ? animById.get(st.display.animationId) : undefined;
       return { spriteId: anim?.frames[0] ?? null, animationId: anim?.id ?? null };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -665,7 +633,7 @@ export function MapCanvas({
   const getWorldPos = useCallback(
     (e: React.MouseEvent) => {
       const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return { x: 0, y: 0 };
+      if (!rect) {return { x: 0, y: 0 };}
       const sx = e.clientX - rect.left;
       const sy = e.clientY - rect.top;
       return {
@@ -678,22 +646,18 @@ export function MapCanvas({
 
   const findTopmostPlacement = useCallback(
     (screenKeyStr: string, wx: number, wy: number) => {
-      const r = screenRects.find(
-        (sr) => screenKey(sr.screen.x, sr.screen.y) === screenKeyStr,
-      );
-      if (!r) return null;
+      const r = screenRects.find((sr) => screenKey(sr.screen.x, sr.screen.y) === screenKeyStr);
+      if (!r) {return null;}
       const localX = wx - r.wx;
       const localY = wy - r.wy;
       // Topmost = highest level, then latest insertion (reverse walk of
       // the level-sorted list).
-      const sorted = [...r.screen.placements].sort(
-        (a, b) => a.level - b.level,
-      );
+      const sorted = [...r.screen.placements].sort((a, b) => a.level - b.level);
       for (let i = sorted.length - 1; i >= 0; i--) {
         const p = sorted[i]!;
-        if (!levelInteractive(p.level)) continue;
+        if (!levelInteractive(p.level)) {continue;}
         const box = boxOf(p);
-        if (!box) continue;
+        if (!box) {continue;}
         const rot = ((p.rotation ?? 0) * Math.PI) / 180;
         const cx = box.ox + box.width / 2;
         const cy = box.oy + box.height / 2;
@@ -726,22 +690,22 @@ export function MapCanvas({
   const makePlacement = useCallback(
     (col: number, row: number): MapPlacement | null => {
       const sel = map.selected;
-      if (!sel) return null;
+      if (!sel) {return null;}
       const id = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const x = col * map.blockSize;
       const y = row * map.blockSize;
       const level = map.activeLevel;
-      if (sel.kind === "sprite") {
-        return { id, kind: "sprite", spriteId: sel.id, x, y, level };
+      if (sel.kind === 'sprite') {
+        return { id, kind: 'sprite', spriteId: sel.id, x, y, level };
       }
-      if (sel.kind === "animation") {
-        return { id, kind: "animation", animationId: sel.id, x, y, level };
+      if (sel.kind === 'animation') {
+        return { id, kind: 'animation', animationId: sel.id, x, y, level };
       }
       // Text is placed free-form by the Text tool, never grid-snapped by paint.
-      if (sel.kind === "text") return null;
+      if (sel.kind === 'text') {return null;}
       return {
         id,
-        kind: "machine",
+        kind: 'machine',
         machineId: sel.id,
         x,
         y,
@@ -776,10 +740,10 @@ export function MapCanvas({
 
       const tool = map.activeTool;
 
-      if (tool === "fill") {
-        if (map.selected?.kind === "sprite") {
+      if (tool === 'fill') {
+        if (map.selected?.kind === 'sprite') {
           mapDispatch({
-            type: "SET_SCREEN_DEFAULT",
+            type: 'SET_SCREEN_DEFAULT',
             x: r.screen.x,
             y: r.screen.y,
             spriteId: map.selected.id,
@@ -788,19 +752,19 @@ export function MapCanvas({
         return;
       }
 
-      if (tool === "pick") {
+      if (tool === 'pick') {
         const p = findTopmostPlacement(key, world.x, world.y);
         if (p) {
           mapDispatch({
-            type: "SELECT_PALETTE",
+            type: 'SELECT_PALETTE',
             selection:
-              p.kind === "sprite"
-                ? { kind: "sprite", id: p.spriteId }
-                : p.kind === "animation"
-                  ? { kind: "animation", id: p.animationId }
-                  : p.kind === "text"
+              p.kind === 'sprite'
+                ? { kind: 'sprite', id: p.spriteId }
+                : p.kind === 'animation'
+                  ? { kind: 'animation', id: p.animationId }
+                  : p.kind === 'text'
                     ? {
-                        kind: "text",
+                        kind: 'text',
                         text: p.text,
                         font: p.font,
                         fontSize: p.fontSize,
@@ -808,7 +772,7 @@ export function MapCanvas({
                         align: p.align,
                       }
                     : {
-                        kind: "machine",
+                        kind: 'machine',
                         id: p.machineId,
                         ...(p.stateName ? { stateName: p.stateName } : {}),
                         ...(p.properties && Object.keys(p.properties).length > 0
@@ -816,46 +780,46 @@ export function MapCanvas({
                           : {}),
                       },
           });
-          mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
+          mapDispatch({ type: 'SELECT_PLACEMENT', id: p.id });
         } else {
           if (r.screen.defaultSpriteId) {
             mapDispatch({
-              type: "SELECT_PALETTE",
+              type: 'SELECT_PALETTE',
               selection: {
-                kind: "sprite",
+                kind: 'sprite',
                 id: r.screen.defaultSpriteId,
               },
             });
           }
-          mapDispatch({ type: "SELECT_PLACEMENT", id: null });
+          mapDispatch({ type: 'SELECT_PLACEMENT', id: null });
         }
         return;
       }
 
       // Select: pick the object under the cursor so the palette's "Placement"
       // panel opens for it. Leaves the paint brush untouched.
-      if (tool === "select") {
+      if (tool === 'select') {
         const p = findTopmostPlacement(key, world.x, world.y);
-        mapDispatch({ type: "SELECT_PLACEMENT", id: p ? p.id : null });
+        mapDispatch({ type: 'SELECT_PLACEMENT', id: p ? p.id : null });
         return;
       }
 
-      if (tool === "erase") {
+      if (tool === 'erase') {
         const p = findTopmostPlacement(key, world.x, world.y);
         if (p) {
-          mapDispatch({ type: "REMOVE_PLACEMENT", screenKey: key, id: p.id });
+          mapDispatch({ type: 'REMOVE_PLACEMENT', screenKey: key, id: p.id });
         }
         return;
       }
 
       // Move: click-drag a placement to reposition it (drop on mouseup).
-      if (tool === "move") {
+      if (tool === 'move') {
         const p = findTopmostPlacement(key, world.x, world.y);
         if (!p) {
-          mapDispatch({ type: "SELECT_PLACEMENT", id: null });
+          mapDispatch({ type: 'SELECT_PLACEMENT', id: null });
           return;
         }
-        mapDispatch({ type: "SELECT_PLACEMENT", id: p.id });
+        mapDispatch({ type: 'SELECT_PLACEMENT', id: p.id });
         movingRef.current = { id: p.id, screenKey: key };
         setMovePreview({
           id: p.id,
@@ -866,17 +830,17 @@ export function MapCanvas({
           rotation: p.rotation,
           flipX: p.flipX,
           flipY: p.flipY,
-          text: p.kind === "text" ? p : undefined,
+          text: p.kind === 'text' ? p : undefined,
           valid: true,
         });
         return;
       }
       // Text: drop a free-positioned label at the exact pixel (no grid snap).
-      if (tool === "text") {
-        const style = map.selected?.kind === "text" ? map.selected : DEFAULT_TEXT_STYLE;
+      if (tool === 'text') {
+        const style = map.selected?.kind === 'text' ? map.selected : DEFAULT_TEXT_STYLE;
         const placement: MapPlacement = {
           id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-          kind: "text",
+          kind: 'text',
           text: style.text,
           font: style.font,
           fontSize: style.fontSize,
@@ -886,17 +850,16 @@ export function MapCanvas({
           y: Math.round(localY),
           level: map.activeLevel,
         };
-        mapDispatch({ type: "ADD_PLACEMENT", screenKey: key, placement });
-        mapDispatch({ type: "SELECT_PLACEMENT", id: placement.id });
+        mapDispatch({ type: 'ADD_PLACEMENT', screenKey: key, placement });
+        mapDispatch({ type: 'SELECT_PLACEMENT', id: placement.id });
         return;
       }
 
-
       // Paint: click places one item per click at the active level.
-      if (tool === "paint") {
+      if (tool === 'paint') {
         const placement = makePlacement(col, row);
         if (placement) {
-          mapDispatch({ type: "ADD_PLACEMENT", screenKey: key, placement });
+          mapDispatch({ type: 'ADD_PLACEMENT', screenKey: key, placement });
         }
       }
     },
@@ -918,15 +881,15 @@ export function MapCanvas({
     (e: React.MouseEvent) => {
       const world = getWorldPos(e);
       const r = findScreenAt(world.x, world.y);
-      if (!r) return;
+      if (!r) {return;}
       const key = screenKey(r.screen.x, r.screen.y);
       const col = Math.max(0, Math.floor((world.x - r.wx) / map.blockSize));
       const row = Math.max(0, Math.floor((world.y - r.wy) / map.blockSize));
       const cellKey = `${key}:${col},${row}`;
-      if (cellKey === lastStreamCellRef.current) return;
+      if (cellKey === lastStreamCellRef.current) {return;}
       lastStreamCellRef.current = cellKey;
       const placement = makePlacement(col, row);
-      if (placement) mapDispatch({ type: "ADD_PLACEMENT", screenKey: key, placement });
+      if (placement) {mapDispatch({ type: 'ADD_PLACEMENT', screenKey: key, placement });}
       onActiveScreen(key);
     },
     [getWorldPos, findScreenAt, map.blockSize, makePlacement, mapDispatch, onActiveScreen],
@@ -934,7 +897,7 @@ export function MapCanvas({
 
   // Leaving the stream tool cancels any active stream.
   useEffect(() => {
-    if (map.activeTool !== "stream") {
+    if (map.activeTool !== 'stream') {
       setStreaming(false);
       lastStreamCellRef.current = null;
     }
@@ -942,11 +905,7 @@ export function MapCanvas({
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
-      if (
-        e.button === 1 ||
-        map.activeTool === "pan" ||
-        (spaceHeld && e.button === 0)
-      ) {
+      if (e.button === 1 || map.activeTool === 'pan' || (spaceHeld && e.button === 0)) {
         setIsPanning(true);
         panStartRef.current = {
           x: e.clientX - map.pan.x,
@@ -954,13 +913,13 @@ export function MapCanvas({
         };
         return;
       }
-      if (e.button !== 0) return;
+      if (e.button !== 0) {return;}
       // Stream tool: a click toggles continuous painting on/off.
-      if (map.activeTool === "stream") {
+      if (map.activeTool === 'stream') {
         const activating = !streaming;
         setStreaming(activating);
         lastStreamCellRef.current = null;
-        if (activating) streamPaintAt(e);
+        if (activating) {streamPaintAt(e);}
         return;
       }
       applyTool(e);
@@ -972,7 +931,7 @@ export function MapCanvas({
     (e: React.MouseEvent) => {
       if (isPanning) {
         mapDispatch({
-          type: "SET_PAN",
+          type: 'SET_PAN',
           x: e.clientX - panStartRef.current.x,
           y: e.clientY - panStartRef.current.y,
         });
@@ -984,7 +943,7 @@ export function MapCanvas({
 
       // Move tool: update the drag preview (block-snapped).
       const moving = movingRef.current;
-      if (moving && map.activeTool === "move") {
+      if (moving && map.activeTool === 'move') {
         if (!r) {
           setMovePreview(null);
           return;
@@ -992,21 +951,19 @@ export function MapCanvas({
         const key = screenKey(r.screen.x, r.screen.y);
         const localX = world.x - r.wx;
         const localY = world.y - r.wy;
-        const original = map.screens[moving.screenKey]?.placements.find(
-          (p) => p.id === moving.id,
-        );
-        const free = original?.kind === "text";
+        const original = map.screens[moving.screenKey]?.placements.find((p) => p.id === moving.id);
+        const free = original?.kind === 'text';
         const nx = free ? Math.round(localX) : Math.round(localX / map.blockSize) * map.blockSize;
         const ny = free ? Math.round(localY) : Math.round(localY / map.blockSize) * map.blockSize;
         setMovePreview((prev) =>
           prev
             ? {
-              ...prev,
-              screenKey: key,
-              x: nx,
-              y: ny,
-              valid: moving.screenKey === key,
-            }
+                ...prev,
+                screenKey: key,
+                x: nx,
+                y: ny,
+                valid: moving.screenKey === key,
+              }
             : prev,
         );
         onStatus({
@@ -1020,7 +977,7 @@ export function MapCanvas({
       }
 
       // Stream tool active: paint wherever the cursor moves (no button held).
-      if (map.activeTool === "stream" && streaming) streamPaintAt(e);
+      if (map.activeTool === 'stream' && streaming) {streamPaintAt(e);}
 
       // Hover only — placement/erase happen on click (mousedown).
       if (!r) {
@@ -1049,16 +1006,14 @@ export function MapCanvas({
       const preview = movePreview;
       setMovePreview(null);
       if (preview && preview.valid) {
-        const original = map.screens[moving.screenKey]?.placements.find(
-          (p) => p.id === moving.id,
-        );
+        const original = map.screens[moving.screenKey]?.placements.find((p) => p.id === moving.id);
         if (
           original &&
           (original.x !== preview.x || original.y !== preview.y) &&
           preview.screenKey === moving.screenKey
         ) {
           mapDispatch({
-            type: "MOVE_PLACEMENT",
+            type: 'MOVE_PLACEMENT',
             screenKey: moving.screenKey,
             id: moving.id,
             x: preview.x,
@@ -1071,15 +1026,15 @@ export function MapCanvas({
 
   // Stop panning / commit moves even off-canvas.
   useEffect(() => {
-    window.addEventListener("mouseup", handleMouseUp);
-    return () => window.removeEventListener("mouseup", handleMouseUp);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => window.removeEventListener('mouseup', handleMouseUp);
   }, [handleMouseUp]);
 
   const handleWheel = useCallback(
     (e: React.WheelEvent) => {
       e.preventDefault();
       const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
+      if (!rect) {return;}
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
 
@@ -1088,8 +1043,8 @@ export function MapCanvas({
       const newPanX = mx - (mx - map.pan.x) * (newZoom / map.zoom);
       const newPanY = my - (my - map.pan.y) * (newZoom / map.zoom);
 
-      mapDispatch({ type: "SET_ZOOM", zoom: newZoom });
-      mapDispatch({ type: "SET_PAN", x: newPanX, y: newPanY });
+      mapDispatch({ type: 'SET_ZOOM', zoom: newZoom });
+      mapDispatch({ type: 'SET_PAN', x: newPanX, y: newPanY });
     },
     [map.zoom, map.pan, mapDispatch],
   );
@@ -1100,7 +1055,7 @@ export function MapCanvas({
     key: string;
     x: number; // CSS px
     y: number;
-    dir: "N" | "S" | "E" | "W";
+    dir: 'N' | 'S' | 'E' | 'W';
     newX: number;
     newY: number;
   }
@@ -1115,22 +1070,20 @@ export function MapCanvas({
     const pw = r.w * map.zoom;
     const ph = r.h * map.zoom;
     const half = (GAP * map.zoom) / 2;
-    const cands: Array<[PlusButton["dir"], number, number, number, number]> = [
-      ["N", p.x + pw / 2, p.y - half, r.screen.x - 1, r.screen.y],
-      ["S", p.x + pw / 2, p.y + ph + half, r.screen.x + 1, r.screen.y],
-      ["E", p.x + pw + half, p.y + ph / 2, r.screen.x, r.screen.y + 1],
-      ["W", p.x - half, p.y + ph / 2, r.screen.x, r.screen.y - 1],
+    const cands: Array<[PlusButton['dir'], number, number, number, number]> = [
+      ['N', p.x + pw / 2, p.y - half, r.screen.x - 1, r.screen.y],
+      ['S', p.x + pw / 2, p.y + ph + half, r.screen.x + 1, r.screen.y],
+      ['E', p.x + pw + half, p.y + ph / 2, r.screen.x, r.screen.y + 1],
+      ['W', p.x - half, p.y + ph / 2, r.screen.x, r.screen.y - 1],
     ];
     for (const [dir, x, y, nx, ny] of cands) {
-      if (map.screens[screenKey(nx, ny)]) continue;
+      if (map.screens[screenKey(nx, ny)]) {continue;}
       plusButtons.push({ key: `${key}:${dir}`, x, y, dir, newX: nx, newY: ny });
     }
   }
 
   const toolClass =
-    map.activeTool === "pan" || spaceHeld
-      ? `tool-pan ${isPanning ? "panning" : ""}`
-      : "";
+    map.activeTool === 'pan' || spaceHeld ? `tool-pan ${isPanning ? 'panning' : ''}` : '';
 
   return (
     <div ref={containerRef} className={`canvas-area ${toolClass}`}>
@@ -1149,22 +1102,19 @@ export function MapCanvas({
           className="map-plus-btn"
           title={`Add screen (${b.newX},${b.newY}) — ${b.dir}`}
           style={{ left: b.x, top: b.y }}
-          onClick={() =>
-            mapDispatch({ type: "ADD_SCREEN", x: b.newX, y: b.newY })
-          }
+          onClick={() => mapDispatch({ type: 'ADD_SCREEN', x: b.newX, y: b.newY })}
         >
           +
         </button>
       ))}
       {Object.keys(map.screens).length === 0 && (
         <div className="upload-overlay">
-          <div className="big-icon"><Icon name="map-editor" size={48} /></div>
+          <div className="big-icon">
+            <Icon name="map-editor" size={48} />
+          </div>
           <div>No screens yet</div>
           <div>Click + to add the first screen at 0,0</div>
-          <button
-            className="btn"
-            onClick={() => mapDispatch({ type: "ADD_SCREEN", x: 0, y: 0 })}
-          >
+          <button className="btn" onClick={() => mapDispatch({ type: 'ADD_SCREEN', x: 0, y: 0 })}>
             + Add Screen (0,0)
           </button>
         </div>

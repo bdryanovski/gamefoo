@@ -119,30 +119,17 @@
   },
   "animations": {
     "campfire": {
-      "frames": [
-        "sprite_0_4",
-        "sprite_1_4",
-        "sprite_2_4",
-        "sprite_3_4"
-      ],
+      "frames": ["sprite_0_4", "sprite_1_4", "sprite_2_4", "sprite_3_4"],
       "duration": 0.2,
       "loop": true
     },
     "light": {
-      "frames": [
-        "sprite_0_0",
-        "sprite_1_0",
-        "sprite_2_0",
-        "sprite_3_0"
-      ],
+      "frames": ["sprite_0_0", "sprite_1_0", "sprite_2_0", "sprite_3_0"],
       "duration": 0.15,
       "loop": true
     },
     "lanter": {
-      "frames": [
-        "sprite_9_1",
-        "sprite_10_1"
-      ],
+      "frames": ["sprite_9_1", "sprite_10_1"],
       "duration": 0.15,
       "loop": true
     }

@@ -3,7 +3,7 @@
  * engine StateStore, so a collected olive stays gone (no colliders) across
  * re-spawns, and exposes its optional `message` dialog reference.
  */
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vite-plus/test';
 import { Olive } from '../games/Experiment00/src/objects/olive';
 import { MemoryBackend } from '../src/core/state/memory_backend';
 import { StateStore } from '../src/core/state/state_store';
@@ -44,8 +44,8 @@ function makeOlive(store: StateStore, opts: { id?: string; message?: string } = 
   Olive.useState(store.scope('olives'));
   const def = oliveDef();
   const properties: Record<string, string> = {};
-  if (opts.id !== undefined) properties.id = opts.id;
-  if (opts.message !== undefined) properties.message = opts.message;
+  if (opts.id !== undefined) {properties.id = opts.id;}
+  if (opts.message !== undefined) {properties.message = opts.message;}
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,

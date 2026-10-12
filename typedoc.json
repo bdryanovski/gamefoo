@@ -36,16 +36,7 @@
 
   "categorizeByGroup": true,
   "defaultCategory": "General",
-  "categoryOrder": [
-    "Core",
-    "Rendering",
-    "Physics",
-    "Input",
-    "Audio",
-    "Utilities",
-    "*",
-    "Other"
-  ],
+  "categoryOrder": ["Core", "Rendering", "Physics", "Input", "Audio", "Utilities", "*", "Other"],
   "groupOrder": [
     "Classes",
     "Abstract Classes",

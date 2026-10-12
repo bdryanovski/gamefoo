@@ -1,13 +1,8 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from "react";
-import type {
-  AppAction,
-  CollisionVolume,
-  CollisionShape,
-  CollisionLayerDef,
-} from "../types";
-import { makeCollision, collisionLayerId } from "../types";
-import { uid } from "../utils/uid";
-import { Icon } from "./Icon";
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import type { AppAction, CollisionVolume, CollisionShape, CollisionLayerDef } from '../types';
+import { makeCollision, collisionLayerId } from '../types';
+import { uid } from '../utils/uid';
+import { Icon } from './Icon';
 
 interface Props {
   /** Local coordinate space width in px. */
@@ -37,22 +32,27 @@ const VIEW = 260;
 /** Handle square half-size, in canvas pixels (constant on screen). */
 const HANDLE = 4;
 /** Fallback colour when a volume references a missing layer. */
-const UNKNOWN_COLOR = "#888888";
+const UNKNOWN_COLOR = '#888888';
 
 // --- geometry (sprite-local coords) ------------------------------------
 
 function translateShape(shape: CollisionShape, dx: number, dy: number): CollisionShape {
-  if (shape.kind === "circle") return { ...shape, cx: shape.cx + dx, cy: shape.cy + dy };
-  if (shape.kind === "rect") return { ...shape, x: shape.x + dx, y: shape.y + dy };
-  return { kind: "polygon", points: shape.points.map((p) => ({ x: p.x + dx, y: p.y + dy })) };
+  if (shape.kind === 'circle') {return { ...shape, cx: shape.cx + dx, cy: shape.cy + dy };}
+  if (shape.kind === 'rect') {return { ...shape, x: shape.x + dx, y: shape.y + dy };}
+  return { kind: 'polygon', points: shape.points.map((p) => ({ x: p.x + dx, y: p.y + dy })) };
 }
 
 function hitShape(shape: CollisionShape, p: Pt): boolean {
-  if (shape.kind === "circle") {
+  if (shape.kind === 'circle') {
     return Math.hypot(p.x - shape.cx, p.y - shape.cy) <= shape.radius;
   }
-  if (shape.kind === "rect") {
-    return p.x >= shape.x && p.x <= shape.x + shape.width && p.y >= shape.y && p.y <= shape.y + shape.height;
+  if (shape.kind === 'rect') {
+    return (
+      p.x >= shape.x &&
+      p.x <= shape.x + shape.width &&
+      p.y >= shape.y &&
+      p.y <= shape.y + shape.height
+    );
   }
   const pts = shape.points;
   let inside = false;
@@ -68,16 +68,16 @@ function hitShape(shape: CollisionShape, p: Pt): boolean {
 
 /** Draggable handles for a shape, each with a stable id, in local coords. */
 function handlesFor(shape: CollisionShape): Array<{ id: string; x: number; y: number }> {
-  if (shape.kind === "circle") {
-    return [{ id: "r", x: shape.cx + shape.radius, y: shape.cy }];
+  if (shape.kind === 'circle') {
+    return [{ id: 'r', x: shape.cx + shape.radius, y: shape.cy }];
   }
-  if (shape.kind === "rect") {
+  if (shape.kind === 'rect') {
     const { x, y, width: w, height: h } = shape;
     return [
-      { id: "nw", x, y },
-      { id: "ne", x: x + w, y },
-      { id: "sw", x, y: y + h },
-      { id: "se", x: x + w, y: y + h },
+      { id: 'nw', x, y },
+      { id: 'ne', x: x + w, y },
+      { id: 'sw', x, y: y + h },
+      { id: 'se', x: x + w, y: y + h },
     ];
   }
   return shape.points.map((p, i) => ({ id: `v${i}`, x: p.x, y: p.y }));
@@ -85,17 +85,17 @@ function handlesFor(shape: CollisionShape): Array<{ id: string; x: number; y: nu
 
 /** Apply a handle drag: `cur` is the pointer's current local position. */
 function dragHandle(shape: CollisionShape, handle: string, cur: Pt): CollisionShape {
-  if (shape.kind === "circle") {
+  if (shape.kind === 'circle') {
     return { ...shape, radius: Math.max(1, Math.hypot(cur.x - shape.cx, cur.y - shape.cy)) };
   }
-  if (shape.kind === "rect") {
+  if (shape.kind === 'rect') {
     // Keep the corner opposite the grabbed one fixed.
-    const left = handle === "nw" || handle === "sw" ? shape.x + shape.width : shape.x;
-    const top = handle === "nw" || handle === "ne" ? shape.y + shape.height : shape.y;
+    const left = handle === 'nw' || handle === 'sw' ? shape.x + shape.width : shape.x;
+    const top = handle === 'nw' || handle === 'ne' ? shape.y + shape.height : shape.y;
     const x = Math.min(left, cur.x);
     const y = Math.min(top, cur.y);
     return {
-      kind: "rect",
+      kind: 'rect',
       x,
       y,
       width: Math.max(1, Math.abs(cur.x - left)),
@@ -104,7 +104,7 @@ function dragHandle(shape: CollisionShape, handle: string, cur: Pt): CollisionSh
   }
   const idx = Number(handle.slice(1));
   const points = shape.points.map((p, i) => (i === idx ? { x: cur.x, y: cur.y } : p));
-  return { kind: "polygon", points };
+  return { kind: 'polygon', points };
 }
 
 /** Insert a polygon vertex at the edge nearest `p`. */
@@ -133,16 +133,16 @@ function insertVertex(points: Pt[], p: Pt): Pt[] {
 
 function tracePath(ctx: CanvasRenderingContext2D, shape: CollisionShape, scale: number): void {
   ctx.beginPath();
-  if (shape.kind === "circle") {
+  if (shape.kind === 'circle') {
     ctx.arc(shape.cx * scale, shape.cy * scale, shape.radius * scale, 0, Math.PI * 2);
-  } else if (shape.kind === "rect") {
+  } else if (shape.kind === 'rect') {
     ctx.rect(shape.x * scale, shape.y * scale, shape.width * scale, shape.height * scale);
   } else {
     shape.points.forEach((p, i) => {
       const mx = p.x * scale;
       const my = p.y * scale;
-      if (i === 0) ctx.moveTo(mx, my);
-      else ctx.lineTo(mx, my);
+      if (i === 0) {ctx.moveTo(mx, my);}
+      else {ctx.lineTo(mx, my);}
     });
     ctx.closePath();
   }
@@ -160,22 +160,30 @@ function capturePointer(e: React.PointerEvent<HTMLCanvasElement>): void {
 // --- component ---------------------------------------------------------
 
 type Drag =
-  | { mode: "move"; id: string; origin: Pt; shape: CollisionShape }
-  | { mode: "handle"; id: string; handle: string }
+  | { mode: 'move'; id: string; origin: Pt; shape: CollisionShape }
+  | { mode: 'handle'; id: string; handle: string }
   | null;
 
-const SHAPE_LABEL: Record<CollisionShape["kind"], string> = {
-  circle: "Circle",
-  rect: "Box",
-  polygon: "Custom",
+const SHAPE_LABEL: Record<CollisionShape['kind'], string> = {
+  circle: 'Circle',
+  rect: 'Box',
+  polygon: 'Custom',
 };
 
-export function CollisionEditor({ width, height, collisions, layers, onChange, dispatch, drawBackdrop }: Props) {
+export function CollisionEditor({
+  width,
+  height,
+  collisions,
+  layers,
+  onChange,
+  dispatch,
+  drawBackdrop,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragRef = useRef<Drag>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addMode, setAddMode] = useState(false);
-  const [addLayerId, setAddLayerId] = useState<string>("");
+  const [addLayerId, setAddLayerId] = useState<string>('');
   const [showLayers, setShowLayers] = useState(false);
   // Freehand draw mode: `drawing` holds the polygon volume id being traced;
   // `hover` is the current cursor position for the rubber-band preview.
@@ -190,7 +198,7 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
     [layers],
   );
   const colorOf = useCallback((id: string) => layerById[id]?.color ?? UNKNOWN_COLOR, [layerById]);
-  const activeLayerId = layerById[addLayerId] ? addLayerId : (layers[0]?.id ?? "");
+  const activeLayerId = layerById[addLayerId] ? addLayerId : (layers[0]?.id ?? '');
 
   const patch = useCallback(
     (id: string, shape: CollisionShape) =>
@@ -209,8 +217,8 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
   // Redraw whenever geometry, selection, layers, or image change.
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) {return;}
     const dw = width * scale;
     const dh = height * scale;
     canvas.width = dw;
@@ -234,8 +242,8 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
       ctx.stroke();
       ctx.setLineDash([]);
       if (isSel) {
-        ctx.fillStyle = "#ffffff";
-        ctx.strokeStyle = "#000000";
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#000000';
         ctx.lineWidth = 1;
         for (const h of handlesFor(vol.shape)) {
           ctx.beginPath();
@@ -249,7 +257,7 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
     // Rubber-band segment from the last placed point to the cursor.
     if (drawing && hover) {
       const vol = collisions.find((c) => c.id === drawing);
-      if (vol && vol.shape.kind === "polygon" && vol.shape.points.length > 0) {
+      if (vol?.shape.kind === 'polygon' && vol.shape.points.length > 0) {
         const last = vol.shape.points[vol.shape.points.length - 1]!;
         ctx.setLineDash([4, 3]);
         ctx.strokeStyle = colorOf(vol.layerId);
@@ -269,29 +277,32 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
       // Draw mode: each click appends a vertex to the polygon being traced.
       if (drawing) {
         const vol = collisions.find((c) => c.id === drawing);
-        if (vol && vol.shape.kind === "polygon") {
-          patch(drawing, { kind: "polygon", points: [...vol.shape.points, p] });
+        if (vol?.shape.kind === 'polygon') {
+          patch(drawing, { kind: 'polygon', points: [...vol.shape.points, p] });
         }
         return;
       }
       if (selected) {
         for (const h of handlesFor(selected.shape)) {
-          if (Math.abs(h.x - p.x) * scale <= HANDLE + 2 && Math.abs(h.y - p.y) * scale <= HANDLE + 2) {
-            dragRef.current = { mode: "handle", id: selected.id, handle: h.id };
+          if (
+            Math.abs(h.x - p.x) * scale <= HANDLE + 2 &&
+            Math.abs(h.y - p.y) * scale <= HANDLE + 2
+          ) {
+            dragRef.current = { mode: 'handle', id: selected.id, handle: h.id };
             capturePointer(e);
             return;
           }
         }
       }
-      if (addMode && selected && selected.shape.kind === "polygon") {
-        patch(selected.id, { kind: "polygon", points: insertVertex(selected.shape.points, p) });
+      if (addMode && selected?.shape.kind === 'polygon') {
+        patch(selected.id, { kind: 'polygon', points: insertVertex(selected.shape.points, p) });
         return;
       }
       for (let i = collisions.length - 1; i >= 0; i--) {
         const vol = collisions[i]!;
         if (hitShape(vol.shape, p)) {
           setSelectedId(vol.id);
-          dragRef.current = { mode: "move", id: vol.id, origin: p, shape: vol.shape };
+          dragRef.current = { mode: 'move', id: vol.id, origin: p, shape: vol.shape };
           capturePointer(e);
           return;
         }
@@ -308,13 +319,13 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
         return;
       }
       const drag = dragRef.current;
-      if (!drag) return;
+      if (!drag) {return;}
       const p = toLocal(e);
-      if (drag.mode === "move") {
+      if (drag.mode === 'move') {
         patch(drag.id, translateShape(drag.shape, p.x - drag.origin.x, p.y - drag.origin.y));
       } else {
         const vol = collisions.find((c) => c.id === drag.id);
-        if (vol) patch(drag.id, dragHandle(vol.shape, drag.handle, p));
+        if (vol) {patch(drag.id, dragHandle(vol.shape, drag.handle, p));}
       }
     },
     [collisions, drawing, toLocal, patch],
@@ -335,9 +346,9 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
   const finishDraw = useCallback(() => {
     setDrawing(null);
     setHover(null);
-    if (!drawing) return;
+    if (!drawing) {return;}
     const vol = collisions.find((c) => c.id === drawing);
-    if (!vol || vol.shape.kind !== "polygon" || vol.shape.points.length < 3) {
+    if (vol?.shape.kind !== 'polygon' || vol.shape.points.length < 3) {
       onChange(collisions.filter((c) => c.id !== drawing));
       setSelectedId((s) => (s === drawing ? null : s));
     }
@@ -354,13 +365,13 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
 
   // While drawing: Enter finishes, Escape cancels.
   useEffect(() => {
-    if (!drawing) return;
+    if (!drawing) {return;}
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") cancelDraw();
-      else if (e.key === "Enter") finishDraw();
+      if (e.key === 'Escape') {cancelDraw();}
+      else if (e.key === 'Enter') {finishDraw();}
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [drawing, cancelDraw, finishDraw]);
 
   const onDoubleClick = useCallback(
@@ -369,22 +380,25 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
         finishDraw();
         return;
       }
-      if (!selected || selected.shape.kind !== "polygon") return;
+      if (selected?.shape.kind !== 'polygon') {return;}
       const rect = e.currentTarget.getBoundingClientRect();
       const p = { x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale };
       const pts = selected.shape.points;
-      if (pts.length <= 3) return;
-      const idx = pts.findIndex((v) => Math.abs(v.x - p.x) * scale <= HANDLE + 2 && Math.abs(v.y - p.y) * scale <= HANDLE + 2);
-      if (idx >= 0) {
-        patch(selected.id, { kind: "polygon", points: pts.filter((_, i) => i !== idx) });
+      if (pts.length <= 3) {return;}
+      const idx = pts.findIndex(
+        (v) =>
+          Math.abs(v.x - p.x) * scale <= HANDLE + 2 && Math.abs(v.y - p.y) * scale <= HANDLE + 2,
+      );
+      if (idx !== -1) {
+        patch(selected.id, { kind: 'polygon', points: pts.filter((_, i) => i !== idx) });
       }
     },
     [selected, scale, patch],
   );
 
   const addVolume = useCallback(
-    (kind: CollisionShape["kind"]) => {
-      if (!activeLayerId) return;
+    (kind: CollisionShape['kind']) => {
+      if (!activeLayerId) {return;}
       const vol = makeCollision(kind, { width, height }, activeLayerId);
       onChange([...collisions, vol]);
       setSelectedId(vol.id);
@@ -394,12 +408,12 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
   );
 
   const startDraw = useCallback(() => {
-    if (!activeLayerId) return;
+    if (!activeLayerId) {return;}
     const vol: CollisionVolume = {
-      id: uid("col"),
+      id: uid('col'),
       layerId: activeLayerId,
       enabled: true,
-      shape: { kind: "polygon", points: [] },
+      shape: { kind: 'polygon', points: [] },
     };
     onChange([...collisions, vol]);
     setSelectedId(vol.id);
@@ -409,30 +423,35 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
   }, [activeLayerId, collisions, onChange]);
 
   const setVolumeLayer = useCallback(
-    (id: string, layerId: string) => onChange(collisions.map((c) => (c.id === id ? { ...c, layerId } : c))),
+    (id: string, layerId: string) =>
+      onChange(collisions.map((c) => (c.id === id ? { ...c, layerId } : c))),
     [collisions, onChange],
   );
   const setVolumeEnabled = useCallback(
-    (id: string, enabled: boolean) => onChange(collisions.map((c) => (c.id === id ? { ...c, enabled } : c))),
+    (id: string, enabled: boolean) =>
+      onChange(collisions.map((c) => (c.id === id ? { ...c, enabled } : c))),
     [collisions, onChange],
   );
   const removeVolume = useCallback(
     (id: string) => {
       onChange(collisions.filter((c) => c.id !== id));
-      if (selectedId === id) setSelectedId(null);
+      if (selectedId === id) {setSelectedId(null);}
     },
     [collisions, onChange, selectedId],
   );
 
   const drawingVol = drawing ? collisions.find((c) => c.id === drawing) : null;
   const drawnCount =
-    drawingVol && drawingVol.shape.kind === "polygon" ? drawingVol.shape.points.length : 0;
+    drawingVol?.shape.kind === 'polygon' ? drawingVol.shape.points.length : 0;
 
   return (
     <div className="col gap-md collision-editor">
       <div className="section-title">
         <span>Collisions ({collisions.length})</span>
-        <button className={`btn btn-sm ${showLayers ? "active" : ""}`} onClick={() => setShowLayers(!showLayers)}>
+        <button
+          className={`btn btn-sm ${showLayers ? 'active' : ''}`}
+          onClick={() => setShowLayers(!showLayers)}
+        >
           Layers
         </button>
       </div>
@@ -447,20 +466,46 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
           title="Layer for new volumes"
         >
           {layers.map((l) => (
-            <option key={l.id} value={l.id}>{l.name}</option>
+            <option key={l.id} value={l.id}>
+              {l.name}
+            </option>
           ))}
         </select>
-        <button className="btn btn-sm" disabled={!activeLayerId || !!drawing} onClick={() => addVolume("circle")}><Icon name="shape-circle" size={12} /> Circle</button>
-        <button className="btn btn-sm" disabled={!activeLayerId || !!drawing} onClick={() => addVolume("rect")}><Icon name="shape-box" size={12} /> Box</button>
-        <button className="btn btn-sm" disabled={!activeLayerId || !!drawing} onClick={() => addVolume("polygon")}><Icon name="shape-custom" size={12} /> Custom</button>
-        <button className="btn btn-sm" disabled={!activeLayerId || !!drawing} onClick={startDraw}><Icon name="draw" size={12} /> Draw</button>
+        <button
+          className="btn btn-sm"
+          disabled={!activeLayerId || !!drawing}
+          onClick={() => addVolume('circle')}
+        >
+          <Icon name="shape-circle" size={12} /> Circle
+        </button>
+        <button
+          className="btn btn-sm"
+          disabled={!activeLayerId || !!drawing}
+          onClick={() => addVolume('rect')}
+        >
+          <Icon name="shape-box" size={12} /> Box
+        </button>
+        <button
+          className="btn btn-sm"
+          disabled={!activeLayerId || !!drawing}
+          onClick={() => addVolume('polygon')}
+        >
+          <Icon name="shape-custom" size={12} /> Custom
+        </button>
+        <button className="btn btn-sm" disabled={!activeLayerId || !!drawing} onClick={startDraw}>
+          <Icon name="draw" size={12} /> Draw
+        </button>
       </div>
 
       {drawing && (
         <div className="field-row draw-banner">
           <span className="text-xs">Click to add points ({drawnCount})</span>
-          <button className="btn btn-sm" disabled={drawnCount < 3} onClick={finishDraw}>Finish</button>
-          <button className="btn btn-sm danger" onClick={cancelDraw}>Cancel</button>
+          <button className="btn btn-sm" disabled={drawnCount < 3} onClick={finishDraw}>
+            Finish
+          </button>
+          <button className="btn btn-sm danger" onClick={cancelDraw}>
+            Cancel
+          </button>
           <span className="text-xs text-dim">Enter finishes · Esc cancels</span>
         </div>
       )}
@@ -479,9 +524,8 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
 
       {collisions.length === 0 && (
         <div className="text-xs text-dim">
-          No collision volumes. Pick a layer, then add a Circle, Box, or Custom
-          polygon — or use Draw to click out any shape. Drag on the canvas to
-          move, drag handles to resize.
+          No collision volumes. Pick a layer, then add a Circle, Box, or Custom polygon — or use
+          Draw to click out any shape. Drag on the canvas to move, drag handles to resize.
         </div>
       )}
 
@@ -490,7 +534,7 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
         return (
           <div
             key={vol.id}
-            className={`collision-vol ${sel ? "selected" : ""}`}
+            className={`collision-vol ${sel ? 'selected' : ''}`}
             onClick={() => setSelectedId(vol.id)}
           >
             <div className="field-row">
@@ -501,9 +545,13 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
                 onChange={(e) => setVolumeLayer(vol.id, e.target.value)}
               >
                 {layers.map((l) => (
-                  <option key={l.id} value={l.id}>{l.name}</option>
+                  <option key={l.id} value={l.id}>
+                    {l.name}
+                  </option>
                 ))}
-                {!layerById[vol.layerId] && <option value={vol.layerId}>{vol.layerId} (missing)</option>}
+                {!layerById[vol.layerId] && (
+                  <option value={vol.layerId}>{vol.layerId} (missing)</option>
+                )}
               </select>
               <span className="badge-shape">{SHAPE_LABEL[vol.shape.kind]}</span>
               <label className="checkbox-row">
@@ -514,9 +562,18 @@ export function CollisionEditor({ width, height, collisions, layers, onChange, d
                 />
                 On
               </label>
-              <button className="btn btn-sm danger" onClick={() => removeVolume(vol.id)}>Del</button>
+              <button className="btn btn-sm danger" onClick={() => removeVolume(vol.id)}>
+                Del
+              </button>
             </div>
-            {sel && <ShapeFields vol={vol} onShape={(shape) => patch(vol.id, shape)} addMode={addMode} setAddMode={setAddMode} />}
+            {sel && (
+              <ShapeFields
+                vol={vol}
+                onShape={(shape) => patch(vol.id, shape)}
+                addMode={addMode}
+                setAddMode={setAddMode}
+              />
+            )}
           </div>
         );
       })}
@@ -531,17 +588,17 @@ function LayerManager({
   layers: CollisionLayerDef[];
   dispatch: React.Dispatch<AppAction>;
 }) {
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("#7ad0ff");
+  const [name, setName] = useState('');
+  const [color, setColor] = useState('#7ad0ff');
 
   const existing = useMemo(() => new Set(layers.map((l) => l.id)), [layers]);
   const newId = collisionLayerId(name);
   const canAdd = name.trim().length > 0 && !existing.has(newId);
 
   const add = useCallback(() => {
-    if (!canAdd) return;
-    dispatch({ type: "ADD_COLLISION_LAYER", layer: { id: newId, name: name.trim(), color } });
-    setName("");
+    if (!canAdd) {return;}
+    dispatch({ type: 'ADD_COLLISION_LAYER', layer: { id: newId, name: name.trim(), color } });
+    setName('');
   }, [canAdd, dispatch, newId, name, color]);
 
   return (
@@ -553,35 +610,54 @@ function LayerManager({
             type="color"
             className="input color-input"
             value={l.color}
-            onChange={(e) => dispatch({ type: "UPDATE_COLLISION_LAYER", id: l.id, updates: { color: e.target.value } })}
+            onChange={(e) =>
+              dispatch({
+                type: 'UPDATE_COLLISION_LAYER',
+                id: l.id,
+                updates: { color: e.target.value },
+              })
+            }
           />
           <input
             type="text"
             className="input input-full"
             value={l.name}
-            onChange={(e) => dispatch({ type: "UPDATE_COLLISION_LAYER", id: l.id, updates: { name: e.target.value } })}
+            onChange={(e) =>
+              dispatch({
+                type: 'UPDATE_COLLISION_LAYER',
+                id: l.id,
+                updates: { name: e.target.value },
+              })
+            }
           />
           <span className="badge-shape">{l.id}</span>
           <button
             className="btn btn-sm danger"
             title="Delete layer and its volumes on every sprite"
-            onClick={() => dispatch({ type: "DELETE_COLLISION_LAYER", id: l.id })}
+            onClick={() => dispatch({ type: 'DELETE_COLLISION_LAYER', id: l.id })}
           >
             Del
           </button>
         </div>
       ))}
       <div className="field-row">
-        <input type="color" className="input color-input" value={color} onChange={(e) => setColor(e.target.value)} />
+        <input
+          type="color"
+          className="input color-input"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+        />
         <input
           type="text"
           className="input input-full"
           placeholder="new layer name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
+          onKeyDown={(e) => e.key === 'Enter' && add()}
         />
-        <button className="btn btn-sm" disabled={!canAdd} onClick={add}>Add</button>
+        <button className="btn btn-sm" disabled={!canAdd} onClick={add}>
+          Add
+        </button>
       </div>
     </div>
   );
@@ -604,32 +680,70 @@ function ShapeFields({
   setAddMode: (v: boolean) => void;
 }) {
   const s = vol.shape;
-  if (s.kind === "circle") {
+  if (s.kind === 'circle') {
     return (
       <div className="field-row">
         <span className="field-label">CX:</span>
-        <input type="number" className="input input-sm" value={s.cx} onChange={(e) => onShape({ ...s, cx: num(e.target.value) })} />
+        <input
+          type="number"
+          className="input input-sm"
+          value={s.cx}
+          onChange={(e) => onShape({ ...s, cx: num(e.target.value) })}
+        />
         <span className="field-label">CY:</span>
-        <input type="number" className="input input-sm" value={s.cy} onChange={(e) => onShape({ ...s, cy: num(e.target.value) })} />
+        <input
+          type="number"
+          className="input input-sm"
+          value={s.cy}
+          onChange={(e) => onShape({ ...s, cy: num(e.target.value) })}
+        />
         <span className="field-label">R:</span>
-        <input type="number" className="input input-sm" min={1} value={s.radius} onChange={(e) => onShape({ ...s, radius: Math.max(1, num(e.target.value)) })} />
+        <input
+          type="number"
+          className="input input-sm"
+          min={1}
+          value={s.radius}
+          onChange={(e) => onShape({ ...s, radius: Math.max(1, num(e.target.value)) })}
+        />
       </div>
     );
   }
-  if (s.kind === "rect") {
+  if (s.kind === 'rect') {
     return (
       <>
         <div className="field-row">
           <span className="field-label">X:</span>
-          <input type="number" className="input input-sm" value={s.x} onChange={(e) => onShape({ ...s, x: num(e.target.value) })} />
+          <input
+            type="number"
+            className="input input-sm"
+            value={s.x}
+            onChange={(e) => onShape({ ...s, x: num(e.target.value) })}
+          />
           <span className="field-label">Y:</span>
-          <input type="number" className="input input-sm" value={s.y} onChange={(e) => onShape({ ...s, y: num(e.target.value) })} />
+          <input
+            type="number"
+            className="input input-sm"
+            value={s.y}
+            onChange={(e) => onShape({ ...s, y: num(e.target.value) })}
+          />
         </div>
         <div className="field-row">
           <span className="field-label">W:</span>
-          <input type="number" className="input input-sm" min={1} value={s.width} onChange={(e) => onShape({ ...s, width: Math.max(1, num(e.target.value)) })} />
+          <input
+            type="number"
+            className="input input-sm"
+            min={1}
+            value={s.width}
+            onChange={(e) => onShape({ ...s, width: Math.max(1, num(e.target.value)) })}
+          />
           <span className="field-label">H:</span>
-          <input type="number" className="input input-sm" min={1} value={s.height} onChange={(e) => onShape({ ...s, height: Math.max(1, num(e.target.value)) })} />
+          <input
+            type="number"
+            className="input input-sm"
+            min={1}
+            value={s.height}
+            onChange={(e) => onShape({ ...s, height: Math.max(1, num(e.target.value)) })}
+          />
         </div>
       </>
     );
@@ -639,10 +753,10 @@ function ShapeFields({
       <div className="field-row">
         <span className="field-label">Points:</span>
         <button
-          className={`btn btn-sm ${addMode ? "active" : ""}`}
+          className={`btn btn-sm ${addMode ? 'active' : ''}`}
           onClick={() => setAddMode(!addMode)}
         >
-          {addMode ? "Click canvas to add" : "+ Add point"}
+          {addMode ? 'Click canvas to add' : '+ Add point'}
         </button>
         <span className="text-xs text-dim">dbl-click vertex to remove</span>
       </div>
@@ -653,19 +767,31 @@ function ShapeFields({
             type="number"
             className="input input-sm"
             value={p.x}
-            onChange={(e) => onShape({ kind: "polygon", points: s.points.map((q, j) => (j === i ? { ...q, x: num(e.target.value) } : q)) })}
+            onChange={(e) =>
+              onShape({
+                kind: 'polygon',
+                points: s.points.map((q, j) => (j === i ? { ...q, x: num(e.target.value) } : q)),
+              })
+            }
           />
           <input
             type="number"
             className="input input-sm"
             value={p.y}
-            onChange={(e) => onShape({ kind: "polygon", points: s.points.map((q, j) => (j === i ? { ...q, y: num(e.target.value) } : q)) })}
+            onChange={(e) =>
+              onShape({
+                kind: 'polygon',
+                points: s.points.map((q, j) => (j === i ? { ...q, y: num(e.target.value) } : q)),
+              })
+            }
           />
           {s.points.length > 3 && (
             <button
               className="btn btn-sm danger"
               title="Remove point"
-              onClick={() => onShape({ kind: "polygon", points: s.points.filter((_, j) => j !== i) })}
+              onClick={() =>
+                onShape({ kind: 'polygon', points: s.points.filter((_, j) => j !== i) })
+              }
             >
               <Icon name="close" size={10} />
             </button>

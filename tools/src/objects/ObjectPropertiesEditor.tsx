@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Icon } from "../components/Icon";
+import React, { useState } from 'react';
+import { Icon } from '../components/Icon';
 
 /**
  * Key/value property list editor for a game object — the single source of
@@ -15,11 +15,10 @@ export function ObjectPropertiesEditor({
   properties: Record<string, string>;
   onChange: (properties: Record<string, string>) => void;
 }) {
-  const [newKey, setNewKey] = useState("");
-  const [newVal, setNewVal] = useState("");
+  const [newKey, setNewKey] = useState('');
+  const [newVal, setNewVal] = useState('');
 
-  const set = (key: string, value: string) =>
-    onChange({ ...properties, [key]: value });
+  const set = (key: string, value: string) => onChange({ ...properties, [key]: value });
 
   const remove = (key: string) => {
     const next = { ...properties };
@@ -29,17 +28,19 @@ export function ObjectPropertiesEditor({
 
   const add = () => {
     const key = newKey.trim();
-    if (!key) return;
+    if (!key) {return;}
     set(key, newVal);
-    setNewKey("");
-    setNewVal("");
+    setNewKey('');
+    setNewVal('');
   };
 
   return (
     <div className="col gap-sm">
       {Object.entries(properties).map(([key, val]) => (
         <div key={key} className="field-row">
-          <span className="field-label" style={{ minWidth: 70 }}>{key}:</span>
+          <span className="field-label" style={{ minWidth: 70 }}>
+            {key}:
+          </span>
           <input
             type="text"
             className="input input-full"
@@ -49,7 +50,7 @@ export function ObjectPropertiesEditor({
           <button
             className="btn btn-sm danger"
             title="Remove property"
-            style={{ padding: "0 3px", minHeight: 14 }}
+            style={{ padding: '0 3px', minHeight: 14 }}
             onClick={() => remove(key)}
           >
             <Icon name="close" size={11} />
@@ -57,9 +58,9 @@ export function ObjectPropertiesEditor({
         </div>
       ))}
       {Object.keys(properties).length === 0 && (
-        <div className="text-xs text-dim" style={{ padding: "0 4px" }}>
-          No properties yet. Game code reads these at runtime — e.g. a
-          "dialogId" key can point at a message from the Dialog tab.
+        <div className="text-xs text-dim" style={{ padding: '0 4px' }}>
+          No properties yet. Game code reads these at runtime — e.g. a "dialogId" key can point at a
+          message from the Dialog tab.
         </div>
       )}
       <div className="field-row mt-4">
@@ -69,7 +70,7 @@ export function ObjectPropertiesEditor({
           placeholder="key"
           value={newKey}
           onChange={(e) => setNewKey(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
+          onKeyDown={(e) => e.key === 'Enter' && add()}
         />
         <input
           type="text"
@@ -77,7 +78,7 @@ export function ObjectPropertiesEditor({
           placeholder="value"
           value={newVal}
           onChange={(e) => setNewVal(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
+          onKeyDown={(e) => e.key === 'Enter' && add()}
         />
         <button className="btn btn-sm" disabled={!newKey.trim()} onClick={add}>
           +

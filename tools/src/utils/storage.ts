@@ -1,7 +1,7 @@
-import type { AppState } from "../types";
+import type { AppState } from '../types';
 
-const STATE_KEY = "gamefoo-tools-state";
-const PROJECT_ID_KEY = "gamefoo-tools-project-id";
+const STATE_KEY = 'gamefoo-tools-state';
+const PROJECT_ID_KEY = 'gamefoo-tools-project-id';
 
 // ── LocalStorage ──────────────────────────────────────────
 
@@ -10,15 +10,15 @@ export function saveStateToLocal(state: AppState): void {
     // The undo `history` is ephemeral session state — persisting it bloats the
     // payload ~100× (and blows the localStorage quota). Never store it.
     localStorage.setItem(STATE_KEY, JSON.stringify({ ...state, history: [] }));
-  } catch (e) {
-    console.warn("localStorage save failed:", e);
+  } catch (error) {
+    console.warn('localStorage save failed:', error);
   }
 }
 
 export function loadStateFromLocal(): AppState | null {
   try {
     const raw = localStorage.getItem(STATE_KEY);
-    if (!raw) return null;
+    if (!raw) {return null;}
     return JSON.parse(raw) as AppState;
   } catch {
     return null;
@@ -31,8 +31,8 @@ export function clearLocalState(): void {
 }
 
 export function saveProjectId(id: string | null): void {
-  if (id) localStorage.setItem(PROJECT_ID_KEY, id);
-  else localStorage.removeItem(PROJECT_ID_KEY);
+  if (id) {localStorage.setItem(PROJECT_ID_KEY, id);}
+  else {localStorage.removeItem(PROJECT_ID_KEY);}
 }
 
 export function getProjectId(): string | null {
@@ -41,13 +41,11 @@ export function getProjectId(): string | null {
 
 // ── Server API ────────────────────────────────────────────
 
-export async function uploadImage(
-  file: File,
-): Promise<{ path: string; name: string }> {
+export async function uploadImage(file: File): Promise<{ path: string; name: string }> {
   const form = new FormData();
-  form.append("file", file);
-  const res = await fetch("/api/upload", { method: "POST", body: form });
-  if (!res.ok) throw new Error("Upload failed");
+  form.append('file', file);
+  const res = await fetch('/api/upload', { method: 'POST', body: form });
+  if (!res.ok) {throw new Error('Upload failed');}
   return res.json();
 }
 
@@ -55,10 +53,7 @@ export async function uploadImage(
  * Re-upload a base64 data URL as a real file on the server.
  * Returns the new server path, or null on failure.
  */
-export async function reuploadDataUrl(
-  dataUrl: string,
-  filename: string,
-): Promise<string | null> {
+export async function reuploadDataUrl(dataUrl: string, filename: string): Promise<string | null> {
   try {
     const res = await fetch(dataUrl);
     const blob = await res.blob();
@@ -81,44 +76,41 @@ export interface ProjectMeta {
 }
 
 export async function listProjects(): Promise<ProjectMeta[]> {
-  const res = await fetch("/api/projects");
-  if (!res.ok) return [];
+  const res = await fetch('/api/projects');
+  if (!res.ok) {return [];}
   return res.json();
 }
 
 export async function loadProject(id: string): Promise<AppState | null> {
   const res = await fetch(`/api/projects/${id}`);
-  if (!res.ok) return null;
+  if (!res.ok) {return null;}
   return res.json();
 }
 
-export async function saveProject(
-  id: string,
-  state: AppState,
-): Promise<void> {
+export async function saveProject(id: string, state: AppState): Promise<void> {
   let res: Response;
   try {
     res = await fetch(`/api/projects/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...state, history: [] }),
     });
-  } catch (e) {
+  } catch (error) {
     // fetch rejects when the API server is unreachable (proxy refused).
     throw new Error(
-      `Could not reach the API server. Is it running? Start it with "pnpm dev" (server + UI) or "pnpm start". (${e instanceof Error ? e.message : String(e)})`,
+      `Could not reach the API server. Is it running? Start it with "pnpm dev" (server + UI) or "pnpm start". (${error instanceof Error ? error.message : String(error)})`,
     );
   }
   if (!res.ok) {
-    const detail = await res.text().catch(() => "");
+    const detail = await res.text().catch(() => '');
     throw new Error(
-      `Server responded ${res.status} ${res.statusText}${detail ? `: ${detail.slice(0, 300)}` : ""}`,
+      `Server responded ${res.status} ${res.statusText}${detail ? `: ${detail.slice(0, 300)}` : ''}`,
     );
   }
 }
 
 export async function deleteProject(id: string): Promise<void> {
-  await fetch(`/api/projects/${id}`, { method: "DELETE" });
+  await fetch(`/api/projects/${id}`, { method: 'DELETE' });
 }
 
 export async function exportProjectFiles(
@@ -126,11 +118,11 @@ export async function exportProjectFiles(
   files: Record<string, unknown>,
 ): Promise<Record<string, string>> {
   const res = await fetch(`/api/projects/${id}/export`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ files }),
   });
-  if (!res.ok) throw new Error("Export failed");
+  if (!res.ok) {throw new Error('Export failed');}
   const data = await res.json();
   return data.files;
 }

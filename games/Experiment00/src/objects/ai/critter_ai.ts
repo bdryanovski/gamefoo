@@ -151,8 +151,8 @@ export abstract class CritterAI extends MapObject {
     if (!this.moving) {
       return 'Idle';
     }
-    if (this.facing === 'up') return 'Up';
-    if (this.facing === 'down') return 'Down';
+    if (this.facing === 'up') {return 'Up';}
+    if (this.facing === 'down') {return 'Down';}
     return this.facing === 'left' ? 'Left' : 'Right';
   }
 }

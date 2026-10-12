@@ -27,7 +27,9 @@ const server = app.listen(port, '0.0.0.0', () => {
 
 server.on('error', (err: NodeJS.ErrnoException) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`✖ Port ${port} is already in use — stop the other process, or run PORT=<port> pnpm start`);
+    console.error(
+      `✖ Port ${port} is already in use — stop the other process, or run PORT=<port> pnpm start`,
+    );
     process.exit(1);
   }
   console.error(err);

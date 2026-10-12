@@ -7,7 +7,7 @@
  * fork independence, the MemoryBackend and LocalStorageBackend adapters
  * (hydrate/autoSave/corrupt-value), and prefixed scopes.
  */
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vite-plus/test';
 import { LocalStorageBackend } from '../src/core/state/local_storage_backend';
 import { MemoryBackend } from '../src/core/state/memory_backend';
 import type { StorageLike } from '../src/core/state/storage';
@@ -15,7 +15,9 @@ import { StateStore } from '../src/core/state/state_store';
 import type { StateChange, StateData } from '../src/core/state/types';
 
 /** A Map-backed StorageLike for exercising LocalStorageBackend in Node. */
-function fakeStorage(seed: Record<string, string> = {}): StorageLike & { map: Map<string, string> } {
+function fakeStorage(
+  seed: Record<string, string> = {},
+): StorageLike & { map: Map<string, string> } {
   const map = new Map<string, string>(Object.entries(seed));
   return {
     map,
@@ -259,7 +261,9 @@ describe('StateStore — persistence', () => {
     const backend = new LocalStorageBackend('save:slot1', storage);
     const store = new StateStore({ backend, autoSave: true });
     store.set('doors.gate1.open', true);
-    expect(JSON.parse(storage.map.get('save:slot1')!)).toEqual({ doors: { gate1: { open: true } } });
+    expect(JSON.parse(storage.map.get('save:slot1')!)).toEqual({
+      doors: { gate1: { open: true } },
+    });
     store.clearPersisted();
     expect(storage.map.has('save:slot1')).toBe(false);
   });

@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback } from "react";
-import type { AppState } from "../types";
-import { exportDialogs, downloadDialogsExport } from "./dialogExport";
+import React, { useMemo, useCallback } from 'react';
+import type { AppState } from '../types';
+import { exportDialogs, downloadDialogsExport } from './dialogExport';
 
 interface Props {
   state: AppState;
@@ -23,8 +23,8 @@ export function DialogExportPanel({ state }: Props) {
       <div className="section-title">Export dialogs</div>
       <div className="text-dim text-xs">
         id-keyed JSON: each tree exposes a <code>root</code> message and a flat
-        <code> messages</code> table. Options link by message id; a null target
-        ends the dialog. <code>meta</code> is your key/value data per message.
+        <code> messages</code> table. Options link by message id; a null target ends the dialog.{' '}
+        <code>meta</code> is your key/value data per message.
       </div>
       <div className="row gap-md text-xs text-dim">
         <span>{treeCount} trees</span>

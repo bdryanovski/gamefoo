@@ -4,7 +4,7 @@
  * against the screen collision. Without a nearby player it wanders (and never
  * reports fleeing).
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { Rat } from '../games/Experiment00/src/objects/rat';
 import CollisionMap from '../src/core/map/collision_map';
 import type AssetManager from '../src/core/map/asset_manager';
@@ -49,7 +49,7 @@ function ratDef(): GameObjectDefinition {
 /** A collision world whose whole floor is walkable and has no solids. */
 function openFloor(): CollisionMap {
   const map = new CollisionMap(20, 16, 16);
-  for (let r = 0; r < 16; r++) for (let c = 0; c < 20; c++) map.setWalkable(c, r);
+  for (let r = 0; r < 16; r++) {for (let c = 0; c < 20; c++) map.setWalkable(c, r);}
   return map;
 }
 

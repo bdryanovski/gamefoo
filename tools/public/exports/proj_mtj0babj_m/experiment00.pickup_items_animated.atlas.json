@@ -107,42 +107,22 @@
   },
   "animations": {
     "olive": {
-      "frames": [
-        "sprite_0_0",
-        "sprite_1_0",
-        "sprite_2_0",
-        "sprite_3_0"
-      ],
+      "frames": ["sprite_0_0", "sprite_1_0", "sprite_2_0", "sprite_3_0"],
       "duration": 0.2,
       "loop": true
     },
     "key": {
-      "frames": [
-        "sprite_0_1",
-        "sprite_1_1",
-        "sprite_2_1",
-        "sprite_3_1"
-      ],
+      "frames": ["sprite_0_1", "sprite_1_1", "sprite_2_1", "sprite_3_1"],
       "duration": 0.2,
       "loop": true
     },
     "potion": {
-      "frames": [
-        "sprite_0_2",
-        "sprite_1_2",
-        "sprite_2_2",
-        "sprite_3_2"
-      ],
+      "frames": ["sprite_0_2", "sprite_1_2", "sprite_2_2", "sprite_3_2"],
       "duration": 0.2,
       "loop": true
     },
     "heart": {
-      "frames": [
-        "sprite_0_4",
-        "sprite_1_4",
-        "sprite_2_4",
-        "sprite_3_4"
-      ],
+      "frames": ["sprite_0_4", "sprite_1_4", "sprite_2_4", "sprite_3_4"],
       "duration": 0.2,
       "loop": true
     }

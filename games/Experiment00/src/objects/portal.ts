@@ -5,9 +5,9 @@ import { MapObject, type Rect, type RenderContext, type ScopedState } from '../.
  * malformed. Whitespace around each number is tolerated.
  */
 function parseCoord(raw: string | undefined): { x: number; y: number } | null {
-  if (!raw) return null;
+  if (!raw) {return null;}
   const parts = raw.split(',');
-  if (parts.length !== 2) return null;
+  if (parts.length !== 2) {return null;}
   const x = Number(parts[0]!.trim());
   const y = Number(parts[1]!.trim());
   return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
@@ -271,7 +271,7 @@ export class Portal extends MapObject {
         } else {
           // Clockwise angle from twelve o'clock, 0..2π.
           let rel = Math.atan2(oy, ox) - twelve;
-          if (rel < 0) rel += Math.PI * 2;
+          if (rel < 0) {rel += Math.PI * 2;}
           color = rel <= sweep ? '#ffd66e' : '#2a2a3a';
         }
         ctx.fillRect(cx + gx, cy + gy, cell, cell, color);

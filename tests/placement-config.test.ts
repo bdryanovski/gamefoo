@@ -5,7 +5,7 @@
  * over the object def's `properties` (the placement wins). This is how one
  * prefab (e.g. a `portal`) drives many differently-configured instances.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import type AssetManager from '../src/core/map/asset_manager';
 import MapObject from '../src/core/map/map_object';
 import MapObjectRegistry from '../src/core/map/map_object_registry';

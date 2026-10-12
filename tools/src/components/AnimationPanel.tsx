@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
-import type { AppState, AppAction, AnimationDef, SpriteRegion } from "../types";
-import { uid } from "../utils/uid";
-import { Icon } from "./Icon";
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import type { AppState, AppAction, AnimationDef, SpriteRegion } from '../types';
+import { uid } from '../utils/uid';
+import { Icon } from './Icon';
 
 interface Props {
   state: AppState;
@@ -28,27 +28,33 @@ function FrameThumb({
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!canvas) {return;}
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {return;}
     canvas.width = 28;
     canvas.height = 28;
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, 28, 28);
     const image = imageMap.get(sprite.imageId);
-    if (!image || !image.complete) return;
+    if (!image || !image.complete) {return;}
     const scale = Math.min(28 / sprite.width, 28 / sprite.height);
     const dw = sprite.width * scale;
     const dh = sprite.height * scale;
     ctx.drawImage(
       image,
-      sprite.x, sprite.y, sprite.width, sprite.height,
-      (28 - dw) / 2, (28 - dh) / 2, dw, dh,
+      sprite.x,
+      sprite.y,
+      sprite.width,
+      sprite.height,
+      (28 - dw) / 2,
+      (28 - dh) / 2,
+      dw,
+      dh,
     );
   }, [sprite, imageMap]);
 
   return (
-    <div className={`anim-frame-thumb ${selected ? "selected" : ""}`} onClick={onClick}>
+    <div className={`anim-frame-thumb ${selected ? 'selected' : ''}`} onClick={onClick}>
       <canvas ref={ref} width={28} height={28} />
       <span className="anim-frame-thumb__order">{index}</span>
     </div>
@@ -69,7 +75,7 @@ function AnimPreview({
   const spriteMap = new Map(sprites.map((s) => [s.id, s]));
 
   useEffect(() => {
-    if (anim.frames.length === 0 || anim.duration <= 0) return;
+    if (anim.frames.length === 0 || anim.duration <= 0) {return;}
     const interval = setInterval(() => {
       setFrameIndex((i) => (i + 1) % anim.frames.length);
     }, anim.duration * 1000);
@@ -78,9 +84,9 @@ function AnimPreview({
 
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!canvas) {return;}
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {return;}
 
     const frameId = anim.frames[frameIndex];
     const sprite = frameId ? spriteMap.get(frameId) : null;
@@ -91,7 +97,7 @@ function AnimPreview({
       return;
     }
     const image = imageMap.get(sprite.imageId);
-    if (!image || !image.complete) return;
+    if (!image || !image.complete) {return;}
 
     const maxDim = 64;
     const scale = Math.min(maxDim / sprite.width, maxDim / sprite.height, 4);
@@ -114,23 +120,23 @@ function AnimPreview({
 export function AnimationPanel({ state, dispatch, imageMap }: Props) {
   const spriteMap = new Map(state.sprites.map((s) => [s.id, s]));
   const selectedAnim = state.animations.find((a) => a.id === state.selectedAnimationId) ?? null;
-  const [editName, setEditName] = useState("");
+  const [editName, setEditName] = useState('');
 
   useEffect(() => {
-    if (selectedAnim) setEditName(selectedAnim.name);
+    if (selectedAnim) {setEditName(selectedAnim.name);}
   }, [selectedAnim?.id]);
 
   const createAnimation = useCallback(() => {
     if (state.selectedSpriteIds.length === 0) {
       const anim: AnimationDef = {
-        id: uid("anim"),
+        id: uid('anim'),
         name: `anim_${state.animations.length}`,
         frames: [],
         duration: 0.15,
         loop: true,
       };
-      dispatch({ type: "ADD_ANIMATION", animation: anim });
-      dispatch({ type: "SELECT_ANIMATION", id: anim.id });
+      dispatch({ type: 'ADD_ANIMATION', animation: anim });
+      dispatch({ type: 'SELECT_ANIMATION', id: anim.id });
       return;
     }
 
@@ -140,39 +146,39 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
       .sort((a, b) => a.order - b.order);
 
     const anim: AnimationDef = {
-      id: uid("anim"),
+      id: uid('anim'),
       name: `anim_${state.animations.length}`,
       frames: sortedSprites.map((s) => s.id),
       duration: 0.15,
       loop: true,
     };
-    dispatch({ type: "ADD_ANIMATION", animation: anim });
-    dispatch({ type: "SELECT_ANIMATION", id: anim.id });
+    dispatch({ type: 'ADD_ANIMATION', animation: anim });
+    dispatch({ type: 'SELECT_ANIMATION', id: anim.id });
   }, [state.selectedSpriteIds, state.sprites, state.animations.length, dispatch]);
 
   const addFramesToAnim = useCallback(() => {
-    if (!selectedAnim || state.selectedSpriteIds.length === 0) return;
+    if (!selectedAnim || state.selectedSpriteIds.length === 0) {return;}
     const newFrames = [...selectedAnim.frames, ...state.selectedSpriteIds];
-    dispatch({ type: "UPDATE_ANIMATION", id: selectedAnim.id, updates: { frames: newFrames } });
+    dispatch({ type: 'UPDATE_ANIMATION', id: selectedAnim.id, updates: { frames: newFrames } });
   }, [selectedAnim, state.selectedSpriteIds, dispatch]);
 
   const removeFrame = useCallback(
     (index: number) => {
-      if (!selectedAnim) return;
+      if (!selectedAnim) {return;}
       const frames = selectedAnim.frames.filter((_, i) => i !== index);
-      dispatch({ type: "UPDATE_ANIMATION", id: selectedAnim.id, updates: { frames } });
+      dispatch({ type: 'UPDATE_ANIMATION', id: selectedAnim.id, updates: { frames } });
     },
     [selectedAnim, dispatch],
   );
 
   const moveFrame = useCallback(
     (index: number, dir: -1 | 1) => {
-      if (!selectedAnim) return;
+      if (!selectedAnim) {return;}
       const frames = [...selectedAnim.frames];
       const newIdx = index + dir;
-      if (newIdx < 0 || newIdx >= frames.length) return;
+      if (newIdx < 0 || newIdx >= frames.length) {return;}
       [frames[index], frames[newIdx]] = [frames[newIdx]!, frames[index]!];
-      dispatch({ type: "UPDATE_ANIMATION", id: selectedAnim.id, updates: { frames } });
+      dispatch({ type: 'UPDATE_ANIMATION', id: selectedAnim.id, updates: { frames } });
     },
     [selectedAnim, dispatch],
   );
@@ -203,12 +209,12 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
           {state.animations.map((a) => (
             <div
               key={a.id}
-              className={`anim-item ${state.selectedAnimationId === a.id ? "selected" : ""}`}
-              onClick={() => dispatch({ type: "SELECT_ANIMATION", id: a.id })}
+              className={`anim-item ${state.selectedAnimationId === a.id ? 'selected' : ''}`}
+              onClick={() => dispatch({ type: 'SELECT_ANIMATION', id: a.id })}
             >
               <span className="anim-item__name">{a.name}</span>
               <span className="anim-item__info">
-                {a.frames.length}f · {a.duration}s · {a.loop ? "loop" : "once"}
+                {a.frames.length}f · {a.duration}s · {a.loop ? 'loop' : 'once'}
               </span>
             </div>
           ))}
@@ -222,7 +228,7 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
             <span>Edit: {selectedAnim.name}</span>
             <button
               className="btn btn-sm danger"
-              onClick={() => dispatch({ type: "DELETE_ANIMATION", id: selectedAnim.id })}
+              onClick={() => dispatch({ type: 'DELETE_ANIMATION', id: selectedAnim.id })}
             >
               Del
             </button>
@@ -236,7 +242,11 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               onBlur={() =>
-                dispatch({ type: "UPDATE_ANIMATION", id: selectedAnim.id, updates: { name: editName } })
+                dispatch({
+                  type: 'UPDATE_ANIMATION',
+                  id: selectedAnim.id,
+                  updates: { name: editName },
+                })
               }
             />
           </div>
@@ -250,7 +260,7 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
               min={0.01}
               onChange={(e) =>
                 dispatch({
-                  type: "UPDATE_ANIMATION",
+                  type: 'UPDATE_ANIMATION',
                   id: selectedAnim.id,
                   updates: { duration: +e.target.value || 0.1 },
                 })
@@ -265,7 +275,7 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
                 checked={selectedAnim.loop}
                 onChange={(e) =>
                   dispatch({
-                    type: "UPDATE_ANIMATION",
+                    type: 'UPDATE_ANIMATION',
                     id: selectedAnim.id,
                     updates: { loop: e.target.checked },
                   })
@@ -291,9 +301,9 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
             <div className="anim-frames mt-4">
               {selectedAnim.frames.map((fid, i) => {
                 const sprite = spriteMap.get(fid);
-                if (!sprite) return null;
+                if (!sprite) {return null;}
                 return (
-                  <div key={`${fid}-${i}`} style={{ position: "relative" }}>
+                  <div key={`${fid}-${i}`} style={{ position: 'relative' }}>
                     <FrameThumb
                       sprite={sprite}
                       imageMap={imageMap}
@@ -301,19 +311,19 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
                       selected={false}
                       onClick={() => {}}
                     />
-                    <div className="row gap-sm" style={{ justifyContent: "center" }}>
+                    <div className="row gap-sm" style={{ justifyContent: 'center' }}>
                       <button
                         className="btn btn-sm"
                         onClick={() => moveFrame(i, -1)}
                         disabled={i === 0}
-                        style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
+                        style={{ padding: '0 2px', minHeight: 14, fontSize: 8 }}
                       >
                         <Icon name="prev" size={11} />
                       </button>
                       <button
                         className="btn btn-sm danger"
                         onClick={() => removeFrame(i)}
-                        style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
+                        style={{ padding: '0 2px', minHeight: 14, fontSize: 8 }}
                       >
                         <Icon name="close" size={11} />
                       </button>
@@ -321,7 +331,7 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
                         className="btn btn-sm"
                         onClick={() => moveFrame(i, 1)}
                         disabled={i === selectedAnim.frames.length - 1}
-                        style={{ padding: "0 2px", minHeight: 14, fontSize: 8 }}
+                        style={{ padding: '0 2px', minHeight: 14, fontSize: 8 }}
                       >
                         <Icon name="next" size={11} />
                       </button>
@@ -336,10 +346,10 @@ export function AnimationPanel({ state, dispatch, imageMap }: Props) {
           <div className="mt-4">
             <div className="section-title">Preview</div>
             <AnimPreview anim={selectedAnim} sprites={state.sprites} imageMap={imageMap} />
-            <div className="text-xs text-dim mt-4" style={{ textAlign: "center" }}>
+            <div className="text-xs text-dim mt-4" style={{ textAlign: 'center' }}>
               {selectedAnim.frames.length > 0
                 ? `${selectedAnim.frames.length} frames @ ${selectedAnim.duration}s = ${(selectedAnim.frames.length * selectedAnim.duration).toFixed(2)}s total`
-                : "No frames"}
+                : 'No frames'}
             </div>
           </div>
         </div>

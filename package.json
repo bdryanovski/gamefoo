@@ -31,48 +31,32 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "pnpm vite web_demos --config web_demos/vite.config.ts",
     "build": "rm -rf dist && pnpm tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "lint": "oxlint src",
-    "lint:fix": "oxlint --fix src",
-    "format": "oxfmt src",
-    "format:check": "oxfmt --check src",
+    "lint": "vp lint src",
+    "lint:fix": "vp lint --fix src",
+    "format": "vp fmt src",
+    "format:check": "vp fmt --check src",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",
     "check:staged": "pnpm lint-staged",
     "prepublishOnly": "pnpm run check && pnpm run build",
     "prepare": "husky",
-    "docs:generate": "typedoc && pnpm tsx scripts/fix-api-frontmatter.ts && pnpm tsx scripts/collect-docs.ts",
-    "docs:build": "pnpm run docs:generate && pnpm astro build --root ./docs",
-    "docs:collect": "pnpm tsx scripts/collect-docs.ts",
-    "docs:dev": "pnpm run docs:generate && pnpm astro dev --root ./docs",
-    "docs:preview": "pnpm astro preview --root ./docs",
-    "docs:watch": "chokidar 'src/**/*.ts' -c 'pnpm run docs:generate' --initial",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vp test run",
+    "test:watch": "vp test",
     "test:publish": "pnpm run --filter publish-test sanity"
   },
   "dependencies": {
-    "@microsoft/tsdoc": "^0.16.0",
-    "astro": "^5.18.0",
-    "chokidar-cli": "^3.0.0",
-    "tsx": "^4.21.0",
-    "typedoc": "^0.28.17",
-    "typedoc-plugin-markdown": "^4.10.0"
+    "tsx": "4.23.15"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
-    "@vitest/ui": "^3.0.0",
     "express": "^4.21.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "oxfmt": "^0.66.0",
-    "oxlint": "^1.81.0",
-    "oxlint-tsgolint": "^7.0.2001",
-    "vite": "^6.0.0",
-    "vitest": "^3.0.0"
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [

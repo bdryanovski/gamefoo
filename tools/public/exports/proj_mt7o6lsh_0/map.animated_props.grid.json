@@ -32,38 +32,22 @@
   },
   "animations": {
     "anim_0": {
-      "frames": [
-        0,
-        1,
-        2,
-        3
-      ],
+      "frames": [0, 1, 2, 3],
       "duration": 0.15,
       "loop": true
     },
     "fire": {
-      "frames": [
-        44,
-        45,
-        46,
-        47
-      ],
+      "frames": [44, 45, 46, 47],
       "duration": 0.15,
       "loop": true
     },
     "Ork": {
-      "frames": [
-        18,
-        19
-      ],
+      "frames": [18, 19],
       "duration": 0.15,
       "loop": true
     },
     "Lanter": {
-      "frames": [
-        20,
-        21
-      ],
+      "frames": [20, 21],
       "duration": 0.15,
       "loop": true
     }

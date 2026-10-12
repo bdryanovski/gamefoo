@@ -6,7 +6,7 @@
  * subsystem lifecycle — all against a fake Web Audio context (tests run
  * in Node, where `AudioContext` does not exist).
  */
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vite-plus/test';
 import { AudioSystem } from '../src/core/audio/audio_system';
 import { SoundSequence } from '../src/core/audio/sound_sequence';
 import { distanceFactor, resolvePosition } from '../src/core/audio/spatial';
@@ -784,7 +784,7 @@ describe('SoundHandle — onEnded', () => {
     const warn = spyWarnings();
     const context = new FakeAudioContext();
     const decoder = vi.fn(async (url: string) => {
-      if (url.includes('scream')) throw new Error('decode failed');
+      if (url.includes('scream')) {throw new Error('decode failed');}
       return { url } as AudioBuffer;
     });
     const system = new AudioSystem({ context: context as unknown as AudioContextLike });

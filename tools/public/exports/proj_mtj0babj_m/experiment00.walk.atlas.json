@@ -83,32 +83,17 @@
   },
   "animations": {
     "p_walk_front": {
-      "frames": [
-        "sprite_0_0",
-        "sprite_2_0",
-        "sprite_4_0",
-        "sprite_6_0"
-      ],
+      "frames": ["sprite_0_0", "sprite_2_0", "sprite_4_0", "sprite_6_0"],
       "duration": 0.15,
       "loop": true
     },
     "p_walk_right": {
-      "frames": [
-        "sprite_0_2",
-        "sprite_2_2",
-        "sprite_4_2",
-        "sprite_6_2"
-      ],
+      "frames": ["sprite_0_2", "sprite_2_2", "sprite_4_2", "sprite_6_2"],
       "duration": 0.15,
       "loop": true
     },
     "p_walk_back": {
-      "frames": [
-        "sprite_0_4",
-        "sprite_2_4",
-        "sprite_4_4",
-        "sprite_6_4"
-      ],
+      "frames": ["sprite_0_4", "sprite_2_4", "sprite_4_4", "sprite_6_4"],
       "duration": 0.15,
       "loop": true
     }

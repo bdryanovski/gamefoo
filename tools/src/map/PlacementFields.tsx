@@ -1,7 +1,7 @@
-import React from "react";
-import type { GameObjectDef } from "../types";
-import type { MapLayer, MapPlacement, TextStyle } from "./types";
-import { resolveMachineState, TEXT_FONTS } from "./types";
+import React from 'react';
+import type { GameObjectDef } from '../types';
+import type { MapLayer, MapPlacement, TextStyle } from './types';
+import { resolveMachineState, TEXT_FONTS } from './types';
 
 /**
  * Shared placement-editing field groups — the single source of truth for
@@ -25,7 +25,7 @@ export function MachineStateSelect({
       <span className="field-label">State:</span>
       <select
         className="input input-sm input-full"
-        value={stateName ?? resolveMachineState(object.machine)?.name ?? ""}
+        value={stateName ?? resolveMachineState(object.machine)?.name ?? ''}
         onChange={(e) => onState(e.target.value)}
       >
         {object.machine.states.map((s) => (
@@ -47,7 +47,7 @@ export function MachineOverrideFields({
   object,
   properties,
   onProperties,
-  title = "Properties",
+  title = 'Properties',
 }: {
   object: GameObjectDef;
   properties?: Record<string, string>;
@@ -62,7 +62,7 @@ export function MachineOverrideFields({
         {title}
       </div>
       {keys.length === 0 && (
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+        <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
           No properties on this object. Define them in the Objects tab.
         </div>
       )}
@@ -73,23 +73,23 @@ export function MachineOverrideFields({
           <div className="field-row" key={key}>
             <span
               className="field-label"
-              title={overridden ? "Overridden" : "Inherited from the object"}
+              title={overridden ? 'Overridden' : 'Inherited from the object'}
             >
-              {overridden ? "● " : ""}
+              {overridden ? '● ' : ''}
               {key}:
             </span>
             <input
               type="text"
               className="input input-sm input-full"
               value={value}
-              onChange={(e) => onProperties({ ...(properties ?? {}), [key]: e.target.value })}
+              onChange={(e) => onProperties({ ...properties, [key]: e.target.value })}
             />
             <button
               className="btn btn-sm"
               title="Reset to object default"
               disabled={!overridden}
               onClick={() => {
-                const next = { ...(properties ?? {}) };
+                const next = { ...properties };
                 delete next[key];
                 onProperties(next);
               }}
@@ -189,10 +189,10 @@ export function TextConfigFields({
       </div>
       <div className="field-row">
         <span className="field-label">Align:</span>
-        {(["left", "center", "right"] as const).map((a) => (
+        {(['left', 'center', 'right'] as const).map((a) => (
           <button
             key={a}
-            className={`btn btn-sm ${value.align === a ? "active" : ""}`}
+            className={`btn btn-sm ${value.align === a ? 'active' : ''}`}
             onClick={() => onChange({ align: a })}
           >
             {a}
@@ -205,7 +205,7 @@ export function TextConfigFields({
 
 /** Fields a placement transform edit can carry (position/level/orientation). */
 export type PlacementTransformUpdates = Partial<
-  Pick<MapPlacement, "x" | "y" | "level" | "rotation" | "flipX" | "flipY">
+  Pick<MapPlacement, 'x' | 'y' | 'level' | 'rotation' | 'flipX' | 'flipY'>
 >;
 
 /**
@@ -254,13 +254,11 @@ export function PlacementTransform({
           {layers.map((l, i) => (
             <option key={i} value={i}>
               {i}: {l.name}
-              {l.visible ? "" : " (hidden)"}
+              {l.visible ? '' : ' (hidden)'}
             </option>
           ))}
           {placement.level >= layers.length && (
-            <option value={placement.level}>
-              {placement.level}: (missing layer)
-            </option>
+            <option value={placement.level}>{placement.level}: (missing layer)</option>
           )}
         </select>
       </div>
@@ -294,18 +292,18 @@ export function PlacementTransform({
 
       <div className="field-row">
         <button
-          className={`btn btn-sm ${placement.flipX ? "active" : ""}`}
+          className={`btn btn-sm ${placement.flipX ? 'active' : ''}`}
           title="Mirror horizontally (X)"
           onClick={() => onChange({ flipX: !placement.flipX })}
         >
-          ⇄ Flip X {placement.flipX ? "ON" : ""}
+          ⇄ Flip X {placement.flipX ? 'ON' : ''}
         </button>
         <button
-          className={`btn btn-sm ${placement.flipY ? "active" : ""}`}
+          className={`btn btn-sm ${placement.flipY ? 'active' : ''}`}
           title="Mirror vertically (Y)"
           onClick={() => onChange({ flipY: !placement.flipY })}
         >
-          ⇅ Flip Y {placement.flipY ? "ON" : ""}
+          ⇅ Flip Y {placement.flipY ? 'ON' : ''}
         </button>
       </div>
 
@@ -322,7 +320,7 @@ export function PlacementTransform({
         </button>
       </div>
 
-      <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+      <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
         Shortcuts: R rotate · X flip X · Y flip Y
       </div>
     </>

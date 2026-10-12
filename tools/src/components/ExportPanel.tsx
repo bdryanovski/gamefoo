@@ -1,49 +1,58 @@
-import React, { useState, useMemo, useCallback } from "react";
-import type { AppState, AppAction } from "../types";
-import { objectMachines } from "../types";
-import { exportAtlasForImage, exportGridForImage, exportFull, exportProject, exportSprites, exportAnimations, downloadJSON, spritesOfImage } from "../utils/export";
-import { exportStateMachines } from "../statemachine/smExport";
+import React, { useState, useMemo, useCallback } from 'react';
+import type { AppState, AppAction } from '../types';
+import { objectMachines } from '../types';
+import {
+  exportAtlasForImage,
+  exportGridForImage,
+  exportFull,
+  exportProject,
+  exportSprites,
+  exportAnimations,
+  downloadJSON,
+  spritesOfImage,
+} from '../utils/export';
+import { exportStateMachines } from '../statemachine/smExport';
 
 interface Props {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
 }
 
-type ExportFormat = "sprites" | "animations" | "machines" | "atlas" | "grid" | "full" | "project";
+type ExportFormat = 'sprites' | 'animations' | 'machines' | 'atlas' | 'grid' | 'full' | 'project';
 
 const FORMAT_INFO: Record<ExportFormat, { label: string; desc: string }> = {
   sprites: {
-    label: "Sprites (simple)",
-    desc: "Name → { x, y, width, height }. Minimal — write your own wrapper.",
+    label: 'Sprites (simple)',
+    desc: 'Name → { x, y, width, height }. Minimal — write your own wrapper.',
   },
   animations: {
-    label: "Animations",
-    desc: "Animations only: ordered frame names, duration, loop.",
+    label: 'Animations',
+    desc: 'Animations only: ordered frame names, duration, loop.',
   },
   machines: {
-    label: "State Machines",
-    desc: "Machines with states (sprite/animation) + transitions with engine-side conditions.",
+    label: 'State Machines',
+    desc: 'Machines with states (sprite/animation) + transitions with engine-side conditions.',
   },
   atlas: {
-    label: "Atlas (fromAtlas)",
-    desc: "Named sprite regions + animations for the ACTIVE image. Use with Sprite.fromAtlas().",
+    label: 'Atlas (fromAtlas)',
+    desc: 'Named sprite regions + animations for the ACTIVE image. Use with Sprite.fromAtlas().',
   },
   grid: {
-    label: "Grid (fromGrid)",
-    desc: "Uniform grid config + named frame indices for the ACTIVE image. Use with Sprite.fromGrid().",
+    label: 'Grid (fromGrid)',
+    desc: 'Uniform grid config + named frame indices for the ACTIVE image. Use with Sprite.fromGrid().',
   },
   full: {
-    label: "Full Export",
-    desc: "Everything: frames, animations, objects, metadata. Comprehensive format.",
+    label: 'Full Export',
+    desc: 'Everything: frames, animations, objects, metadata. Comprehensive format.',
   },
   project: {
-    label: "Project File",
-    desc: "Save/reload project state in the editor. Not for engine consumption.",
+    label: 'Project File',
+    desc: 'Save/reload project state in the editor. Not for engine consumption.',
   },
 };
 
 export function ExportPanel({ state, dispatch }: Props) {
-  const [format, setFormat] = useState<ExportFormat>("sprites");
+  const [format, setFormat] = useState<ExportFormat>('sprites');
 
   const activeImage =
     state.images.find((i) => i.id === state.activeImageId) ??
@@ -52,49 +61,44 @@ export function ExportPanel({ state, dispatch }: Props) {
     null;
 
   const imageBase = activeImage
-    ? activeImage.name.replace(/\.[^.]+$/, "").replace(/\s+/g, "_").toLowerCase()
-    : "image";
+    ? activeImage.name
+        .replace(/\.[^.]+$/, '')
+        .replace(/\s+/g, '_')
+        .toLowerCase()
+    : 'image';
 
   const preview = useMemo(() => {
     switch (format) {
-      case "sprites":
+      case 'sprites':
         return JSON.stringify(exportSprites(state), null, 2);
-      case "animations":
+      case 'animations':
         return JSON.stringify(exportAnimations(state), null, 2);
-      case "machines":
+      case 'machines':
         return JSON.stringify(exportStateMachines(state), null, 2);
-      case "atlas":
-        return JSON.stringify(
-          activeImage ? exportAtlasForImage(state, activeImage) : {},
-          null,
-          2,
-        );
-      case "grid":
-        return JSON.stringify(
-          activeImage ? exportGridForImage(state, activeImage) : {},
-          null,
-          2,
-        );
-      case "full":
+      case 'atlas':
+        return JSON.stringify(activeImage ? exportAtlasForImage(state, activeImage) : {}, null, 2);
+      case 'grid':
+        return JSON.stringify(activeImage ? exportGridForImage(state, activeImage) : {}, null, 2);
+      case 'full':
         return JSON.stringify(exportFull(state), null, 2);
-      case "project":
+      case 'project':
         return exportProject(state);
     }
   }, [format, state, activeImage]);
 
   const handleDownload = useCallback(() => {
-    const baseName = state.projectName.replace(/\s+/g, "_").toLowerCase();
+    const baseName = state.projectName.replace(/\s+/g, '_').toLowerCase();
     switch (format) {
-      case "sprites":
+      case 'sprites':
         downloadJSON(exportSprites(state), `${baseName}.sprites.json`);
         break;
-      case "animations":
+      case 'animations':
         downloadJSON(exportAnimations(state), `${baseName}.animations.json`);
         break;
-      case "machines":
+      case 'machines':
         downloadJSON(exportStateMachines(state), `${baseName}.machines.json`);
         break;
-      case "atlas":
+      case 'atlas':
         if (activeImage) {
           downloadJSON(
             exportAtlasForImage(state, activeImage),
@@ -102,7 +106,7 @@ export function ExportPanel({ state, dispatch }: Props) {
           );
         }
         break;
-      case "grid":
+      case 'grid':
         if (activeImage) {
           downloadJSON(
             exportGridForImage(state, activeImage),
@@ -110,10 +114,10 @@ export function ExportPanel({ state, dispatch }: Props) {
           );
         }
         break;
-      case "full":
+      case 'full':
         downloadJSON(exportFull(state), `${baseName}.full.json`);
         break;
-      case "project":
+      case 'project':
         downloadJSON(JSON.parse(exportProject(state)), `${baseName}.project.json`);
         break;
     }
@@ -134,7 +138,7 @@ export function ExportPanel({ state, dispatch }: Props) {
             type="text"
             className="input input-full"
             value={state.projectName}
-            onChange={(e) => dispatch({ type: "SET_PROJECT_NAME", name: e.target.value })}
+            onChange={(e) => dispatch({ type: 'SET_PROJECT_NAME', name: e.target.value })}
           />
         </div>
       </div>
@@ -150,7 +154,7 @@ export function ExportPanel({ state, dispatch }: Props) {
                 name="format"
                 checked={format === f}
                 onChange={() => setFormat(f)}
-                style={{ appearance: "auto", width: 13, height: 13 }}
+                style={{ appearance: 'auto', width: 13, height: 13 }}
               />
               <div>
                 <div className="text-sm">{FORMAT_INFO[f].label}</div>
@@ -168,15 +172,12 @@ export function ExportPanel({ state, dispatch }: Props) {
           <div>Sprites: {state.sprites.length}</div>
           <div>Animations: {state.animations.length}</div>
           <div>Objects: {state.objects.length}</div>
-          <div>
-            State Machines: {objectMachines(state.objects).length}
-          </div>
+          <div>State Machines: {objectMachines(state.objects).length}</div>
           <div>Images: {state.images.length}</div>
           {activeImage && (
             <div>
-              Active image: {activeImage.name} ({activeImage.width}×
-              {activeImage.height}) — {spritesOfImage(state, activeImage.id).length}{" "}
-              sprites
+              Active image: {activeImage.name} ({activeImage.width}×{activeImage.height}) —{' '}
+              {spritesOfImage(state, activeImage.id).length} sprites
             </div>
           )}
         </div>

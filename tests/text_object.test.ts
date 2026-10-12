@@ -4,7 +4,7 @@
  * style, and the object is reachable + mutable via `Screen.objectsByType` so it
  * can be animated at runtime.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import TextObject from '../src/core/map/text_object';
 import Screen from '../src/core/map/screen';
 import AssetManager from '../src/core/map/asset_manager';
@@ -24,7 +24,12 @@ function fakeCtx() {
     fillText(text: string, x: number, y: number) {
       calls.push({ text, x, y });
       // capture the state at draw time
-      raw._at = { font: raw.font, align: raw.textAlign, alpha: raw.globalAlpha, fill: raw.fillStyle };
+      raw._at = {
+        font: raw.font,
+        align: raw.textAlign,
+        alpha: raw.globalAlpha,
+        fill: raw.fillStyle,
+      };
     },
     _at: {} as Record<string, unknown>,
   };
@@ -39,7 +44,14 @@ function context(over: Partial<MapObjectContext> = {}): MapObjectContext {
   return {
     assets: new AssetManager(),
     machine: { id: '', name: 'text', states: [], transitions: [], initialStateId: null },
-    def: { id: '', name: 'Text', sprites: [], animations: [], properties: {}, machine: { id: '', name: 'text', states: [], transitions: [], initialStateId: null } },
+    def: {
+      id: '',
+      name: 'Text',
+      sprites: [],
+      animations: [],
+      properties: {},
+      machine: { id: '', name: 'text', states: [], transitions: [], initialStateId: null },
+    },
     properties: {},
     x: 10,
     y: 20,
@@ -52,7 +64,9 @@ function context(over: Partial<MapObjectContext> = {}): MapObjectContext {
 describe('TextObject', () => {
   test('applies authored style and draws the string', () => {
     const obj = new TextObject(
-      context({ text: { text: 'HELLO', font: 'Georgia', fontSize: 24, color: '#ff0000', align: 'center' } }),
+      context({
+        text: { text: 'HELLO', font: 'Georgia', fontSize: 24, color: '#ff0000', align: 'center' },
+      }),
     );
     const { ctx, raw, calls } = fakeCtx();
     obj.render(ctx);
@@ -119,6 +133,14 @@ describe('Screen builds text placements', () => {
     const texts = screen.objectsByType(TextObject);
     expect(texts).toHaveLength(1);
     const t = texts[0]!;
-    expect(t).toMatchObject({ id: 'txt1', text: 'Sign', fontSize: 8, color: '#0af', x: 32, y: 48, level: 2 });
+    expect(t).toMatchObject({
+      id: 'txt1',
+      text: 'Sign',
+      fontSize: 8,
+      color: '#0af',
+      x: 32,
+      y: 48,
+      level: 2,
+    });
   });
 });

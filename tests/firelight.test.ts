@@ -3,7 +3,7 @@
  * object's machine (initial state = lit) and its collider from the object
  * definition — no config file. Toggling flips the state and the solid box.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { Campfire } from '../games/Experiment00/src/objects/campfire';
 import { Torch } from '../games/Experiment00/src/objects/torch';
 import type AssetManager from '../src/core/map/asset_manager';

@@ -52,9 +52,7 @@
   "collisions": [],
   "states": {
     "init": {
-      "layers": [
-        "base"
-      ],
+      "layers": ["base"],
       "collisionsOff": []
     }
   },

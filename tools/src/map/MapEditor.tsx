@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
-import type { AppState, AppAction } from "../types";
-import { objectMachines } from "../types";
-import type { MapAction, MapToolType } from "./types";
-import { findPlacement } from "./types";
-import { MapCanvas } from "./MapCanvas";
-import { MapPalettePanel } from "./MapPalettePanel";
-import { MapExportPanel } from "./MapExportPanel";
-import { PlacementInspector } from "./PlacementInspector";
-import type { DialogAction } from "../dialog/types";
-import { Icon, type IconName, ICON } from "../components/Icon";
-import { Tooltip } from "../components/Tooltip";
-import { EditorHeader } from "../components/EditorHeader";
+import React, { useState, useEffect, useCallback } from 'react';
+import type { AppState, AppAction } from '../types';
+import { objectMachines } from '../types';
+import type { MapAction, MapToolType } from './types';
+import { findPlacement } from './types';
+import { MapCanvas } from './MapCanvas';
+import { MapPalettePanel } from './MapPalettePanel';
+import { MapExportPanel } from './MapExportPanel';
+import { PlacementInspector } from './PlacementInspector';
+import type { DialogAction } from '../dialog/types';
+import { Icon, type IconName, ICON } from '../components/Icon';
+import { Tooltip } from '../components/Tooltip';
+import { EditorHeader } from '../components/EditorHeader';
 
 interface Props {
   state: AppState;
@@ -20,35 +20,89 @@ interface Props {
   imageMap: Map<string, HTMLImageElement>;
   projectId: string | null;
   saving: boolean;
-  onSave: (mode?: "save" | "quick") => void;
+  onSave: (mode?: 'save' | 'quick') => void;
   onOpenProjects: () => void;
 }
 
-const MAP_TOOLS: { key: MapToolType; icon: IconName; label: string; shortcut: string; tip: string }[] = [
-  { key: "select", icon: "tool-select", label: "Select", shortcut: "C", tip: "Click a placed object to edit its placement, orientation, state & properties" },
-  { key: "paint", icon: "tool-paint", label: "Paint", shortcut: "P", tip: "Place the selected sprite" },
-  { key: "stream", icon: "tool-stream", label: "Stream", shortcut: "S", tip: "Toggle continuous painting; paints wherever the mouse moves" },
-  { key: "erase", icon: "tool-erase", label: "Erase", shortcut: "E", tip: "Remove placements" },
-  { key: "fill", icon: "tool-fill", label: "Fill", shortcut: "F", tip: "Set the screen default tile" },
-  { key: "pick", icon: "tool-pick", label: "Pick", shortcut: "I", tip: "Sample a sprite/object into the paint brush" },
-  { key: "move", icon: "tool-move", label: "Move", shortcut: "M", tip: "Drag a placement to reposition it" },
-  { key: "text", icon: "draw", label: "Text", shortcut: "T", tip: "Drop a free-positioned text label (not grid-snapped)" },
-  { key: "pan", icon: "tool-pan", label: "Pan", shortcut: "H", tip: "Drag to move the view (or hold Space)" },
+const MAP_TOOLS: Array<{
+  key: MapToolType;
+  icon: IconName;
+  label: string;
+  shortcut: string;
+  tip: string;
+}> = [
+  {
+    key: 'select',
+    icon: 'tool-select',
+    label: 'Select',
+    shortcut: 'C',
+    tip: 'Click a placed object to edit its placement, orientation, state & properties',
+  },
+  {
+    key: 'paint',
+    icon: 'tool-paint',
+    label: 'Paint',
+    shortcut: 'P',
+    tip: 'Place the selected sprite',
+  },
+  {
+    key: 'stream',
+    icon: 'tool-stream',
+    label: 'Stream',
+    shortcut: 'S',
+    tip: 'Toggle continuous painting; paints wherever the mouse moves',
+  },
+  { key: 'erase', icon: 'tool-erase', label: 'Erase', shortcut: 'E', tip: 'Remove placements' },
+  {
+    key: 'fill',
+    icon: 'tool-fill',
+    label: 'Fill',
+    shortcut: 'F',
+    tip: 'Set the screen default tile',
+  },
+  {
+    key: 'pick',
+    icon: 'tool-pick',
+    label: 'Pick',
+    shortcut: 'I',
+    tip: 'Sample a sprite/object into the paint brush',
+  },
+  {
+    key: 'move',
+    icon: 'tool-move',
+    label: 'Move',
+    shortcut: 'M',
+    tip: 'Drag a placement to reposition it',
+  },
+  {
+    key: 'text',
+    icon: 'draw',
+    label: 'Text',
+    shortcut: 'T',
+    tip: 'Drop a free-positioned text label (not grid-snapped)',
+  },
+  {
+    key: 'pan',
+    icon: 'tool-pan',
+    label: 'Pan',
+    shortcut: 'H',
+    tip: 'Drag to move the view (or hold Space)',
+  },
 ];
 
 const KEY_MAP: Record<string, MapToolType> = {
-  p: "paint",
-  s: "stream",
-  e: "erase",
-  f: "fill",
-  i: "pick",
-  m: "move",
-  c: "select",
-  h: "pan",
-  t: "text",
+  p: 'paint',
+  s: 'stream',
+  e: 'erase',
+  f: 'fill',
+  i: 'pick',
+  m: 'move',
+  c: 'select',
+  h: 'pan',
+  t: 'text',
 };
 
-type MapTabType = "palette" | "export";
+type MapTabType = 'palette' | 'export';
 
 export function MapEditor({
   state,
@@ -62,7 +116,7 @@ export function MapEditor({
   onOpenProjects,
 }: Props) {
   const map = state.map;
-  const [tab, setTab] = useState<MapTabType>("palette");
+  const [tab, setTab] = useState<MapTabType>('palette');
   const [status, setStatus] = useState<{
     screenKey: string | null;
     block: { col: number; row: number } | null;
@@ -74,63 +128,63 @@ export function MapEditor({
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null;
-      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {return;}
       const k = e.key.toLowerCase();
       const tool = KEY_MAP[k];
       if (tool) {
-        mapDispatch({ type: "SET_TOOL", tool });
+        mapDispatch({ type: 'SET_TOOL', tool });
         return;
       }
-      if (k === "[") {
-        mapDispatch({ type: "SET_ACTIVE_LEVEL", level: state.map.activeLevel - 1 });
+      if (k === '[') {
+        mapDispatch({ type: 'SET_ACTIVE_LEVEL', level: state.map.activeLevel - 1 });
         return;
       }
-      if (k === "]") {
-        mapDispatch({ type: "SET_ACTIVE_LEVEL", level: state.map.activeLevel + 1 });
+      if (k === ']') {
+        mapDispatch({ type: 'SET_ACTIVE_LEVEL', level: state.map.activeLevel + 1 });
         return;
       }
       // Placement transforms when one is selected.
       const sel = findPlacement(state.map, state.map.selectedPlacementId);
       const pid = sel?.placement.id ?? null;
-      if (!pid || (k !== "r" && k !== "x" && k !== "y")) return;
+      if (!pid || (k !== 'r' && k !== 'x' && k !== 'y')) {return;}
       const p = sel!.placement;
-      if (k === "r") {
+      if (k === 'r') {
         mapDispatch({
-          type: "UPDATE_PLACEMENT",
+          type: 'UPDATE_PLACEMENT',
           screenKey: sel!.screenKey,
           id: pid,
           updates: { rotation: ((p.rotation ?? 0) + 90) % 360 },
         });
-      } else if (k === "x") {
+      } else if (k === 'x') {
         mapDispatch({
-          type: "UPDATE_PLACEMENT",
+          type: 'UPDATE_PLACEMENT',
           screenKey: sel!.screenKey,
           id: pid,
           updates: { flipX: !p.flipX },
         });
       } else {
         mapDispatch({
-          type: "UPDATE_PLACEMENT",
+          type: 'UPDATE_PLACEMENT',
           screenKey: sel!.screenKey,
           id: pid,
           updates: { flipY: !p.flipY },
         });
       }
     };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
   }, [mapDispatch, state.map]);
 
   const sel = map.selected;
   const selectedSpriteName = !sel
-    ? "—"
-    : sel.kind === "sprite"
-      ? (state.sprites.find((s) => s.id === sel.id)?.name ?? "?")
-      : sel.kind === "animation"
-        ? (state.animations.find((a) => a.id === sel.id)?.name ?? "?")
-        : sel.kind === "text"
+    ? '—'
+    : sel.kind === 'sprite'
+      ? (state.sprites.find((s) => s.id === sel.id)?.name ?? '?')
+      : sel.kind === 'animation'
+        ? (state.animations.find((a) => a.id === sel.id)?.name ?? '?')
+        : sel.kind === 'text'
           ? `"${sel.text}"`
-          : (objectMachines(state.objects).find((m) => m.id === sel.id)?.name ?? "?");
+          : (objectMachines(state.objects).find((m) => m.id === sel.id)?.name ?? '?');
 
   const screenCount = Object.keys(map.screens).length;
 
@@ -142,7 +196,7 @@ export function MapEditor({
         projectName={state.projectName}
         unsaved={!projectId}
         undoCount={state.history.length}
-        onUndo={() => dispatch({ type: "UNDO" })}
+        onUndo={() => dispatch({ type: 'UNDO' })}
         onOpenProjects={onOpenProjects}
         onSave={onSave}
         saving={saving}
@@ -155,8 +209,8 @@ export function MapEditor({
             {MAP_TOOLS.map((t) => (
               <Tooltip key={t.key} label={t.tip} shortcut={t.shortcut} side="right">
                 <button
-                  className={`tool-btn ${map.activeTool === t.key ? "active" : ""}`}
-                  onClick={() => mapDispatch({ type: "SET_TOOL", tool: t.key })}
+                  className={`tool-btn ${map.activeTool === t.key ? 'active' : ''}`}
+                  onClick={() => mapDispatch({ type: 'SET_TOOL', tool: t.key })}
                   aria-label={t.label}
                 >
                   <Icon name={t.icon} size={ICON.md} />
@@ -169,7 +223,7 @@ export function MapEditor({
             <Tooltip label="Zoom In" shortcut="+" side="right">
               <button
                 className="tool-btn"
-                onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom * 1.25 })}
+                onClick={() => mapDispatch({ type: 'SET_ZOOM', zoom: map.zoom * 1.25 })}
                 aria-label="Zoom in"
               >
                 <Icon name="add" size={ICON.md} />
@@ -178,7 +232,7 @@ export function MapEditor({
             <Tooltip label="Zoom Out" shortcut="-" side="right">
               <button
                 className="tool-btn"
-                onClick={() => mapDispatch({ type: "SET_ZOOM", zoom: map.zoom / 1.25 })}
+                onClick={() => mapDispatch({ type: 'SET_ZOOM', zoom: map.zoom / 1.25 })}
                 aria-label="Zoom out"
               >
                 <Icon name="subtract" size={ICON.md} />
@@ -188,8 +242,8 @@ export function MapEditor({
               <button
                 className="tool-btn"
                 onClick={() => {
-                  mapDispatch({ type: "SET_ZOOM", zoom: 0.5 });
-                  mapDispatch({ type: "SET_PAN", x: 40, y: 40 });
+                  mapDispatch({ type: 'SET_ZOOM', zoom: 0.5 });
+                  mapDispatch({ type: 'SET_PAN', x: 40, y: 40 });
                 }}
                 aria-label="Reset view"
               >
@@ -217,26 +271,26 @@ export function MapEditor({
           mapDispatch={mapDispatch}
           dialogDispatch={dialogDispatch}
           imageMap={imageMap}
-          onClose={() => mapDispatch({ type: "SELECT_PLACEMENT", id: null })}
+          onClose={() => mapDispatch({ type: 'SELECT_PLACEMENT', id: null })}
         />
 
         <div className="right-panel">
           <div className="panel-tabs">
             <div
-              className={`panel-tab ${tab === "palette" ? "active" : ""}`}
-              onClick={() => setTab("palette")}
+              className={`panel-tab ${tab === 'palette' ? 'active' : ''}`}
+              onClick={() => setTab('palette')}
             >
               Palette
             </div>
             <div
-              className={`panel-tab ${tab === "export" ? "active" : ""}`}
-              onClick={() => setTab("export")}
+              className={`panel-tab ${tab === 'export' ? 'active' : ''}`}
+              onClick={() => setTab('export')}
             >
               Export
             </div>
           </div>
           <div className="panel-content">
-            {tab === "palette" && (
+            {tab === 'palette' && (
               <MapPalettePanel
                 state={state}
                 dispatch={dispatch}
@@ -245,9 +299,7 @@ export function MapEditor({
                 imageMap={imageMap}
               />
             )}
-            {tab === "export" && (
-              <MapExportPanel state={state} projectId={projectId} />
-            )}
+            {tab === 'export' && <MapExportPanel state={state} projectId={projectId} />}
           </div>
         </div>
       </div>
@@ -255,13 +307,12 @@ export function MapEditor({
       {/* Status bar */}
       <div className="status-bar">
         <div className="status-cell flex">
-          {state.projectName} · block {map.blockSize}px · screen{" "}
-          {map.screenCols}×{map.screenRows}
+          {state.projectName} · block {map.blockSize}px · screen {map.screenCols}×{map.screenRows}
         </div>
         <div className="status-cell">Tool: {map.activeTool}</div>
         <div className="status-cell">
-          Screen: {status.screenKey ?? "—"}
-          {status.block ? ` · block ${status.block.col},${status.block.row}` : ""}
+          Screen: {status.screenKey ?? '—'}
+          {status.block ? ` · block ${status.block.col},${status.block.row}` : ''}
         </div>
         <div className="status-cell">Sprite: {selectedSpriteName}</div>
         <div className="status-cell">Zoom: {Math.round(map.zoom * 100)}%</div>

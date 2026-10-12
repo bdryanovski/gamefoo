@@ -1,14 +1,15 @@
+import type {
+  RenderContext,
+  ConsoleName,
+  ColorPalette,
+  GeneratedPalette} from '../../src/index';
 import {
   Engine,
   Entity,
   ObjectSystem,
-  RenderContext,
   WebRenderer,
   CONSOLES,
-  ConsoleName,
   listConsoles,
-  ColorPalette,
-  GeneratedPalette,
   FontBitmap,
   isGeneratedPalette,
 } from '../../src/index';
@@ -49,13 +50,7 @@ class ConsoleDemo extends Entity {
       // For generated palettes, show common colors or a sample gradient
       const colors = this.palette.commonColors || [];
       for (let i = 0; i < colors.length; i++) {
-        ctx.fillRect(
-          this.x + BOX.width * i,
-          this.y + 10,
-          BOX.width,
-          BOX.height,
-          colors[i],
-        );
+        ctx.fillRect(this.x + BOX.width * i, this.y + 10, BOX.width, BOX.height, colors[i]);
       }
       // Show total color count
       text.renderText(

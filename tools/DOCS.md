@@ -76,12 +76,12 @@ pnpm start
 
 ## Tools
 
-| Tool            | Key | Description                                      |
-|-----------------|-----|--------------------------------------------------|
-| **Select** (⇱)  | V   | Click sprites to select. Shift+click for multi.  |
-| **Grid Pick** (▦)| G   | Click grid cells to create/select sprites.       |
-| **Region** (▭)  | R   | Click-drag to draw free-form sprite rectangles.  |
-| **Pan** (✥)     | H   | Click-drag to pan the canvas. Also: middle-click.|
+| Tool              | Key | Description                                       |
+| ----------------- | --- | ------------------------------------------------- |
+| **Select** (⇱)    | V   | Click sprites to select. Shift+click for multi.   |
+| **Grid Pick** (▦) | G   | Click grid cells to create/select sprites.        |
+| **Region** (▭)    | R   | Click-drag to draw free-form sprite rectangles.   |
+| **Pan** (✥)       | H   | Click-drag to pan the canvas. Also: middle-click. |
 
 Additional toolbar buttons:
 
@@ -95,17 +95,17 @@ Additional toolbar buttons:
 
 Sprites are rectangular regions cut from the tilemap image. Each sprite has:
 
-| Property   | Type     | Description                                         |
-|------------|----------|-----------------------------------------------------|
-| `name`     | string   | Unique name (used as key in exported JSON).          |
-| `x`, `y`   | number   | Top-left position in the source image (pixels).      |
-| `width`    | number   | Width in pixels.                                     |
-| `height`   | number   | Height in pixels.                                    |
-| `anchor`   | {x, y}   | Anchor/pivot point relative to top-left of frame.    |
-| `group`    | string   | Logical group name (e.g. "hero", "enemies").         |
-| `order`    | number   | Ordering index within its group (for sorting).       |
-| `level`    | number   | Z-level / layer depth.                               |
-| `tags`     | string[] | Arbitrary tags for filtering/categorization.         |
+| Property | Type     | Description                                       |
+| -------- | -------- | ------------------------------------------------- |
+| `name`   | string   | Unique name (used as key in exported JSON).       |
+| `x`, `y` | number   | Top-left position in the source image (pixels).   |
+| `width`  | number   | Width in pixels.                                  |
+| `height` | number   | Height in pixels.                                 |
+| `anchor` | {x, y}   | Anchor/pivot point relative to top-left of frame. |
+| `group`  | string   | Logical group name (e.g. "hero", "enemies").      |
+| `order`  | number   | Ordering index within its group (for sorting).    |
+| `level`  | number   | Z-level / layer depth.                            |
+| `tags`   | string[] | Arbitrary tags for filtering/categorization.      |
 
 ### Creating Sprites
 
@@ -133,12 +133,12 @@ for batch operations and for creating animations from multiple frames.
 
 Animations are ordered sequences of sprite frames with timing info.
 
-| Property   | Type      | Description                                         |
-|------------|-----------|-----------------------------------------------------|
-| `name`     | string    | Animation name (e.g. "idle", "walk_right").          |
-| `frames`   | string[]  | Ordered list of sprite IDs forming the animation.    |
-| `duration`  | number    | Seconds each frame is displayed before advancing.    |
-| `loop`     | boolean   | Whether the animation loops after the last frame.    |
+| Property   | Type     | Description                                       |
+| ---------- | -------- | ------------------------------------------------- |
+| `name`     | string   | Animation name (e.g. "idle", "walk_right").       |
+| `frames`   | string[] | Ordered list of sprite IDs forming the animation. |
+| `duration` | number   | Seconds each frame is displayed before advancing. |
+| `loop`     | boolean  | Whether the animation loops after the last frame. |
 
 ### Creating Animations
 
@@ -163,12 +163,12 @@ Game Objects group related sprites and animations into logical entities.
 For example, a "hero" object might contain idle, walk, and attack sprites
 along with their corresponding animations.
 
-| Property     | Type                    | Description                      |
-|--------------|-------------------------|----------------------------------|
-| `name`       | string                  | Object name (e.g. "hero").       |
-| `sprites`    | string[]                | Associated sprite IDs.           |
-| `animations` | string[]                | Associated animation IDs.        |
-| `properties` | Record<string, string>  | Custom key-value properties.     |
+| Property     | Type                   | Description                  |
+| ------------ | ---------------------- | ---------------------------- |
+| `name`       | string                 | Object name (e.g. "hero").   |
+| `sprites`    | string[]               | Associated sprite IDs.       |
+| `animations` | string[]               | Associated animation IDs.    |
+| `properties` | Record<string, string> | Custom key-value properties. |
 
 Custom properties are freeform and can store things like `speed`,
 `health`, `collider_type`, etc.
@@ -179,11 +179,11 @@ Custom properties are freeform and can store things like `speed`,
 
 Configure how the grid overlay divides the tilemap:
 
-| Setting      | Description                                          |
-|--------------|------------------------------------------------------|
-| **Cell W/H** | Width and height of each grid cell in pixels.        |
-| **Offset X/Y**| Margin before the first column/row.                |
-| **Spacing X/Y**| Gap between cells (for spritesheets with padding). |
+| Setting         | Description                                        |
+| --------------- | -------------------------------------------------- |
+| **Cell W/H**    | Width and height of each grid cell in pixels.      |
+| **Offset X/Y**  | Margin before the first column/row.                |
+| **Spacing X/Y** | Gap between cells (for spritesheets with padding). |
 
 These settings directly map to the engine's `GridConfig` interface,
 so the Grid export format can be consumed by `Sprite.fromGrid()` without
@@ -209,12 +209,12 @@ The editor automatically preserves your work across page refreshes.
 
 ### What gets persisted
 
-| Data               | Where                         | When                      |
-|--------------------|-------------------------------|---------------------------|
-| Full editor state  | localStorage                  | Every change (debounced)  |
-| Uploaded images    | `public/uploads/`             | On file upload            |
-| Saved projects     | `public/projects/{id}.json`   | On manual "Save"          |
-| Export files       | `public/exports/{id}/`        | On "Save to Server"       |
+| Data              | Where                       | When                     |
+| ----------------- | --------------------------- | ------------------------ |
+| Full editor state | localStorage                | Every change (debounced) |
+| Uploaded images   | `public/uploads/`           | On file upload           |
+| Saved projects    | `public/projects/{id}.json` | On manual "Save"         |
+| Export files      | `public/exports/{id}/`      | On "Save to Server"      |
 
 ---
 
@@ -330,7 +330,11 @@ or when you want named frame access.
   },
   "animations": {
     "idle": { "frames": ["hero_idle_0", "hero_idle_1"], "duration": 0.25, "loop": true },
-    "walk": { "frames": ["hero_walk_0", "hero_walk_1", "hero_walk_2"], "duration": 0.15, "loop": true }
+    "walk": {
+      "frames": ["hero_walk_0", "hero_walk_1", "hero_walk_2"],
+      "duration": 0.15,
+      "loop": true
+    }
   }
 }
 ```
@@ -342,7 +346,7 @@ all frames share the same dimensions.
 
 ```json
 {
-  "meta": { "..." : "same as atlas" },
+  "meta": { "...": "same as atlas" },
   "grid": {
     "frameWidth": 32,
     "frameHeight": 32,
@@ -370,10 +374,10 @@ sprite metadata, and optional grid config.
 
 ```json
 {
-  "meta": { "..." : "same as atlas" },
-  "grid": { "..." : "optional, present if grid was enabled" },
-  "frames": { "..." : "same as atlas format" },
-  "animations": { "..." : "same as atlas format" },
+  "meta": { "...": "same as atlas" },
+  "grid": { "...": "optional, present if grid was enabled" },
+  "frames": { "...": "same as atlas format" },
+  "animations": { "...": "same as atlas format" },
   "objects": {
     "hero": {
       "sprites": ["hero_idle_0", "hero_walk_0"],
@@ -409,10 +413,10 @@ engine consumption.**
 ### Atlas format → `Sprite.fromAtlas()`
 
 ```typescript
-import { Asset, Sprite, SpriteRender } from "@dryanovski/gamefoo";
+import { Asset, Sprite, SpriteRender } from '@dryanovski/gamefoo';
 
 // Load the exported atlas JSON
-const response = await fetch("assets/hero.atlas.json");
+const response = await fetch('assets/hero.atlas.json');
 const atlas = await response.json();
 
 // Load the spritesheet image
@@ -424,31 +428,31 @@ const sprite = Sprite.fromAtlas(image, atlas.frames, atlas.animations);
 // Use it on an entity
 const render = new SpriteRender(entity, sprite);
 entity.attachBehaviour(render);
-render.play("idle");
+render.play('idle');
 ```
 
 ### Grid format → `Sprite.fromGrid()`
 
 ```typescript
-import { Asset, Sprite } from "@dryanovski/gamefoo";
+import { Asset, Sprite } from '@dryanovski/gamefoo';
 
-const response = await fetch("assets/tileset.grid.json");
+const response = await fetch('assets/tileset.grid.json');
 const data = await response.json();
 
 const image = await Asset.load(`assets/${data.meta.image}`);
 const sprite = Sprite.fromGrid(image, data.grid, data.animations);
 
 // Access named frames
-const grassFrameIndex = data.namedFrames["grass"];
+const grassFrameIndex = data.namedFrames['grass'];
 const rect = sprite.getFrameRect(grassFrameIndex);
 ```
 
 ### Grid format → TileSet / TileMap
 
 ```typescript
-import { Asset, Sprite, TileSet, TileLayer, TileMap, Grid } from "@dryanovski/gamefoo";
+import { Asset, Sprite, TileSet, TileLayer, TileMap, Grid } from '@dryanovski/gamefoo';
 
-const response = await fetch("assets/tileset.grid.json");
+const response = await fetch('assets/tileset.grid.json');
 const data = await response.json();
 
 const image = await Asset.load(`assets/${data.meta.image}`);
@@ -458,7 +462,7 @@ const tileSet = new TileSet({ sprite });
 
 // Build layers from your level data
 const ground = new TileLayer({
-  name: "ground",
+  name: 'ground',
   cols: 20,
   rows: 15,
   tileSet,
@@ -472,7 +476,7 @@ const tilemap = new TileMap({ grid, layers: [ground] });
 ### Full format → Mixed usage
 
 ```typescript
-const response = await fetch("assets/game.full.json");
+const response = await fetch('assets/game.full.json');
 const data = await response.json();
 const image = await Asset.load(`assets/${data.meta.image}`);
 
@@ -480,30 +484,30 @@ const image = await Asset.load(`assets/${data.meta.image}`);
 const heroSprite = Sprite.fromAtlas(image, data.frames, data.animations);
 
 // Access object definitions for game logic
-const heroConfig = data.objects["hero"];
-console.log(heroConfig.properties.speed);  // "120"
-console.log(heroConfig.animations);        // ["idle", "walk"]
+const heroConfig = data.objects['hero'];
+console.log(heroConfig.properties.speed); // "120"
+console.log(heroConfig.animations); // ["idle", "walk"]
 
 // Access sprite metadata for additional info
-const meta = data.spriteMetadata["hero_idle_0"];
-console.log(meta.tags);   // ["hero", "idle"]
-console.log(meta.level);  // 1
+const meta = data.spriteMetadata['hero_idle_0'];
+console.log(meta.tags); // ["hero", "idle"]
+console.log(meta.level); // 1
 ```
 
 ---
 
 ## Keyboard Shortcuts
 
-| Key    | Action                          |
-|--------|---------------------------------|
-| V      | Select tool                     |
-| G      | Grid Pick tool                  |
-| R      | Region (draw) tool              |
-| H      | Pan (hand) tool                 |
-| Scroll | Zoom in/out (at cursor)         |
-| Shift  | Multi-select (with click)       |
-| Space  | Hold + drag to pan (any tool)   |
-| Middle | Pan (any tool)                  |
+| Key    | Action                        |
+| ------ | ----------------------------- |
+| V      | Select tool                   |
+| G      | Grid Pick tool                |
+| R      | Region (draw) tool            |
+| H      | Pan (hand) tool               |
+| Scroll | Zoom in/out (at cursor)       |
+| Shift  | Multi-select (with click)     |
+| Space  | Hold + drag to pan (any tool) |
+| Middle | Pan (any tool)                |
 
 ---
 
@@ -511,14 +515,14 @@ console.log(meta.level);  // 1
 
 The tools server exposes these API endpoints:
 
-| Method   | Endpoint                          | Description                        |
-|----------|-----------------------------------|------------------------------------|
-| `POST`   | `/api/upload`                     | Upload image (multipart form)      |
-| `GET`    | `/api/projects`                   | List all saved projects            |
-| `GET`    | `/api/projects/:id`              | Load a specific project            |
-| `POST`   | `/api/projects/:id`              | Save/update a project              |
-| `DELETE` | `/api/projects/:id`              | Delete project and its exports     |
-| `POST`   | `/api/projects/:id/export`       | Generate export files on server    |
+| Method   | Endpoint                   | Description                     |
+| -------- | -------------------------- | ------------------------------- |
+| `POST`   | `/api/upload`              | Upload image (multipart form)   |
+| `GET`    | `/api/projects`            | List all saved projects         |
+| `GET`    | `/api/projects/:id`        | Load a specific project         |
+| `POST`   | `/api/projects/:id`        | Save/update a project           |
+| `DELETE` | `/api/projects/:id`        | Delete project and its exports  |
+| `POST`   | `/api/projects/:id/export` | Generate export files on server |
 
 ### Upload response
 
@@ -529,14 +533,16 @@ The tools server exposes these API endpoints:
 ### Project list response
 
 ```json
-[{
-  "id": "proj_abc123",
-  "name": "My Game",
-  "lastModified": "2025-01-15T12:00:00.000Z",
-  "spriteCount": 32,
-  "animCount": 5,
-  "imageName": "tileset.png"
-}]
+[
+  {
+    "id": "proj_abc123",
+    "name": "My Game",
+    "lastModified": "2025-01-15T12:00:00.000Z",
+    "spriteCount": 32,
+    "animCount": 5,
+    "imageName": "tileset.png"
+  }
+]
 ```
 
 ### Server directory structure
@@ -643,12 +649,12 @@ It builds multi-screen tile maps from your spritesheets.
 
 ### Concepts
 
-| Term       | Meaning                                                      |
-|------------|--------------------------------------------------------------|
-| **Block**  | Base grid cell, `blockSize` px (16, 32, 64…).                |
+| Term       | Meaning                                                            |
+| ---------- | ------------------------------------------------------------------ |
+| **Block**  | Base grid cell, `blockSize` px (16, 32, 64…).                      |
 | **Screen** | Fixed grid of `Cols × Rows` blocks. All screens are the same size. |
-| **Map**    | Sparse grid of screens, keyed by coordinate `x,y`.           |
-| **Asset**  | A sliced tile/object from an uploaded image.                  |
+| **Map**    | Sparse grid of screens, keyed by coordinate `x,y`.                 |
+| **Asset**  | A sliced tile/object from an uploaded image.                       |
 
 **Screen coordinates:** the first screen is always `(0,0)`. The screen to
 the **right** is `(0,1)` — the one **below** is `(1,0)`. So `x` grows
@@ -667,7 +673,7 @@ South (down) and `y` grows East (right).
    select it for painting.
 3. **Set a background** — pick a tool:
    - **Fill (F)**: click a screen to tile the selected sprite across it.
-   - *Default Tile* section: "Use Selected" makes all *new* screens
+   - _Default Tile_ section: "Use Selected" makes all _new_ screens
      start with that background.
 4. **Place things on top** — **Paint (P)**: click/drag to place the
    selected sprite (snapped to blocks, ghost preview follows the
@@ -682,7 +688,7 @@ South (down) and `y` grows East (right).
    Placements stay on their own screen.
 7. **Edit placements** — click a placement with the **Pick (I)** or
    **Move (M)** tool to select it (cyan dashed outline). The palette's
-   *Placement* section then offers: X/Y position, rotation (any degrees,
+   _Placement_ section then offers: X/Y position, rotation (any degrees,
    +90° button), **Flip X / Flip Y** mirrors, reset transform, delete.
    Keyboard: **R** rotate 90° cw, **X** flip horizontally, **Y** flip
    vertically (e.g. mirror a sign left/right). Rotation/flips are
@@ -737,14 +743,18 @@ convention as screen coords). `sx,sy` is the source rect in `image`;
   {
     "name": "wall_top",
     "screen": "0,0",
-    "x": 64, "y": 32,
-    "worldX": 64, "worldY": 32,
-    "width": 32, "height": 32,
+    "x": 64,
+    "y": 32,
+    "worldX": 64,
+    "worldY": 32,
+    "width": 32,
+    "height": 32,
     "rotation": 0,
     "flipX": false,
     "flipY": false,
     "image": "tileset.png",
-    "sx": 64, "sy": 0,
+    "sx": 64,
+    "sy": 0,
     "z": 0
   }
 ]
@@ -758,10 +768,33 @@ so any consumer can resolve the connections.
 
 ```json
 {
-  "meta": { "version": "1.0", "tool": "gamefoo-map-editor", "projectName": "My World", "blockSize": 32, "screenCols": 16, "screenRows": 12, "exportedAt": "..." },
-  "images": [{ "id": "img_1", "name": "tileset.png", "url": "/uploads/123_tileset.png", "width": 256, "height": 128 }],
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-map-editor",
+    "projectName": "My World",
+    "blockSize": 32,
+    "screenCols": 16,
+    "screenRows": 12,
+    "exportedAt": "..."
+  },
+  "images": [
+    {
+      "id": "img_1",
+      "name": "tileset.png",
+      "url": "/uploads/123_tileset.png",
+      "width": 256,
+      "height": 128
+    }
+  ],
   "assets": {
-    "ast_1": { "name": "tileset_r0c0", "imageId": "img_1", "x": 0, "y": 0, "width": 32, "height": 32 }
+    "ast_1": {
+      "name": "tileset_r0c0",
+      "imageId": "img_1",
+      "x": 0,
+      "y": 0,
+      "width": 32,
+      "height": 32
+    }
   },
   "mapDefaultAssetId": null,
   "screens": {
@@ -791,7 +824,7 @@ the exports directory.
 Switch via the **States** mode button. Defines per-sprite/tile state
 machines (Godot AnimationNodeStateMachine / Unity Animator style): each
 state shows a **single static sprite** or an **animation**, and named
-**transitions** move between states. Conditions are *engine-controlled* —
+**transitions** move between states. Conditions are _engine-controlled_ —
 the editor only names them; game code decides when to trigger
 (`machine.set("ignite")` or similar, however your wrapper drives it).
 

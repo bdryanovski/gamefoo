@@ -44,9 +44,7 @@
   --elevation: 4px 4px 0 rgba(0, 0, 0, 0.3);
   --font-smoothing: none;
   --btn-inset-hi: #f4f4f4;
-  --btn-shadow:
-    inset -1px -1px 0 var(--border-mid),
-    inset 1px 1px 0 var(--btn-inset-hi);
+  --btn-shadow: inset -1px -1px 0 var(--border-mid), inset 1px 1px 0 var(--btn-inset-hi);
   --btn-face-hover: linear-gradient(180deg, #ececec 0%, #d2d2d2 55%, #c6c6c6 100%);
   --section-grad: linear-gradient(180deg, #b0b0b0 0%, #9a9a9a 100%);
   --section-text: #202020;
@@ -2159,7 +2157,8 @@ code {
 
 /* Round + thin the beveled components; equalized --border-* already
    made the four sides a single flat color. */
-:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail']) :is(
+:is([data-theme='modern'], [data-theme='linear'], [data-theme='gmail'])
+  :is(
     .btn,
     .btn-sm,
     .mode-btn,

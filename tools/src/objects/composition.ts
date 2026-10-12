@@ -1,9 +1,4 @@
-import type {
-  SpriteRegion,
-  AnimationDef,
-  ObjectCellSource,
-  ObjectLayer,
-} from "../types";
+import type { SpriteRegion, AnimationDef, ObjectCellSource, ObjectLayer } from '../types';
 
 /** The sprite a cell draws: its sprite, or an animation's first frame. */
 export function cellSprite(
@@ -11,7 +6,7 @@ export function cellSprite(
   spriteById: Map<string, SpriteRegion>,
   animById: Map<string, AnimationDef>,
 ): SpriteRegion | undefined {
-  if (source.kind === "sprite") return spriteById.get(source.spriteId);
+  if (source.kind === 'sprite') {return spriteById.get(source.spriteId);}
   const a = animById.get(source.animationId);
   const first = a?.frames[0];
   return first ? spriteById.get(first) : undefined;
@@ -35,13 +30,13 @@ export function drawObjectLayers(
   ctx.imageSmoothingEnabled = false;
   for (const layer of layers) {
     const op = opacityOf(layer.id);
-    if (op <= 0) continue;
+    if (op <= 0) {continue;}
     ctx.globalAlpha = op;
     for (const c of layer.cells) {
       const s = cellSprite(c.source, spriteById, animById);
-      if (!s) continue;
+      if (!s) {continue;}
       const img = imageMap.get(s.imageId);
-      if (!img) continue;
+      if (!img) {continue;}
       const dw = s.width * scale;
       const dh = s.height * scale;
       const dx = c.col * cell * scale;
@@ -49,7 +44,7 @@ export function drawObjectLayers(
       if (c.flipX || c.flipY || c.rotation) {
         ctx.save();
         ctx.translate(dx + dw / 2, dy + dh / 2);
-        if (c.rotation) ctx.rotate((c.rotation * Math.PI) / 180);
+        if (c.rotation) {ctx.rotate((c.rotation * Math.PI) / 180);}
         ctx.scale(c.flipX ? -1 : 1, c.flipY ? -1 : 1);
         ctx.drawImage(img, s.x, s.y, s.width, s.height, -dw / 2, -dh / 2, dw, dh);
         ctx.restore();

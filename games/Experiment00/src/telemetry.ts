@@ -348,7 +348,7 @@ export class Telemetry {
         ts: Date.now(),
         t: Math.round((performance.now() - this.startedAt) / 1000),
         screen: `${this.screenX},${this.screenY}`,
-        ...(props ?? {}),
+        ...props,
       },
     };
 

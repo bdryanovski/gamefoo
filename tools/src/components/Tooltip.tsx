@@ -5,10 +5,10 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-} from "react";
-import { createPortal } from "react-dom";
+} from 'react';
+import { createPortal } from 'react-dom';
 
-type Side = "top" | "bottom" | "left" | "right";
+type Side = 'top' | 'bottom' | 'left' | 'right';
 
 interface Props {
   /** Primary tooltip text. */
@@ -38,10 +38,10 @@ const SHOW_DELAY = 140;
 const GAP = 8;
 
 function opposite(side: Side): Side {
-  if (side === "top") return "bottom";
-  if (side === "bottom") return "top";
-  if (side === "left") return "right";
-  return "left";
+  if (side === 'top') {return 'bottom';}
+  if (side === 'bottom') {return 'top';}
+  if (side === 'left') {return 'right';}
+  return 'left';
 }
 
 function place(rect: DOMRect, tip: DOMRect, preferred: Side): Placement {
@@ -53,16 +53,16 @@ function place(rect: DOMRect, tip: DOMRect, preferred: Side): Placement {
     left: rect.left - tip.width - GAP >= 0,
     right: rect.right + tip.width + GAP <= vw,
   };
-  const order: Side[] = [preferred, opposite(preferred), "top", "bottom", "right", "left"];
+  const order: Side[] = [preferred, opposite(preferred), 'top', 'bottom', 'right', 'left'];
   const side = order.find((s) => fits[s]) ?? preferred;
 
   let left: number;
   let top: number;
-  if (side === "top" || side === "bottom") {
+  if (side === 'top' || side === 'bottom') {
     left = rect.left + rect.width / 2 - tip.width / 2;
-    top = side === "top" ? rect.top - tip.height - GAP : rect.bottom + GAP;
+    top = side === 'top' ? rect.top - tip.height - GAP : rect.bottom + GAP;
   } else {
-    left = side === "left" ? rect.left - tip.width - GAP : rect.right + GAP;
+    left = side === 'left' ? rect.left - tip.width - GAP : rect.right + GAP;
     top = rect.top + rect.height / 2 - tip.height / 2;
   }
   left = Math.max(4, Math.min(left, vw - tip.width - 4));
@@ -70,7 +70,7 @@ function place(rect: DOMRect, tip: DOMRect, preferred: Side): Placement {
   return { left, top, side };
 }
 
-export function Tooltip({ label, shortcut, side = "top", children }: Props) {
+export function Tooltip({ label, shortcut, side = 'top', children }: Props) {
   const anchorRef = useRef<HTMLElement | null>(null);
   const tipRef = useRef<HTMLDivElement | null>(null);
   const timer = useRef<number | null>(null);
@@ -89,18 +89,24 @@ export function Tooltip({ label, shortcut, side = "top", children }: Props) {
 
   // Measure once mounted, then lock the final (possibly flipped) position.
   useLayoutEffect(() => {
-    if (!open || !anchorRef.current || !tipRef.current) return;
-    setPos(place(anchorRef.current.getBoundingClientRect(), tipRef.current.getBoundingClientRect(), side));
+    if (!open || !anchorRef.current || !tipRef.current) {return;}
+    setPos(
+      place(
+        anchorRef.current.getBoundingClientRect(),
+        tipRef.current.getBoundingClientRect(),
+        side,
+      ),
+    );
   }, [open, side]);
 
-  if (!isValidElement(children)) return children;
+  if (!isValidElement(children)) {return children;}
 
   const childProps = children.props as AnchorProps;
   const childRef = childProps.ref;
   const setRef = (node: HTMLElement | null) => {
     anchorRef.current = node;
-    if (typeof childRef === "function") childRef(node);
-    else if (childRef && typeof childRef === "object") {
+    if (typeof childRef === 'function') {childRef(node);}
+    else if (childRef && typeof childRef === 'object') {
       (childRef as React.MutableRefObject<HTMLElement | null>).current = node;
     }
   };

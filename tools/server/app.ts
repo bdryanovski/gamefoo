@@ -113,7 +113,7 @@ export function createApiApp(options: ApiAppOptions): Express {
 
   app.get('/api/projects/:id', async (req, res) => {
     const id = projectId(req, res);
-    if (!id) return;
+    if (!id) {return;}
 
     const filepath = path.join(projectsDir, `${id}.json`);
     if (existsSync(filepath)) {
@@ -125,7 +125,7 @@ export function createApiApp(options: ApiAppOptions): Express {
 
   app.post('/api/projects/:id', async (req, res) => {
     const id = projectId(req, res);
-    if (!id) return;
+    if (!id) {return;}
 
     const body = req.body;
     if (typeof body !== 'object' || body === null || Array.isArray(body)) {
@@ -140,7 +140,7 @@ export function createApiApp(options: ApiAppOptions): Express {
 
   app.delete('/api/projects/:id', (req, res) => {
     const id = projectId(req, res);
-    if (!id) return;
+    if (!id) {return;}
 
     const filepath = path.join(projectsDir, `${id}.json`);
     if (existsSync(filepath)) {
@@ -155,7 +155,7 @@ export function createApiApp(options: ApiAppOptions): Express {
 
   app.post('/api/projects/:id/export', async (req, res) => {
     const id = projectId(req, res);
-    if (!id) return;
+    if (!id) {return;}
 
     const files = req.body?.files;
     if (typeof files !== 'object' || files === null || Array.isArray(files)) {

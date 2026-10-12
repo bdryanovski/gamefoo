@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 import type {
   AppAction,
   AnimationDef,
   CollisionLayerDef,
   GameObjectDef,
   SpriteRegion,
-} from "../types";
-import { objectPixelSize, stateCollisions, stateHasOwnCollisions } from "../types";
-import { CollisionEditor } from "../components/CollisionEditor";
-import { drawObjectLayers } from "./composition";
-import { uid } from "../utils/uid";
+} from '../types';
+import { objectPixelSize, stateCollisions, stateHasOwnCollisions } from '../types';
+import { CollisionEditor } from '../components/CollisionEditor';
+import { drawObjectLayers } from './composition';
+import { uid } from '../utils/uid';
 
 /**
  * Per-state collision editing for a game object, with the initial/idle-state
@@ -37,18 +37,17 @@ export function ObjectCollisionEditor({
   animById: Map<string, AnimationDef>;
   imageMap: Map<string, HTMLImageElement>;
 }) {
-  if (!stateId) return null;
+  if (!stateId) {return null;}
 
   const idleStateId = object.machine.initialStateId;
   const isIdleState = stateId === idleStateId;
   const inherited = !isIdleState && !stateHasOwnCollisions(object, stateId);
   const effective = stateCollisions(object, stateId);
-  const stateName =
-    object.machine.states.find((s) => s.id === stateId)?.name ?? "—";
+  const stateName = object.machine.states.find((s) => s.id === stateId)?.name ?? '—';
 
   const setCollisions = (vols: typeof effective) =>
     dispatch({
-      type: "UPDATE_OBJECT",
+      type: 'UPDATE_OBJECT',
       id: object.id,
       updates: {
         collisionsByState: { ...object.collisionsByState, [stateId]: vols },
@@ -58,7 +57,7 @@ export function ObjectCollisionEditor({
   const resetToIdle = () => {
     const cbs = { ...object.collisionsByState };
     delete cbs[stateId];
-    dispatch({ type: "UPDATE_OBJECT", id: object.id, updates: { collisionsByState: cbs } });
+    dispatch({ type: 'UPDATE_OBJECT', id: object.id, updates: { collisionsByState: cbs } });
   };
 
   const { width, height } = objectPixelSize(object.grid);
@@ -66,13 +65,16 @@ export function ObjectCollisionEditor({
   return (
     <div className="section">
       <div className="section-title">
-        <span>Collisions — {stateName}{inherited ? " (inherits idle)" : ""}</span>
+        <span>
+          Collisions — {stateName}
+          {inherited ? ' (inherits idle)' : ''}
+        </span>
         {!isIdleState &&
           (inherited ? (
             <button
               className="btn btn-sm"
               title="Copy idle collisions to edit them just for this state"
-              onClick={() => setCollisions(effective.map((c) => ({ ...c, id: uid("col") })))}
+              onClick={() => setCollisions(effective.map((c) => ({ ...c, id: uid('col') })))}
             >
               Override
             </button>
@@ -87,7 +89,7 @@ export function ObjectCollisionEditor({
           ))}
       </div>
       {inherited && (
-        <div className="text-xs text-dim" style={{ padding: "0 4px 4px" }}>
+        <div className="text-xs text-dim" style={{ padding: '0 4px 4px' }}>
           This state uses the idle collisions. Click Override to change them here.
         </div>
       )}

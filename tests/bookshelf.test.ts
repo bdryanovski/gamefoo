@@ -4,7 +4,7 @@
  * door that slides one tile (16px) right on {@link Bookshelf.slideOpen},
  * remembers it in the store, and re-spawns at the opened position.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { Bookshelf } from '../games/Experiment00/src/objects/bookshelf';
 import { StateStore } from '../src/core/state/state_store';
 import type AssetManager from '../src/core/map/asset_manager';
@@ -37,8 +37,8 @@ function makeShelf(
   Bookshelf.useState(opts.store ? opts.store.scope('shelves') : null);
   const def = shelfDef();
   const properties: Record<string, string> = {};
-  if (opts.message !== undefined) properties.message = opts.message;
-  if (opts.id !== undefined) properties.id = opts.id;
+  if (opts.message !== undefined) {properties.message = opts.message;}
+  if (opts.id !== undefined) {properties.id = opts.id;}
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,

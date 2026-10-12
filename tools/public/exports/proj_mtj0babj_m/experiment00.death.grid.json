@@ -28,29 +28,17 @@
   },
   "animations": {
     "p_dead_front": {
-      "frames": [
-        7,
-        9,
-        11
-      ],
+      "frames": [7, 9, 11],
       "duration": 0.15,
       "loop": true
     },
     "p_dead_right": {
-      "frames": [
-        19,
-        21,
-        23
-      ],
+      "frames": [19, 21, 23],
       "duration": 0.15,
       "loop": true
     },
     "p_dead_back": {
-      "frames": [
-        31,
-        32,
-        34
-      ],
+      "frames": [31, 32, 34],
       "duration": 0.15,
       "loop": true
     }

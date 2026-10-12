@@ -4,11 +4,7 @@
     "tool": "gamefoo-project-config",
     "projectName": "ColTest"
   },
-  "defaultLayers": [
-    "base",
-    "walls",
-    "objects"
-  ],
+  "defaultLayers": ["base", "walls", "objects"],
   "collisionLayers": [
     {
       "id": "solid",

@@ -32,12 +32,12 @@ async function discoverDemos(): Promise<DemoMeta[]> {
   const demos: DemoMeta[] = [];
 
   for (const entry of entries) {
-    if (!entry.isDirectory() || EXCLUDE_DIRS.has(entry.name)) continue;
+    if (!entry.isDirectory() || EXCLUDE_DIRS.has(entry.name)) {continue;}
 
     const demoPath = join(DEMOS_DIR, entry.name);
     const indexFile = Bun.file(join(demoPath, 'index.html'));
 
-    if (!(await indexFile.exists())) continue;
+    if (!(await indexFile.exists())) {continue;}
 
     // Try to load demo.json for metadata
     let meta: Partial<DemoMeta> = {};

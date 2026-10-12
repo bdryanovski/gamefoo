@@ -1,27 +1,21 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
-import type {
-  AppState,
-  AppAction,
-  AnimationDef,
-  GameObjectDef,
-  SpriteRegion,
-} from "../types";
-import { objectMachines } from "../types";
-import type { MapAction, MachinePlacement } from "./types";
-import { findPlacement, resolveMachineState, resolvePlacementDisplay } from "./types";
-import type { DialogAction } from "../dialog/types";
-import { allDialogMessages, findDialogMessage } from "../dialog/types";
-import { DialogMessageCard } from "../dialog/DialogMessageCard";
-import { ObjectPropertiesEditor } from "../objects/ObjectPropertiesEditor";
-import { ObjectCollisionEditor } from "../objects/ObjectCollisionEditor";
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import type { AppState, AppAction, AnimationDef, GameObjectDef, SpriteRegion } from '../types';
+import { objectMachines } from '../types';
+import type { MapAction, MachinePlacement } from './types';
+import { findPlacement, resolveMachineState, resolvePlacementDisplay } from './types';
+import type { DialogAction } from '../dialog/types';
+import { allDialogMessages, findDialogMessage } from '../dialog/types';
+import { DialogMessageCard } from '../dialog/DialogMessageCard';
+import { ObjectPropertiesEditor } from '../objects/ObjectPropertiesEditor';
+import { ObjectCollisionEditor } from '../objects/ObjectCollisionEditor';
 import {
   MachineStateSelect,
   MachineOverrideFields,
   TextConfigFields,
   PlacementTransform,
-} from "./PlacementFields";
-import { AnimatedSpritePreview } from "../components/AnimatedSpritePreview";
-import { Icon, ICON } from "../components/Icon";
+} from './PlacementFields';
+import { AnimatedSpritePreview } from '../components/AnimatedSpritePreview';
+import { Icon, ICON } from '../components/Icon';
 
 /**
  * Floating placement inspector — the map editor's in-place editor for a
@@ -42,15 +36,13 @@ import { Icon, ICON } from "../components/Icon";
  * owns no data of its own beyond window position and the active tab.
  */
 
-type InspectorTab = "sprite" | "properties" | "dialogs" | "collisions";
+type InspectorTab = 'sprite' | 'properties' | 'dialogs' | 'collisions';
 
 /** Fields a placement edit can carry (position, transform, machine config, text style). */
-type PlacementUpdates = NonNullable<
-  Extract<MapAction, { type: "UPDATE_PLACEMENT" }>["updates"]
->;
+type PlacementUpdates = NonNullable<Extract<MapAction, { type: 'UPDATE_PLACEMENT' }>['updates']>;
 
 const INSPECTOR_WIDTH = 320;
-const POS_STORAGE_KEY = "gamefoo-inspector-pos";
+const POS_STORAGE_KEY = 'gamefoo-inspector-pos';
 
 /** Clamp so the window always keeps a grip inside the viewport. */
 function clampPos(x: number, y: number): { x: number; y: number } {
@@ -67,7 +59,7 @@ function loadPos(): { x: number; y: number } {
     const raw = localStorage.getItem(POS_STORAGE_KEY);
     if (raw) {
       const p = JSON.parse(raw) as { x?: unknown; y?: unknown };
-      if (typeof p.x === "number" && typeof p.y === "number") {
+      if (typeof p.x === 'number' && typeof p.y === 'number') {
         return clampPos(p.x, p.y);
       }
     }
@@ -98,14 +90,11 @@ export function PlacementInspector({
   onClose,
 }: Props) {
   const map = state.map;
-  const [tab, setTab] = useState<InspectorTab>("sprite");
+  const [tab, setTab] = useState<InspectorTab>('sprite');
   const [pos, setPos] = useState<{ x: number; y: number }>(loadPos);
   const dragRef = useRef<{ px: number; py: number; ox: number; oy: number } | null>(null);
 
-  const spriteById = useMemo(
-    () => new Map(state.sprites.map((s) => [s.id, s])),
-    [state.sprites],
-  );
+  const spriteById = useMemo(() => new Map(state.sprites.map((s) => [s.id, s])), [state.sprites]);
   const animById = useMemo(
     () => new Map(state.animations.map((a) => [a.id, a])),
     [state.animations],
@@ -115,7 +104,7 @@ export function PlacementInspector({
   const placement = sel?.placement ?? null;
   const screenKey = sel?.screenKey;
 
-  const machinePlacement = placement?.kind === "machine" ? placement : null;
+  const machinePlacement = placement?.kind === 'machine' ? placement : null;
   const object =
     machinePlacement != null
       ? (state.objects.find((o) => o.machine.id === machinePlacement.machineId) ?? null)
@@ -123,9 +112,9 @@ export function PlacementInspector({
 
   const updatePlacement = useCallback(
     (updates: PlacementUpdates) => {
-      if (!placement || !screenKey) return;
+      if (!placement || !screenKey) {return;}
       mapDispatch({
-        type: "UPDATE_PLACEMENT",
+        type: 'UPDATE_PLACEMENT',
         screenKey,
         id: placement.id,
         updates,
@@ -135,8 +124,8 @@ export function PlacementInspector({
   );
 
   const removePlacement = useCallback(() => {
-    if (!placement || !screenKey) return;
-    mapDispatch({ type: "REMOVE_PLACEMENT", screenKey, id: placement.id });
+    if (!placement || !screenKey) {return;}
+    mapDispatch({ type: 'REMOVE_PLACEMENT', screenKey, id: placement.id });
   }, [placement, screenKey, mapDispatch]);
 
   // ── Window dragging (title bar) ────────────────────────
@@ -146,7 +135,7 @@ export function PlacementInspector({
       // Don't hijack clicks on the title bar's own controls (close button):
       // capturing the pointer here would retarget the follow-up mouse events
       // away from the button and its click would never fire.
-      if ((e.target as HTMLElement).closest("button")) return;
+      if ((e.target as HTMLElement).closest('button')) {return;}
       dragRef.current = { px: e.clientX, py: e.clientY, ox: pos.x, oy: pos.y };
       e.currentTarget.setPointerCapture(e.pointerId);
     },
@@ -155,12 +144,12 @@ export function PlacementInspector({
 
   const onTitlePointerMove = useCallback((e: React.PointerEvent) => {
     const d = dragRef.current;
-    if (!d) return;
+    if (!d) {return;}
     setPos(clampPos(d.ox + (e.clientX - d.px), d.oy + (e.clientY - d.py)));
   }, []);
 
   const onTitlePointerUp = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current) return;
+    if (!dragRef.current) {return;}
     dragRef.current = null;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
@@ -176,11 +165,11 @@ export function PlacementInspector({
   // ── Tab availability ───────────────────────────────────
 
   const tabs: InspectorTab[] = object
-    ? ["sprite", "properties", "dialogs", "collisions"]
-    : ["sprite"];
-  const activeTab: InspectorTab = tabs.includes(tab) ? tab : "sprite";
+    ? ['sprite', 'properties', 'dialogs', 'collisions']
+    : ['sprite'];
+  const activeTab: InspectorTab = tabs.includes(tab) ? tab : 'sprite';
 
-  if (!placement || !screenKey) return null;
+  if (!placement || !screenKey) {return null;}
 
   const display = resolvePlacementDisplay(
     placement,
@@ -200,13 +189,13 @@ export function PlacementInspector({
 
   const title =
     object?.name ??
-    (placement.kind === "sprite"
-      ? (spriteById.get(placement.spriteId)?.name ?? "Sprite")
-      : placement.kind === "animation"
-        ? (animById.get(placement.animationId)?.name ?? "Animation")
-        : placement.kind === "text"
-          ? "Text label"
-          : "Object");
+    (placement.kind === 'sprite'
+      ? (spriteById.get(placement.spriteId)?.name ?? 'Sprite')
+      : placement.kind === 'animation'
+        ? (animById.get(placement.animationId)?.name ?? 'Animation')
+        : placement.kind === 'text'
+          ? 'Text label'
+          : 'Object');
 
   return (
     <div
@@ -223,14 +212,13 @@ export function PlacementInspector({
         onPointerUp={onTitlePointerUp}
         onPointerCancel={onTitlePointerUp}
       >
-        <Icon name={object ? "objects" : placement.kind === "text" ? "draw" : "sprite-editor"} size={ICON.sm} />
+        <Icon
+          name={object ? 'objects' : placement.kind === 'text' ? 'draw' : 'sprite-editor'}
+          size={ICON.sm}
+        />
         <span className="inspector-title__name">{title}</span>
         {object && <span className="text-xs">object</span>}
-        <button
-          className="btn btn-sm"
-          title="Deselect placement"
-          onClick={onClose}
-        >
+        <button className="btn btn-sm" title="Deselect placement" onClick={onClose}>
           <Icon name="close" size={ICON.xs} />
         </button>
       </div>
@@ -240,27 +228,27 @@ export function PlacementInspector({
         {tabs.map((t) => (
           <div
             key={t}
-            className={`inspector-tab ${activeTab === t ? "active" : ""}`}
+            className={`inspector-tab ${activeTab === t ? 'active' : ''}`}
             onClick={() => setTab(t)}
           >
-            {t === "sprite"
-              ? "Sprite"
-              : t === "properties"
-                ? "Properties"
-                : t === "dialogs"
-                  ? "Dialogs"
-                  : "Collisions"}
+            {t === 'sprite'
+              ? 'Sprite'
+              : t === 'properties'
+                ? 'Properties'
+                : t === 'dialogs'
+                  ? 'Dialogs'
+                  : 'Collisions'}
           </div>
         ))}
       </div>
 
       {/* Body */}
       <div className="inspector-body panel-content">
-        {activeTab === "sprite" && (
+        {activeTab === 'sprite' && (
           <div className="col gap-md">
             {previewFrames.length > 0 && (
-              <div className="row" style={{ gap: 8, alignItems: "center", padding: 4 }}>
-                <div className="asset-thumb" style={{ width: 44, height: 44, cursor: "default" }}>
+              <div className="row" style={{ gap: 8, alignItems: 'center', padding: 4 }}>
+                <div className="asset-thumb" style={{ width: 44, height: 44, cursor: 'default' }}>
                   <AnimatedSpritePreview
                     frames={previewFrames}
                     duration={previewDuration}
@@ -285,10 +273,10 @@ export function PlacementInspector({
               </div>
             )}
 
-            <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-              Screen {screenKey} · layer {placement.level}:{" "}
-              {map.layers[placement.level]?.name ?? "?"}
-              {map.layers[placement.level]?.visible === false ? " (hidden)" : ""}
+            <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+              Screen {screenKey} · layer {placement.level}:{' '}
+              {map.layers[placement.level]?.name ?? '?'}
+              {map.layers[placement.level]?.visible === false ? ' (hidden)' : ''}
             </div>
 
             {object && machinePlacement && (
@@ -299,7 +287,7 @@ export function PlacementInspector({
               />
             )}
 
-            {placement.kind === "text" && (
+            {placement.kind === 'text' && (
               <TextConfigFields value={placement} onChange={(patch) => updatePlacement(patch)} />
             )}
 
@@ -312,7 +300,7 @@ export function PlacementInspector({
           </div>
         )}
 
-        {activeTab === "properties" && object && machinePlacement && (
+        {activeTab === 'properties' && object && machinePlacement && (
           <PropertiesTab
             object={object}
             machinePlacement={machinePlacement}
@@ -321,7 +309,7 @@ export function PlacementInspector({
           />
         )}
 
-        {activeTab === "dialogs" && object && machinePlacement && (
+        {activeTab === 'dialogs' && object && machinePlacement && (
           <DialogsTab
             key={placement.id}
             state={state}
@@ -333,7 +321,7 @@ export function PlacementInspector({
           />
         )}
 
-        {activeTab === "collisions" && object && machinePlacement && (
+        {activeTab === 'collisions' && object && machinePlacement && (
           <CollisionsTab
             key={placement.id}
             state={state}
@@ -370,10 +358,10 @@ function PropertiesTab({
         <ObjectPropertiesEditor
           properties={object.properties}
           onChange={(properties) =>
-            dispatch({ type: "UPDATE_OBJECT", id: object.id, updates: { properties } })
+            dispatch({ type: 'UPDATE_OBJECT', id: object.id, updates: { properties } })
           }
         />
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
+        <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
           These live on the object — every placed instance inherits them.
         </div>
       </div>
@@ -384,9 +372,8 @@ function PropertiesTab({
           properties={machinePlacement.properties}
           onProperties={(properties) => updatePlacement({ properties })}
         />
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-          ● marks keys this instance overrides — reset with ↺ to follow the
-          object again.
+        <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+          ● marks keys this instance overrides — reset with ↺ to follow the object again.
         </div>
       </div>
     </div>
@@ -416,7 +403,7 @@ function DialogsTab({
 
   const effectiveProps: Record<string, string> = {
     ...object.properties,
-    ...(machinePlacement.properties ?? {}),
+    ...machinePlacement.properties,
   };
   const allMessages = useMemo(() => allDialogMessages(state.dialog.trees), [state.dialog.trees]);
   const messageIndex = useMemo(
@@ -425,9 +412,7 @@ function DialogsTab({
   );
 
   const dialogKeys = Object.keys(effectiveProps).filter(
-    (key) =>
-      messageIndex.has(effectiveProps[key]!) ||
-      DIALOG_KEY_RE.test(key),
+    (key) => messageIndex.has(effectiveProps[key]!) || DIALOG_KEY_RE.test(key),
   );
 
   /** Change where a property points — written to the instance override when
@@ -437,7 +422,7 @@ function DialogsTab({
       updatePlacement({ properties: { ...machinePlacement.properties, [key]: value } });
     } else {
       dispatch({
-        type: "UPDATE_OBJECT",
+        type: 'UPDATE_OBJECT',
         id: object.id,
         updates: { properties: { ...object.properties, [key]: value } },
       });
@@ -450,11 +435,10 @@ function DialogsTab({
       <div className="col gap-md">
         <div className="section">
           <div className="section-title">Dialog References</div>
-          <div className="text-xs text-dim" style={{ padding: "4px" }}>
-            No dialog references yet. A property counts as one when its value
-            is a message id from the Dialog tab (or its key mentions
-            dialog/message). Add one in the Properties tab — e.g. key
-            "dialogId" — then pick a message here.
+          <div className="text-xs text-dim" style={{ padding: '4px' }}>
+            No dialog references yet. A property counts as one when its value is a message id from
+            the Dialog tab (or its key mentions dialog/message). Add one in the Properties tab —
+            e.g. key "dialogId" — then pick a message here.
           </div>
         </div>
       </div>
@@ -473,9 +457,7 @@ function DialogsTab({
           <div className="section" key={key}>
             <div className="section-title">
               <span>{key}</span>
-              <span className="text-xs text-dim">
-                {overridden ? "● instance" : "object"}
-              </span>
+              <span className="text-xs text-dim">{overridden ? '● instance' : 'object'}</span>
             </div>
             <div className="field-row">
               <span className="field-label">Msg:</span>
@@ -486,13 +468,13 @@ function DialogsTab({
                 onChange={(e) => setPropValue(key, e.target.value)}
               >
                 {!messageIndex.has(value) && (
-                  <option value={value}>{value || "— none —"} (not a message id)</option>
+                  <option value={value}>{value || '— none —'} (not a message id)</option>
                 )}
                 {state.dialog.trees.map((t) => (
                   <optgroup key={t.id} label={t.name}>
                     {t.messages.map((m) => (
                       <option key={m.id} value={m.id}>
-                        {m.title || "(untitled)"} — {m.id}
+                        {m.title || '(untitled)'} — {m.id}
                       </option>
                     ))}
                   </optgroup>
@@ -522,9 +504,9 @@ function DialogsTab({
                 />
               </>
             ) : (
-              <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-                No message with id "{value || "—"}" — pick one above to link
-                this property to a dialog.
+              <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+                No message with id "{value || '—'}" — pick one above to link this property to a
+                dialog.
               </div>
             )}
           </div>
@@ -565,20 +547,20 @@ function CollisionsTab({
           <span>State</span>
           <select
             className="input input-sm"
-            value={stateId ?? ""}
+            value={stateId ?? ''}
             onChange={(e) => setStateId(e.target.value || null)}
           >
             {object.machine.states.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.name}
-                {s.id === object.machine.initialStateId ? " (idle)" : ""}
+                {s.id === object.machine.initialStateId ? ' (idle)' : ''}
               </option>
             ))}
           </select>
         </div>
-        <div className="text-xs text-dim" style={{ padding: "2px 4px" }}>
-          Edits the object definition — every instance of {object.name} on
-          every map uses these collisions.
+        <div className="text-xs text-dim" style={{ padding: '2px 4px' }}>
+          Edits the object definition — every instance of {object.name} on every map uses these
+          collisions.
         </div>
       </div>
       <ObjectCollisionEditor

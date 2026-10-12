@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, type Plugin } from 'vite-plus';
 import { createApiApp } from './server/app';
 
 const root = path.dirname(fileURLToPath(import.meta.url));

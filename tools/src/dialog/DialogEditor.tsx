@@ -55,7 +55,7 @@ function CopyId({ id, compact }: { id: string; compact?: boolean }) {
   const copy = (e: React.MouseEvent) => {
     e.stopPropagation();
     void copyText(id).then((ok) => {
-      if (!ok) return;
+      if (!ok) {return;}
       setCopied(true);
       setTimeout(() => setCopied(false), 1000);
     });
@@ -101,14 +101,14 @@ function buildTreeData(tree: DialogTree): { root: TreeNodeData | null; reachable
 
   const walk = (id: string, edgeLabel: string | null): TreeNodeData | null => {
     const message = byId.get(id);
-    if (!message) return null;
-    if (expanded.has(id)) return { message, edgeLabel, ref: true, children: [] };
+    if (!message) {return null;}
+    if (expanded.has(id)) {return { message, edgeLabel, ref: true, children: [] };}
     expanded.add(id);
     const children: TreeNodeData[] = [];
     for (const option of message.options) {
-      if (!option.targetId) continue;
+      if (!option.targetId) {continue;}
       const child = walk(option.targetId, option.label || '(option)');
-      if (child) children.push(child);
+      if (child) {children.push(child);}
     }
     return { message, edgeLabel, ref: false, children };
   };
@@ -257,8 +257,8 @@ export function DialogEditor({
   // `message` property) rarely tells you which tree holds it.
   const globalMatches = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (q === '') return [];
-    const out: { tree: DialogTree; message: DialogMessage }[] = [];
+    if (q === '') {return [];}
+    const out: Array<{ tree: DialogTree; message: DialogMessage }> = [];
     for (const t of dialog.trees) {
       for (const m of t.messages) {
         if (m.id.toLowerCase().includes(q) || m.title.toLowerCase().includes(q)) {
@@ -272,7 +272,7 @@ export function DialogEditor({
   // Commit a whole message field; segments/options/meta edits build the next
   // array locally then hand it off through one UPDATE_MESSAGE.
   const commitSegments = (segments: string[]): void => {
-    if (!message) return;
+    if (!message) {return;}
     dialogDispatch({
       type: 'UPDATE_MESSAGE',
       id: message.id,

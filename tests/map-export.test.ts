@@ -5,7 +5,7 @@
  * when set, and omit them when empty — this is the editor→runtime hand-off the
  * engine's Screen consumes.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import type { AppState } from '../tools/src/types';
 import { exportMap } from '../tools/src/map/mapExport';
 
@@ -49,7 +49,7 @@ function makeState(): AppState {
 
 describe('exportMap per-placement config', () => {
   const out = exportMap(makeState());
-  const placements = (out.screens as Record<string, { placements: Record<string, unknown>[] }>)[
+  const placements = (out.screens as Record<string, { placements: Array<Record<string, unknown>> }>)[
     '0,0'
   ]!.placements;
 

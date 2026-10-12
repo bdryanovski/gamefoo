@@ -1,7 +1,7 @@
 import { cpSync, createReadStream, existsSync, mkdirSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, type Plugin } from 'vite-plus';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '../..');
@@ -22,7 +22,7 @@ function serveProject(): Plugin {
     name: 'serve-project',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (!req.url || !req.url.startsWith(prefix)) return next();
+        if (!req.url || !req.url.startsWith(prefix)) {return next();}
         const rel = decodeURIComponent(req.url.slice(prefix.length).split('?')[0]);
         const filePath = resolve(projectRoot, rel);
         if (
@@ -50,7 +50,7 @@ function stageStaticAssets(): Plugin {
     name: 'stage-static-assets',
     apply: 'build',
     closeBundle() {
-      const copies: [from: string, to: string][] = [
+      const copies: Array<[from: string, to: string]> = [
         // Audio catalog + clips, fetched from `/assets/audio/…`.
         [resolve(here, 'assets'), resolve(distRoot, 'assets')],
         // The map project, fetched from `/project/projects/…`.

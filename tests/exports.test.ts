@@ -4,7 +4,7 @@
  * One test per exported name. Fails if a symbol is removed or renamed.
  * Add a new test here whenever a new export is added to src/index.ts.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import * as Gamefoo from '../src/index';
 
 describe('exports — classes', () => {

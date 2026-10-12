@@ -55,12 +55,7 @@
   },
   "animations": {
     "fire": {
-      "frames": [
-        "fire",
-        "fire_1",
-        "fire_2",
-        "fire_3"
-      ],
+      "frames": ["fire", "fire_1", "fire_2", "fire_3"],
       "duration": 0.15,
       "loop": true
     }
@@ -102,9 +97,7 @@
   ],
   "states": {
     "init": {
-      "layers": [
-        "base"
-      ],
+      "layers": ["base"],
       "collisionsOff": []
     }
   },

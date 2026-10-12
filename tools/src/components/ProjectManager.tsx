@@ -1,9 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  listProjects,
-  deleteProject,
-  type ProjectMeta,
-} from "../utils/storage";
+import React, { useEffect, useState, useCallback } from 'react';
+import { listProjects, deleteProject, type ProjectMeta } from '../utils/storage';
 
 interface Props {
   currentId: string | null;
@@ -13,20 +9,14 @@ interface Props {
   onClose: () => void;
 }
 
-export function ProjectManager({
-  currentId,
-  onOpen,
-  onNew,
-  onImport,
-  onClose,
-}: Props) {
+export function ProjectManager({ currentId, onOpen, onNew, onImport, onClose }: Props) {
   const [projects, setProjects] = useState<ProjectMeta[]>([]);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
     setLoading(true);
     const list = await listProjects();
-    setProjects(list.filter((p) => p.kind !== "map"));
+    setProjects(list.filter((p) => p.kind !== 'map'));
     setLoading(false);
   }, []);
 
@@ -36,7 +26,7 @@ export function ProjectManager({
 
   const handleDelete = useCallback(
     async (id: string) => {
-      if (!confirm("Delete this project? This cannot be undone.")) return;
+      if (!confirm('Delete this project? This cannot be undone.')) {return;}
       await deleteProject(id);
       await refresh();
     },
@@ -67,32 +57,25 @@ export function ProjectManager({
 
           {!loading && projects.length === 0 && (
             <div className="text-dim p-4">
-              No saved projects yet. Click "Save" in the title bar to save
-              your current work as a project.
+              No saved projects yet. Click "Save" in the title bar to save your current work as a
+              project.
             </div>
           )}
 
           <div className="project-list">
             {projects.map((p) => (
-              <div
-                key={p.id}
-                className={`project-item ${p.id === currentId ? "current" : ""}`}
-              >
+              <div key={p.id} className={`project-item ${p.id === currentId ? 'current' : ''}`}>
                 <div className="project-item__info">
                   <div className="project-item__name">
                     {p.name}
-                    {p.id === currentId && (
-                      <span className="project-item__badge">current</span>
-                    )}
+                    {p.id === currentId && <span className="project-item__badge">current</span>}
                   </div>
                   <div className="project-item__meta">
                     {p.spriteCount} sprites · {p.animCount} anims
-                    {p.imageName ? ` · ${p.imageName}` : ""}
+                    {p.imageName ? ` · ${p.imageName}` : ''}
                   </div>
                   <div className="project-item__date">
-                    {p.lastModified
-                      ? new Date(p.lastModified).toLocaleString()
-                      : "Unknown date"}
+                    {p.lastModified ? new Date(p.lastModified).toLocaleString() : 'Unknown date'}
                   </div>
                 </div>
                 <div className="project-item__actions">
@@ -103,10 +86,7 @@ export function ProjectManager({
                   >
                     Open
                   </button>
-                  <button
-                    className="btn btn-sm danger"
-                    onClick={() => handleDelete(p.id)}
-                  >
+                  <button className="btn btn-sm danger" onClick={() => handleDelete(p.id)}>
                     Del
                   </button>
                 </div>

@@ -3,7 +3,7 @@
  * the engine StateStore keyed by the placement id, exposes its `message`
  * dialog + `item` payload, and drops its solid collider when open.
  */
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vite-plus/test';
 import { Chest } from '../games/Experiment00/src/objects/chest';
 import { Inventory } from '../games/Experiment00/src/inventory';
 import { StateStore } from '../src/core/state/state_store';
@@ -57,8 +57,8 @@ function makeChest(
   Chest.useState(store.scope('chests'));
   const def = chestDef();
   const properties: Record<string, string> = {};
-  if (opts.message !== undefined) properties.message = opts.message;
-  if (opts.item !== undefined) properties.item = opts.item;
+  if (opts.message !== undefined) {properties.message = opts.message;}
+  if (opts.item !== undefined) {properties.item = opts.item;}
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,

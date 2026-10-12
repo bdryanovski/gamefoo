@@ -1,6 +1,6 @@
-import React from "react";
-import { Icon, type IconName, ICON } from "./Icon";
-import { Tooltip } from "./Tooltip";
+import React from 'react';
+import { Icon, type IconName, ICON } from './Icon';
+import { Tooltip } from './Tooltip';
 
 interface Props {
   /** Editor glyph shown at the far left. */
@@ -14,7 +14,7 @@ interface Props {
   undoCount?: number;
   onUndo?: () => void;
   onOpenProjects?: () => void;
-  onSave: (mode: "quick" | "save") => void;
+  onSave: (mode: 'quick' | 'save') => void;
   saving: boolean;
   /** Leading editor-specific actions (e.g. "+ Add Image"). */
   extras?: React.ReactNode;
@@ -44,7 +44,7 @@ export function EditorHeader({
       </span>
       <span className="title-bar__name">
         GameFoo {title} — {projectName}
-        {unsaved ? " (unsaved)" : ""}
+        {unsaved ? ' (unsaved)' : ''}
       </span>
 
       <div className="title-bar__actions">
@@ -66,7 +66,7 @@ export function EditorHeader({
               disabled={!undoCount}
               aria-label="Undo"
             >
-              <Icon name="undo" size={ICON.sm} /> Undo{undoCount ? ` (${undoCount})` : ""}
+              <Icon name="undo" size={ICON.sm} /> Undo{undoCount ? ` (${undoCount})` : ''}
             </button>
           </Tooltip>
         )}
@@ -74,7 +74,7 @@ export function EditorHeader({
         <Tooltip label="Save without the export screen" shortcut="Ctrl+S" side="bottom">
           <button
             className="btn btn-sm title-btn"
-            onClick={() => onSave("quick")}
+            onClick={() => onSave('quick')}
             disabled={saving}
             aria-label="QuickSave"
           >
@@ -83,12 +83,8 @@ export function EditorHeader({
         </Tooltip>
 
         <Tooltip label="Save and open the export screen" side="bottom">
-          <button
-            className="btn btn-sm title-btn"
-            onClick={() => onSave("save")}
-            disabled={saving}
-          >
-            {saving ? "Saving..." : "Save"}
+          <button className="btn btn-sm title-btn" onClick={() => onSave('save')} disabled={saving}>
+            {saving ? 'Saving...' : 'Save'}
           </button>
         </Tooltip>
       </div>

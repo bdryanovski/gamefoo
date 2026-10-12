@@ -4,14 +4,21 @@
  * layered state like a portal's `base` + `door` draws in full, not just its
  * single representative sprite.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import type AssetManager from '../src/core/map/asset_manager';
 import MapObject from '../src/core/map/map_object';
 import type { Frame, GameObjectDefinition, MapObjectContext } from '../src/core/map/types';
 import type { RenderContext } from '../src/core/renderer/type';
 
 const img = {} as HTMLImageElement;
-const frameFor = (tag: number): Frame => ({ image: img, sx: tag, sy: 0, sw: 16, sh: 16, name: `f${tag}` });
+const frameFor = (tag: number): Frame => ({
+  image: img,
+  sx: tag,
+  sy: 0,
+  sw: 16,
+  sh: 16,
+  name: `f${tag}`,
+});
 
 // sprA → tag 1 (base), sprB → tag 2 (door)
 const assets = {
@@ -38,11 +45,23 @@ const def: GameObjectDefinition = {
   },
   layersByState: {
     st_open: [
-      { name: 'base', visible: true, cells: [{ col: 0, row: 0, source: { kind: 'sprite', spriteId: 'sprA' } }] },
+      {
+        name: 'base',
+        visible: true,
+        cells: [{ col: 0, row: 0, source: { kind: 'sprite', spriteId: 'sprA' } }],
+      },
     ],
     st_close: [
-      { name: 'base', visible: true, cells: [{ col: 0, row: 0, source: { kind: 'sprite', spriteId: 'sprA' } }] },
-      { name: 'door', visible: true, cells: [{ col: 0, row: 1, source: { kind: 'sprite', spriteId: 'sprB' } }] },
+      {
+        name: 'base',
+        visible: true,
+        cells: [{ col: 0, row: 0, source: { kind: 'sprite', spriteId: 'sprA' } }],
+      },
+      {
+        name: 'door',
+        visible: true,
+        cells: [{ col: 0, row: 1, source: { kind: 'sprite', spriteId: 'sprB' } }],
+      },
     ],
   },
 };
@@ -68,8 +87,15 @@ function drawsForObject(
   const obj = prepare(new MapObject(ctx));
   const draws: Array<{ tag: number; dx: number; dy: number }> = [];
   const rctx = {
-    drawSprite: (_img: unknown, sx: number, _sy: number, _sw: number, _sh: number, dx: number, dy: number) =>
-      draws.push({ tag: sx, dx, dy }),
+    drawSprite: (
+      _img: unknown,
+      sx: number,
+      _sy: number,
+      _sw: number,
+      _sh: number,
+      dx: number,
+      dy: number,
+    ) => draws.push({ tag: sx, dx, dy }),
     save() {},
     restore() {},
     translate() {},

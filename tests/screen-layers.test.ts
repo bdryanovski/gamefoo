@@ -5,7 +5,7 @@
  * `visible: false` is excluded at build time (no tiles/fill drawn). Maps that
  * omit `layers` render every level, exactly as before.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import type AssetManager from '../src/core/map/asset_manager';
 import Screen from '../src/core/map/screen';
 import type { Frame, MapData, Placement, ScreenData } from '../src/core/map/types';

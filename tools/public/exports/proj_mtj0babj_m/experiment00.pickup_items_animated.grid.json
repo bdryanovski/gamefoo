@@ -35,42 +35,22 @@
   },
   "animations": {
     "olive": {
-      "frames": [
-        0,
-        1,
-        2,
-        3
-      ],
+      "frames": [0, 1, 2, 3],
       "duration": 0.2,
       "loop": true
     },
     "key": {
-      "frames": [
-        4,
-        5,
-        6,
-        7
-      ],
+      "frames": [4, 5, 6, 7],
       "duration": 0.2,
       "loop": true
     },
     "potion": {
-      "frames": [
-        8,
-        9,
-        10,
-        11
-      ],
+      "frames": [8, 9, 10, 11],
       "duration": 0.2,
       "loop": true
     },
     "heart": {
-      "frames": [
-        16,
-        17,
-        18,
-        19
-      ],
+      "frames": [16, 17, 18, 19],
       "duration": 0.2,
       "loop": true
     }

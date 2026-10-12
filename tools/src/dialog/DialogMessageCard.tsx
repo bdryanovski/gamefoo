@@ -1,6 +1,6 @@
-import React from "react";
-import type { DialogAction, DialogMessage, DialogTree } from "./types";
-import { Icon } from "../components/Icon";
+import React from 'react';
+import type { DialogAction, DialogMessage, DialogTree } from './types';
+import { Icon } from '../components/Icon';
 
 /**
  * Compact inline editor for one dialog message — the message card half of
@@ -29,13 +29,13 @@ export function DialogMessageCard({
 }) {
   const act = (a: DialogAction) => {
     if (selectedTreeId !== tree.id) {
-      dialogDispatch({ type: "SELECT_TREE", id: tree.id });
+      dialogDispatch({ type: 'SELECT_TREE', id: tree.id });
     }
     dialogDispatch(a);
   };
 
   const commitSegments = (segments: string[]) =>
-    act({ type: "UPDATE_MESSAGE", id: message.id, updates: { segments } });
+    act({ type: 'UPDATE_MESSAGE', id: message.id, updates: { segments } });
 
   return (
     <div className="col gap-sm dialog-message-card">
@@ -48,7 +48,7 @@ export function DialogMessageCard({
           value={message.title}
           placeholder="Message title"
           onChange={(e) =>
-            act({ type: "UPDATE_MESSAGE", id: message.id, updates: { title: e.target.value } })
+            act({ type: 'UPDATE_MESSAGE', id: message.id, updates: { title: e.target.value } })
           }
         />
       </div>
@@ -60,7 +60,16 @@ export function DialogMessageCard({
       {/* Sub-messages (segments) */}
       <div className="row-between">
         <span className="text-dim text-xs">Sub-messages</span>
-        <button className="btn btn-sm" onClick={() => act({ type: "UPDATE_MESSAGE", id: message.id, updates: { segments: [...message.segments, ""] } })}>
+        <button
+          className="btn btn-sm"
+          onClick={() =>
+            act({
+              type: 'UPDATE_MESSAGE',
+              id: message.id,
+              updates: { segments: [...message.segments, ''] },
+            })
+          }
+        >
           <Icon name="add" size={11} /> Part
         </button>
       </div>
@@ -104,7 +113,10 @@ export function DialogMessageCard({
       {/* Options (branching paths) */}
       <div className="row-between">
         <span className="text-dim text-xs">Options</span>
-        <button className="btn btn-sm" onClick={() => act({ type: "ADD_OPTION", messageId: message.id })}>
+        <button
+          className="btn btn-sm"
+          onClick={() => act({ type: 'ADD_OPTION', messageId: message.id })}
+        >
           <Icon name="add" size={11} /> Option
         </button>
       </div>
@@ -112,9 +124,7 @@ export function DialogMessageCard({
         <div className="text-dim text-xs">No options — this message is a dead end.</div>
       )}
       {message.options.map((option) => {
-        const target = option.targetId
-          ? tree.messages.find((m) => m.id === option.targetId)
-          : null;
+        const target = option.targetId ? tree.messages.find((m) => m.id === option.targetId) : null;
         return (
           <div key={option.id} className="field-row">
             <input
@@ -125,7 +135,7 @@ export function DialogMessageCard({
               title="Text shown to the player"
               onChange={(e) =>
                 act({
-                  type: "UPDATE_OPTION",
+                  type: 'UPDATE_OPTION',
                   messageId: message.id,
                   optionId: option.id,
                   updates: { label: e.target.value },
@@ -135,11 +145,11 @@ export function DialogMessageCard({
             <span className="text-dim text-xs">→</span>
             <select
               className="input input-sm input-full"
-              value={option.targetId ?? ""}
+              value={option.targetId ?? ''}
               title="Where this choice leads"
               onChange={(e) =>
                 act({
-                  type: "UPDATE_OPTION",
+                  type: 'UPDATE_OPTION',
                   messageId: message.id,
                   optionId: option.id,
                   updates: { targetId: e.target.value || null },
@@ -157,7 +167,7 @@ export function DialogMessageCard({
             </select>
             <button
               className="btn btn-sm"
-              title={`Follow to "${target?.title ?? option.targetId ?? "?"}"`}
+              title={`Follow to "${target?.title ?? option.targetId ?? '?'}"`}
               disabled={!option.targetId}
               onClick={() => option.targetId && onNavigate?.(option.targetId)}
             >
@@ -167,7 +177,7 @@ export function DialogMessageCard({
               className="btn btn-sm danger"
               title="Remove option"
               onClick={() =>
-                act({ type: "DELETE_OPTION", messageId: message.id, optionId: option.id })
+                act({ type: 'DELETE_OPTION', messageId: message.id, optionId: option.id })
               }
             >
               <Icon name="delete" size={11} />
@@ -181,8 +191,8 @@ export function DialogMessageCard({
         <div className="col gap-sm">
           <span className="text-dim text-xs">Metadata</span>
           {message.meta.map((entry, i) => (
-            <div key={i} className="text-xs" style={{ padding: "0 4px" }}>
-              <b>{entry.key || "(key)"}</b>: {entry.value}
+            <div key={i} className="text-xs" style={{ padding: '0 4px' }}>
+              <b>{entry.key || '(key)'}</b>: {entry.value}
             </div>
           ))}
         </div>

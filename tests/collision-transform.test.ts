@@ -3,7 +3,7 @@
  * object footprint centre), so a rotated or flipped object's colliders track
  * its sprite instead of staying in the authored orientation.
  */
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'vite-plus/test';
 import { transformShape } from '../src/core/map/collision_map';
 import type { CollisionShape } from '../src/core/map/types';
 
@@ -12,7 +12,7 @@ const footprint = { width: 16, height: 16 };
 const topRect: CollisionShape = { kind: 'rect', x: 0, y: 0, width: 16, height: 11 };
 
 function rect(shape: CollisionShape) {
-  if (shape.kind !== 'rect') throw new Error('expected rect');
+  if (shape.kind !== 'rect') {throw new Error('expected rect');}
   return { x: shape.x, y: shape.y, width: shape.width, height: shape.height };
 }
 

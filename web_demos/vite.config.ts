@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite-plus';
 import { resolve } from 'path';
 import { readdirSync, statSync, existsSync } from 'fs';
 
@@ -6,10 +6,7 @@ import { readdirSync, statSync, existsSync } from 'fs';
 const demosDir = resolve(__dirname);
 const demoFolders = readdirSync(demosDir).filter((name) => {
   const path = resolve(demosDir, name);
-  return (
-    statSync(path).isDirectory() &&
-    existsSync(resolve(path, 'index.html'))
-  );
+  return statSync(path).isDirectory() && existsSync(resolve(path, 'index.html'));
 });
 
 // Build input object for multi-page app

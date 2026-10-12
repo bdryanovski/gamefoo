@@ -1,7 +1,7 @@
-import type { AppState } from "../types";
-import { objectMachines } from "../types";
-import { screenKey, resolvePlacementDisplay } from "./types";
-import { downloadJSON, projectBaseName } from "../utils/export";
+import type { AppState } from '../types';
+import { objectMachines } from '../types';
+import { screenKey, resolvePlacementDisplay } from './types';
+import { downloadJSON, projectBaseName } from '../utils/export';
 
 /**
  * Full map export — everything needed to rebuild the map: images,
@@ -13,8 +13,8 @@ export function exportMap(state: AppState) {
   const imageNames = new Map(state.images.map((i) => [i.id, i.name]));
   return {
     meta: {
-      version: "1.0",
-      tool: "gamefoo-map-editor",
+      version: '1.0',
+      tool: 'gamefoo-map-editor',
       projectName: state.projectName,
       blockSize: m.blockSize,
       screenCols: m.screenCols,
@@ -33,7 +33,7 @@ export function exportMap(state: AppState) {
         {
           name: s.name,
           imageId: s.imageId,
-          image: imageNames.get(s.imageId) ?? "",
+          image: imageNames.get(s.imageId) ?? '',
           x: s.x,
           y: s.y,
           width: s.width,
@@ -50,9 +50,9 @@ export function exportMap(state: AppState) {
           defaultSpriteId: s.defaultSpriteId,
           placements: s.placements.map((p) => ({
             kind: p.kind,
-            ...(p.kind === "sprite" ? { spriteId: p.spriteId } : {}),
-            ...(p.kind === "animation" ? { animationId: p.animationId } : {}),
-            ...(p.kind === "text"
+            ...(p.kind === 'sprite' ? { spriteId: p.spriteId } : {}),
+            ...(p.kind === 'animation' ? { animationId: p.animationId } : {}),
+            ...(p.kind === 'text'
               ? {
                   text: p.text,
                   font: p.font,
@@ -61,7 +61,7 @@ export function exportMap(state: AppState) {
                   align: p.align,
                 }
               : {}),
-            ...(p.kind === "machine"
+            ...(p.kind === 'machine'
               ? {
                   machineId: p.machineId,
                   ...(p.stateName ? { stateName: p.stateName } : {}),
@@ -113,7 +113,7 @@ export function exportMapScreens(state: AppState) {
           : null;
         return {
           kind: p.kind,
-          name: p.kind === "text" ? p.text : (spriteName ?? animName ?? "?"),
+          name: p.kind === 'text' ? p.text : (spriteName ?? animName ?? '?'),
           x: p.x,
           y: p.y,
           level: p.level,
@@ -169,7 +169,7 @@ export function exportMapObjects(state: AppState): MapObjectExport[] {
         objectMachines(state.objects),
       );
       const sprite = display.spriteId ? sprites.get(display.spriteId) : undefined;
-      if (!sprite) return;
+      if (!sprite) {return;}
       objects.push({
         name: sprite.name,
         screen: screenKey(s.x, s.y),
@@ -182,7 +182,7 @@ export function exportMapObjects(state: AppState): MapObjectExport[] {
         rotation: p.rotation ?? 0,
         flipX: p.flipX ?? false,
         flipY: p.flipY ?? false,
-        image: imageNames.get(sprite.imageId) ?? "",
+        image: imageNames.get(sprite.imageId) ?? '',
         sx: sprite.x,
         sy: sprite.y,
         z,

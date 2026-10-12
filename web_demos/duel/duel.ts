@@ -1,3 +1,6 @@
+import type {
+  RenderContext,
+  Vector2} from '../../src/index';
 import {
   Behaviour,
   Bitmap,
@@ -11,8 +14,6 @@ import {
   InputMapper,
   MonitorSystem,
   ObjectSystem,
-  RenderContext,
-  Vector2,
   WebRenderer,
 } from '../../src/index';
 
@@ -133,7 +134,7 @@ class Bullet extends DynamicEntity {
   private end: Vector2;
 
   constructor(name: string, x: number, y: number) {
-    super('bullet_' + name, x, y, 3, 3);
+    super(`bullet_${  name}`, x, y, 3, 3);
     this.root = { x, y };
     this.end = {
       x: 200,
@@ -164,7 +165,7 @@ class Bullet extends DynamicEntity {
     ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height, COLORS.WHITE);
   }
 
-  public direction(target: Vector2) {
+  direction(target: Vector2) {
     this.end = target;
   }
 

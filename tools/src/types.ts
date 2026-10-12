@@ -1,10 +1,10 @@
-import { uid } from "./utils/uid";
-import { INITIAL_MAP_STATE, migrateMapState, sanitizeMap, DEFAULT_LAYER_NAMES } from "./map/types";
-import type { MapAction, MapState } from "./map/types";
-import { makeStateMachine, sanitizeMachine } from "./statemachine/types";
-import type { StateMachineDef, StateNodeDef } from "./statemachine/types";
-import { INITIAL_DIALOG_STATE, sanitizeDialogState } from "./dialog/types";
-import type { DialogAction, DialogState } from "./dialog/types";
+import { uid } from './utils/uid';
+import { INITIAL_MAP_STATE, migrateMapState, sanitizeMap, DEFAULT_LAYER_NAMES } from './map/types';
+import type { MapAction, MapState } from './map/types';
+import { makeStateMachine, sanitizeMachine } from './statemachine/types';
+import type { StateMachineDef, StateNodeDef } from './statemachine/types';
+import { INITIAL_DIALOG_STATE, sanitizeDialogState } from './dialog/types';
+import type { DialogAction, DialogState } from './dialog/types';
 
 /**
  * An image in the shared asset library. The sprite editor cuts sprites
@@ -37,9 +37,9 @@ export interface GridSettings {
  * top-left, extent = sprite width/height).
  */
 export type CollisionShape =
-  | { kind: "circle"; cx: number; cy: number; radius: number }
-  | { kind: "rect"; x: number; y: number; width: number; height: number }
-  | { kind: "polygon"; points: Array<{ x: number; y: number }> };
+  | { kind: 'circle'; cx: number; cy: number; radius: number }
+  | { kind: 'rect'; x: number; y: number; width: number; height: number }
+  | { kind: 'polygon'; points: Array<{ x: number; y: number }> };
 
 /**
  * A collision layer defined once at the project level: a named collision
@@ -74,39 +74,45 @@ export interface CollisionVolume {
  * more; each layer keeps one colour wherever it is used.
  */
 export const DEFAULT_COLLISION_LAYERS: readonly CollisionLayerDef[] = [
-  { id: "solid", name: "Solid", color: "#e05a5a" },
-  { id: "vision", name: "Vision", color: "#f2c14e" },
-  { id: "damage", name: "Damage", color: "#d94fd9" },
-  { id: "activation", name: "Activation", color: "#4ea3f2" },
-  { id: "hitbox", name: "Hitbox", color: "#ff7043" },
-  { id: "hurtbox", name: "Hurtbox", color: "#5ad07a" },
-  { id: "trigger", name: "Trigger", color: "#26c6da" },
-  { id: "pickup", name: "Pickup", color: "#ffd54f" },
-  { id: "ledge", name: "Ledge", color: "#8d6e63" },
-  { id: "water", name: "Water", color: "#29b6f6" },
+  { id: 'solid', name: 'Solid', color: '#e05a5a' },
+  { id: 'vision', name: 'Vision', color: '#f2c14e' },
+  { id: 'damage', name: 'Damage', color: '#d94fd9' },
+  { id: 'activation', name: 'Activation', color: '#4ea3f2' },
+  { id: 'hitbox', name: 'Hitbox', color: '#ff7043' },
+  { id: 'hurtbox', name: 'Hurtbox', color: '#5ad07a' },
+  { id: 'trigger', name: 'Trigger', color: '#26c6da' },
+  { id: 'pickup', name: 'Pickup', color: '#ffd54f' },
+  { id: 'ledge', name: 'Ledge', color: '#8d6e63' },
+  { id: 'water', name: 'Water', color: '#29b6f6' },
 ];
 
 /** Slugify a layer name into a stable id (lowercase, dash-separated). */
 export function collisionLayerId(name: string): string {
-  return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || uid("layer");
+  return (
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || uid('layer')
+  );
 }
 
 /** A fresh collision volume of the given shape, sized to the sprite frame. */
 export function makeCollision(
-  kind: CollisionShape["kind"],
+  kind: CollisionShape['kind'],
   sprite: { width: number; height: number },
   layerId: string,
 ): CollisionVolume {
   const w = Math.max(1, sprite.width);
   const h = Math.max(1, sprite.height);
   let shape: CollisionShape;
-  if (kind === "circle") {
-    shape = { kind: "circle", cx: w / 2, cy: h / 2, radius: Math.min(w, h) / 2 };
-  } else if (kind === "rect") {
-    shape = { kind: "rect", x: w * 0.25, y: h * 0.25, width: w * 0.5, height: h * 0.5 };
+  if (kind === 'circle') {
+    shape = { kind: 'circle', cx: w / 2, cy: h / 2, radius: Math.min(w, h) / 2 };
+  } else if (kind === 'rect') {
+    shape = { kind: 'rect', x: w * 0.25, y: h * 0.25, width: w * 0.5, height: h * 0.5 };
   } else {
     shape = {
-      kind: "polygon",
+      kind: 'polygon',
       points: [
         { x: w / 2, y: h * 0.2 },
         { x: w * 0.8, y: h * 0.8 },
@@ -114,7 +120,7 @@ export function makeCollision(
       ],
     };
   }
-  return { id: uid("col"), layerId, enabled: true, shape };
+  return { id: uid('col'), layerId, enabled: true, shape };
 }
 
 /**
@@ -171,7 +177,7 @@ export interface ObjectMeta {
  */
 /** One directional/action slot on a character → a sprite or animation. */
 export interface CharacterSlot {
-  kind: "sprite" | "animation";
+  kind: 'sprite' | 'animation';
   id: string;
   /** Mirror horizontally — reuse an existing animation flipped (e.g. left = right flipped). */
   flipX?: boolean;
@@ -205,8 +211,8 @@ export interface ObjectGrid {
 
 /** What a composition cell draws: a static sprite or an animation. */
 export type ObjectCellSource =
-  | { kind: "sprite"; spriteId: string }
-  | { kind: "animation"; animationId: string };
+  | { kind: 'sprite'; spriteId: string }
+  | { kind: 'animation'; animationId: string };
 
 /** One sprite/animation placed at grid (col,row) on a layer. */
 export interface ObjectCell {
@@ -285,7 +291,7 @@ export function makeObject(name: string, cell = 32): GameObjectDef {
   const machine = makeStateMachine(name);
   const initId = machine.states[0]!.id;
   return {
-    id: uid("obj"),
+    id: uid('obj'),
     name,
     sprites: [],
     animations: [],
@@ -293,20 +299,20 @@ export function makeObject(name: string, cell = 32): GameObjectDef {
     layersByState: { [initId]: makeStateLayers() },
     collisionsByState: {},
     properties: {},
-    meta: { description: "", category: "", tags: [] },
-    machine: { ...machine, states: machine.states.map((s) => ({ ...s, name: "init" })) },
+    meta: { description: '', category: '', tags: [] },
+    machine: { ...machine, states: machine.states.map((s) => ({ ...s, name: 'init' })) },
   };
 }
 
 /** A fresh composition for a new state: one empty "base" layer. */
 export function makeStateLayers(): ObjectLayer[] {
-  return [{ id: uid("lyr"), name: "base", visible: true, cells: [] }];
+  return [{ id: uid('lyr'), name: 'base', visible: true, cells: [] }];
 }
 
 /** Effective collisions for a state: its own set, else the initial state's. */
 export function stateCollisions(object: GameObjectDef, stateId: string): CollisionVolume[] {
   const own = object.collisionsByState[stateId];
-  if (own) return own;
+  if (own) {return own;}
   const fallback = object.machine.initialStateId;
   return (fallback ? object.collisionsByState[fallback] : undefined) ?? [];
 }
@@ -337,18 +343,17 @@ export function normalizeObject(
   };
   const machine = normalizeMachine(o.machine, o.name);
   return {
-    id: typeof o.id === "string" ? o.id : uid("obj"),
-    name: typeof o.name === "string" ? o.name : "object",
+    id: typeof o.id === 'string' ? o.id : uid('obj'),
+    name: typeof o.name === 'string' ? o.name : 'object',
     sprites: Array.isArray(o.sprites) ? o.sprites : [],
     animations: Array.isArray(o.animations) ? o.animations : [],
     grid,
     layersByState: normalizeLayersByState(rec, machine),
     collisionsByState: normalizeCollisionsByState(rec, machine, legacy),
-    properties:
-      o.properties && typeof o.properties === "object" ? o.properties : {},
+    properties: o.properties && typeof o.properties === 'object' ? o.properties : {},
     meta: {
-      description: typeof meta.description === "string" ? meta.description : "",
-      category: typeof meta.category === "string" ? meta.category : "",
+      description: typeof meta.description === 'string' ? meta.description : '',
+      category: typeof meta.category === 'string' ? meta.category : '',
       tags: Array.isArray(meta.tags) ? meta.tags : [],
     },
     machine,
@@ -358,10 +363,10 @@ export function normalizeObject(
 
 function cloneLayers(layers: ObjectLayer[]): ObjectLayer[] {
   return layers.map((l) => ({
-    id: uid("lyr"),
+    id: uid('lyr'),
     name: l.name,
     visible: l.visible,
-    cells: l.cells.map((c) => ({ ...c, id: uid("cell") })),
+    cells: l.cells.map((c) => ({ ...c, id: uid('cell') })),
   }));
 }
 
@@ -387,8 +392,11 @@ function normalizeLayersByState(
   const visById = new Map<string, string[] | null>();
   for (const rs of rawStates) {
     const r = asRecord(rs);
-    if (r && typeof r.id === "string") {
-      visById.set(r.id, Array.isArray(r.layers) ? r.layers.filter((x): x is string => typeof x === "string") : null);
+    if (r && typeof r.id === 'string') {
+      visById.set(
+        r.id,
+        Array.isArray(r.layers) ? r.layers.filter((x): x is string => typeof x === 'string') : null,
+      );
     }
   }
   for (const id of ids) {
@@ -415,7 +423,7 @@ function normalizeCollisionsByState(
   const rawMap = asRecord(rec.collisionsByState);
   if (rawMap) {
     for (const key of Object.keys(rawMap)) {
-      if (ids.has(key)) result[key] = normList(rawMap[key]);
+      if (ids.has(key)) {result[key] = normList(rawMap[key]);}
     }
     return result;
   }
@@ -428,39 +436,41 @@ function normalizeCollisionsByState(
 
 function normalizeCellSource(raw: unknown): ObjectCellSource | null {
   const r = asRecord(raw);
-  if (!r) return null;
-  if (r.kind === "sprite" && typeof r.spriteId === "string") return { kind: "sprite", spriteId: r.spriteId };
-  if (r.kind === "animation" && typeof r.animationId === "string") return { kind: "animation", animationId: r.animationId };
+  if (!r) {return null;}
+  if (r.kind === 'sprite' && typeof r.spriteId === 'string')
+    {return { kind: 'sprite', spriteId: r.spriteId };}
+  if (r.kind === 'animation' && typeof r.animationId === 'string')
+    {return { kind: 'animation', animationId: r.animationId };}
   return null;
 }
 
 function normalizeLayers(raw: unknown): ObjectLayer[] {
-  if (!Array.isArray(raw)) return [];
+  if (!Array.isArray(raw)) {return [];}
   const out: ObjectLayer[] = [];
   for (const l of raw) {
     const r = asRecord(l);
-    if (!r) continue;
+    if (!r) {continue;}
     const cells: ObjectCell[] = [];
     if (Array.isArray(r.cells)) {
       for (const c of r.cells) {
         const cr = asRecord(c);
         const src = cr && normalizeCellSource(cr.source);
-        if (!cr || !src) continue;
+        if (!cr || !src) {continue;}
         cells.push({
-          id: typeof cr.id === "string" ? cr.id : uid("cell"),
+          id: typeof cr.id === 'string' ? cr.id : uid('cell'),
           col: Math.max(0, Math.floor(num(cr.col))),
           row: Math.max(0, Math.floor(num(cr.row))),
           source: src,
           ...(cr.flipX === true ? { flipX: true } : {}),
           ...(cr.flipY === true ? { flipY: true } : {}),
-          ...(typeof cr.rotation === "number" && cr.rotation ? { rotation: cr.rotation } : {}),
+          ...(typeof cr.rotation === 'number' && cr.rotation ? { rotation: cr.rotation } : {}),
         });
       }
     }
     out.push({
-      id: typeof r.id === "string" ? r.id : uid("lyr"),
-      name: typeof r.name === "string" ? r.name : "layer",
-      visible: typeof r.visible === "boolean" ? r.visible : true,
+      id: typeof r.id === 'string' ? r.id : uid('lyr'),
+      name: typeof r.name === 'string' ? r.name : 'layer',
+      visible: typeof r.visible === 'boolean' ? r.visible : true,
       cells,
     });
   }
@@ -473,16 +483,16 @@ export function objectStateLayers(object: GameObjectDef, stateId: string): Objec
 }
 
 /** Representative sprite/animation for a composition: topmost visible cell. */
-function representativeDisplay(layers: ObjectLayer[]): StateNodeDef["display"] {
+function representativeDisplay(layers: ObjectLayer[]): StateNodeDef['display'] {
   for (let i = layers.length - 1; i >= 0; i--) {
     const layer = layers[i]!;
-    if (!layer.visible || layer.cells.length === 0) continue;
+    if (!layer.visible || layer.cells.length === 0) {continue;}
     const src = layer.cells[0]!.source;
-    return src.kind === "sprite"
-      ? { kind: "sprite", spriteId: src.spriteId }
-      : { kind: "animation", animationId: src.animationId };
+    return src.kind === 'sprite'
+      ? { kind: 'sprite', spriteId: src.spriteId }
+      : { kind: 'animation', animationId: src.animationId };
   }
-  return { kind: "sprite", spriteId: null };
+  return { kind: 'sprite', spriteId: null };
 }
 
 /**
@@ -506,7 +516,9 @@ export function sanitizeObject(
     const pruned = src.map((l) => ({
       ...l,
       cells: l.cells.filter((c) =>
-        c.source.kind === "sprite" ? spriteIds.has(c.source.spriteId) : animIds.has(c.source.animationId),
+        c.source.kind === 'sprite'
+          ? spriteIds.has(c.source.spriteId)
+          : animIds.has(c.source.animationId),
       ),
     }));
     layersByState[s.id] = pruned.length > 0 ? pruned : makeStateLayers();
@@ -515,7 +527,7 @@ export function sanitizeObject(
   // Keep only collision entries for states that still exist.
   const collisionsByState: Record<string, CollisionVolume[]> = {};
   for (const key of Object.keys(object.collisionsByState)) {
-    if (stateIds.has(key)) collisionsByState[key] = object.collisionsByState[key]!;
+    if (stateIds.has(key)) {collisionsByState[key] = object.collisionsByState[key]!;}
   }
 
   return {
@@ -538,20 +550,20 @@ function normalizeCharacter(raw: CharacterConfig): CharacterConfig {
   const rawSlots = raw.slots ?? {};
   for (const key of Object.keys(rawSlots)) {
     const s = rawSlots[key];
-    if (s && (s.kind === "sprite" || s.kind === "animation") && typeof s.id === "string") {
+    if (s && (s.kind === 'sprite' || s.kind === 'animation') && typeof s.id === 'string') {
       slots[key] = {
         kind: s.kind,
         id: s.id,
         ...(s.flipX === true ? { flipX: true } : {}),
         ...(s.flipY === true ? { flipY: true } : {}),
-        ...(typeof s.rotation === "number" && s.rotation ? { rotation: s.rotation } : {}),
+        ...(typeof s.rotation === 'number' && s.rotation ? { rotation: s.rotation } : {}),
       };
     }
   }
   const actions = Array.isArray(raw.actions)
     ? raw.actions
-      .filter((a) => a && typeof a.id === "string" && typeof a.name === "string")
-      .map((a) => ({ id: a.id, name: a.name }))
+        .filter((a) => a && typeof a.id === 'string' && typeof a.name === 'string')
+        .map((a) => ({ id: a.id, name: a.name }))
     : [];
   return { slots, actions };
 }
@@ -561,23 +573,21 @@ function normalizeMachine(raw: unknown, fallbackName?: string): StateMachineDef 
   const m = (raw ?? {}) as Partial<StateMachineDef>;
   const states = Array.isArray(m.states) ? m.states : [];
   return {
-    id: typeof m.id === "string" ? m.id : uid("sm"),
-    name: typeof m.name === "string" ? m.name : (fallbackName ?? "machine"),
+    id: typeof m.id === 'string' ? m.id : uid('sm'),
+    name: typeof m.name === 'string' ? m.name : (fallbackName ?? 'machine'),
     states,
     transitions: Array.isArray(m.transitions) ? m.transitions : [],
     initialStateId:
-      typeof m.initialStateId === "string"
-        ? m.initialStateId
-        : (states[0]?.id ?? null),
+      typeof m.initialStateId === 'string' ? m.initialStateId : (states[0]?.id ?? null),
   };
 }
 
 function num(v: unknown, fallback = 0): number {
-  return typeof v === "number" && Number.isFinite(v) ? v : fallback;
+  return typeof v === 'number' && Number.isFinite(v) ? v : fallback;
 }
 
 function asRecord(v: unknown): Record<string, unknown> | null {
-  return v && typeof v === "object" ? (v as Record<string, unknown>) : null;
+  return v && typeof v === 'object' ? (v as Record<string, unknown>) : null;
 }
 
 /**
@@ -591,16 +601,22 @@ function normalizeCollision(
 ): CollisionVolume | null {
   const c = asRecord(raw);
   const s = c && asRecord(c.shape);
-  if (!s) return null;
+  if (!s) {return null;}
   let shape: CollisionShape;
-  if (s.kind === "circle") {
-    shape = { kind: "circle", cx: num(s.cx), cy: num(s.cy), radius: Math.max(0, num(s.radius)) };
-  } else if (s.kind === "rect") {
-    shape = { kind: "rect", x: num(s.x), y: num(s.y), width: Math.max(0, num(s.width)), height: Math.max(0, num(s.height)) };
-  } else if (s.kind === "polygon") {
+  if (s.kind === 'circle') {
+    shape = { kind: 'circle', cx: num(s.cx), cy: num(s.cy), radius: Math.max(0, num(s.radius)) };
+  } else if (s.kind === 'rect') {
+    shape = {
+      kind: 'rect',
+      x: num(s.x),
+      y: num(s.y),
+      width: Math.max(0, num(s.width)),
+      height: Math.max(0, num(s.height)),
+    };
+  } else if (s.kind === 'polygon') {
     const pts = Array.isArray(s.points) ? s.points : [];
     shape = {
-      kind: "polygon",
+      kind: 'polygon',
       points: pts.map((p) => {
         const r = asRecord(p);
         return { x: num(r?.x), y: num(r?.y) };
@@ -610,19 +626,18 @@ function normalizeCollision(
     return null;
   }
   const layerId =
-    typeof c!.layerId === "string" ? c!.layerId
-    : typeof c!.layer === "string" ? c!.layer
-    : "solid";
+    typeof c!.layerId === 'string' ? c!.layerId : typeof c!.layer === 'string' ? c!.layer : 'solid';
   // Old volumes carried their own name/colour; preserve them as a layer.
   if (legacy && !legacy.has(layerId)) {
-    const name = typeof c!.name === "string" ? c!.name : null;
-    const color = typeof c!.color === "string" ? c!.color : null;
-    if (name || color) legacy.set(layerId, { id: layerId, name: name ?? layerId, color: color ?? "#e05a5a" });
+    const name = typeof c!.name === 'string' ? c!.name : null;
+    const color = typeof c!.color === 'string' ? c!.color : null;
+    if (name || color)
+      {legacy.set(layerId, { id: layerId, name: name ?? layerId, color: color ?? '#e05a5a' });}
   }
   return {
-    id: typeof c!.id === "string" ? c!.id : uid("col"),
+    id: typeof c!.id === 'string' ? c!.id : uid('col'),
     layerId,
-    enabled: typeof c!.enabled === "boolean" ? c!.enabled : true,
+    enabled: typeof c!.enabled === 'boolean' ? c!.enabled : true,
     shape,
   };
 }
@@ -633,7 +648,9 @@ function normalizeSprite(
   legacy?: Map<string, CollisionLayerDef>,
 ): SpriteRegion {
   const collisions = Array.isArray(raw.collisions)
-    ? raw.collisions.map((c) => normalizeCollision(c, legacy)).filter((c): c is CollisionVolume => c != null)
+    ? raw.collisions
+        .map((c) => normalizeCollision(c, legacy))
+        .filter((c): c is CollisionVolume => c != null)
     : [];
   return { ...raw, collisions };
 }
@@ -644,25 +661,25 @@ function buildCollisionLayers(
   legacy: Map<string, CollisionLayerDef>,
 ): CollisionLayerDef[] {
   const byId = new Map<string, CollisionLayerDef>();
-  for (const l of DEFAULT_COLLISION_LAYERS) byId.set(l.id, { ...l });
+  for (const l of DEFAULT_COLLISION_LAYERS) {byId.set(l.id, { ...l });}
   if (Array.isArray(raw)) {
     for (const r of raw) {
       const rec = asRecord(r);
-      if (rec && typeof rec.id === "string") {
+      if (rec && typeof rec.id === 'string') {
         byId.set(rec.id, {
           id: rec.id,
-          name: typeof rec.name === "string" ? rec.name : rec.id,
-          color: typeof rec.color === "string" ? rec.color : "#e05a5a",
+          name: typeof rec.name === 'string' ? rec.name : rec.id,
+          color: typeof rec.color === 'string' ? rec.color : '#e05a5a',
         });
       }
     }
   }
-  for (const [id, def] of legacy) if (!byId.has(id)) byId.set(id, def);
+  for (const [id, def] of legacy) {if (!byId.has(id)) byId.set(id, def);}
   return [...byId.values()];
 }
 
-export type ToolType = "select" | "region" | "grid-pick" | "pan";
-export type TabType = "images" | "sprites" | "animations" | "export";
+export type ToolType = 'select' | 'region' | 'grid-pick' | 'pan';
+export type TabType = 'images' | 'sprites' | 'animations' | 'export';
 
 /**
  * Project-wide constants shared across every editor and inlined into
@@ -717,41 +734,41 @@ export interface AppState {
 }
 
 /** A point-in-time project document — everything except the undo stack. */
-export type ProjectSnapshot = Omit<AppState, "history">;
+export type ProjectSnapshot = Omit<AppState, 'history'>;
 
 export type AppAction =
-  | { type: "ADD_IMAGE"; image: LibraryImage; activate?: boolean }
-  | { type: "REMOVE_IMAGE"; imageId: string }
-  | { type: "SET_ACTIVE_IMAGE"; imageId: string }
-  | { type: "SET_GRID"; grid: Partial<GridSettings> }
-  | { type: "ADD_SPRITE"; sprite: SpriteRegion }
-  | { type: "UPDATE_SPRITE"; id: string; updates: Partial<SpriteRegion> }
-  | { type: "DELETE_SPRITE"; id: string }
-  | { type: "SELECT_SPRITE"; id: string; multi?: boolean }
-  | { type: "DESELECT_ALL_SPRITES" }
-  | { type: "ADD_COLLISION_LAYER"; layer: CollisionLayerDef }
-  | { type: "UPDATE_COLLISION_LAYER"; id: string; updates: Partial<Omit<CollisionLayerDef, "id">> }
-  | { type: "DELETE_COLLISION_LAYER"; id: string }
-  | { type: "ADD_ANIMATION"; animation: AnimationDef }
-  | { type: "UPDATE_ANIMATION"; id: string; updates: Partial<AnimationDef> }
-  | { type: "DELETE_ANIMATION"; id: string }
-  | { type: "SELECT_ANIMATION"; id: string | null }
-  | { type: "ADD_OBJECT"; object: GameObjectDef }
-  | { type: "UPDATE_OBJECT"; id: string; updates: Partial<GameObjectDef> }
-  | { type: "DELETE_OBJECT"; id: string }
-  | { type: "SELECT_OBJECT"; id: string | null }
-  | { type: "SET_CONFIG_DEFAULT_LAYERS"; layers: string[] }
-  | { type: "SET_TOOL"; tool: ToolType }
-  | { type: "SET_ZOOM"; zoom: number }
-  | { type: "SET_PAN"; x: number; y: number }
-  | { type: "SET_TAB"; tab: TabType }
-  | { type: "SET_PROJECT_NAME"; name: string }
-  | { type: "LOAD_PROJECT"; state: AppState }
-  | { type: "UNDO" }
+  | { type: 'ADD_IMAGE'; image: LibraryImage; activate?: boolean }
+  | { type: 'REMOVE_IMAGE'; imageId: string }
+  | { type: 'SET_ACTIVE_IMAGE'; imageId: string }
+  | { type: 'SET_GRID'; grid: Partial<GridSettings> }
+  | { type: 'ADD_SPRITE'; sprite: SpriteRegion }
+  | { type: 'UPDATE_SPRITE'; id: string; updates: Partial<SpriteRegion> }
+  | { type: 'DELETE_SPRITE'; id: string }
+  | { type: 'SELECT_SPRITE'; id: string; multi?: boolean }
+  | { type: 'DESELECT_ALL_SPRITES' }
+  | { type: 'ADD_COLLISION_LAYER'; layer: CollisionLayerDef }
+  | { type: 'UPDATE_COLLISION_LAYER'; id: string; updates: Partial<Omit<CollisionLayerDef, 'id'>> }
+  | { type: 'DELETE_COLLISION_LAYER'; id: string }
+  | { type: 'ADD_ANIMATION'; animation: AnimationDef }
+  | { type: 'UPDATE_ANIMATION'; id: string; updates: Partial<AnimationDef> }
+  | { type: 'DELETE_ANIMATION'; id: string }
+  | { type: 'SELECT_ANIMATION'; id: string | null }
+  | { type: 'ADD_OBJECT'; object: GameObjectDef }
+  | { type: 'UPDATE_OBJECT'; id: string; updates: Partial<GameObjectDef> }
+  | { type: 'DELETE_OBJECT'; id: string }
+  | { type: 'SELECT_OBJECT'; id: string | null }
+  | { type: 'SET_CONFIG_DEFAULT_LAYERS'; layers: string[] }
+  | { type: 'SET_TOOL'; tool: ToolType }
+  | { type: 'SET_ZOOM'; zoom: number }
+  | { type: 'SET_PAN'; x: number; y: number }
+  | { type: 'SET_TAB'; tab: TabType }
+  | { type: 'SET_PROJECT_NAME'; name: string }
+  | { type: 'LOAD_PROJECT'; state: AppState }
+  | { type: 'UNDO' }
   /** All map-editor actions, delegated to mapReducer. */
-  | { type: "MAP"; action: MapAction }
+  | { type: 'MAP'; action: MapAction }
   /** All dialog-editor actions, delegated to dialogReducer. */
-  | { type: "DIALOG"; action: DialogAction };
+  | { type: 'DIALOG'; action: DialogAction };
 
 export const DEFAULT_GRID: GridSettings = {
   enabled: true,
@@ -764,7 +781,7 @@ export const DEFAULT_GRID: GridSettings = {
 };
 
 export const INITIAL_STATE: AppState = {
-  projectName: "Untitled",
+  projectName: 'Untitled',
   images: [],
   activeImageId: null,
   grid: { ...DEFAULT_GRID },
@@ -776,10 +793,10 @@ export const INITIAL_STATE: AppState = {
   selectedSpriteIds: [],
   selectedAnimationId: null,
   selectedObjectId: null,
-  activeTool: "grid-pick",
+  activeTool: 'grid-pick',
   zoom: 2,
   pan: { x: 0, y: 0 },
-  activeTab: "sprites",
+  activeTab: 'sprites',
   map: INITIAL_MAP_STATE,
   dialog: INITIAL_DIALOG_STATE,
   history: [],
@@ -802,9 +819,10 @@ interface LegacyState {
 /** Coerce persisted project config to a valid shape. */
 function normalizeConfig(raw: unknown): ProjectConfig {
   const c = asRecord(raw);
-  const layers = c && Array.isArray(c.defaultLayers)
-    ? c.defaultLayers.filter((n): n is string => typeof n === "string" && n.trim().length > 0)
-    : null;
+  const layers =
+    c && Array.isArray(c.defaultLayers)
+      ? c.defaultLayers.filter((n): n is string => typeof n === 'string' && n.trim().length > 0)
+      : null;
   return { defaultLayers: layers && layers.length > 0 ? layers : [...DEFAULT_LAYER_NAMES] };
 }
 
@@ -821,15 +839,13 @@ export function migrateSpriteState(raw: unknown): AppState {
   const legacyLayers = new Map<string, CollisionLayerDef>();
 
   if (Array.isArray(old.images)) {
-    images = old.images.filter(
-      (i) => i && typeof i.id === "string" && typeof i.url === "string",
-    );
+    images = old.images.filter((i) => i && typeof i.id === 'string' && typeof i.url === 'string');
     const imageIds = new Set(images.map((i) => i.id));
     sprites = (old.sprites ?? [])
       .filter((s) => s && s.imageId && imageIds.has(s.imageId))
       .map((s) => normalizeSprite({ ...s, imageId: s.imageId! }, legacyLayers));
   } else if (old.imageData) {
-    const imageId = uid("img");
+    const imageId = uid('img');
     images = [
       {
         id: imageId,
@@ -850,9 +866,7 @@ export function migrateSpriteState(raw: unknown): AppState {
       ? old.activeImageId
       : (images[0]?.id ?? null);
 
-  const animations: AnimationDef[] = Array.isArray(old.animations)
-    ? old.animations
-    : [];
+  const animations: AnimationDef[] = Array.isArray(old.animations) ? old.animations : [];
 
   const rawObjects = Array.isArray(old.objects)
     ? old.objects.map((o) => normalizeObject(o, legacyLayers))
@@ -860,21 +874,20 @@ export function migrateSpriteState(raw: unknown): AppState {
   // Legacy top-level state machines: each becomes its own object.
   const smRaw = old.stateMachines;
   const legacyMachines =
-    smRaw && typeof smRaw === "object" && "machines" in smRaw && Array.isArray(smRaw.machines)
+    smRaw && typeof smRaw === 'object' && 'machines' in smRaw && Array.isArray(smRaw.machines)
       ? smRaw.machines
       : [];
   const legacyObjects = legacyMachines.map((m) => {
     const name =
-      m && typeof m === "object" && "name" in m && typeof m.name === "string"
-        ? m.name
-        : "machine";
+      m && typeof m === 'object' && 'name' in m && typeof m.name === 'string' ? m.name : 'machine';
     const obj = normalizeObject({ name, machine: m }, legacyLayers);
     // Attach every sprite/animation the machine states reference.
     const sIds = new Set<string>();
     const aIds = new Set<string>();
     for (const st of obj.machine.states) {
-      if (st.display.kind === "sprite" && st.display.spriteId) sIds.add(st.display.spriteId);
-      if (st.display.kind === "animation" && st.display.animationId) aIds.add(st.display.animationId);
+      if (st.display.kind === 'sprite' && st.display.spriteId) {sIds.add(st.display.spriteId);}
+      if (st.display.kind === 'animation' && st.display.animationId)
+        {aIds.add(st.display.animationId);}
     }
     return { ...obj, sprites: [...sIds], animations: [...aIds] };
   });
@@ -884,11 +897,10 @@ export function migrateSpriteState(raw: unknown): AppState {
 
   const state = {
     ...INITIAL_STATE,
-    projectName:
-      typeof old.projectName === "string" ? old.projectName : INITIAL_STATE.projectName,
+    projectName: typeof old.projectName === 'string' ? old.projectName : INITIAL_STATE.projectName,
     images,
     activeImageId,
-    grid: { ...DEFAULT_GRID, ...(old.grid ?? {}) },
+    grid: { ...DEFAULT_GRID, ...old.grid },
     sprites,
     animations,
     objects,
@@ -898,32 +910,26 @@ export function migrateSpriteState(raw: unknown): AppState {
       ? old.selectedSpriteIds.filter((id) => sprites.some((s) => s.id === id))
       : [],
     selectedAnimationId:
-      typeof old.selectedAnimationId === "string" ? old.selectedAnimationId : null,
-    selectedObjectId:
-      typeof old.selectedObjectId === "string" ? old.selectedObjectId : null,
+      typeof old.selectedAnimationId === 'string' ? old.selectedAnimationId : null,
+    selectedObjectId: typeof old.selectedObjectId === 'string' ? old.selectedObjectId : null,
     activeTool:
-      typeof old.activeTool === "string"
-        ? (old.activeTool as AppState["activeTool"])
+      typeof old.activeTool === 'string'
+        ? (old.activeTool as AppState['activeTool'])
         : INITIAL_STATE.activeTool,
-    zoom: typeof old.zoom === "number" ? old.zoom : INITIAL_STATE.zoom,
+    zoom: typeof old.zoom === 'number' ? old.zoom : INITIAL_STATE.zoom,
     pan:
-      old.pan && typeof old.pan === "object"
+      old.pan && typeof old.pan === 'object'
         ? (old.pan as { x: number; y: number })
         : INITIAL_STATE.pan,
     activeTab:
-      old.activeTab === "images" ||
-        old.activeTab === "sprites" ||
-        old.activeTab === "animations" ||
-        old.activeTab === "export"
+      old.activeTab === 'images' ||
+      old.activeTab === 'sprites' ||
+      old.activeTab === 'animations' ||
+      old.activeTab === 'export'
         ? old.activeTab
         : INITIAL_STATE.activeTab,
     map: old.map
-      ? sanitizeMap(
-        migrateMapState(old.map),
-        sprites,
-        animations,
-        objectMachines(objects),
-      )
+      ? sanitizeMap(migrateMapState(old.map), sprites, animations, objectMachines(objects))
       : { ...INITIAL_MAP_STATE, screens: {} },
     dialog: sanitizeDialogState(old.dialog),
     // Undo history is runtime-only: never restored from a loaded/imported

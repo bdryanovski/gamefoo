@@ -1,6 +1,6 @@
-import type { AppState } from "../types";
-import { objectMachines } from "../types";
-import { downloadJSON, projectBaseName } from "../utils/export";
+import type { AppState } from '../types';
+import { objectMachines } from '../types';
+import { downloadJSON, projectBaseName } from '../utils/export';
 
 /**
  * State machines export — name-based so consumers (and re-imports) stay
@@ -16,8 +16,8 @@ export function exportStateMachines(state: AppState) {
 
   return {
     meta: {
-      version: "1.0",
-      tool: "gamefoo-statemachine-editor",
+      version: '1.0',
+      tool: 'gamefoo-statemachine-editor',
       projectName: state.projectName,
     },
     machines: Object.fromEntries(
@@ -33,15 +33,15 @@ export function exportStateMachines(state: AppState) {
                 s.name,
                 {
                   display:
-                    s.display.kind === "sprite"
+                    s.display.kind === 'sprite'
                       ? {
-                          kind: "sprite" as const,
+                          kind: 'sprite' as const,
                           sprite: s.display.spriteId
                             ? (spriteNames.get(s.display.spriteId) ?? null)
                             : null,
                         }
                       : {
-                          kind: "animation" as const,
+                          kind: 'animation' as const,
                           animation: s.display.animationId
                             ? (animNames.get(s.display.animationId) ?? null)
                             : null,
@@ -50,8 +50,8 @@ export function exportStateMachines(state: AppState) {
               ]),
             ),
             transitions: m.transitions.map((t) => ({
-              from: stateName(t.fromStateId) ?? "?",
-              to: stateName(t.toStateId) ?? "?",
+              from: stateName(t.fromStateId) ?? '?',
+              to: stateName(t.toStateId) ?? '?',
               condition: t.condition,
             })),
           },

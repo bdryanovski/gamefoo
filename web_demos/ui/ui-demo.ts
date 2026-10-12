@@ -33,11 +33,7 @@ import {
   type ColorPalette,
   type GeneratedPalette,
 } from '../../src/core/palettes';
-import {
-  MenuSubSystem,
-  DEFAULT_THEME,
-  type AnyPalette,
-} from '../../src/ui';
+import { MenuSubSystem, DEFAULT_THEME, type AnyPalette } from '../../src/ui';
 
 // ============================================================================
 // Setup
@@ -160,7 +156,7 @@ class DemoGame extends Engine {
 
   private drawSettingsInfo(ctx: typeof renderer, padding: number, lineHeight: number): void {
     const menu = this._menuSubSystem;
-    if (!menu) return;
+    if (!menu) {return;}
 
     let y = 75;
 
@@ -181,12 +177,7 @@ class DemoGame extends Engine {
     ctx.drawText(`Scale: ${graphics.scale}x`, padding, y, '#aaaaaa');
     y += lineHeight;
 
-    ctx.drawText(
-      `Resolution: ${graphics.width}x${graphics.height}`,
-      padding,
-      y,
-      '#aaaaaa',
-    );
+    ctx.drawText(`Resolution: ${graphics.width}x${graphics.height}`, padding, y, '#aaaaaa');
     y += lineHeight + 8;
 
     ctx.drawText('Press ESC to open menu', padding, y, '#666666');
