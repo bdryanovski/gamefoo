@@ -4,9 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "start": "tsx server.ts",
+    "start": "vite",
+    "build": "vite build",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },

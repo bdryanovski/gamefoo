@@ -31,20 +31,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rm -rf dist && pnpm tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
-    "typecheck:watch": "tsc --noEmit --watch",
     "lint": "vp lint src",
-    "lint:fix": "vp lint --fix src",
     "format": "vp fmt src",
-    "format:check": "vp fmt --check src",
-    "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",
-    "check:staged": "pnpm lint-staged",
-    "prepublishOnly": "pnpm run check && pnpm run build",
     "prepare": "husky",
-    "test": "vp test run",
-    "test:watch": "vp test",
-    "test:publish": "pnpm run --filter publish-test sanity"
+    "test": "vp test run"
   },
   "dependencies": {
     "tsx": "4.23.15"
