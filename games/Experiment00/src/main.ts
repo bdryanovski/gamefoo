@@ -54,6 +54,7 @@ import { setFog } from './fog';
 import { Lanter } from './objects/lanter';
 import { Candle } from './objects/candle';
 import { Candles } from './objects/candles';
+import { Her } from './objects/her';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -231,9 +232,9 @@ class MapGame extends Engine {
     // Load the single bitmap font used for ALL text (8×8 CP437 atlas) and
     // install it as the default for every text path before the map streams in,
     // so editor-authored text placements are drawn with it too.
-    this.font = await FontSheet.load(
-      '/assets/fonts/dungeonmode/bitmap/dungeon-437.png',
-    ).catch(() => undefined);
+    this.font = await FontSheet.load('/assets/fonts/dungeonmode/bitmap/dungeon-437.png').catch(
+      () => undefined,
+    );
     if (this.font) {
       TextObject.defaultFont = this.font;
       useHudFont(this.font, 2);
@@ -259,6 +260,7 @@ class MapGame extends Engine {
     registry.register(Olive);
     registry.register(Candle);
     registry.register(Candles);
+    registry.register(Her);
     // Olives read/write their collected flag from the shared save store.
     Olive.useState(this.save.scope('olives'));
     registry.register(Chest);
