@@ -49,6 +49,8 @@ import { Telemetry } from './telemetry';
 import { Bat } from './objects/bat';
 import { setFog } from './fog';
 import { Lanter } from './objects/lanter';
+import { Candle } from './objects/candle';
+import { Candles } from './objects/candles';
 
 // The Experiment00 project uses 20×16 screens of 16px tiles → a
 // 320×256 screen, up-scaled ×2 for display (640×512).
@@ -224,6 +226,8 @@ class MapGame extends Engine {
     registry.register(Torch);
     registry.register(Lanter);
     registry.register(Olive);
+    registry.register(Candle);
+    registry.register(Candles);
     // Olives read/write their collected flag from the shared save store.
     Olive.useState(this.save.scope('olives'));
     registry.register(Chest);
