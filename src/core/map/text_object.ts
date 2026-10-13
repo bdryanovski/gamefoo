@@ -1,3 +1,4 @@
+import type { TextFont } from '../fonts/text_font';
 import type { RenderContext } from '../renderer/type';
 import type { ShaderRegion } from '../shaders/types';
 import MapObject from './map_object';
@@ -56,6 +57,17 @@ export default class TextObject extends MapObject {
   static override readonly type = 'Text';
 
   /**
+   * Optional bitmap font used for **every** text placement, overriding the
+   * per-placement CSS `font`. Set once at boot to unify all in-world text on a
+   * single pixel font:
+   *
+   * ```ts
+   * TextObject.defaultFont = await FontSheet.load('/assets/fonts/dungeon.png');
+   * ```
+   */
+  static defaultFont?: TextFont;
+
+  /**
    * The rendered string. Reassign to change what the player sees.
    */
   text: string;
@@ -102,7 +114,31 @@ export default class TextObject extends MapObject {
    * Draws the string at the object origin with its font/size/colour/alignment,
    * then lets any attached shaders render over its bounds.
    */
+  // oxlint-disable-next-line max-statements
   override render(ctx: RenderContext): void {
+    const bitmap = TextObject.defaultFont;
+    if (bitmap) {
+      const scale = Math.max(1, Math.round(this.fontSize / bitmap.lineHeight));
+      const width = bitmap.measure(this.text, scale);
+      let x = this.x;
+      if (this.align === 'center') {
+        x -= width / 2;
+      } else if (this.align === 'right') {
+        x -= width;
+      }
+      const raw = ctx.getCanvas?.();
+      if (raw && this.alpha !== 1) {
+        raw.save();
+        raw.globalAlpha *= this.alpha;
+        bitmap.render(ctx, this.text, x, this.y, this.color, scale);
+        raw.restore();
+      } else {
+        bitmap.render(ctx, this.text, x, this.y, this.color, scale);
+      }
+      super.render(ctx);
+      return;
+    }
+
     const raw = ctx.getCanvas?.();
     if (raw) {
       raw.save();

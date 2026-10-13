@@ -1,3 +1,4 @@
+import type { TextFont } from '../fonts/text_font';
 import type { RenderContext } from '../renderer/type';
 import type { DialogRunner } from './dialog_runner';
 
@@ -41,6 +42,17 @@ export interface DialogBoxConfig {
   maxHeightRatio?: number;
   /** Slide-in/out speed (fraction per second). @defaultValue `6` */
   slideSpeed?: number;
+  /**
+   * Optional bitmap font used to draw every label. When set, the box renders
+   * through it (pixel-perfect, integer-scaled) instead of the canvas font API.
+   * Falls back to `${fontSize}px monospace` when omitted.
+   */
+  font?: TextFont;
+  /**
+   * Integer upscale applied to {@link DialogBoxConfig.font}. Derived from
+   * `fontSize / font.lineHeight` when omitted.
+   */
+  fontScale?: number;
 }
 
 const DEFAULT_THEME: Required<DialogBoxTheme> = {
@@ -112,6 +124,10 @@ export class DialogBox {
   private readonly minHeightRatio: number;
   private readonly maxHeightRatio: number;
   private readonly slideSpeed: number;
+  /** Optional bitmap font; when set, replaces the canvas font API. */
+  private readonly font?: TextFont;
+  /** Integer upscale applied to {@link DialogBox.font}. */
+  private readonly fontScale: number;
 
   /** 0 = fully hidden, 1 = fully shown. Eased for the slide animation. */
   private reveal = 0;
@@ -124,6 +140,10 @@ export class DialogBox {
     this.minHeightRatio = config.minHeightRatio ?? 0.24;
     this.maxHeightRatio = config.maxHeightRatio ?? 0.7;
     this.slideSpeed = config.slideSpeed ?? 6;
+    this.font = config.font;
+    this.fontScale =
+      config.fontScale ??
+      (this.font ? Math.max(1, Math.round(this.fontSize / this.font.lineHeight)) : 1);
   }
 
   /** Advance the slide animation toward shown/hidden and the caret blink. */
@@ -147,8 +167,12 @@ export class DialogBox {
     const raw = ctx.getCanvas?.() ?? null;
     if (raw) {
       raw.save();
-      raw.font = `${this.fontSize}px monospace`;
-      raw.textBaseline = 'top';
+      // With a bitmap font the glyphs are drawn directly; only the canvas
+      // fallback needs a font set for `measureText` + `fillText`.
+      if (!this.font) {
+        raw.font = `${this.fontSize}px monospace`;
+        raw.textBaseline = 'top';
+      }
     }
     // Laid out after the font is set, so `measureText` measures in the panel's
     // own font and the wrap width matches what is drawn.
@@ -175,7 +199,25 @@ export class DialogBox {
 
   /** Width of `s` in the panel font, estimated when there is no canvas. */
   private measureText(raw: CanvasRenderingContext2D | null, s: string): number {
+    if (this.font) {
+      return this.font.measure(s, this.fontScale);
+    }
     return raw ? raw.measureText(s).width : s.length * this.fontSize * 0.6;
+  }
+
+  /** Draws one line of text with the active font (bitmap or canvas). */
+  private drawLine(
+    ctx: RenderContext,
+    s: string,
+    x: number,
+    y: number,
+    color: string,
+  ): void {
+    if (this.font) {
+      this.font.render(ctx, s, x, y, color, this.fontScale);
+      return;
+    }
+    ctx.drawText(s, x, y, color);
   }
 
   /** Panel height for `contentWithPadding`, clamped to the configured ratios. */
@@ -240,13 +282,13 @@ export class DialogBox {
   private drawBody(ctx: RenderContext, l: DialogLayout, runner: DialogRunner): void {
     let cursorY = l.y + l.pad;
     if (l.caption) {
-      ctx.drawText(l.caption, l.innerX, cursorY, this.theme.title);
+      this.drawLine(ctx, l.caption, l.innerX, cursorY, this.theme.title);
       cursorY += l.captionH;
     }
     if (runner.fullText) {
       const shownChars = Math.min(runner.revealedCount, l.wrapped.length);
       for (const line of l.wrapped.slice(0, shownChars).split('\n')) {
-        ctx.drawText(line, l.innerX, cursorY, this.theme.text);
+        this.drawLine(ctx, line, l.innerX, cursorY, this.theme.text);
         cursorY += l.lineH;
       }
     }
@@ -260,7 +302,8 @@ export class DialogBox {
         return;
       }
       const hint = runner.phase === 'typing' ? '\u25B6 skip (E)' : '\u25BC more (E)';
-      ctx.drawText(
+      this.drawLine(
+        ctx,
         hint,
         l.x + l.panelW - l.pad - this.measureText(l.raw, hint),
         footerTop,
@@ -272,7 +315,8 @@ export class DialogBox {
     for (let i = 0; i < choices.length; i++) {
       const selected = i === runner.selectedIndex;
       const label = `${selected ? '\u25B6 ' : '  '}${choices[i]!.label}`;
-      ctx.drawText(
+      this.drawLine(
+        ctx,
         label,
         l.innerX,
         footerTop + i * l.lineH,

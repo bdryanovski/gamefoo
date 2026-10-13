@@ -85,6 +85,9 @@ export type { EnhancedCameraConfig } from './core/enhanced_camera';
 export { EnhancedCamera } from './core/enhanced_camera';
 export type { InternalBitmapFontName } from './core/fonts/font_bitmap';
 export { default as FontBitmap } from './core/fonts/font_bitmap';
+export { default as FontSheet } from './core/fonts/font_sheet';
+export type { FontSheetOptions } from './core/fonts/font_sheet';
+export type { TextFont } from './core/fonts/text_font';
 export { default as GameObjectRegister } from './core/game_object_register';
 // ── Grid ────────────────────────────────────────────────────────────
 export { Grid } from './core/grid/grid';

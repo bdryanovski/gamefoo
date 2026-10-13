@@ -30,7 +30,7 @@ class DungenEngine extends Engine {
 
   private tileMap: number[][] = [];
   private wallMap: boolean[][] = [];
-  private decorMap: Array<number | null>[] = [];
+  private decorMap: Array<Array<number | null>> = [];
   private visMap: number[][] = [];
 
   // PLayer

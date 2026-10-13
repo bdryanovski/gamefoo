@@ -9,6 +9,7 @@ import {
   type Frame,
   DialogRunner,
   Engine,
+  FontSheet,
   Input,
   MapManager,
   MapObjectRegistry,
@@ -18,6 +19,7 @@ import {
   ShaderSystem,
   type SoundHandle,
   StateStore,
+  TextObject,
   VignetteShader,
   OutlineShader,
   WebRenderer,
@@ -25,7 +27,7 @@ import {
   DitherFog,
   MonitorSystem,
 } from '../../../src/index';
-import { drawMessages, showMessage, updateMessages } from './hud';
+import { drawMessages, showMessage, updateMessages, useHudFont } from './hud';
 import { Olive } from './objects/olive';
 import { Chest } from './objects/chest';
 import { Inventory } from './inventory';
@@ -154,8 +156,14 @@ class MapGame extends Engine {
   private player?: Player;
 
   private dialog?: DialogRunner;
-  private readonly dialogBox = new DialogBox();
+  private dialogBox = new DialogBox();
   private audio?: AudioSystem;
+  /**
+   * The single pixel font every piece of text in the game is drawn with — the
+   * dialog box, the HUD toasts, the splash prompt, the lock keypad and every
+   * in-world text placement. Loaded once at boot.
+   */
+  private font?: FontSheet;
   /** Pre-game title card shown until the player presses E. */
   private splash?: HTMLImageElement;
   /** True once loading finished and the splash is waiting on input. */
@@ -220,6 +228,17 @@ class MapGame extends Engine {
     // Load the title card first so it is on screen while the rest of the world
     // streams in. A missing/failed image is non-fatal — the game still boots.
     this.splash = await Asset.load('/assets/images/splash.jpg').catch(() => undefined);
+    // Load the single bitmap font used for ALL text (8×8 CP437 atlas) and
+    // install it as the default for every text path before the map streams in,
+    // so editor-authored text placements are drawn with it too.
+    this.font = await FontSheet.load(
+      '/assets/fonts/dungeonmode/bitmap/dungeon-437.png',
+    ).catch(() => undefined);
+    if (this.font) {
+      TextObject.defaultFont = this.font;
+      useHudFont(this.font, 2);
+      this.dialogBox = new DialogBox({ font: this.font });
+    }
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
     const registry = new MapObjectRegistry();
@@ -895,7 +914,8 @@ class MapGame extends Engine {
     this.fog?.render();
     ctx.restore();
 
-    ctx.drawText(
+    this.drawText(
+      ctx,
       `screen ${this.cx},${this.cy}   WASD move · E use / open portal`,
       8,
       20,
@@ -908,6 +928,26 @@ class MapGame extends Engine {
 
     // Code entry keypad, above the dialog.
     if (this.lockUI) this.renderLock(ctx);
+  }
+
+  /**
+   * Draws a line of text with the shared pixel font, falling back to the
+   * canvas font API when the sheet failed to load.
+   */
+  // oxlint-disable-next-line max-params
+  private drawText(
+    ctx: RenderContext,
+    text: string,
+    x: number,
+    y: number,
+    color: string,
+    scale = 2,
+  ): void {
+    if (this.font) {
+      this.font.render(ctx, text, x, y, color, scale);
+      return;
+    }
+    ctx.drawText(text, x, y, color);
   }
 
   /**
@@ -931,17 +971,17 @@ class MapGame extends Engine {
     // Dim the image a touch so the prompt stays legible over bright areas.
     ctx.fillRect(0, 0, w, h, 'rgba(6, 6, 12, 0.35)');
 
-    const label = this.ready ? 'Press E to start' : 'Loading\u2026';
+    const label = this.ready ? 'Press E to start' : 'Loading...';
     const pulse = 0.55 + 0.45 * Math.sin(this.splashElapsed * 3);
+    const scale = 3;
+    const textW = this.font ? this.font.measure(label, scale) : label.length * 12;
+    const x = Math.round((w - textW) / 2);
+    const y = h - 48;
     const raw = ctx.getCanvas?.();
     if (raw) {
       raw.save();
-      raw.font = '20px monospace';
-      raw.textAlign = 'center';
-      raw.textBaseline = 'middle';
       raw.globalAlpha = this.ready ? pulse : 0.7;
-      raw.fillStyle = '#f5efe0';
-      raw.fillText(label, w / 2, h - 48);
+      this.drawText(ctx, label, x, y, '#f5efe0', scale);
       raw.restore();
     }
   }
@@ -962,7 +1002,7 @@ class MapGame extends Engine {
     const totalW = 4 * box + 3 * gap;
     const startX = Math.round((w - totalW) / 2);
     const y = Math.round((h - box) / 2);
-    ctx.drawText('ENTER CODE', startX, y - Math.round(box * 0.5), '#e8e8ff');
+    this.drawText(ctx, 'ENTER CODE', startX, y - Math.round(box * 0.5), '#e8e8ff');
     for (let i = 0; i < 4; i++) {
       const x = startX + i * (box + gap);
       const active = i === ui.cursor;
@@ -976,11 +1016,12 @@ class MapGame extends Engine {
         ctx.drawSprite(frame.image, frame.sx, frame.sy, frame.sw, frame.sh, dx, dy, s, s);
       }
       if (active) {
-        ctx.drawText('\u25B2', x + Math.round(box / 2) - 6, y - 20, '#ffd66e');
-        ctx.drawText('\u25BC', x + Math.round(box / 2) - 6, y + box + 4, '#ffd66e');
+        this.drawText(ctx, '\u25B2', x + Math.round(box / 2) - 6, y - 20, '#ffd66e');
+        this.drawText(ctx, '\u25BC', x + Math.round(box / 2) - 6, y + box + 4, '#ffd66e');
       }
     }
-    ctx.drawText(
+    this.drawText(
+      ctx,
       '\u25B2\u25BC change   \u25C4\u25BA move   E / Esc close',
       startX,
       y + box + Math.round(box * 0.55),

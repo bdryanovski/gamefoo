@@ -674,7 +674,7 @@ function buildCollisionLayers(
       }
     }
   }
-  for (const [id, def] of legacy) {if (!byId.has(id)) byId.set(id, def);}
+  for (const [id, def] of legacy) {if (!byId.has(id)) {byId.set(id, def);}}
   return [...byId.values()];
 }
 

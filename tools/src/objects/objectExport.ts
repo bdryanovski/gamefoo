@@ -83,7 +83,7 @@ export function exportObject(state: AppState, object: GameObjectDef): ObjectExpo
   // Collision layer ids referenced by any state or any involved sprite.
   const refColLayers = new Set<string>();
   for (const vols of Object.values(object.collisionsByState))
-    {for (const c of vols) refColLayers.add(c.layerId);}
+    {for (const c of vols) {refColLayers.add(c.layerId);}}
 
   const frames: ObjectExport['frames'] = {};
   for (const sid of usedSprites) {

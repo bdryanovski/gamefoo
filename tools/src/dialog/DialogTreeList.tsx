@@ -54,7 +54,7 @@ export function DialogTreeList({
       }
     };
     for (const f of folders) {push(f);}
-    for (const t of trees) {if (t.folder) push(t.folder);}
+    for (const t of trees) {if (t.folder) {push(t.folder);}}
     return out;
   }, [folders, trees]);
 

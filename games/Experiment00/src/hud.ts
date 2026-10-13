@@ -1,4 +1,4 @@
-import type { RenderContext } from '../../../src/index';
+import type { RenderContext, TextFont } from '../../../src/index';
 
 /**
  * A transient on-screen message with a countdown.
@@ -12,6 +12,19 @@ interface Toast {
 // objects, the engine loop) can surface story/UI text without threading a
 // reference through everyone. The newest un-expired toast is what renders.
 const toasts: Toast[] = [];
+
+// The bitmap font every toast is drawn with, installed once at boot. Kept
+// module-level so callers only ever pass text, never a font.
+let hudFont: TextFont | null = null;
+let hudFontScale = 1;
+
+/**
+ * Installs the bitmap font used for every on-screen message.
+ */
+export function useHudFont(font: TextFont, scale = 1): void {
+  hudFont = font;
+  hudFontScale = scale;
+}
 
 /**
  * Queues a message shown for `seconds`. Screen classes call this from their
@@ -41,6 +54,10 @@ export function updateMessages(deltaTime: number): void {
 export function drawMessages(ctx: RenderContext, x: number, y: number): void {
   const toast = toasts[toasts.length - 1];
   if (!toast) {
+    return;
+  }
+  if (hudFont) {
+    hudFont.render(ctx, toast.text, x, y, '#ffe9a8', hudFontScale);
     return;
   }
   ctx.drawText(toast.text, x, y, '#ffe9a8');
