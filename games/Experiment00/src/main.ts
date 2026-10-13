@@ -2,6 +2,7 @@
 import type { MapObject } from '../../../src/index';
 import {
   AmbientSporeShader,
+  Asset,
   AudioSystem,
   DialogBox,
   type DialogDocument,
@@ -155,6 +156,14 @@ class MapGame extends Engine {
   private dialog?: DialogRunner;
   private readonly dialogBox = new DialogBox();
   private audio?: AudioSystem;
+  /** Pre-game title card shown until the player presses E. */
+  private splash?: HTMLImageElement;
+  /** True once loading finished and the splash is waiting on input. */
+  private ready = false;
+  /** True once the player has dismissed the splash and the world is live. */
+  private started = false;
+  /** Seconds the splash has been visible; drives the blinking prompt. */
+  private splashElapsed = 0;
   /** Seconds since the last footfall; starts "ready" so walking steps at once. */
   private stepTimer: number = AUDIO.stepInterval;
   /** Looping campfire emitter per lit fire on the active screen. */
@@ -208,6 +217,9 @@ class MapGame extends Engine {
   async load(): Promise<void> {
     const loadStart = performance.now();
     this.telemetry.gameStart();
+    // Load the title card first so it is on screen while the rest of the world
+    // streams in. A missing/failed image is non-fatal — the game still boots.
+    this.splash = await Asset.load('/assets/images/splash.jpg').catch(() => undefined);
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
     const registry = new MapObjectRegistry();
@@ -302,7 +314,18 @@ class MapGame extends Engine {
     this.spawnPlayer();
     window.addEventListener('keydown', (e) => this.onKey(e));
 
+    this.ready = true;
     this.telemetry.gameLoaded(performance.now() - loadStart);
+  }
+
+  /**
+   * Dismisses the splash and starts play: reveals the world (already loaded
+   * and frozen behind the title card) and crossfades in its ambient bed.
+   */
+  private startGame(): void {
+    if (this.started) return;
+    this.started = true;
+    this.updateBackground();
   }
 
   /** Builds the persistent player from the loaded "player" prefab. */
@@ -419,6 +442,7 @@ class MapGame extends Engine {
 
   /** Crossfades to the ambient bed configured for the current screen. */
   private updateBackground(): void {
+    if (!this.started) return;
     const id = AUDIO.backgroundByScreen[`${this.cx},${this.cy}`];
     this.audio?.playAmbient(AUDIO.defaultBackground, {
       channel: 'cave',
@@ -668,6 +692,14 @@ class MapGame extends Engine {
   private onKey(e: KeyboardEvent): void {
     // Any key is a user gesture — resume the (autoplay-suspended) audio context.
     void this.audio?.unlock();
+    // Splash: swallow every key until the world is loaded, then start on E.
+    if (!this.started) {
+      if (this.ready && (e.key === 'e' || e.key === 'E' || e.key === ' ' || e.key === 'Enter')) {
+        this.startGame();
+        e.preventDefault();
+      }
+      return;
+    }
     // Code entry captures all keys: arrows spin/move, E/Esc leaves.
     if (this.lockUI) {
       const lockedPortal = this.lockUI.portal;
@@ -700,6 +732,12 @@ class MapGame extends Engine {
   }
 
   override update(dt: number): void {
+    // The splash freezes the world; only its prompt keeps blinking.
+    if (!this.started) {
+      this.splashElapsed += dt;
+      return;
+    }
+
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
     this.dialog?.update(dt);
@@ -834,6 +872,12 @@ class MapGame extends Engine {
     const raw = ctx.getCanvas?.();
     if (raw) raw.imageSmoothingEnabled = false;
 
+    // Before the player presses E, the title card covers everything.
+    if (!this.started) {
+      this.renderSplash(ctx);
+      return;
+    }
+
     ctx.save();
     ctx.scale(SCALE, SCALE);
     const player = this.player;
@@ -864,6 +908,42 @@ class MapGame extends Engine {
 
     // Code entry keypad, above the dialog.
     if (this.lockUI) this.renderLock(ctx);
+  }
+
+  /**
+   * Draws the pre-game title card: the splash image fitted to cover the whole
+   * screen, dimmed slightly, with a prompt that pulses once loading finishes.
+   */
+  private renderSplash(ctx: RenderContext): void {
+    const w = ctx.width;
+    const h = ctx.height;
+    const image = this.splash;
+    if (image && ctx.drawSprite) {
+      const iw = image.naturalWidth || image.width;
+      const ih = image.naturalHeight || image.height;
+      const cover = Math.max(w / iw, h / ih);
+      const dw = iw * cover;
+      const dh = ih * cover;
+      ctx.drawSprite(image, 0, 0, iw, ih, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    } else {
+      ctx.fillRect(0, 0, w, h, '#0b0b12');
+    }
+    // Dim the image a touch so the prompt stays legible over bright areas.
+    ctx.fillRect(0, 0, w, h, 'rgba(6, 6, 12, 0.35)');
+
+    const label = this.ready ? 'Press E to start' : 'Loading\u2026';
+    const pulse = 0.55 + 0.45 * Math.sin(this.splashElapsed * 3);
+    const raw = ctx.getCanvas?.();
+    if (raw) {
+      raw.save();
+      raw.font = '20px monospace';
+      raw.textAlign = 'center';
+      raw.textBaseline = 'middle';
+      raw.globalAlpha = this.ready ? pulse : 0.7;
+      raw.fillStyle = '#f5efe0';
+      raw.fillText(label, w / 2, h - 48);
+      raw.restore();
+    }
   }
 
   /**
