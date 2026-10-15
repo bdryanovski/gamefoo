@@ -28,9 +28,10 @@ import {
   MonitorSystem,
 } from '../../../src/index';
 import { drawMessages, showMessage, updateMessages, useHudFont } from './hud';
+import { resolveDialogText } from './dialog_text';
 import { Olive } from './objects/olive';
 import { Chest } from './objects/chest';
-import { Inventory } from './inventory';
+import { DEFAULT_ITEMS, Inventory, InventoryView, ItemCatalog, Journal } from './inventory';
 import { Campfire } from './objects/campfire';
 import { Torch } from './objects/torch';
 import { Bookshelf } from './objects/bookshelf';
@@ -157,6 +158,8 @@ class MapGame extends Engine {
   private player?: Player;
 
   private dialog?: DialogRunner;
+  /** The raw dialogs document, kept for resolving authored text (see {@link MapGame.harvest}). */
+  private dialogs?: DialogDocument;
   private dialogBox = new DialogBox();
   private audio?: AudioSystem;
   /**
@@ -189,6 +192,20 @@ class MapGame extends Engine {
 
   /** The player's item bag (persisted with the save; chests fill it). */
   private readonly inventory = new Inventory(this.save.scope('inventory'));
+  /** Which journal entries the player has found (persisted with the save). */
+  private readonly journal = new Journal(this.save.scope('journal'));
+  /** Item id → name + message; discovered definitions persist with the save. */
+  private readonly itemCatalog = new ItemCatalog(DEFAULT_ITEMS, this.save.scope('items'));
+  /**
+   * The book-like inventory overlay, opened and closed with **Esc**. Owns its
+   * own tab + selection state and is drawn last, on top of every other layer.
+   * The font is attached once the bitmap sheet finishes loading.
+   */
+  private readonly inventoryView = new InventoryView({
+    inventory: this.inventory,
+    journal: this.journal,
+    items: this.itemCatalog,
+  });
   /** A movable shelf whose message is being read; slides once it closes. */
   private shelfAwaitingSlide?: Bookshelf;
   /** The iris-wipe overlay; the game drives its `coverage` each frame. */
@@ -239,6 +256,7 @@ class MapGame extends Engine {
       TextObject.defaultFont = this.font;
       useHudFont(this.font, 2);
       this.dialogBox = new DialogBox({ font: this.font });
+      this.inventoryView.setFont(this.font, 2);
     }
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
@@ -309,6 +327,7 @@ class MapGame extends Engine {
       .then((r) => (r.ok ? r.json() : { trees: {} }))
       .catch(() => ({ trees: {} }));
     this.dialog = new DialogRunner(dialogs);
+    this.dialogs = dialogs;
 
     const shaders = new ShaderSystem();
     shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
@@ -527,6 +546,52 @@ class MapGame extends Engine {
     return false;
   }
 
+  /**
+   * Reads the authored item/journal properties off an interacted object and
+   * records whatever it grants. Called on every **E** press for the object the
+   * player acted on, so item presses stack in the bag and journal presses are
+   * idempotent.
+   *
+   * - `item_id` (or the legacy `item`) adds one to the bag and registers its
+   *   `item_name` + `message` text with the {@link ItemCatalog}.
+   * - `journal_id` unlocks a journal slot named `journal_name`, whose readable
+   *   body is the object's `message` dialog resolved to plain lines.
+   *
+   * Returns whether anything was granted (so callers can show an "empty"
+   * message when nothing was).
+   */
+  private harvest(object: MapObject): boolean {
+    const itemId = this.readProperty(object, 'item_id') ?? this.readProperty(object, 'item');
+    const journalId = this.readProperty(object, 'journal_id');
+    if (!itemId && !journalId) {
+      return false;
+    }
+
+    const text = resolveDialogText(this.dialogs, this.readProperty(object, 'message'));
+
+    if (itemId) {
+      const name = this.readProperty(object, 'item_name') ?? itemId;
+      this.itemCatalog.register({ id: itemId, name, message: text.join('\n') || undefined });
+      this.inventory.add(itemId);
+      showMessage(`Found ${name}`, 1.6);
+    }
+
+    if (journalId) {
+      const name = this.readProperty(object, 'journal_name') ?? journalId;
+      if (this.journal.discover(journalId, name, text)) {
+        showMessage(`Journal entry: ${name}`, 1.8);
+      }
+    }
+
+    return true;
+  }
+
+  /** A trimmed property value, treating the `"0"` sentinel and blanks as unset. */
+  private readProperty(object: MapObject, key: string): string | null {
+    const value = object.getProperty(key)?.trim();
+    return value && value !== '0' ? value : null;
+  }
+
   /** Opens a nearby portal (and travels), else toggles a nearby campfire. */
   private interact(): void {
     const player = this.player;
@@ -538,6 +603,7 @@ class MapGame extends Engine {
       ?.objectsByType(Portal)
       .find((p) => p.overlaps(player.interactionBox()));
     if (portal) {
+      this.harvest(portal);
       // A locked door refuses to open: remind the player, then ask for the
       // 4-digit code. It stays shut until the right code is entered.
       if (portal.isLocked) {
@@ -586,12 +652,14 @@ class MapGame extends Engine {
       ...(this.map?.current?.objectsByType(Goblin) ?? []),
     ].find((s) => s.overlaps(player.box()));
     if (stalker) {
+      this.harvest(stalker);
       if (this.startDialog(stalker.dialogRef, 'stalker')) return;
     }
 
     // Slime king: a stationary NPC — press E beside it to run its dialog.
     const king = this.map?.current?.objectsByType(SlimeKing).find((k) => k.overlaps(player.box()));
     if (king) {
+      this.harvest(king);
       if (this.startDialog(king.dialogRef, 'slime_king')) return;
     }
 
@@ -600,6 +668,7 @@ class MapGame extends Engine {
       ?.objectsByType(Sign)
       .find((s) => s.overlaps(player.interactionBox()));
     if (sign) {
+      this.harvest(sign);
       if (this.startDialog(sign.dialogRef, 'sign')) return;
     }
 
@@ -610,6 +679,7 @@ class MapGame extends Engine {
       ?.objectsByType(Bookshelf)
       .find((b) => b.overlaps(player.interactionBox()));
     if (shelf) {
+      this.harvest(shelf);
       if (shelf.movable && !shelf.isOpen) {
         if (this.startDialog(shelf.dialogRef, 'bookshelf')) {
           this.shelfAwaitingSlide = shelf;
@@ -628,12 +698,8 @@ class MapGame extends Engine {
       .find((c) => !c.isOpen && c.overlaps(player.interactionBox()));
     if (chest?.open()) {
       this.audio?.playSound('chest_open', { volume: 0.7 });
-      const item = chest.item;
-      this.telemetry.chestOpen(chest.id, item ?? null);
-      if (item) {
-        this.inventory.add(item);
-        showMessage(`Found ${item}`, 1.6);
-      } else {
+      this.telemetry.chestOpen(chest.id, chest.item ?? null);
+      if (!this.harvest(chest)) {
         showMessage('The chest is empty', 1.2);
       }
       this.startDialog(chest.dialogRef, 'chest');
@@ -643,6 +709,7 @@ class MapGame extends Engine {
     // Campfires: toggle the nearest within reach.
     const fire = this.campfires().find((f) => this.isCampfireInReach(f));
     if (fire) {
+      this.harvest(fire);
       fire.toggle();
       this.telemetry.campfireToggle(fire.id, fire.lit);
     }
@@ -721,6 +788,20 @@ class MapGame extends Engine {
       }
       return;
     }
+    // Inventory overlay: while open it captures every key (WASD/arrows move,
+    // Esc closes). When closed, Esc opens it — unless a dialog or keypad own
+    // the screen, in which case Esc belongs to them.
+    const inventory = this.inventoryView;
+    if (inventory.isOpen) {
+      inventory.handleKey(e);
+      e.preventDefault();
+      return;
+    }
+    if (e.key === 'Escape' && !this.lockUI && !this.dialog?.active) {
+      inventory.show();
+      e.preventDefault();
+      return;
+    }
     // Code entry captures all keys: arrows spin/move, E/Esc leaves.
     if (this.lockUI) {
       const lockedPortal = this.lockUI.portal;
@@ -758,6 +839,10 @@ class MapGame extends Engine {
       this.splashElapsed += dt;
       return;
     }
+
+    // The inventory overlay freezes the world while open. It has no clock of
+    // its own, so there is nothing to advance — just stop the frame here.
+    if (this.inventoryView.isOpen) return;
 
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
@@ -885,6 +970,7 @@ class MapGame extends Engine {
       if (!(object instanceof Olive) || !object.collect()) continue;
       showMessage('You picked an olive', 1.2);
       this.telemetry.olivePickup(object.id);
+      this.harvest(object);
       if (this.startDialog(object.dialogRef, 'olive')) break;
     }
   }
@@ -918,7 +1004,7 @@ class MapGame extends Engine {
 
     this.drawText(
       ctx,
-      `screen ${this.cx},${this.cy}   WASD move · E use / open portal`,
+      `screen ${this.cx},${this.cy}   WASD move · E use / open portal · Esc inventory`,
       8,
       20,
       '#ffffff',
@@ -930,6 +1016,9 @@ class MapGame extends Engine {
 
     // Code entry keypad, above the dialog.
     if (this.lockUI) this.renderLock(ctx);
+
+    // The inventory overlay is the topmost layer — it covers the keypad too.
+    this.inventoryView.render(ctx);
   }
 
   /**

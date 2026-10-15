@@ -243,6 +243,18 @@ export default class MapObject extends ShaderHost {
   }
 
   /**
+   * Reads an authored key/value property by name — the public counterpart to
+   * {@link MapObject.prop}. Lets game systems drive behaviour from free-form
+   * editor properties (e.g. a chest's `item_id`, a note's `journal_id`)
+   * without the object class having to expose a dedicated getter for each.
+   *
+   * @since 0.5.0
+   */
+  getProperty(key: string): string | undefined {
+    return this.properties[key];
+  }
+
+  /**
    * Reads an authored property as a number, or `fallback` if absent/NaN.
    */
   protected propNumber(key: string, fallback = 0): number {

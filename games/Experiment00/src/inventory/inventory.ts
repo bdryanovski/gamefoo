@@ -1,4 +1,4 @@
-import type { ScopedState, StateChange } from '../../../src/index';
+import type { ScopedState, StateChange } from '../../../../src/index';
 
 /** One held item and how many the player carries. */
 export interface InventoryEntry {
@@ -9,8 +9,8 @@ export interface InventoryEntry {
 /**
  * The player's item bag, backed by a {@link ScopedState} so it persists with
  * the save and notifies listeners on every change. Items are stored as
- * `id → count`; the item definitions and their display icons are declared
- * elsewhere (later), so the bag stays a plain count map.
+ * `id → count`; the item definitions and their display text live in
+ * {@link ItemCatalog}, so the bag stays a plain count map.
  *
  * @example
  * ```ts
