@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "jar",
+    "category": ""
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {},
+  "images": {
+    "props.png": {
+      "src": "/uploads/1788287738546_props.png",
+      "width": 304,
+      "height": 128
+    }
+  },
+  "frames": {
+    "sprite_0_1": {
+      "image": "props.png",
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_1": {
+      "image": "props.png",
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "image": "props.png",
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {},
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "activation": {
+      "name": "Activation",
+      "color": "#4ea3f2"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_0_1"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtoter26_d",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 7.509765625,
+            "cy": 5.216796874999999,
+            "radius": 5.740354325792487
+          }
+        },
+        {
+          "id": "col_mtotfax9_e",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    },
+    "open": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_3_1"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtoter26_d",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 7.509765625,
+            "cy": 5.216796874999999,
+            "radius": 5.740354325792487
+          }
+        },
+        {
+          "id": "col_mtotfax9_e",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    },
+    "broken": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "sprite",
+                "sprite": "sprite_1_1"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtoter26_d",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 7.509765625,
+            "cy": 5.216796874999999,
+            "radius": 5.740354325792487
+          }
+        },
+        {
+          "id": "col_mtotfax9_e",
+          "layer": "activation",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

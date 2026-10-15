@@ -45,7 +45,7 @@ export const MAP_COLS = 100; //Math.floor(CANVAS_W / TILE_SIZE); // 50
 export const MAP_ROWS = 80; //Math.floor(CANVAS_H / TILE_SIZE); // 37
 
 // seed
-export let SEED = 44;
+export const SEED = 44;
 
 // fog
 export const VIS_UNSEEN = 0;

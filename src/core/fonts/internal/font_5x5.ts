@@ -26,7 +26,9 @@
  * ```
  */
 
-/** Catalogue name used by {@link FontBitmap} to look up this font. */
+/**
+ * Catalogue name used by {@link FontBitmap} to look up this font.
+ */
 export const FONT_5x5_NAME = '5x5';
 
 /**
@@ -120,17 +122,29 @@ export const FONT_5x5: Record<string, number[]> = {
  * @internal
  */
 export const metadata = {
-  /** Catalogue name. */
+  /**
+   * Catalogue name.
+   */
   name: FONT_5x5_NAME,
-  /** Cell width including spacing (5 + 1 = 6). */
+  /**
+   * Cell width including spacing (5 + 1 = 6).
+   */
   width: FONT_5x5_WIDTH + FONT_5x5_SPACING,
-  /** Cell height (5). */
+  /**
+   * Cell height (5).
+   */
   height: FONT_5x5_HEIGHT,
-  /** Inter-glyph spacing (1). */
+  /**
+   * Inter-glyph spacing (1).
+   */
   spacing: FONT_5x5_SPACING,
-  /** Supported character string. */
+  /**
+   * Supported character string.
+   */
   chars: FONT_5x5_CHARS,
-  /** Glyph bitmask data. */
+  /**
+   * Glyph bitmask data.
+   */
   data: FONT_5x5,
 };
 

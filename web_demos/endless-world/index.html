@@ -41,10 +41,23 @@
         line-height: 1.7;
         color: #888;
       }
-      #issues h2 { color: #f88; font-size: 0.9rem; margin-bottom: 8px; }
-      #issues ul { padding-left: 20px; }
-      #issues li { margin-bottom: 4px; }
-      #issues code { color: #7fdbca; background: #1a1a2e; padding: 1px 4px; border-radius: 2px; }
+      #issues h2 {
+        color: #f88;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+      #issues ul {
+        padding-left: 20px;
+      }
+      #issues li {
+        margin-bottom: 4px;
+      }
+      #issues code {
+        color: #7fdbca;
+        background: #1a1a2e;
+        padding: 1px 4px;
+        border-radius: 2px;
+      }
     </style>
   </head>
   <body>
@@ -54,18 +67,32 @@
       <canvas id="game"></canvas>
     </div>
     <div class="controls">
-      Move: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or
-      <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd>
+      Move: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or <kbd>↑</kbd> <kbd>←</kbd>
+      <kbd>↓</kbd> <kbd>→</kbd>
     </div>
     <div id="issues">
       <h2>Camera Issues Found</h2>
       <ul>
-        <li><code>Engine.render()</code> never applies <code>ctx.translate()</code> — camera tracks position but doesn't transform the canvas</li>
-        <li><code>Camera</code> is private on the engine (<code>this.engine.camera</code>) — entities can't access it for manual transforms</li>
-        <li>No world-to-screen coordinate conversion — all entities render at world coords regardless of camera</li>
-        <li>All objects are updated/rendered every frame even when off-screen — no frustum culling</li>
+        <li>
+          <code>Engine.render()</code> never applies <code>ctx.translate()</code> — camera tracks
+          position but doesn't transform the canvas
+        </li>
+        <li>
+          <code>Camera</code> is private on the engine (<code>this.engine.camera</code>) — entities
+          can't access it for manual transforms
+        </li>
+        <li>
+          No world-to-screen coordinate conversion — all entities render at world coords regardless
+          of camera
+        </li>
+        <li>
+          All objects are updated/rendered every frame even when off-screen — no frustum culling
+        </li>
         <li>Background fill uses canvas size, not world size — moving camera would reveal gaps</li>
-        <li>This demo uses a <strong>manual workaround</strong>: a shared camera offset that entities subtract in their <code>render()</code> methods</li>
+        <li>
+          This demo uses a <strong>manual workaround</strong>: a shared camera offset that entities
+          subtract in their <code>render()</code> methods
+        </li>
       </ul>
     </div>
     <script type="module" src="./game.ts"></script>

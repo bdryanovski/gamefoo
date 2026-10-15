@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "props.png",
+    "imageWidth": 304,
+    "imageHeight": 128
+  },
+  "frames": {
+    "sprite_0_3": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_4": {
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_2": {
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_1": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_1": {
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_5_1": {
+      "x": 80,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_6_1": {
+      "x": 96,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_7_1": {
+      "x": 112,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_8_1": {
+      "x": 128,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_0": {
+      "x": 160,
+      "y": 0,
+      "width": 32,
+      "height": 16
+    },
+    "sprite_15_1": {
+      "x": 240,
+      "y": 0,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_16_0": {
+      "x": 256,
+      "y": 0,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_0_4": {
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_2": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {}
+}

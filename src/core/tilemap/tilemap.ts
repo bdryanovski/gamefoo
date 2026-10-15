@@ -49,6 +49,38 @@ import type { TileLayer } from './tile_layer';
 import type { TileMapConfig } from './tilemap_types';
 
 /**
+ * Grid position and pixel rect of a {@link WallEntity}.
+ *
+ * @internal
+ */
+interface WallEntityConfig {
+  /**
+   * Grid column of this wall.
+   */
+  col: number;
+  /**
+   * Grid row of this wall.
+   */
+  row: number;
+  /**
+   * World/screen X position.
+   */
+  x: number;
+  /**
+   * World/screen Y position.
+   */
+  y: number;
+  /**
+   * Width in pixels.
+   */
+  width: number;
+  /**
+   * Height in pixels.
+   */
+  height: number;
+}
+
+/**
  * Internal entity used by {@link TileMap.buildColliders} to represent
  * a static wall tile in the collision world.
  *
@@ -56,36 +88,32 @@ import type { TileMapConfig } from './tilemap_types';
  */
 class WallEntity extends Entity {
   /**
-   * @param col    - Grid column of this wall.
-   * @param row    - Grid row of this wall.
-   * @param x      - World/screen X position.
-   * @param y      - World/screen Y position.
-   * @param width  - Width in pixels.
-   * @param height - Height in pixels.
+   * @param config - Grid position and pixel rect of the wall.
    */
-  constructor(
-    col: number,
-    row: number,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-  ) {
-    super(`wall_${col}_${row}`, x, y, width, height);
+  constructor(config: WallEntityConfig) {
+    super(`wall_${config.col}_${config.row}`, config.x, config.y, config.width, config.height);
   }
 
-  /** Walls are static — no update logic. */
+  /**
+   * Walls are static — no update logic.
+   */
   update(_dt: number): void {}
 
-  /** Walls are invisible — collision only, tiles draw them. */
+  /**
+   * Walls are invisible — collision only, tiles draw them.
+   */
   render(_ctx: RenderContext): void {}
 }
 
 export class TileMap {
-  /** The underlying grid storing cell data and walkability. */
+  /**
+   * The underlying grid storing cell data and walkability.
+   */
   readonly grid: Grid;
 
-  /** Ordered list of tile layers (rendered back-to-front). */
+  /**
+   * Ordered list of tile layers (rendered back-to-front).
+   */
   readonly layers: TileLayer[];
 
   /**
@@ -95,7 +123,9 @@ export class TileMap {
    */
   projection: IsometricProjection | null;
 
-  /** Name of the collision layer, if any. */
+  /**
+   * Name of the collision layer, if any.
+   */
   private collisionLayerName: string | null;
 
   /**
@@ -145,23 +175,14 @@ export class TileMap {
     viewport: { x: number; y: number; width: number; height: number },
   ): void {
     for (const layer of this.layers) {
-      if (!layer.visible) continue;
+      if (!layer.visible) {
+        continue;
+      }
 
       if (this.projection) {
-        layer.renderIsometric(
-          ctx,
-          this.projection,
-          viewport,
-          this.grid.cols,
-          this.grid.rows,
-        );
+        layer.renderIsometric(ctx, this.projection, viewport, this.grid.cols, this.grid.rows);
       } else {
-        layer.renderOrthogonal(
-          ctx,
-          this.grid.cellWidth,
-          this.grid.cellHeight,
-          viewport,
-        );
+        layer.renderOrthogonal(ctx, this.grid.cellWidth, this.grid.cellHeight, viewport);
       }
     }
   }
@@ -190,7 +211,9 @@ export class TileMap {
    */
   getTileAtScreen(screenX: number, screenY: number, layerName: string): number {
     const layer = this.layers.find((l) => l.name === layerName);
-    if (!layer) return -1;
+    if (!layer) {
+      return -1;
+    }
 
     let col: number;
     let row: number;
@@ -205,7 +228,9 @@ export class TileMap {
       row = cell.row;
     }
 
-    if (!this.grid.isInBounds(col, row)) return -1;
+    if (!this.grid.isInBounds(col, row)) {
+      return -1;
+    }
     return layer.getTile(col, row);
   }
 
@@ -231,64 +256,107 @@ export class TileMap {
    * ```
    */
   buildColliders(world: World): Entity[] {
-    if (!this.collisionLayerName) return [];
+    if (!this.collisionLayerName) {
+      return [];
+    }
 
     const layer = this.layers.find((l) => l.name === this.collisionLayerName);
-    if (!layer) return [];
+    if (!layer) {
+      return [];
+    }
 
     const entities: Entity[] = [];
-    const isIso = this.projection !== null;
 
     for (let row = 0; row < this.grid.rows; row++) {
       for (let col = 0; col < this.grid.cols; col++) {
-        const cell = this.grid.getCell(col, row);
-        if (!cell || cell.walkable) continue;
-
-        const tileId = layer.getTile(col, row);
-        if (tileId < 0) continue;
-
-        let wx: number;
-        let wy: number;
-        let colliderW: number;
-        let colliderH: number;
-
-        if (isIso) {
-          const pos = this.projection!.gridToScreen(col, row);
-          const tw = this.projection!.tileWidth;
-          const th = this.projection!.tileHeight;
-          colliderW = tw / 2;
-          colliderH = th / 2;
-          wx = pos.x + (tw - colliderW) / 2;
-          wy = pos.y + (th - colliderH) / 2;
-        } else {
-          const pos = this.grid.cellToWorld(col, row);
-          wx = pos.x;
-          wy = pos.y;
-          colliderW = this.grid.cellWidth;
-          colliderH = this.grid.cellHeight;
+        const wall = this.buildWall(layer, col, row, world);
+        if (wall) {
+          entities.push(wall);
         }
-
-        const wall = new WallEntity(col, row, wx, wy, colliderW, colliderH);
-
-        wall.attachBehaviour(
-          new Collidable(wall, world, {
-            shape: {
-              type: 'aabb',
-              width: colliderW,
-              height: colliderH,
-            },
-            solid: true,
-            fixed: true,
-            tags: new Set(['wall']),
-            collidesWith: new Set(['player', 'enemy', 'npc']),
-          }),
-        );
-
-        entities.push(wall);
       }
     }
 
     return entities;
+  }
+
+  /**
+   * Builds the wall entity for a single cell of the collision layer.
+   *
+   * Returns `null` when the cell produces no wall — either the cell is
+   * walkable, or the layer has no tile at that position.
+   *
+   * @param layer - The collision layer being scanned.
+   * @param col   - Grid column of the cell.
+   * @param row   - Grid row of the cell.
+   * @param world - The collision {@link World} the collider registers in.
+   * @returns The wall entity, or `null` if this cell is not a wall.
+   *
+   * @internal
+   */
+  private buildWall(layer: TileLayer, col: number, row: number, world: World): WallEntity | null {
+    const cell = this.grid.getCell(col, row);
+    if (!cell || cell.walkable) {
+      return null;
+    }
+
+    const tileId = layer.getTile(col, row);
+    if (tileId < 0) {
+      return null;
+    }
+
+    const config = this.wallConfigAt(col, row);
+    const wall = new WallEntity(config);
+
+    wall.attachBehaviour(
+      new Collidable(wall, world, {
+        shape: {
+          type: 'aabb',
+          width: config.width,
+          height: config.height,
+        },
+        solid: true,
+        fixed: true,
+        tags: new Set(['wall']),
+        collidesWith: new Set(['player', 'enemy', 'npc']),
+      }),
+    );
+
+    return wall;
+  }
+
+  /**
+   * Computes the collider rect of a cell, in world-space for
+   * orthogonal maps and screen-space for isometric ones.
+   *
+   * Isometric colliders use the box inscribed in the diamond tile —
+   * half the tile width and height, centred inside it.
+   *
+   * @param col - Grid column of the cell.
+   * @param row - Grid row of the cell.
+   * @returns The grid position and pixel rect of the wall.
+   *
+   * @internal
+   */
+  private wallConfigAt(col: number, row: number): WallEntityConfig {
+    if (this.projection) {
+      const pos = this.projection.gridToScreen(col, row);
+      const tw = this.projection.tileWidth;
+      const th = this.projection.tileHeight;
+      const width = tw / 2;
+      const height = th / 2;
+
+      return { col, row, x: pos.x + (tw - width) / 2, y: pos.y + (th - height) / 2, width, height };
+    }
+
+    const pos = this.grid.cellToWorld(col, row);
+    return {
+      col,
+      row,
+      x: pos.x,
+      y: pos.y,
+      width: this.grid.cellWidth,
+      height: this.grid.cellHeight,
+    };
   }
 
   /**

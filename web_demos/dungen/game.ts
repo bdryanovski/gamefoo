@@ -1,12 +1,5 @@
-import type { RenderContext } from "../../src/core/renderer/type";
-import {
-  Asset,
-  Engine,
-  Input,
-  PerlinNoise,
-  Sprite,
-  WebRenderer,
-} from "../../src/index";
+import type { RenderContext } from '../../src/core/renderer/type';
+import { Asset, Engine, Input, PerlinNoise, Sprite, WebRenderer } from '../../src/index';
 import {
   CANVAS_H,
   CANVAS_W,
@@ -21,13 +14,13 @@ import {
   VIS_SEEN,
   VIS_UNSEEN,
   VIS_VISIBLE,
-} from "./constants";
-import { Archer } from "./enemies/archer";
-import { Phantom } from "./enemies/phantom";
-import { Slime } from "./enemies/slime";
-import type { DungenEnemy } from "./enemy";
-import { DungenPlayer } from "./player";
-import { drawTile } from "./utils";
+} from './constants';
+import { Archer } from './enemies/archer';
+import { Phantom } from './enemies/phantom';
+import { Slime } from './enemies/slime';
+import type { DungenEnemy } from './enemy';
+import { DungenPlayer } from './player';
+import { drawTile } from './utils';
 
 let SEED = 44;
 
@@ -37,7 +30,7 @@ class DungenEngine extends Engine {
 
   private tileMap: number[][] = [];
   private wallMap: boolean[][] = [];
-  private decorMap: (number | null)[][] = [];
+  private decorMap: Array<Array<number | null>> = [];
   private visMap: number[][] = [];
 
   // PLayer
@@ -62,51 +55,50 @@ class DungenEngine extends Engine {
   private exitRow = 0;
 
   // power ups
-  private messages: { text: string; x: number; y: number; timer: number }[] =
-    [];
+  private messages: Array<{ text: string; x: number; y: number; timer: number }> = [];
 
   private shakeTimer = 0;
   private shakeIntensity = 0;
   private damageFlashTimer = 0;
 
-  private particles: {
+  private particles: Array<{
     x: number;
     y: number;
     vx: number;
     vy: number;
     life: number;
     color: string;
-  }[] = [];
+  }> = [];
 
   private lightMap: boolean[][] = [];
 
-  private drops: {
+  private drops: Array<{
     x: number;
     y: number;
-    type: "hp" | "loot";
+    type: 'hp' | 'loot';
     timer: number;
-  }[] = [];
+  }> = [];
 
-  private projectiles: {
+  private projectiles: Array<{
     x: number;
     y: number;
     vx: number;
     vy: number;
     life: number;
-  }[] = [];
+  }> = [];
 
   constructor(width: number, height: number) {
-    super(new WebRenderer("game", width, height, 1), {
-      backgroundColor: "#000",
+    super(new WebRenderer('game', width, height, 1), {
+      backgroundColor: '#000',
     });
 
     this.initialize();
   }
 
   protected async initialize() {
-    const res = await fetch("/dungen/assets/dungen.grid.json");
+    const res = await fetch('/dungen/assets/dungen.grid.json');
     const data = await res.json();
-    const image = await Asset.load("/dungen/assets/" + data.meta.image);
+    const image = await Asset.load(`/dungen/assets/${  data.meta.image}`);
     const sprite = Sprite.fromGrid(image, data.grid, data.animations);
 
     this.assets = sprite;
@@ -143,15 +135,15 @@ class DungenEngine extends Engine {
   }
 
   override update(delta: number) {
-    if (!this.ready) return;
+    if (!this.ready) {return;}
 
-    const rDown = this.input.isKeyDown("r");
+    const rDown = this.input.isKeyDown('r');
     if (rDown && !this.rWasDown) {
       this.restart();
     }
     this.rWasDown = rDown;
 
-    if (this.gameOver) return;
+    if (this.gameOver) {return;}
 
     if (this.damageFlashTimer > 0) {
       this.damageFlashTimer -= delta;
@@ -185,24 +177,13 @@ class DungenEngine extends Engine {
 
       const col = Math.floor(p.x / TILE_SIZE);
       const row = Math.floor(p.y / TILE_SIZE);
-      if (
-        row >= 0 &&
-        row < MAP_ROWS &&
-        col >= 0 &&
-        col < MAP_COLS &&
-        this.wallMap[row]?.[col]
-      ) {
+      if (row >= 0 && row < MAP_ROWS && col >= 0 && col < MAP_COLS && this.wallMap[row]?.[col]) {
         return false;
       }
 
       if (this.player.isAttacking()) {
         const box = this.player.getAttackBox();
-        if (
-          p.x > box.x &&
-          p.x < box.x + box.w &&
-          p.y > box.y &&
-          p.y < box.y + box.h
-        ) {
+        if (p.x > box.x && p.x < box.x + box.w && p.y > box.y && p.y < box.y + box.h) {
           let nearest: DungenEnemy | null = null;
           let nearestDist = Infinity;
           for (const e of this.enemies) {
@@ -223,9 +204,9 @@ class DungenEngine extends Engine {
             p.vy *= -1;
           }
           p.life = 3;
-          this.spawnParticles(p.x, p.y, "#ffffff", 4);
+          this.spawnParticles(p.x, p.y, '#ffffff', 4);
           this.messages.push({
-            text: "DEFLECT!",
+            text: 'DEFLECT!',
             x: p.x - 16,
             y: p.y - 12,
             timer: 0.8,
@@ -244,11 +225,11 @@ class DungenEngine extends Engine {
           enemy.takeDamage();
           enemy.applyKnockback(p.x, p.y);
           if (enemy.isDead()) {
-            this.spawnParticles(enemy.x, enemy.y, "#ff6060", 8);
+            this.spawnParticles(enemy.x, enemy.y, '#ff6060', 8);
             this.spawnDrop(enemy.x, enemy.y);
             this.kills += 1;
           } else {
-            this.spawnParticles(enemy.x, enemy.y, "#ffffff", 4);
+            this.spawnParticles(enemy.x, enemy.y, '#ffffff', 4);
           }
           return false;
         }
@@ -257,12 +238,7 @@ class DungenEngine extends Engine {
 
       const px = this.player.x;
       const py = this.player.y;
-      if (
-        p.x > px &&
-        p.x < px + TILE_SIZE &&
-        p.y > py &&
-        p.y < py + TILE_SIZE
-      ) {
+      if (p.x > px && p.x < px + TILE_SIZE && p.y > py && p.y < py + TILE_SIZE) {
         const hpBefore = this.player.getHp();
         this.player.takeDamage();
         if (this.player.getHp() < hpBefore) {
@@ -283,19 +259,14 @@ class DungenEngine extends Engine {
       const dy = Math.floor(d.y / TILE_SIZE);
 
       if (px === dx && py === dy) {
-        if (d.type === "hp" && this.player.getHp() < this.player.getMaxHp()) {
+        if (d.type === 'hp' && this.player.getHp() < this.player.getMaxHp()) {
           this.player.heal(1);
-          this.messages.push({ text: "+1 HP", x: d.x, y: d.y, timer: 1.5 });
+          this.messages.push({ text: '+1 HP', x: d.x, y: d.y, timer: 1.5 });
         } else {
           this.score += 1;
-          this.messages.push({ text: "+1 Loot", x: d.x, y: d.y, timer: 1.0 });
+          this.messages.push({ text: '+1 Loot', x: d.x, y: d.y, timer: 1.0 });
         }
-        this.spawnParticles(
-          d.x,
-          d.y,
-          d.type === "hp" ? "#ff5050" : "#ffdd44",
-          4,
-        );
+        this.spawnParticles(d.x, d.y, d.type === 'hp' ? '#ff5050' : '#ffdd44', 4);
         return false;
       }
 
@@ -319,7 +290,7 @@ class DungenEngine extends Engine {
 
   override render(ctx: RenderContext) {
     const c = ctx.getCanvas!()!;
-    if (!this.ready) return;
+    if (!this.ready) {return;}
 
     c.save();
 
@@ -334,15 +305,9 @@ class DungenEngine extends Engine {
 
     // Draw only visible on screen
     const startCol = Math.max(0, Math.floor(this.cameraX / TILE_SIZE));
-    const endCol = Math.min(
-      MAP_COLS,
-      Math.ceil((this.cameraX + CANVAS_W) / TILE_SIZE),
-    );
+    const endCol = Math.min(MAP_COLS, Math.ceil((this.cameraX + CANVAS_W) / TILE_SIZE));
     const startRow = Math.max(0, Math.floor(this.cameraY / TILE_SIZE));
-    const endRow = Math.min(
-      MAP_ROWS,
-      Math.ceil((this.cameraY + CANVAS_H) / TILE_SIZE),
-    );
+    const endRow = Math.min(MAP_ROWS, Math.ceil((this.cameraY + CANVAS_H) / TILE_SIZE));
 
     for (let row = startRow; row < endRow; row++) {
       for (let col = startCol; col < endCol; col++) {
@@ -362,20 +327,19 @@ class DungenEngine extends Engine {
     for (const d of this.drops) {
       const col = Math.floor(d.x / TILE_SIZE);
       const row = Math.floor(d.y / TILE_SIZE);
-      if (col < startCol || col >= endCol || row < startRow || row >= endRow)
-        continue;
-      if (this.visMap[row]?.[col] !== VIS_VISIBLE) continue;
+      if (col < startCol || col >= endCol || row < startRow || row >= endRow) {continue;}
+      if (this.visMap[row]?.[col] !== VIS_VISIBLE) {continue;}
 
       const bob = Math.sin(d.timer * 4) * 2;
-      c.fillStyle = d.type === "hp" ? "#ff5050" : "#ffdd44";
+      c.fillStyle = d.type === 'hp' ? '#ff5050' : '#ffdd44';
       c.fillRect(d.x + 4, d.y + 4 + bob, TILE_SIZE - 8, TILE_SIZE - 8);
-      c.fillStyle = "rgba(255, 255, 255, 0.5)";
+      c.fillStyle = 'rgba(255, 255, 255, 0.5)';
       c.fillRect(d.x + 6, d.y + 5 + bob, 3, 3);
     }
 
     const exitVis = this.visMap[this.exitRow]?.[this.exitCol];
     if (exitVis === VIS_VISIBLE || exitVis === VIS_SEEN) {
-      c.fillStyle = exitVis === VIS_VISIBLE ? "#50e050" : "#2a7a2a";
+      c.fillStyle = exitVis === VIS_VISIBLE ? '#50e050' : '#2a7a2a';
       c.fillRect(
         this.exitCol * TILE_SIZE + 2,
         this.exitRow * TILE_SIZE + 2,
@@ -383,7 +347,7 @@ class DungenEngine extends Engine {
         TILE_SIZE - 4,
       );
       if (exitVis === VIS_VISIBLE) {
-        c.strokeStyle = "#90ff90";
+        c.strokeStyle = '#90ff90';
         c.lineWidth = 1;
         c.strokeRect(
           this.exitCol * TILE_SIZE + 1,
@@ -405,14 +369,14 @@ class DungenEngine extends Engine {
     for (let row = startRow; row < endRow; row++) {
       for (let col = startCol; col < endCol; col++) {
         const vis = this.visMap[row]?.[col];
-        if (vis === VIS_VISIBLE) continue;
+        if (vis === VIS_VISIBLE) {continue;}
 
         if (vis === VIS_SEEN && this.lightMap[row]?.[col]) {
-          c.fillStyle = "rgba(20, 10, 0, 0.4)";
+          c.fillStyle = 'rgba(20, 10, 0, 0.4)';
         } else if (vis === VIS_SEEN) {
-          c.fillStyle = "rgba(0, 0, 0, 0.6)";
+          c.fillStyle = 'rgba(0, 0, 0, 0.6)';
         } else {
-          c.fillStyle = "rgba(0, 0, 0, 1)";
+          c.fillStyle = 'rgba(0, 0, 0, 1)';
         }
         c.fillRect(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE);
       }
@@ -451,11 +415,11 @@ class DungenEngine extends Engine {
         col < MAP_COLS &&
         this.visMap[row]?.[col] === VIS_VISIBLE
       ) {
-        c.fillStyle = "#ff4444";
+        c.fillStyle = '#ff4444';
         c.beginPath();
         c.arc(proj.x, proj.y, 3, 0, Math.PI * 2);
         c.fill();
-        c.fillStyle = "#ffaa00";
+        c.fillStyle = '#ffaa00';
         c.beginPath();
         c.arc(proj.x, proj.y, 1.5, 0, Math.PI * 2);
         c.fill();
@@ -478,14 +442,14 @@ class DungenEngine extends Engine {
   }
 
   private isWall(col: number, row: number): boolean {
-    if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return true;
+    if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) {return true;}
     return this.wallMap[row]?.[col] ?? false;
   }
 
   private autoTile() {
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        if (!this.isWall(col, row)) continue;
+        if (!this.isWall(col, row)) {continue;}
 
         const up = !this.isWall(col, row - 1);
         const down = !this.isWall(col, row + 1);
@@ -527,14 +491,8 @@ class DungenEngine extends Engine {
       const wallLine: boolean[] = [];
       const tileLine: number[] = [];
       for (let col = 0; col < MAP_COLS; col++) {
-        const isBorder =
-          row === 0 ||
-          row === MAP_ROWS - 1 ||
-          col === 0 ||
-          col === MAP_COLS - 1;
-        const isWall =
-          isBorder ||
-          perlin.fbm(col / scale, row / scale, 4, 2, 0.5) > wallThreshold;
+        const isBorder = row === 0 || row === MAP_ROWS - 1 || col === 0 || col === MAP_COLS - 1;
+        const isWall = isBorder || perlin.fbm(col / scale, row / scale, 4, 2, 0.5) > wallThreshold;
 
         wallLine.push(isWall);
 
@@ -542,8 +500,7 @@ class DungenEngine extends Engine {
           tileLine.push(TILE.WALL_INNER);
         } else {
           const noiseVal = perlin.fbm(col / scale, row / scale, 4, 2, 0.5);
-          const groundIndex =
-            Math.abs(Math.floor(noiseVal * 100)) % GROUNDS.length;
+          const groundIndex = Math.abs(Math.floor(noiseVal * 100)) % GROUNDS.length;
           tileLine.push(GROUNDS[groundIndex] ?? 0);
         }
       }
@@ -568,7 +525,7 @@ class DungenEngine extends Engine {
     this.decorMap = [];
 
     for (let row = 0; row < MAP_ROWS; row++) {
-      const line: (number | null)[] = [];
+      const line: Array<number | null> = [];
       for (let col = 0; col < MAP_COLS; col++) {
         if (this.wallMap[row]?.[col]) {
           line.push(null);
@@ -606,11 +563,11 @@ class DungenEngine extends Engine {
     // player view
     for (let dy = -VIEW_RADIUS; dy <= VIEW_RADIUS; dy++) {
       for (let dx = -VIEW_RADIUS; dx <= VIEW_RADIUS; dx++) {
-        if (dx * dx + dy * dy > VIEW_RADIUS * VIEW_RADIUS) continue;
+        if (dx * dx + dy * dy > VIEW_RADIUS * VIEW_RADIUS) {continue;}
 
         const col = px + dx;
         const row = py + dy;
-        if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) continue;
+        if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) {continue;}
 
         if (this.hasLineOfSight(px, py, col, row)) {
           this.visMap[row]![col] = VIS_VISIBLE;
@@ -621,22 +578,14 @@ class DungenEngine extends Engine {
     // torch light — reveal as VIS_SEEN if still unseen
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        if (
-          this.lightMap[row]?.[col] &&
-          this.visMap[row]?.[col] === VIS_UNSEEN
-        ) {
+        if (this.lightMap[row]?.[col] && this.visMap[row]?.[col] === VIS_UNSEEN) {
           this.visMap[row]![col] = VIS_SEEN;
         }
       }
     }
   }
 
-  private hasLineOfSight(
-    x0: number,
-    y0: number,
-    x1: number,
-    y1: number,
-  ): boolean {
+  private hasLineOfSight(x0: number, y0: number, x1: number, y1: number): boolean {
     const dx = Math.abs(x1 - x0);
     const dy = Math.abs(y1 - y0);
     const sx = x0 < x1 ? 1 : -1;
@@ -644,8 +593,8 @@ class DungenEngine extends Engine {
     let err = dx - dy;
 
     while (true) {
-      if (this.wallMap[y0]?.[x0] && !(x0 === x1 && y0 === y1)) return false;
-      if (x0 === x1 && y0 === y1) return true;
+      if (this.wallMap[y0]?.[x0] && !(x0 === x1 && y0 === y1)) {return false;}
+      if (x0 === x1 && y0 === y1) {return true;}
 
       const e2 = 2 * err;
       if (e2 > -dy) {
@@ -681,12 +630,10 @@ class DungenEngine extends Engine {
     this.cameraX = playerPos.x - CANVAS_W / 2;
     this.cameraY = playerPos.y - CANVAS_H / 2;
 
-    if (this.cameraX < 0) this.cameraX = 0;
-    if (this.cameraY < 0) this.cameraY = 0;
-    if (this.cameraX > mapPixelW - CANVAS_W)
-      this.cameraX = mapPixelW - CANVAS_W;
-    if (this.cameraY > mapPixelH - CANVAS_H)
-      this.cameraY = mapPixelH - CANVAS_H;
+    if (this.cameraX < 0) {this.cameraX = 0;}
+    if (this.cameraY < 0) {this.cameraY = 0;}
+    if (this.cameraX > mapPixelW - CANVAS_W) {this.cameraX = mapPixelW - CANVAS_W;}
+    if (this.cameraY > mapPixelH - CANVAS_H) {this.cameraY = mapPixelH - CANVAS_H;}
   }
 
   private renderMinimap(renderCtx: RenderContext) {
@@ -697,13 +644,13 @@ class DungenEngine extends Engine {
     const mmY = MINIMAP_PADDING;
 
     // background
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(mmX - 1, mmY - 1, mmW + 2, mmH + 2);
 
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
         const vis = this.visMap[row]?.[col];
-        if (vis === VIS_UNSEEN) continue;
+        if (vis === VIS_UNSEEN) {continue;}
 
         const alpha = vis === VIS_VISIBLE ? 1.0 : 0.4;
 
@@ -727,7 +674,7 @@ class DungenEngine extends Engine {
     // player dot
     const px = Math.floor(this.player.x / TILE_SIZE);
     const py = Math.floor(this.player.y / TILE_SIZE);
-    ctx.fillStyle = "#7fdbca";
+    ctx.fillStyle = '#7fdbca';
     ctx.fillRect(
       mmX + px * MINIMAP_SCALE,
       mmY + py * MINIMAP_SCALE,
@@ -737,7 +684,7 @@ class DungenEngine extends Engine {
 
     const eVis = this.visMap[this.exitRow]?.[this.exitCol];
     if (eVis && eVis !== VIS_UNSEEN) {
-      ctx.fillStyle = "#50e050";
+      ctx.fillStyle = '#50e050';
       ctx.fillRect(
         mmX + this.exitCol * MINIMAP_SCALE,
         mmY + this.exitRow * MINIMAP_SCALE,
@@ -748,7 +695,7 @@ class DungenEngine extends Engine {
   }
 
   private checkInteraction() {
-    const eDown = this.input.isKeyDown("e");
+    const eDown = this.input.isKeyDown('e');
 
     if (eDown && !this.eWasDown) {
       const px = Math.floor(this.player.x / TILE_SIZE);
@@ -762,34 +709,31 @@ class DungenEngine extends Engine {
         [px, py + 1],
       ];
 
-      for (const [col, row] of neighbors as [number, number][]) {
-        if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) continue;
+      for (const [col, row] of neighbors as Array<[number, number]>) {
+        if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) {continue;}
 
         if (this.decorMap[row]?.[col] === TILE.CHEST_1) {
           this.decorMap[row]![col] = TILE.CHEST_0;
           this.wallMap[row]![col] = false;
           this.score += 1;
 
-          if (
-            this.player.getHp() < this.player.getMaxHp() &&
-            Math.random() < 0.5
-          ) {
+          if (this.player.getHp() < this.player.getMaxHp() && Math.random() < 0.5) {
             this.player.heal(1);
             this.messages.push({
-              text: "+1 HP",
+              text: '+1 HP',
               x: col * TILE_SIZE,
               y: row * TILE_SIZE,
               timer: 1.5,
             });
           } else {
             this.messages.push({
-              text: "+1 Loot",
+              text: '+1 Loot',
               x: col * TILE_SIZE,
               y: row * TILE_SIZE,
               timer: 1.0,
             });
           }
-          this.spawnParticles(col * TILE_SIZE, row * TILE_SIZE, "#ffdd44", 6);
+          this.spawnParticles(col * TILE_SIZE, row * TILE_SIZE, '#ffdd44', 6);
           break;
         }
       }
@@ -801,68 +745,51 @@ class DungenEngine extends Engine {
   // hud
   private renderHUD(renderCtx: RenderContext) {
     const ctx = renderCtx.getCanvas!()!;
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.fillRect(MINIMAP_PADDING, MINIMAP_PADDING, 165, 90);
 
     ctx.font = "12px 'Courier New', monospace";
-    ctx.fillStyle = "#7fdbca";
-    ctx.fillText(
-      `Lv.${this.level}  Seed: ${SEED}`,
-      MINIMAP_PADDING + 8,
-      MINIMAP_PADDING + 16,
-    );
-    ctx.fillText(
-      `Chests: ${this.score}`,
-      MINIMAP_PADDING + 8,
-      MINIMAP_PADDING + 34,
-    );
+    ctx.fillStyle = '#7fdbca';
+    ctx.fillText(`Lv.${this.level}  Seed: ${SEED}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 16);
+    ctx.fillText(`Chests: ${this.score}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 34);
 
     const hearts =
-      "♥".repeat(this.player.getHp()) +
-      "♡".repeat(this.player.getMaxHp() - this.player.getHp());
-    ctx.fillStyle = "#e05050";
+      '♥'.repeat(this.player.getHp()) + '♡'.repeat(this.player.getMaxHp() - this.player.getHp());
+    ctx.fillStyle = '#e05050';
     ctx.fillText(`HP: ${hearts}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 52);
 
-    ctx.fillStyle = "#ffff64";
-    ctx.fillText(
-      `Kills: ${this.kills}`,
-      MINIMAP_PADDING + 8,
-      MINIMAP_PADDING + 70,
-    );
+    ctx.fillStyle = '#ffff64';
+    ctx.fillText(`Kills: ${this.kills}`, MINIMAP_PADDING + 8, MINIMAP_PADDING + 70);
 
     if (this.enemies.length === 0) {
-      ctx.fillStyle = "#50e050";
+      ctx.fillStyle = '#50e050';
       ctx.font = "bold 12px 'Courier New', monospace";
-      ctx.fillText("FLOOR CLEARED!", MINIMAP_PADDING + 8, MINIMAP_PADDING + 85);
+      ctx.fillText('FLOOR CLEARED!', MINIMAP_PADDING + 8, MINIMAP_PADDING + 85);
       ctx.font = "12px 'Courier New', monospace";
     } else {
-      ctx.fillStyle = "#666";
-      ctx.fillText(
-        "[SPACE] [X] [E] [R]",
-        MINIMAP_PADDING + 8,
-        MINIMAP_PADDING + 85,
-      );
+      ctx.fillStyle = '#666';
+      ctx.fillText('[SPACE] [X] [E] [R]', MINIMAP_PADDING + 8, MINIMAP_PADDING + 85);
     }
 
     if (this.gameOver) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
       ctx.fillRect(0, CANVAS_H / 2 - 40, CANVAS_W, 80);
 
       ctx.font = "bold 28px 'Courier New', monospace";
-      ctx.fillStyle = "#e05050";
-      ctx.textAlign = "center";
-      ctx.fillText("GAME OVER", CANVAS_W / 2, CANVAS_H / 2);
+      ctx.fillStyle = '#e05050';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', CANVAS_W / 2, CANVAS_H / 2);
 
       ctx.font = "14px 'Courier New', monospace";
-      ctx.fillStyle = "#aaa";
+      ctx.fillStyle = '#aaa';
       ctx.fillText(
         `Score: ${this.score} chests, ${this.kills} kills`,
         CANVAS_W / 2,
         CANVAS_H / 2 + 24,
       );
 
-      ctx.fillText("Press R to restart", CANVAS_W / 2, CANVAS_H / 2 + 44);
-      ctx.textAlign = "left";
+      ctx.fillText('Press R to restart', CANVAS_W / 2, CANVAS_H / 2 + 44);
+      ctx.textAlign = 'left';
     }
   }
 
@@ -874,14 +801,14 @@ class DungenEngine extends Engine {
       Math.floor(spawn.x / TILE_SIZE),
       Math.floor(spawn.y / TILE_SIZE),
     );
-    const candidates: { x: number; y: number }[] = [];
+    const candidates: Array<{ x: number; y: number }> = [];
     const losCheck = this.hasLineOfSight.bind(this);
 
     for (let row = 2; row < MAP_ROWS - 2; row++) {
       for (let col = 2; col < MAP_COLS - 2; col++) {
-        if (this.wallMap[row]?.[col]) continue;
-        if (this.decorMap[row]?.[col] !== null) continue;
-        if (!reachable.has(`${col},${row}`)) continue;
+        if (this.wallMap[row]?.[col]) {continue;}
+        if (this.decorMap[row]?.[col] !== null) {continue;}
+        if (!reachable.has(`${col},${row}`)) {continue;}
 
         const val = perlin.noise2d(col * 5.3, row * 5.3);
         if (val > 0.6) {
@@ -896,55 +823,34 @@ class DungenEngine extends Engine {
     for (let i = 0; i < Math.min(count, candidates.length); i++) {
       const pos = candidates[i]!;
       const roll = Math.random();
-      let type: "slime" | "phantom" | "archer";
+      let type: 'slime' | 'phantom' | 'archer';
       if (roll < archerChance) {
-        type = "archer";
+        type = 'archer';
       } else if (roll < archerChance + phantomChance) {
-        type = "phantom";
+        type = 'phantom';
       } else {
-        type = "slime";
+        type = 'slime';
       }
 
       let enemy: DungenEnemy | undefined;
 
-      if (type === "phantom") {
-        enemy = new Phantom(
-          `enemy_${i}`,
-          pos.x,
-          pos.y,
-          this.wallMap,
-          this.player,
-          losCheck,
-        );
+      if (type === 'phantom') {
+        enemy = new Phantom(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
       }
 
-      if (type === "archer") {
-        enemy = new Archer(
-          `enemy_${i}`,
-          pos.x,
-          pos.y,
-          this.wallMap,
-          this.player,
-          losCheck,
-        );
+      if (type === 'archer') {
+        enemy = new Archer(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
 
         enemy.setShootCallback((x, y, vx, vy) => {
           this.projectiles.push({ x, y, vx, vy, life: 3 });
         });
       }
 
-      if (type === "slime") {
-        enemy = new Slime(
-          `enemy_${i}`,
-          pos.x,
-          pos.y,
-          this.wallMap,
-          this.player,
-          losCheck,
-        );
+      if (type === 'slime') {
+        enemy = new Slime(`enemy_${i}`, pos.x, pos.y, this.wallMap, this.player, losCheck);
       }
 
-      if (enemy) this.enemies.push(enemy);
+      if (enemy) {this.enemies.push(enemy);}
     }
   }
 
@@ -957,10 +863,7 @@ class DungenEngine extends Engine {
       const ey = enemy.y;
 
       const overlap =
-        px < ex + TILE_SIZE &&
-        px + TILE_SIZE > ex &&
-        py < ey + TILE_SIZE &&
-        py + TILE_SIZE > ey;
+        px < ex + TILE_SIZE && px + TILE_SIZE > ex && py < ey + TILE_SIZE && py + TILE_SIZE > ey;
 
       if (overlap) {
         const hpBefore = this.player.getHp();
@@ -975,7 +878,7 @@ class DungenEngine extends Engine {
   }
 
   private checkPlayerAttack() {
-    if (!this.player.isAttacking()) return;
+    if (!this.player.isAttacking()) {return;}
 
     const box = this.player.getAttackBox();
 
@@ -990,10 +893,10 @@ class DungenEngine extends Engine {
         enemy.takeDamage();
         enemy.applyKnockback(this.player.x, this.player.y);
         if (enemy.isDead()) {
-          this.spawnParticles(enemy.x, enemy.y, "#ff6060", 8);
+          this.spawnParticles(enemy.x, enemy.y, '#ff6060', 8);
           this.spawnDrop(enemy.x, enemy.y);
         } else {
-          this.spawnParticles(enemy.x, enemy.y, "#ffffff", 4);
+          this.spawnParticles(enemy.x, enemy.y, '#ffffff', 4);
         }
       }
     }
@@ -1014,8 +917,8 @@ class DungenEngine extends Engine {
 
     for (let row = 1; row < MAP_ROWS - 1; row++) {
       for (let col = 1; col < MAP_COLS - 1; col++) {
-        if (this.wallMap[row]?.[col]) continue;
-        if (this.decorMap[row]?.[col] !== null) continue;
+        if (this.wallMap[row]?.[col]) {continue;}
+        if (this.decorMap[row]?.[col] !== null) {continue;}
 
         const dist = Math.abs(col - spawnCol) + Math.abs(row - spawnRow);
         if (dist > bestDist) {
@@ -1078,15 +981,15 @@ class DungenEngine extends Engine {
 
     for (let row = 0; row < MAP_ROWS; row++) {
       for (let col = 0; col < MAP_COLS; col++) {
-        if (this.decorMap[row]?.[col] !== TILE.FIRE_0) continue;
+        if (this.decorMap[row]?.[col] !== TILE.FIRE_0) {continue;}
 
         for (let dy = -TORCH_RADIUS; dy <= TORCH_RADIUS; dy++) {
           for (let dx = -TORCH_RADIUS; dx <= TORCH_RADIUS; dx++) {
-            if (dx * dx + dy * dy > TORCH_RADIUS * TORCH_RADIUS) continue;
+            if (dx * dx + dy * dy > TORCH_RADIUS * TORCH_RADIUS) {continue;}
 
             const r = row + dy;
             const c = col + dx;
-            if (r < 0 || r >= MAP_ROWS || c < 0 || c >= MAP_COLS) continue;
+            if (r < 0 || r >= MAP_ROWS || c < 0 || c >= MAP_COLS) {continue;}
 
             if (this.hasLineOfSight(col, row, c, r)) {
               this.lightMap[r]![c] = true;
@@ -1099,15 +1002,15 @@ class DungenEngine extends Engine {
 
   private floodFill(startCol: number, startRow: number): Set<string> {
     const visited = new Set<string>();
-    const stack: [number, number][] = [[startCol, startRow]];
+    const stack: Array<[number, number]> = [[startCol, startRow]];
 
     while (stack.length > 0) {
       const [col, row] = stack.pop()!;
       const key = `${col},${row}`;
 
-      if (visited.has(key)) continue;
-      if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) continue;
-      if (this.wallMap[row]?.[col]) continue;
+      if (visited.has(key)) {continue;}
+      if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) {continue;}
+      if (this.wallMap[row]?.[col]) {continue;}
 
       visited.add(key);
 
@@ -1127,7 +1030,7 @@ class DungenEngine extends Engine {
 
     const reachable = this.floodFill(spawnCol, spawnRow);
 
-    if (reachable.has(`${this.exitCol},${this.exitRow}`)) return;
+    if (reachable.has(`${this.exitCol},${this.exitRow}`)) {return;}
 
     const targetCol = this.exitCol;
     const targetRow = this.exitRow;
@@ -1135,16 +1038,16 @@ class DungenEngine extends Engine {
     let row = spawnRow;
 
     while (col !== targetCol || row !== targetRow) {
-      if (col < targetCol) col++;
-      else if (col > targetCol) col--;
+      if (col < targetCol) {col++;}
+      else if (col > targetCol) {col--;}
 
       if (this.wallMap[row]?.[col]) {
         this.wallMap[row]![col] = false;
         this.tileMap[row]![col] = TILE.GROUND_0;
       }
 
-      if (row < targetRow) row++;
-      else if (row > targetRow) row--;
+      if (row < targetRow) {row++;}
+      else if (row > targetRow) {row--;}
 
       if (this.wallMap[row]?.[col]) {
         this.wallMap[row]![col] = false;
@@ -1156,8 +1059,8 @@ class DungenEngine extends Engine {
   }
 
   private spawnDrop(x: number, y: number) {
-    if (Math.random() > 0.3) return; // 30% drop chance
-    const type = Math.random() < 0.4 ? "hp" : "loot";
+    if (Math.random() > 0.3) {return;} // 30% drop chance
+    const type = Math.random() < 0.4 ? 'hp' : 'loot';
     this.drops.push({ x, y, type, timer: 8 });
   }
 }

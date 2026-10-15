@@ -53,7 +53,7 @@ export default class GameObjectRegister {
    * register.register(new Crate("crate_1", 200, 150, 32, 32));
    * ```
    */
-  register(object: GameObject) {
+  register(object: GameObject): void {
     this.objects.set(object.id, object);
     this._cache = null;
   }
@@ -94,9 +94,7 @@ export default class GameObjectRegister {
    * @returns An array of all {@link GameObject} instances in the registry.
    */
   toArray(): GameObject[] {
-    if (!this._cache) {
-      this._cache = Array.from(this.objects.values());
-    }
+    this._cache ??= Array.from(this.objects.values());
 
     return this._cache;
   }

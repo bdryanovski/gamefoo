@@ -1,15 +1,15 @@
-import { PathFollower } from "../../src/core/behaviours/path_follower";
-import { Grid } from "../../src/core/grid/grid";
-import { IsometricProjection } from "../../src/core/grid/isometric";
-import type { RenderContext } from "../../src/core/renderer/type";
-import Sprite from "../../src/core/sprite";
-import { TileMap } from "../../src/core/tilemap/tilemap";
-import { TilemapSystem } from "../../src/core/tilemap/tilemap_system";
-import { TileSet } from "../../src/core/tilemap/tileset";
-import { MapGenerator } from "../../src/core/utils/map_generator";
-import type { BiomeRule } from "../../src/core/utils/map_generator_types";
-import { Pathfinder } from "../../src/core/utils/pathfinding";
-import { GridDebugSystem } from "../../src/debug/grid_debug";
+import { PathFollower } from '../../src/core/behaviours/path_follower';
+import { Grid } from '../../src/core/grid/grid';
+import { IsometricProjection } from '../../src/core/grid/isometric';
+import type { RenderContext } from '../../src/core/renderer/type';
+import Sprite from '../../src/core/sprite';
+import { TileMap } from '../../src/core/tilemap/tilemap';
+import { TilemapSystem } from '../../src/core/tilemap/tilemap_system';
+import { TileSet } from '../../src/core/tilemap/tileset';
+import { MapGenerator } from '../../src/core/utils/map_generator';
+import type { BiomeRule } from '../../src/core/utils/map_generator_types';
+import { Pathfinder } from '../../src/core/utils/pathfinding';
+import { GridDebugSystem } from '../../src/debug/grid_debug';
 import {
   Collidable,
   Control,
@@ -21,11 +21,11 @@ import {
   Player,
   WebRenderer,
   World,
-} from "../../src/index";
-import { CollisionSystem } from "../../src/subsystems/collision_system";
-import { IsometricCameraSystem } from "../../src/subsystems/iso_camera_system";
-import { MonitorSystem } from "../../src/subsystems/monitor_system";
-import { ObjectSystem } from "../../src/subsystems/object_system";
+} from '../../src/index';
+import { CollisionSystem } from '../../src/subsystems/collision_system';
+import { IsometricCameraSystem } from '../../src/subsystems/iso_camera_system';
+import { MonitorSystem } from '../../src/subsystems/monitor_system';
+import { ObjectSystem } from '../../src/subsystems/object_system';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -44,21 +44,21 @@ const NPC_SPEED = 50;
 // ---------------------------------------------------------------------------
 
 const BIOME_COLORS = [
-  "#1a3a5c", // 0 deep_water
-  "#2a5a8c", // 1 water
-  "#c2b280", // 2 sand
-  "#5a8a3a", // 3 grass
-  "#3a6a2a", // 4 forest
-  "#6a6a6a", // 5 mountain
+  '#1a3a5c', // 0 deep_water
+  '#2a5a8c', // 1 water
+  '#c2b280', // 2 sand
+  '#5a8a3a', // 3 grass
+  '#3a6a2a', // 4 forest
+  '#6a6a6a', // 5 mountain
 ];
 
 const biomes: BiomeRule[] = [
-  { name: "deep_water", tileId: 0, minNoise: -1.0, maxNoise: -0.35, walkable: false },
-  { name: "water", tileId: 1, minNoise: -0.35, maxNoise: -0.1, walkable: false },
-  { name: "sand", tileId: 2, minNoise: -0.1, maxNoise: 0.05, walkable: true },
-  { name: "grass", tileId: 3, minNoise: 0.05, maxNoise: 0.45, walkable: true },
-  { name: "forest", tileId: 4, minNoise: 0.45, maxNoise: 0.7, walkable: true },
-  { name: "mountain", tileId: 5, minNoise: 0.7, maxNoise: 1.01, walkable: false },
+  { name: 'deep_water', tileId: 0, minNoise: -1.0, maxNoise: -0.35, walkable: false },
+  { name: 'water', tileId: 1, minNoise: -0.35, maxNoise: -0.1, walkable: false },
+  { name: 'sand', tileId: 2, minNoise: -0.1, maxNoise: 0.05, walkable: true },
+  { name: 'grass', tileId: 3, minNoise: 0.05, maxNoise: 0.45, walkable: true },
+  { name: 'forest', tileId: 4, minNoise: 0.45, maxNoise: 0.7, walkable: true },
+  { name: 'mountain', tileId: 5, minNoise: 0.7, maxNoise: 1.01, walkable: false },
 ];
 
 // ---------------------------------------------------------------------------
@@ -67,7 +67,7 @@ const biomes: BiomeRule[] = [
 
 interface DecoConfig {
   color: string;
-  type: "tree" | "bush" | "rock" | "grass" | "cactus" | "flower";
+  type: 'tree' | 'bush' | 'rock' | 'grass' | 'cactus' | 'flower';
   solid: boolean;
   heightTiles: number;
 }
@@ -76,26 +76,26 @@ const BIOME_DECOS: Record<number, { items: DecoConfig[]; chance: number }> = {
   2: {
     chance: 0.06,
     items: [
-      { color: "#8a8060", type: "rock", solid: true, heightTiles: 1 },
-      { color: "#6a9a4a", type: "cactus", solid: true, heightTiles: 2 },
+      { color: '#8a8060', type: 'rock', solid: true, heightTiles: 1 },
+      { color: '#6a9a4a', type: 'cactus', solid: true, heightTiles: 2 },
     ],
   },
   3: {
     chance: 0.25,
     items: [
-      { color: "#4a8a2a", type: "grass", solid: true, heightTiles: 1.5 },
-      { color: "#3a7a1a", type: "grass", solid: true, heightTiles: 1 },
-      { color: "#e46a8a", type: "flower", solid: false, heightTiles: 1 },
-      { color: "#eaaa3a", type: "flower", solid: false, heightTiles: 1 },
+      { color: '#4a8a2a', type: 'grass', solid: true, heightTiles: 1.5 },
+      { color: '#3a7a1a', type: 'grass', solid: true, heightTiles: 1 },
+      { color: '#e46a8a', type: 'flower', solid: false, heightTiles: 1 },
+      { color: '#eaaa3a', type: 'flower', solid: false, heightTiles: 1 },
     ],
   },
   4: {
     chance: 0.35,
     items: [
-      { color: "#2a5a1a", type: "tree", solid: true, heightTiles: 3 },
-      { color: "#1a4a0a", type: "tree", solid: true, heightTiles: 3 },
-      { color: "#3a6a2a", type: "bush", solid: true, heightTiles: 1.5 },
-      { color: "#4a5a3a", type: "rock", solid: true, heightTiles: 1 },
+      { color: '#2a5a1a', type: 'tree', solid: true, heightTiles: 3 },
+      { color: '#1a4a0a', type: 'tree', solid: true, heightTiles: 3 },
+      { color: '#3a6a2a', type: 'bush', solid: true, heightTiles: 1.5 },
+      { color: '#4a5a3a', type: 'rock', solid: true, heightTiles: 1 },
     ],
   },
 };
@@ -106,10 +106,10 @@ const BIOME_DECOS: Record<number, { items: DecoConfig[]; chance: number }> = {
 
 function generateTilesetImage(colors: string[], tileW: number, tileH: number): HTMLImageElement {
   const count = colors.length;
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   canvas.width = tileW * count;
   canvas.height = tileH;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext('2d')!;
 
   const hw = tileW / 2;
   const hh = tileH / 2;
@@ -126,7 +126,7 @@ function generateTilesetImage(colors: string[], tileW: number, tileH: number): H
     ctx.closePath();
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(0,0,0,0.15)";
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
     ctx.lineWidth = 1;
     ctx.stroke();
   }
@@ -151,12 +151,12 @@ class DecorationEntity extends Entity {
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     const { color, type } = this.config;
 
     switch (type) {
-      case "tree": {
-        c.fillStyle = "#4a3520";
+      case 'tree': {
+        c.fillStyle = '#4a3520';
         c.fillRect(this.x + 3, this.y + 6, 3, 8);
 
         c.fillStyle = color;
@@ -168,25 +168,25 @@ class DecorationEntity extends Entity {
         c.fill();
         break;
       }
-      case "bush": {
+      case 'bush': {
         c.fillStyle = color;
         c.beginPath();
         c.ellipse(this.x + 5, this.y + 4, 6, 4, 0, 0, Math.PI * 2);
         c.fill();
         break;
       }
-      case "rock": {
+      case 'rock': {
         c.fillStyle = color;
         c.beginPath();
         c.ellipse(this.x + 4, this.y + 4, 5, 3, 0.3, 0, Math.PI * 2);
         c.fill();
-        c.fillStyle = "rgba(255,255,255,0.15)";
+        c.fillStyle = 'rgba(255,255,255,0.15)';
         c.beginPath();
         c.ellipse(this.x + 3, this.y + 3, 3, 2, 0.3, 0, Math.PI * 2);
         c.fill();
         break;
       }
-      case "grass": {
+      case 'grass': {
         c.strokeStyle = color;
         c.lineWidth = 1;
         for (let i = 0; i < 5; i++) {
@@ -199,15 +199,15 @@ class DecorationEntity extends Entity {
         }
         break;
       }
-      case "cactus": {
+      case 'cactus': {
         c.fillStyle = color;
         c.fillRect(this.x + 3, this.y - 2, 3, 10);
         c.fillRect(this.x, this.y + 1, 3, 4);
         c.fillRect(this.x + 6, this.y + 3, 3, 4);
         break;
       }
-      case "flower": {
-        c.fillStyle = "#3a7a1a";
+      case 'flower': {
+        c.fillStyle = '#3a7a1a';
         c.fillRect(this.x + 4, this.y + 2, 1, 5);
         c.fillStyle = color;
         c.beginPath();
@@ -244,7 +244,7 @@ class NpcEntity extends DynamicEntity {
     super(id, x, y, 10, 10);
     this.color = color;
     this.label = label;
-    this.font = new FontBitmap("3x5");
+    this.font = new FontBitmap('3x5');
   }
 
   update(dt: number): void {
@@ -252,8 +252,8 @@ class NpcEntity extends DynamicEntity {
   }
 
   render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
-    c.fillStyle = "rgba(0,0,0,0.3)";
+    const c = ctx.getCanvas!()!;
+    c.fillStyle = 'rgba(0,0,0,0.3)';
     c.beginPath();
     c.ellipse(this.x + 5, this.y + 12, 6, 3, 0, 0, Math.PI * 2);
     c.fill();
@@ -261,14 +261,14 @@ class NpcEntity extends DynamicEntity {
     c.fillStyle = this.color;
     c.fillRect(this.x + 2, this.y + 2, 6, 8);
 
-    c.fillStyle = "#fdd";
+    c.fillStyle = '#fdd';
     c.fillRect(this.x + 3, this.y, 4, 4);
 
-    c.fillStyle = "#222";
+    c.fillStyle = '#222';
     c.fillRect(this.x + 3, this.y + 1, 1, 1);
     c.fillRect(this.x + 6, this.y + 1, 1, 1);
 
-    c.fillStyle = "#fff";
+    c.fillStyle = '#fff';
     this.font.renderText(this.label, this.x - 2, this.y - 8, ctx);
 
     this.renderBehaviours(ctx);
@@ -283,8 +283,8 @@ class HeroEntity extends Player {
   private font: FontBitmap;
 
   constructor(x: number, y: number) {
-    super("hero", x, y, 12, 12);
-    this.font = new FontBitmap("3x5");
+    super('hero', x, y, 12, 12);
+    this.font = new FontBitmap('3x5');
   }
 
   override update(dt: number): void {
@@ -292,27 +292,27 @@ class HeroEntity extends Player {
   }
 
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
-    c.fillStyle = "rgba(0,0,0,0.35)";
+    const c = ctx.getCanvas!()!;
+    c.fillStyle = 'rgba(0,0,0,0.35)';
     c.beginPath();
     c.ellipse(this.x + 6, this.y + 14, 7, 3, 0, 0, Math.PI * 2);
     c.fill();
 
-    c.fillStyle = "#4488ff";
+    c.fillStyle = '#4488ff';
     c.fillRect(this.x + 2, this.y + 3, 8, 9);
 
-    c.fillStyle = "#fdd";
+    c.fillStyle = '#fdd';
     c.fillRect(this.x + 3, this.y, 6, 5);
 
-    c.fillStyle = "#222";
+    c.fillStyle = '#222';
     c.fillRect(this.x + 4, this.y + 2, 1, 1);
     c.fillRect(this.x + 7, this.y + 2, 1, 1);
 
-    c.fillStyle = "#543";
+    c.fillStyle = '#543';
     c.fillRect(this.x + 3, this.y, 6, 1);
 
-    c.fillStyle = "#4af";
-    this.font.renderText("YOU", this.x, this.y - 8, ctx);
+    c.fillStyle = '#4af';
+    this.font.renderText('YOU', this.x, this.y - 8, ctx);
 
     this.renderBehaviours(ctx);
   }
@@ -329,18 +329,18 @@ class HudEntity extends Entity {
   private font: FontBitmap;
 
   constructor(cam: IsometricCameraSystem, player: HeroEntity, projection: IsometricProjection) {
-    super("hud", 0, 0, 0, 0);
+    super('hud', 0, 0, 0, 0);
     this.cameraSystem = cam;
     this.player = player;
     this.projection = projection;
-    this.font = new FontBitmap("3x5");
+    this.font = new FontBitmap('3x5');
   }
 
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
     const c = ctx.getCanvas?.();
-    if (!c) return;
+    if (!c) {return;}
     c.save();
     c.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -361,11 +361,11 @@ class HudEntity extends Entity {
     const px = 6;
     const py = 6;
 
-    c.fillStyle = "rgba(0,0,0,0.6)";
+    c.fillStyle = 'rgba(0,0,0,0.6)';
     c.fillRect(px - 2, py - 2, 100, lines.length * lh + 6);
 
     for (let i = 0; i < lines.length; i++) {
-      c.fillStyle = i === 0 ? "#7fdbca" : "#ccc";
+      c.fillStyle = i === 0 ? '#7fdbca' : '#ccc';
       this.font.renderText(lines[i]!, px, py + i * lh, ctx);
     }
 
@@ -378,8 +378,8 @@ class HudEntity extends Entity {
 // ---------------------------------------------------------------------------
 
 function main() {
-  const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
-  const engine = new Engine(renderer, { backgroundColor: "#1a2a3a" });
+  const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H);
+  const engine = new Engine(renderer, { backgroundColor: '#1a2a3a' });
 
   // ── Projection ──────────────────────────────────────────────────
   const projection = new IsometricProjection({
@@ -408,13 +408,13 @@ function main() {
     biomes,
   });
 
-  const { grid, layer: groundLayer } = mapGen.buildLayer(tileSet, "ground", TILE_W, TILE_H);
+  const { grid, layer: groundLayer } = mapGen.buildLayer(tileSet, 'ground', TILE_W, TILE_H);
 
   const tilemap = new TileMap({
     grid,
     layers: [groundLayer],
     projection,
-    collisionLayerName: "ground",
+    collisionLayerName: 'ground',
   });
 
   // ── Collision world ────────────────────────────────────────────
@@ -429,7 +429,7 @@ function main() {
           const c = preferCol + dc;
           const r = preferRow + dr;
           const cell = grid.getCell(c, r);
-          if (cell?.walkable) return { col: c, row: r };
+          if (cell?.walkable) {return { col: c, row: r };}
         }
       }
     }
@@ -448,10 +448,10 @@ function main() {
   player.attachBehaviour(control);
   player.attachBehaviour(
     new Collidable(player, world, {
-      shape: { type: "aabb", width: 12, height: 12 },
+      shape: { type: 'aabb', width: 12, height: 12 },
       solid: true,
-      tags: new Set(["player"]),
-      collidesWith: new Set(["wall", "npc"]),
+      tags: new Set(['player']),
+      collidesWith: new Set(['wall', 'npc']),
     }),
   );
 
@@ -459,11 +459,11 @@ function main() {
   const pathfinder = new Pathfinder({
     grid,
     allowDiagonal: true,
-    heuristic: "euclidean",
+    heuristic: 'euclidean',
   });
 
-  const NPC_COLORS = ["#e44", "#e84", "#e4e", "#4ee"];
-  const NPC_NAMES = ["ADA", "BOB", "MAX", "ZOE"];
+  const NPC_COLORS = ['#e44', '#e84', '#e4e', '#4ee'];
+  const NPC_NAMES = ['ADA', 'BOB', 'MAX', 'ZOE'];
   const npcs: NpcEntity[] = [];
   const followers: PathFollower[] = [];
 
@@ -484,10 +484,10 @@ function main() {
 
     npc.attachBehaviour(
       new Collidable(npc, world, {
-        shape: { type: "aabb", width: 10, height: 10 },
+        shape: { type: 'aabb', width: 10, height: 10 },
         solid: true,
-        tags: new Set(["npc"]),
-        collidesWith: new Set(["wall", "player"]),
+        tags: new Set(['npc']),
+        collidesWith: new Set(['wall', 'player']),
       }),
     );
 
@@ -509,13 +509,13 @@ function main() {
       const col = Math.floor(Math.random() * MAP_COLS);
       const row = Math.floor(Math.random() * MAP_ROWS);
       if (grid.getCell(col, row)?.walkable) {
-        if (follower.moveTo(col, row)) return;
+        if (follower.moveTo(col, row)) {return;}
       }
       attempts++;
     }
   }
 
-  for (const f of followers) wanderTo(f);
+  for (const f of followers) {wanderTo(f);}
 
   // ── Scatter colored decorations on biome-appropriate tiles ─────
   const decorations: DecorationEntity[] = [];
@@ -524,8 +524,8 @@ function main() {
 
   grid.forEach((cell) => {
     const biomeDecor = BIOME_DECOS[cell.value];
-    if (!biomeDecor || !cell.walkable) return;
-    if (Math.random() >= biomeDecor.chance) return;
+    if (!biomeDecor || !cell.walkable) {return;}
+    if (Math.random() >= biomeDecor.chance) {return;}
 
     const cfg = biomeDecor.items[Math.floor(Math.random() * biomeDecor.items.length)]!;
 
@@ -538,14 +538,20 @@ function main() {
     if (cfg.solid) {
       const collW = TILE_W * 0.35;
       const collH = TILE_H * 0.5;
-      const collEntity = new StaticColliderEntity(`dcol_${cell.col}_${cell.row}`, cx - collW / 2, cy, collW, collH);
+      const collEntity = new StaticColliderEntity(
+        `dcol_${cell.col}_${cell.row}`,
+        cx - collW / 2,
+        cy,
+        collW,
+        collH,
+      );
       collEntity.attachBehaviour(
         new Collidable(collEntity, world, {
-          shape: { type: "aabb", width: collW, height: collH },
+          shape: { type: 'aabb', width: collW, height: collH },
           solid: true,
           fixed: true,
-          tags: new Set(["wall"]),
-          collidesWith: new Set(["player", "npc"]),
+          tags: new Set(['wall']),
+          collidesWith: new Set(['player', 'npc']),
         }),
       );
       decoColliders.push(collEntity);
@@ -553,12 +559,18 @@ function main() {
   });
 
   // ── Camera ─────────────────────────────────────────────────────
-  const cameraSystem = new IsometricCameraSystem(CANVAS_W, CANVAS_H, () => player.getPosition(), projection, {
-    zoom: 1.5,
-    lerpSpeed: 0.08,
-    minZoom: 0.5,
-    maxZoom: 4,
-  });
+  const cameraSystem = new IsometricCameraSystem(
+    CANVAS_W,
+    CANVAS_H,
+    () => player.getPosition(),
+    projection,
+    {
+      zoom: 1.5,
+      lerpSpeed: 0.08,
+      minZoom: 0.5,
+      maxZoom: 4,
+    },
+  );
 
   // ── HUD ────────────────────────────────────────────────────────
   const hud = new HudEntity(cameraSystem, player, projection);
@@ -599,17 +611,17 @@ function main() {
   // ── Keyboard toggles ──────────────────────────────────────────
   const keyState: Record<string, boolean> = {};
 
-  document.addEventListener("keydown", (e) => {
-    if (keyState[e.key]) return;
+  document.addEventListener('keydown', (e) => {
+    if (keyState[e.key]) {return;}
     keyState[e.key] = true;
 
-    if (e.key === "g" || e.key === "G") {
+    if (e.key === 'g' || e.key === 'G') {
       (debugSystem as any).showGrid = !(debugSystem as any).showGrid;
     }
-    if (e.key === "p" || e.key === "P") {
+    if (e.key === 'p' || e.key === 'P') {
       (debugSystem as any).showPathfinding = !(debugSystem as any).showPathfinding;
       if ((debugSystem as any).showPathfinding) {
-        const allPaths: { col: number; row: number }[] = [];
+        const allPaths: Array<{ col: number; row: number }> = [];
         for (const f of followers) {
           allPaths.push(...f.currentPath);
         }
@@ -618,18 +630,18 @@ function main() {
         debugSystem.setDebugPath([]);
       }
     }
-    if (e.key === "c" || e.key === "C") {
+    if (e.key === 'c' || e.key === 'C') {
       (debugSystem as any).showCollisionBounds = !(debugSystem as any).showCollisionBounds;
     }
-    if (e.key === "=" || e.key === "+") {
+    if (e.key === '=' || e.key === '+') {
       cameraSystem.camera.zoom = Math.min(4, cameraSystem.camera.zoom + 0.5);
     }
-    if (e.key === "-" || e.key === "_") {
+    if (e.key === '-' || e.key === '_') {
       cameraSystem.camera.zoom = Math.max(0.5, cameraSystem.camera.zoom - 0.5);
     }
   });
 
-  document.addEventListener("keyup", (e) => {
+  document.addEventListener('keyup', (e) => {
     keyState[e.key] = false;
   });
 
@@ -646,7 +658,7 @@ function main() {
     debugTick += dt;
     if (debugTick > 0.5 && (debugSystem as any).showPathfinding) {
       debugTick = 0;
-      const allPaths: { col: number; row: number }[] = [];
+      const allPaths: Array<{ col: number; row: number }> = [];
       for (const f of followers) {
         allPaths.push(...f.currentPath);
       }

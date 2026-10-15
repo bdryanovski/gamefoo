@@ -1,0 +1,5 @@
+{
+  "title": "UI Framework",
+  "description": "Complete canvas-based UI framework with widgets, layouts, themes, and menu system. All rendered on canvas with no DOM dependencies.",
+  "tags": ["widgets", "layouts", "themes", "menu", "focus", "input"]
+}

@@ -1,0 +1,319 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "ghost",
+    "category": "character"
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 1,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 16
+  },
+  "properties": {},
+  "images": {
+    "ghost.png": {
+      "src": "/uploads/1788725399623_ghost.png",
+      "width": 64,
+      "height": 64
+    }
+  },
+  "frames": {
+    "sprite_0_0": {
+      "image": "ghost.png",
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "image": "ghost.png",
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "image": "ghost.png",
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_1": {
+      "image": "ghost.png",
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "image": "ghost.png",
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_1": {
+      "image": "ghost.png",
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {
+    "ghost_idle": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0",
+        "sprite_0_1",
+        "sprite_1_1",
+        "sprite_2_1"
+      ],
+      "duration": 0.24,
+      "loop": true
+    },
+    "ghost_left": {
+      "frames": [
+        "sprite_0_1",
+        "sprite_1_1",
+        "sprite_2_1"
+      ],
+      "duration": 0.15,
+      "loop": true
+    },
+    "ghost_right": {
+      "frames": [
+        "sprite_0_0",
+        "sprite_1_0",
+        "sprite_2_0"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    },
+    "vision": {
+      "name": "Vision",
+      "color": "#f2c14e"
+    }
+  },
+  "states": {
+    "Idle": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "ghost_idle"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq917nm_f",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq91ksf_g",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 15
+          }
+        }
+      ]
+    },
+    "Up": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "ghost_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq917nm_f",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq91ksf_g",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 15
+          }
+        }
+      ]
+    },
+    "Down": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "ghost_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq917nm_f",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq91ksf_g",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 15
+          }
+        }
+      ]
+    },
+    "Left": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "ghost_left"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq917nm_f",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq91ksf_g",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 15
+          }
+        }
+      ]
+    },
+    "Right": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "ghost_right"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mtq917nm_f",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 8
+          }
+        },
+        {
+          "id": "col_mtq91ksf_g",
+          "layer": "vision",
+          "enabled": true,
+          "shape": {
+            "kind": "circle",
+            "cx": 8,
+            "cy": 8,
+            "radius": 15
+          }
+        }
+      ]
+    }
+  },
+  "initial": "Idle"
+}

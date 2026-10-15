@@ -1,6 +1,6 @@
-import { Entity } from "../../src";
-import type { RenderContext } from "../../src/core/renderer/type";
-import { MAP_COLS, MAP_ROWS, TILE_SIZE, VIEW_RADIUS } from "./constants";
+import { Entity } from '../../src';
+import type { RenderContext } from '../../src/core/renderer/type';
+import { MAP_COLS, MAP_ROWS, TILE_SIZE, VIEW_RADIUS } from './constants';
 
 export class DungenEnemy extends Entity {
   private wallMap: boolean[][];
@@ -17,7 +17,7 @@ export class DungenEnemy extends Entity {
 
   protected hp!: number;
   protected maxHp!: number;
-  protected enemyType!: "slime" | "phantom" | "archer";
+  protected enemyType!: 'slime' | 'phantom' | 'archer';
 
   private knockbackVx = 0;
   private knockbackVy = 0;
@@ -66,19 +66,23 @@ export class DungenEnemy extends Entity {
     const dist = Math.abs(myCol - tCol) + Math.abs(myRow - tRow);
 
     const detectRange =
-      this.enemyType === "archer" ? VIEW_RADIUS + 3 : this.enemyType === "phantom" ? VIEW_RADIUS + 5 : VIEW_RADIUS + 2;
+      this.enemyType === 'archer'
+        ? VIEW_RADIUS + 3
+        : this.enemyType === 'phantom'
+          ? VIEW_RADIUS + 5
+          : VIEW_RADIUS + 2;
     this.chasing = dist < detectRange && this.losCheck(myCol, myRow, tCol, tRow);
 
     if (this.knockbackTimer > 0) {
       this.knockbackTimer -= deltaTime;
       const newX = this.x + this.knockbackVx * deltaTime;
       const newY = this.y + this.knockbackVy * deltaTime;
-      if (!this.collides(newX, this.y)) this.x = newX;
-      if (!this.collides(this.x, newY)) this.y = newY;
+      if (!this.collides(newX, this.y)) {this.x = newX;}
+      if (!this.collides(this.x, newY)) {this.y = newY;}
       return;
     }
 
-    if (this.enemyType === "archer" && this.chasing) {
+    if (this.enemyType === 'archer' && this.chasing) {
       const dxToPlayer = this.target!.x - this.x;
       const dyToPlayer = this.target!.y - this.y;
       const len = Math.sqrt(dxToPlayer * dxToPlayer + dyToPlayer * dyToPlayer);
@@ -90,19 +94,24 @@ export class DungenEnemy extends Entity {
         const ny = dyToPlayer / len;
         const newX = this.x + nx * this.chaseSpeed * deltaTime;
         const newY = this.y + ny * this.chaseSpeed * deltaTime;
-        if (!this.collides(newX, this.y)) this.x = newX;
-        if (!this.collides(this.x, newY)) this.y = newY;
+        if (!this.collides(newX, this.y)) {this.x = newX;}
+        if (!this.collides(this.x, newY)) {this.y = newY;}
       } else if (len < preferredDist) {
         const nx = -dxToPlayer / len;
         const ny = -dyToPlayer / len;
         const newX = this.x + nx * this.speed * deltaTime;
         const newY = this.y + ny * this.speed * deltaTime;
-        if (!this.collides(newX, this.y)) this.x = newX;
-        if (!this.collides(this.x, newY)) this.y = newY;
+        if (!this.collides(newX, this.y)) {this.x = newX;}
+        if (!this.collides(this.x, newY)) {this.y = newY;}
       }
 
       this.shootTimer += deltaTime;
-      if (this.shootTimer >= this.shootInterval && len > 0 && len < preferredDist + TILE_SIZE * 2 && this.onShoot) {
+      if (
+        this.shootTimer >= this.shootInterval &&
+        len > 0 &&
+        len < preferredDist + TILE_SIZE * 2 &&
+        this.onShoot
+      ) {
         this.shootTimer = 0;
         const speed = 120;
         this.onShoot(
@@ -127,8 +136,8 @@ export class DungenEnemy extends Entity {
         const newX = this.x + nx * this.chaseSpeed * deltaTime;
         const newY = this.y + ny * this.chaseSpeed * deltaTime;
 
-        if (!this.collides(newX, this.y)) this.x = newX;
-        if (!this.collides(this.x, newY)) this.y = newY;
+        if (!this.collides(newX, this.y)) {this.x = newX;}
+        if (!this.collides(this.x, newY)) {this.y = newY;}
       }
     } else {
       this.dirTimer += deltaTime;
@@ -153,21 +162,21 @@ export class DungenEnemy extends Entity {
   }
 
   render(ctx: RenderContext) {
-    const c = ctx.getCanvas!()!
-    if (this.enemyType === "archer") {
-      c.fillStyle = this.chasing ? "#ffff40" : "#cccc30";
+    const c = ctx.getCanvas!()!;
+    if (this.enemyType === 'archer') {
+      c.fillStyle = this.chasing ? '#ffff40' : '#cccc30';
       c.fillRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
-      c.fillStyle = "#ff4040";
+      c.fillStyle = '#ff4040';
       c.fillRect(this.x + 5, this.y + 7, 6, 2);
-    } else if (this.enemyType === "phantom") {
-      c.fillStyle = this.chasing ? "#b050ff" : "#7040a0";
+    } else if (this.enemyType === 'phantom') {
+      c.fillStyle = this.chasing ? '#b050ff' : '#7040a0';
       c.fillRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
       if (this.hp < this.maxHp) {
-        c.fillStyle = "rgba(255, 255, 255, 0.4)";
+        c.fillStyle = 'rgba(255, 255, 255, 0.4)';
         c.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
       }
     } else {
-      c.fillStyle = this.chasing ? "#ff3030" : "#e05050";
+      c.fillStyle = this.chasing ? '#ff3030' : '#e05050';
       c.fillRect(this.x + 2, this.y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
     }
   }
@@ -180,8 +189,8 @@ export class DungenEnemy extends Entity {
 
     for (let row = top; row <= bottom; row++) {
       for (let col = left; col <= right; col++) {
-        if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return true;
-        if (this.wallMap[row]?.[col]) return true;
+        if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) {return true;}
+        if (this.wallMap[row]?.[col]) {return true;}
       }
     }
     return false;

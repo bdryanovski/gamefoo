@@ -15,7 +15,7 @@ import {
   type Vector2,
   WebRenderer,
   World,
-} from "../../src/index";
+} from '../../src/index';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -52,8 +52,8 @@ function isOnScreen(wx: number, wy: number, margin = 100): boolean {
 // Engine
 // ---------------------------------------------------------------------------
 
-const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
-const engine = new Engine(renderer, { backgroundColor: "#1a2a1a", gameScale: 1 });
+const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H);
+const engine = new Engine(renderer, { backgroundColor: '#1a2a1a', gameScale: 1 });
 const world = new World();
 
 // ---------------------------------------------------------------------------
@@ -79,7 +79,7 @@ class Explorer extends Player {
   private trailTimer = 0;
 
   constructor() {
-    super("player", WORLD_W / 2, WORLD_H / 2, PLAYER_SIZE, PLAYER_SIZE);
+    super('player', WORLD_W / 2, WORLD_H / 2, PLAYER_SIZE, PLAYER_SIZE);
   }
 
   override update(dt: number): void {
@@ -101,12 +101,12 @@ class Explorer extends Player {
         x: this.x + PLAYER_SIZE / 2,
         y: this.y + PLAYER_SIZE / 2,
       });
-      if (this.trail.length > 120) this.trail.shift();
+      if (this.trail.length > 120) {this.trail.shift();}
     }
   }
 
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
 
     // Terrain patches — rendered here because the engine draws the player
     // BEFORE registered objects, so this is our only chance to paint under them.
@@ -116,7 +116,7 @@ class Explorer extends Player {
     // Trail
     for (let i = 0; i < this.trail.length; i++) {
       const t = this.trail[i]!;
-      if (!isOnScreen(t.x, t.y, 10)) continue;
+      if (!isOnScreen(t.x, t.y, 10)) {continue;}
       const s = worldToScreen(t.x, t.y);
       const alpha = (i / this.trail.length) * 0.3;
       c.fillStyle = `rgba(120, 220, 180, ${alpha})`;
@@ -127,13 +127,13 @@ class Explorer extends Player {
 
     // Player body
     const s = worldToScreen(this.x, this.y);
-    c.fillStyle = "#44ddaa";
+    c.fillStyle = '#44ddaa';
     c.fillRect(s.x, s.y, PLAYER_SIZE, PLAYER_SIZE);
-    c.fillStyle = "#88ffcc";
+    c.fillStyle = '#88ffcc';
     c.fillRect(s.x + 3, s.y + 3, PLAYER_SIZE - 6, PLAYER_SIZE - 6);
 
     // Direction indicator (small dot)
-    c.fillStyle = "#fff";
+    c.fillStyle = '#fff';
     c.beginPath();
     c.arc(s.x + PLAYER_SIZE / 2, s.y + PLAYER_SIZE / 2, 2, 0, Math.PI * 2);
     c.fill();
@@ -142,14 +142,14 @@ class Explorer extends Player {
   }
 
   private drawTerrain(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     const step = 40;
     const startWx = Math.floor(cam.x / step) * step;
     const startWy = Math.floor(cam.y / step) * step;
 
     for (let wx = startWx - step; wx < cam.x + CANVAS_W + step; wx += step) {
       for (let wy = startWy - step; wy < cam.y + CANVAS_H + step; wy += step) {
-        if (wx < 0 || wy < 0 || wx > WORLD_W || wy > WORLD_H) continue;
+        if (wx < 0 || wy < 0 || wx > WORLD_W || wy > WORLD_H) {continue;}
         const s = worldToScreen(wx, wy);
         c.fillStyle = terrainColor(wx, wy);
         c.fillRect(s.x, s.y, step + 1, step + 1);
@@ -163,11 +163,11 @@ player.attachBehaviour(new Control(player, new Input()));
 
 player.attachBehaviour(
   new Collidable(player, world, {
-    shape: { type: "aabb", width: PLAYER_SIZE, height: PLAYER_SIZE },
+    shape: { type: 'aabb', width: PLAYER_SIZE, height: PLAYER_SIZE },
     layer: 0,
-    tags: new Set(["player"]),
+    tags: new Set(['player']),
     solid: true,
-    collidesWith: new Set(["obstacle"]),
+    collidesWith: new Set(['obstacle']),
   }),
 );
 
@@ -195,13 +195,13 @@ class Tree extends Entity {
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
-    if (!isOnScreen(this.x, this.y, 80)) return;
-    const c = ctx.getCanvas!()!
+    if (!isOnScreen(this.x, this.y, 80)) {return;}
+    const c = ctx.getCanvas!()!;
     const s = worldToScreen(this.x, this.y);
     const cx = s.x + this.size.width / 2;
 
     // Trunk
-    c.fillStyle = "#5a3a1a";
+    c.fillStyle = '#5a3a1a';
     c.fillRect(cx - 3, s.y + this.size.height - this.trunkH, 6, this.trunkH);
 
     // Crown
@@ -227,18 +227,34 @@ class Rock extends Entity {
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
-    if (!isOnScreen(this.x, this.y, 50)) return;
-    const c = ctx.getCanvas!()!
+    if (!isOnScreen(this.x, this.y, 50)) {return;}
+    const c = ctx.getCanvas!()!;
     const s = worldToScreen(this.x, this.y);
     c.fillStyle = this.shade;
     c.beginPath();
-    c.ellipse(s.x + this.radius, s.y + this.radius, this.radius, this.radius * 0.7, 0, 0, Math.PI * 2);
+    c.ellipse(
+      s.x + this.radius,
+      s.y + this.radius,
+      this.radius,
+      this.radius * 0.7,
+      0,
+      0,
+      Math.PI * 2,
+    );
     c.fill();
 
     // Highlight
-    c.fillStyle = "rgba(255,255,255,0.08)";
+    c.fillStyle = 'rgba(255,255,255,0.08)';
     c.beginPath();
-    c.ellipse(s.x + this.radius - 2, s.y + this.radius - 3, this.radius * 0.5, this.radius * 0.3, -0.3, 0, Math.PI * 2);
+    c.ellipse(
+      s.x + this.radius - 2,
+      s.y + this.radius - 3,
+      this.radius * 0.5,
+      this.radius * 0.3,
+      -0.3,
+      0,
+      Math.PI * 2,
+    );
     c.fill();
   }
 }
@@ -258,8 +274,8 @@ class Bush extends Entity {
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
-    if (!isOnScreen(this.x, this.y, 30)) return;
-    const c = ctx.getCanvas!()!
+    if (!isOnScreen(this.x, this.y, 30)) {return;}
+    const c = ctx.getCanvas!()!;
     const s = worldToScreen(this.x, this.y);
     const cx = s.x + this.radius;
     const cy = s.y + this.radius;
@@ -283,15 +299,15 @@ class Flower extends Entity {
 
   constructor(x: number, y: number) {
     super(`flower_${objectIdCounter++}`, x, y, 6, 6);
-    const colors = ["#ff6b8a", "#ffaa44", "#aa88ff", "#44ccff", "#ffff66", "#ff66cc"];
+    const colors = ['#ff6b8a', '#ffaa44', '#aa88ff', '#44ccff', '#ffff66', '#ff66cc'];
     this.petalColor = colors[Math.floor(Math.random() * colors.length)]!;
   }
 
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
-    if (!isOnScreen(this.x, this.y, 10)) return;
-    const c = ctx.getCanvas!()!
+    if (!isOnScreen(this.x, this.y, 10)) {return;}
+    const c = ctx.getCanvas!()!;
     const s = worldToScreen(this.x, this.y);
 
     // Petals
@@ -302,7 +318,7 @@ class Flower extends Entity {
       c.fill();
     }
     // Center
-    c.fillStyle = "#ffe066";
+    c.fillStyle = '#ffe066';
     c.beginPath();
     c.arc(s.x + 3, s.y + 3, 1.5, 0, Math.PI * 2);
     c.fill();
@@ -324,19 +340,27 @@ class Pond extends Entity {
   update(_dt: number): void {}
 
   render(ctx: RenderContext): void {
-    if (!isOnScreen(this.x, this.y, 100)) return;
-    const c = ctx.getCanvas!()!
+    if (!isOnScreen(this.x, this.y, 100)) {return;}
+    const c = ctx.getCanvas!()!;
     const s = worldToScreen(this.x, this.y);
 
-    c.fillStyle = "rgba(40, 80, 140, 0.6)";
+    c.fillStyle = 'rgba(40, 80, 140, 0.6)';
     c.beginPath();
     c.ellipse(s.x + this.rx, s.y + this.ry, this.rx, this.ry, 0, 0, Math.PI * 2);
     c.fill();
 
     // Shimmer
-    c.fillStyle = "rgba(100, 170, 255, 0.15)";
+    c.fillStyle = 'rgba(100, 170, 255, 0.15)';
     c.beginPath();
-    c.ellipse(s.x + this.rx - 5, s.y + this.ry - 5, this.rx * 0.6, this.ry * 0.5, -0.2, 0, Math.PI * 2);
+    c.ellipse(
+      s.x + this.rx - 5,
+      s.y + this.ry - 5,
+      this.rx * 0.6,
+      this.ry * 0.5,
+      -0.2,
+      0,
+      Math.PI * 2,
+    );
     c.fill();
   }
 }
@@ -364,7 +388,7 @@ class Critter extends DynamicEntity {
 
   update(dt: number): void {
     this.dirTimer += dt;
-    if (this.dirTimer >= this.dirInterval) this.pickDir();
+    if (this.dirTimer >= this.dirInterval) {this.pickDir();}
 
     this.x += this.velocity.x * this.speed * dt;
     this.y += this.velocity.y * this.speed * dt;
@@ -381,14 +405,14 @@ class Critter extends DynamicEntity {
   }
 
   render(ctx: RenderContext): void {
-    if (!isOnScreen(this.x, this.y, 20)) return;
-    const c = ctx.getCanvas!()!
+    if (!isOnScreen(this.x, this.y, 20)) {return;}
+    const c = ctx.getCanvas!()!;
     const s = worldToScreen(this.x, this.y);
     c.fillStyle = this.color;
     c.beginPath();
     c.arc(s.x + 5, s.y + 5, 5, 0, Math.PI * 2);
     c.fill();
-    c.fillStyle = "#fff";
+    c.fillStyle = '#fff';
     c.beginPath();
     c.arc(s.x + 5, s.y + 4, 1.5, 0, Math.PI * 2);
     c.fill();
@@ -412,12 +436,12 @@ function spawnObjects(): Entity[] {
       const tree = new Tree(x, y);
       tree.attachBehaviour(
         new Collidable(tree, world, {
-          shape: { type: "circle", radius: 8 },
+          shape: { type: 'circle', radius: 8 },
           layer: 0,
-          tags: new Set(["obstacle"]),
+          tags: new Set(['obstacle']),
           solid: true,
           fixed: true,
-          collidesWith: new Set(["player"]),
+          collidesWith: new Set(['player']),
         }),
       );
       objects.push(tree);
@@ -433,12 +457,12 @@ function spawnObjects(): Entity[] {
       const rock = new Rock(x, y);
       rock.attachBehaviour(
         new Collidable(rock, world, {
-          shape: { type: "circle", radius: rock.getSize().width / 2 },
+          shape: { type: 'circle', radius: rock.getSize().width / 2 },
           layer: 0,
-          tags: new Set(["obstacle"]),
+          tags: new Set(['obstacle']),
           solid: true,
           fixed: true,
-          collidesWith: new Set(["player"]),
+          collidesWith: new Set(['player']),
         }),
       );
       objects.push(rock);
@@ -482,11 +506,11 @@ function spawnObjects(): Entity[] {
 // HUD — draws on top of everything, in screen coordinates
 // ---------------------------------------------------------------------------
 
-const font = new FontBitmap("5x5");
+const font = new FontBitmap('5x5');
 
 class HUD extends Entity {
   constructor() {
-    super("hud", 0, 0, CANVAS_W, CANVAS_H);
+    super('hud', 0, 0, CANVAS_W, CANVAS_H);
   }
 
   update(_dt: number): void {}
@@ -499,8 +523,8 @@ class HUD extends Entity {
   }
 
   private drawGrid(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
-    c.strokeStyle = "rgba(255, 255, 255, 0.03)";
+    const c = ctx.getCanvas!()!;
+    c.strokeStyle = 'rgba(255, 255, 255, 0.03)';
     c.lineWidth = 1;
 
     const startX = -(cam.x % GRID_SIZE);
@@ -521,11 +545,11 @@ class HUD extends Entity {
   }
 
   private drawWorldBorder(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     const tl = worldToScreen(0, 0);
     const br = worldToScreen(WORLD_W, WORLD_H);
 
-    c.strokeStyle = "rgba(255, 80, 80, 0.4)";
+    c.strokeStyle = 'rgba(255, 80, 80, 0.4)';
     c.lineWidth = 2;
     c.setLineDash([8, 6]);
     c.strokeRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
@@ -533,7 +557,7 @@ class HUD extends Entity {
   }
 
   private drawMinimap(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     const mmW = 140;
     const mmH = 140;
     const mmX = CANVAS_W - mmW - 10;
@@ -541,36 +565,36 @@ class HUD extends Entity {
     const scale = mmW / WORLD_W;
 
     // Background
-    c.fillStyle = "rgba(0, 0, 0, 0.6)";
+    c.fillStyle = 'rgba(0, 0, 0, 0.6)';
     c.fillRect(mmX, mmY, mmW, mmH);
-    c.strokeStyle = "rgba(255, 255, 255, 0.2)";
+    c.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     c.lineWidth = 1;
     c.strokeRect(mmX, mmY, mmW, mmH);
 
     // Viewport rectangle
-    c.strokeStyle = "rgba(255, 255, 100, 0.5)";
+    c.strokeStyle = 'rgba(255, 255, 100, 0.5)';
     c.lineWidth = 1;
     c.strokeRect(mmX + cam.x * scale, mmY + cam.y * scale, CANVAS_W * scale, CANVAS_H * scale);
 
     // Player dot
     const px = player.getPosition().x;
     const py = player.getPosition().y;
-    c.fillStyle = "#44ddaa";
+    c.fillStyle = '#44ddaa';
     c.beginPath();
     c.arc(mmX + px * scale, mmY + py * scale, 3, 0, Math.PI * 2);
     c.fill();
   }
 
   private drawCoords(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     const px = Math.floor(player.getPosition().x);
     const py = Math.floor(player.getPosition().y);
     const text = `POS ${px},${py}  CAM ${Math.floor(cam.x)},${Math.floor(cam.y)}  WORLD ${WORLD_W}x${WORLD_H}`;
 
-    c.fillStyle = "rgba(0,0,0,0.5)";
+    c.fillStyle = 'rgba(0,0,0,0.5)';
     c.fillRect(8, CANVAS_H - 20, text.length * 5 + 8, 14);
 
-    c.fillStyle = "#7fdbca";
+    c.fillStyle = '#7fdbca';
     font.renderText(text, 12, CANVAS_H - 17, ctx);
   }
 }
@@ -584,9 +608,13 @@ engine.setup(() => {
   engine.use(new ObjectSystem([player, ...objects] as any));
   engine.use(new CollisionSystem(world));
 
-  console.log("%c🌍 Endless World loaded — %d objects spawned", "color: #7fdbca; font-weight: bold", objectIdCounter);
   console.log(
-    "%cCamera issues: Engine.render() ignores camera transform — using manual offset workaround",
-    "color: #f88",
+    '%c🌍 Endless World loaded — %d objects spawned',
+    'color: #7fdbca; font-weight: bold',
+    objectIdCounter,
+  );
+  console.log(
+    '%cCamera issues: Engine.render() ignores camera transform — using manual offset workaround',
+    'color: #f88',
   );
 });

@@ -63,14 +63,16 @@ export default class Asset {
     }
     return new Promise((resolve, reject) => {
       const image = new Image();
-      image.onload = () => {
+      image.onload = (): void => {
         Asset.cache.set(src, image);
         resolve(image);
       };
-      image.onerror = (_error) => {
+      image.onerror = (_error): void => {
         reject(new Error(`Failed to load image: ${src}`, { cause: _error }));
       };
       image.src = src;
+
+      return image;
     });
   }
 }

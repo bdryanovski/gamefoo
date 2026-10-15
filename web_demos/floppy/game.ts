@@ -1,4 +1,4 @@
-import type { RenderContext } from "../../src/core/renderer/type";
+import type { RenderContext } from '../../src/core/renderer/type';
 import {
   Behaviour,
   DynamicEntity,
@@ -9,7 +9,7 @@ import {
   StateMachine,
   Text,
   WebRenderer,
-} from "../../src/index";
+} from '../../src/index';
 
 // ---------------------------------------------------------------------------
 // Layout — shared by many classes, derived from game dimensions
@@ -20,9 +20,9 @@ const HEIGHT = 75;
 const GROUND_Y = HEIGHT - 10;
 
 const Colors = {
-  background: "#e0e0e0",
-  foreground: "#1a1a1a",
-  middle: "#888888",
+  background: '#e0e0e0',
+  foreground: '#1a1a1a',
+  middle: '#888888',
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -30,10 +30,10 @@ const Colors = {
 // ---------------------------------------------------------------------------
 
 enum GameState {
-  IDLE = "idle",
-  READY = "ready",
-  PLAYING = "playing",
-  GAME_OVER = "gameover",
+  IDLE = 'idle',
+  READY = 'ready',
+  PLAYING = 'playing',
+  GAME_OVER = 'gameover',
 }
 
 class FloppyState {
@@ -91,7 +91,7 @@ class Bird extends DynamicEntity {
     gravity = 255,
     maxFallSpeed = 150,
   ) {
-    super("bird", startX, startY, 6, 5);
+    super('bird', startX, startY, 6, 5);
     this.velocity = { x: 0, y: 0 };
     this.gs = gs;
     this.startX = startX;
@@ -147,7 +147,7 @@ class Bird extends DynamicEntity {
   }
 
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     const px = Math.round(this.x);
     const py = Math.round(this.y);
 
@@ -168,7 +168,7 @@ class Bird extends DynamicEntity {
 // ---------------------------------------------------------------------------
 
 class FlapControl extends Behaviour<Bird> {
-  readonly type = "flap-control";
+  readonly type = 'flap-control';
 
   private input: Input;
   private gs: FloppyState;
@@ -185,7 +185,7 @@ class FlapControl extends Behaviour<Bird> {
   }
 
   private consumeFlap(): boolean {
-    const isDown = this.input.isKeyDown("w");
+    const isDown = this.input.isKeyDown('w');
     if (isDown && !this.wasDown) {
       this.wasDown = true;
       return true;
@@ -197,7 +197,7 @@ class FlapControl extends Behaviour<Bird> {
   }
 
   update(_dt: number): void {
-    if (!this.consumeFlap()) return;
+    if (!this.consumeFlap()) {return;}
 
     if (this.gs.isReady) {
       this.gs.fsm.transition(GameState.PLAYING);
@@ -222,7 +222,7 @@ class Ground extends DynamicEntity {
   private gs: FloppyState;
 
   constructor(gs: FloppyState, scrollSpeed = 48, tickSpacing = 6) {
-    super("ground", 0, GROUND_Y, WIDTH, 10);
+    super('ground', 0, GROUND_Y, WIDTH, 10);
     this.groundH = this.getSize().height;
     this.gs = gs;
     this.scrollSpeed = scrollSpeed;
@@ -236,7 +236,7 @@ class Ground extends DynamicEntity {
   }
 
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     c.fillStyle = Colors.foreground;
     c.fillRect(0, GROUND_Y, WIDTH, 1);
 
@@ -284,7 +284,7 @@ class PipeManager extends Entity {
     minHeight = 8,
     scorePerPipe = 10,
   ) {
-    super("pipes", 0, 0);
+    super('pipes', 0, 0);
     this.bird = bird;
     this.gs = gs;
     this.speed = speed;
@@ -310,7 +310,7 @@ class PipeManager extends Entity {
   }
 
   override update(dt: number): void {
-    if (!this.gs.isPlaying) return;
+    if (!this.gs.isPlaying) {return;}
 
     this.spawnTimer += dt;
     if (this.spawnTimer >= this.spawnInterval) {
@@ -331,7 +331,7 @@ class PipeManager extends Entity {
       const pipe = this.pipes[i]!;
       pipe.x -= frameDist;
 
-      if (pipe.x + this.pipeWidth < 0) continue;
+      if (pipe.x + this.pipeWidth < 0) {continue;}
 
       if (!pipe.scored && pipe.x + this.pipeWidth < bLeft) {
         pipe.scored = true;
@@ -355,7 +355,7 @@ class PipeManager extends Entity {
   }
 
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
     c.fillStyle = Colors.foreground;
     for (let i = 0; i < this.pipes.length; i++) {
       const pipe = this.pipes[i]!;
@@ -378,7 +378,7 @@ class ScoreLabel extends Text {
   private gs: FloppyState;
 
   constructor(gs: FloppyState) {
-    super("score-label", "3x5");
+    super('score-label', '3x5');
     this.y = 2;
     this.gs = gs;
   }
@@ -388,7 +388,7 @@ class ScoreLabel extends Text {
 
     if (!visible) {
       if (this.lastVisible) {
-        this.setText("");
+        this.setText('');
         this.lastVisible = false;
       }
       return;
@@ -404,7 +404,8 @@ class ScoreLabel extends Text {
   }
 
   override render(ctx: RenderContext): void {
-    const _rawCtx = ctx.getCanvas?.(); if (_rawCtx) {
+    const _rawCtx = ctx.getCanvas?.();
+    if (_rawCtx) {
       _rawCtx.fillStyle = Colors.foreground;
     }
     super.render(ctx);
@@ -417,20 +418,20 @@ class MessageLabel extends Text {
   private gs: FloppyState;
 
   constructor(gs: FloppyState) {
-    super("message-label", "3x5");
+    super('message-label', '3x5');
     this.y = Math.round(GROUND_Y / 2 + 10);
     this.gs = gs;
   }
 
   override update(_dt: number): void {
-    if (this.gs.fsm.current === this.lastState && this.gs.highScore === this.lastHighScore) return;
+    if (this.gs.fsm.current === this.lastState && this.gs.highScore === this.lastHighScore) {return;}
     this.lastState = this.gs.fsm.current;
     this.lastHighScore = this.gs.highScore;
 
-    let text = "";
+    let text = '';
     switch (this.gs.fsm.current) {
       case GameState.READY:
-        text = "PRESS W TO FLAP";
+        text = 'PRESS W TO FLAP';
         break;
       case GameState.GAME_OVER:
         text = `GAME OVER  HI:${this.gs.highScore}`;
@@ -442,7 +443,8 @@ class MessageLabel extends Text {
   }
 
   override render(ctx: RenderContext): void {
-    const _rawCtx = ctx.getCanvas?.(); if (_rawCtx) {
+    const _rawCtx = ctx.getCanvas?.();
+    if (_rawCtx) {
       _rawCtx.fillStyle = Colors.foreground;
     }
     super.render(ctx);
@@ -460,7 +462,7 @@ class Floppy extends Engine {
   private pipes: PipeManager;
 
   constructor() {
-    super(new WebRenderer("game", WIDTH, HEIGHT, 4), {
+    super(new WebRenderer('game', WIDTH, HEIGHT, 4), {
       backgroundColor: Colors.background,
     });
 

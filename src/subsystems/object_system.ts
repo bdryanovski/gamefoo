@@ -49,11 +49,11 @@ export class ObjectSystem implements SubSystem {
     }
   }
 
-  update(deltaTime: number) {
+  update(deltaTime: number): void {
     this.objects.updateAll(deltaTime);
   }
 
-  render(ctx: RenderContext) {
+  render(ctx: RenderContext): void {
     if (this._depthSort) {
       this.objects.sort((a, b) => a.y - b.y);
     }

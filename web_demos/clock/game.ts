@@ -1,18 +1,12 @@
-import type { RenderContext } from "../../src/core/renderer/type";
-import {
-  Engine,
-  Entity,
-  ObjectSystem,
-  Text,
-  WebRenderer,
-} from "../../src/index";
+import type { RenderContext } from '../../src/core/renderer/type';
+import { Engine, Entity, ObjectSystem, Text, WebRenderer } from '../../src/index';
 
 const CANVAS_W = 250;
 const CANVAS_H = 200;
 
-const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H);
 const engine = new Engine(renderer, {
-  backgroundColor: "#000000",
+  backgroundColor: '#000000',
 });
 
 class Circle extends Entity {
@@ -28,13 +22,7 @@ class Circle extends Entity {
 
   protected everyX = 5;
 
-  constructor(
-    name: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-  ) {
+  constructor(name: string, x: number, y: number, width: number, height: number) {
     super(name, x, y, width, height);
   }
 
@@ -45,7 +33,7 @@ class Circle extends Entity {
 
   override render(ctx: RenderContext) {
     const c = ctx.getCanvas?.();
-    if (!c) return;
+    if (!c) {return;}
     c.save();
 
     c.translate(this.x, this.y);
@@ -56,8 +44,7 @@ class Circle extends Entity {
       const x1 = (Math.cos(angle) * this.size.width) / 2;
       const y1 = (Math.sin(angle) * this.size.width) / 2;
 
-      const length =
-        i % this.everyX === 0 ? this.tickLength - 5 : this.tickLength;
+      const length = i % this.everyX === 0 ? this.tickLength - 5 : this.tickLength;
 
       const x2 = Math.cos(angle) * (this.size.width / 2 - length);
       const y2 = Math.sin(angle) * (this.size.width / 2 - length);
@@ -65,7 +52,7 @@ class Circle extends Entity {
       c.beginPath();
       c.moveTo(x1, y1);
       c.lineTo(x2, y2);
-      c.strokeStyle = "#FFFFFF";
+      c.strokeStyle = '#FFFFFF';
       c.lineWidth = this.lineWidth;
       c.stroke();
     }
@@ -78,7 +65,7 @@ class Seconds extends Circle {
   protected override tickLength = 10;
   protected override lineWidth = 1;
   constructor(x: number, y: number, radius: number) {
-    super("seconds", x, y, radius, radius);
+    super('seconds', x, y, radius, radius);
     this.rotation = new Date().getSeconds();
   }
 }
@@ -88,7 +75,7 @@ class Minutes extends Circle {
   protected override everyX = 0;
   protected override lineWidth = 2;
   constructor(x: number, y: number, radius: number) {
-    super("minutes", x, y, radius, radius);
+    super('minutes', x, y, radius, radius);
     this.rotation = new Date().getMinutes();
   }
 }
@@ -101,23 +88,24 @@ class Hours extends Circle {
   protected override lineWidth = 4;
 
   constructor(x: number, y: number, radius: number) {
-    super("hours", x, y, radius, radius);
+    super('hours', x, y, radius, radius);
     this.rotation = new Date().getHours();
   }
 }
 
 class ClockTime extends Text {
   constructor(x: number, y: number) {
-    super("clockTime", "8x8");
+    super('clockTime', '8x8');
     this.x = x;
     this.y = y - this.font.height / 2;
   }
 
   override update(_delta: number) {
     const time = new Date();
-    const text = `${String(time.getHours()).padStart(2, "0")}:${String(
-      time.getMinutes(),
-    ).padStart(2, "0")}:${String(time.getSeconds()).padStart(2, "0")}`;
+    const text = `${String(time.getHours()).padStart(2, '0')}:${String(time.getMinutes()).padStart(
+      2,
+      '0',
+    )}:${String(time.getSeconds()).padStart(2, '0')}`;
     this.setText(text);
   }
 }
@@ -125,18 +113,18 @@ class ClockTime extends Text {
 // Second-hand axis line — drawn by overriding engine.render
 class AxisLine extends Entity {
   constructor() {
-    super("axis-line", 0, 0, CANVAS_W, CANVAS_H);
+    super('axis-line', 0, 0, CANVAS_W, CANVAS_H);
   }
   override update(_dt: number) {}
   override render(ctx: RenderContext) {
     const c = ctx.getCanvas?.();
-    if (!c) return;
+    if (!c) {return;}
     const { height } = engine.dementions;
     c.save();
     c.beginPath();
     c.moveTo(0, height / 2);
     c.lineTo(110, height / 2);
-    c.strokeStyle = "red";
+    c.strokeStyle = 'red';
     c.lineWidth = 2;
     c.stroke();
     c.restore();
