@@ -28,10 +28,9 @@ import {
   MonitorSystem,
 } from '../../../src/index';
 import { drawMessages, showMessage, updateMessages, useHudFont } from './hud';
-import { resolveDialogText } from './dialog_text';
 import { Olive } from './objects/olive';
 import { Chest } from './objects/chest';
-import { DEFAULT_ITEMS, Inventory, InventoryView, ItemCatalog, Journal } from './inventory';
+import { Inventory } from './inventory';
 import { Campfire } from './objects/campfire';
 import { Torch } from './objects/torch';
 import { Bookshelf } from './objects/bookshelf';
@@ -55,77 +54,21 @@ import { setFog } from './fog';
 import { Lanter } from './objects/lanter';
 import { Candle } from './objects/candle';
 import { Candles } from './objects/candles';
-import { Her } from './objects/her';
-
-// The Experiment00 project uses 20×16 screens of 16px tiles → a
-// 320×256 screen, up-scaled ×2 for display (640×512).
-const SCREEN_W = 320;
-const SCREEN_H = 256;
-const SCALE = 3;
-// Screen tile size (px). Portal `spawn` cells are authored in grid col/row
-// and converted to pixels with this.
-const BLOCK_SIZE = 16;
-// How close the player must stand to toggle a campfire (px, centre to centre).
-const CAMP_REACH = 24;
-// Time a door takes to open (seconds). The `portal_open` cue is a 12s WAV
-// played at quadruple rate so it finishes in this window; the pie-fill badge
-// above the door tracks the same clock and completes as the door opens.
-const PORTAL_OPEN_SECONDS = 3;
-// The player draws on this z-level; layers above it (e.g. the `pillars`
-// layer at level 3) occlude it, so keep it below them.
-const PLAYER_LEVEL = 3;
-
-// Screen-cut transition timing (seconds): the room collapses to dark over
-// `OUT`, the screen swaps at the covered midpoint, then the new room reopens
-// over `IN`.
-const TRANSITION_OUT = 0.42;
-const TRANSITION_IN = 0.5;
-
-/** Smooth acceleration/deceleration for the iris wipe, `0..1 → 0..1`. */
-function easeInOut(t: number): number {
-  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-}
-
-/**
- * Audio wiring for the demo, kept declarative so it is easy to tune:
- *
- * - `backgroundByScreen` maps a screen coordinate (`"cx,cy"`) to an ambient
- *   bed id; every other screen falls back to `defaultBackground`.
- * - `footstepSequence` is cycled one step per `stepInterval` seconds while the
- *   player walks, so a footfall rhythm emerges from movement.
- * - `campfireSound` is a looping, distance-attenuated emitter attached to each
- *   lit campfire (swells as the player approaches, silent far away).
- *
- * Ids reference `assets/audio/experiment00.audio.project.json`.
- */
-const AUDIO = {
-  projectUrl: '/assets/audio/experiment00.audio.project.json',
-  ambientFade: 1.2,
-  defaultBackground: 'bg_sewers',
-  backgroundByScreen: {
-    '0,0': 'bg_cantgoon',
-    '0,1': 'bg_cantgoon',
-    '0,2': 'bg_cantgoon',
-    '0,3': 'bg_cantgoon',
-    '0,7': 'bg_cantgoon',
-    '0,8': 'bg_end',
-    '1,8': 'bg_cantgoon',
-    '1,9': 'bg_finalpath',
-    '2,8': 'bg_withouttrace',
-    '-1,7': 'bg_ceilingstars',
-    '-3,8': 'bg_ceilingstars',
-    '-3,9': 'bg_down',
-  } as Record<string, string>,
-  footstepSequence: 'seq_footsteps_water',
-  stepInterval: 0.32,
-  stepVolume: 0.1,
-  campfireSound: 'campfire_loop',
-  campfireVolume: 0.2,
-} as const;
-
-/** Prefixes the audio base path and percent-encodes each path segment. */
-const resolveAudio = (file: string): string =>
-  `/assets/audio/${file.split('/').map(encodeURIComponent).join('/')}`;
+import {
+  BLOCK_SIZE,
+  CAMP_REACH,
+  PLAYER_LEVEL,
+  PORTAL_OPEN_SECONDS,
+  SCALE,
+  SCREEN_H,
+  SCREEN_W,
+  TRANSITION_IN,
+  TRANSITION_OUT,
+} from './constants';
+import { easeInOut, resolveAudio } from './utils';
+import { AUDIO } from './config/audio';
+import { drawText } from './text';
+import type { GameContext } from './context';
 
 const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
 
@@ -142,6 +85,7 @@ const renderer = new WebRenderer('game', SCREEN_W * SCALE, SCREEN_H * SCALE);
  * object — it persists across screens, so the game spawns and repositions it.
  */
 class MapGame extends Engine {
+  readonly context: GameContext;
   private map?: MapManager;
   /**
    * Screen X position
@@ -151,17 +95,16 @@ class MapGame extends Engine {
    * Screen Y position
    */
   private cy = 0;
-  private readonly input = new Input();
   /**
    * Player reference
    */
   private player?: Player;
 
   private dialog?: DialogRunner;
-  /** The raw dialogs document, kept for resolving authored text (see {@link MapGame.harvest}). */
-  private dialogs?: DialogDocument;
   private dialogBox = new DialogBox();
+
   private audio?: AudioSystem;
+  private readonly input = new Input();
   /**
    * The single pixel font every piece of text in the game is drawn with — the
    * dialog box, the HUD toasts, the splash prompt, the lock keypad and every
@@ -192,20 +135,6 @@ class MapGame extends Engine {
 
   /** The player's item bag (persisted with the save; chests fill it). */
   private readonly inventory = new Inventory(this.save.scope('inventory'));
-  /** Which journal entries the player has found (persisted with the save). */
-  private readonly journal = new Journal(this.save.scope('journal'));
-  /** Item id → name + message; discovered definitions persist with the save. */
-  private readonly itemCatalog = new ItemCatalog(DEFAULT_ITEMS, this.save.scope('items'));
-  /**
-   * The book-like inventory overlay, opened and closed with **Esc**. Owns its
-   * own tab + selection state and is drawn last, on top of every other layer.
-   * The font is attached once the bitmap sheet finishes loading.
-   */
-  private readonly inventoryView = new InventoryView({
-    inventory: this.inventory,
-    journal: this.journal,
-    items: this.itemCatalog,
-  });
   /** A movable shelf whose message is being read; slides once it closes. */
   private shelfAwaitingSlide?: Bookshelf;
   /** The iris-wipe overlay; the game drives its `coverage` each frame. */
@@ -256,7 +185,6 @@ class MapGame extends Engine {
       TextObject.defaultFont = this.font;
       useHudFont(this.font, 2);
       this.dialogBox = new DialogBox({ font: this.font });
-      this.inventoryView.setFont(this.font, 2);
     }
     // Objects: the map instantiates a class wherever it places a matching
     // object. `Campfire` is keyed by its static `type` ("campfire").
@@ -278,7 +206,6 @@ class MapGame extends Engine {
     registry.register(Olive);
     registry.register(Candle);
     registry.register(Candles);
-    registry.register(Her);
     // Olives read/write their collected flag from the shared save store.
     Olive.useState(this.save.scope('olives'));
     registry.register(Chest);
@@ -327,7 +254,6 @@ class MapGame extends Engine {
       .then((r) => (r.ok ? r.json() : { trees: {} }))
       .catch(() => ({ trees: {} }));
     this.dialog = new DialogRunner(dialogs);
-    this.dialogs = dialogs;
 
     const shaders = new ShaderSystem();
     shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
@@ -546,52 +472,6 @@ class MapGame extends Engine {
     return false;
   }
 
-  /**
-   * Reads the authored item/journal properties off an interacted object and
-   * records whatever it grants. Called on every **E** press for the object the
-   * player acted on, so item presses stack in the bag and journal presses are
-   * idempotent.
-   *
-   * - `item_id` (or the legacy `item`) adds one to the bag and registers its
-   *   `item_name` + `message` text with the {@link ItemCatalog}.
-   * - `journal_id` unlocks a journal slot named `journal_name`, whose readable
-   *   body is the object's `message` dialog resolved to plain lines.
-   *
-   * Returns whether anything was granted (so callers can show an "empty"
-   * message when nothing was).
-   */
-  private harvest(object: MapObject): boolean {
-    const itemId = this.readProperty(object, 'item_id') ?? this.readProperty(object, 'item');
-    const journalId = this.readProperty(object, 'journal_id');
-    if (!itemId && !journalId) {
-      return false;
-    }
-
-    const text = resolveDialogText(this.dialogs, this.readProperty(object, 'message'));
-
-    if (itemId) {
-      const name = this.readProperty(object, 'item_name') ?? itemId;
-      this.itemCatalog.register({ id: itemId, name, message: text.join('\n') || undefined });
-      this.inventory.add(itemId);
-      showMessage(`Found ${name}`, 1.6);
-    }
-
-    if (journalId) {
-      const name = this.readProperty(object, 'journal_name') ?? journalId;
-      if (this.journal.discover(journalId, name, text)) {
-        showMessage(`Journal entry: ${name}`, 1.8);
-      }
-    }
-
-    return true;
-  }
-
-  /** A trimmed property value, treating the `"0"` sentinel and blanks as unset. */
-  private readProperty(object: MapObject, key: string): string | null {
-    const value = object.getProperty(key)?.trim();
-    return value && value !== '0' ? value : null;
-  }
-
   /** Opens a nearby portal (and travels), else toggles a nearby campfire. */
   private interact(): void {
     const player = this.player;
@@ -603,7 +483,6 @@ class MapGame extends Engine {
       ?.objectsByType(Portal)
       .find((p) => p.overlaps(player.interactionBox()));
     if (portal) {
-      this.harvest(portal);
       // A locked door refuses to open: remind the player, then ask for the
       // 4-digit code. It stays shut until the right code is entered.
       if (portal.isLocked) {
@@ -652,14 +531,12 @@ class MapGame extends Engine {
       ...(this.map?.current?.objectsByType(Goblin) ?? []),
     ].find((s) => s.overlaps(player.box()));
     if (stalker) {
-      this.harvest(stalker);
       if (this.startDialog(stalker.dialogRef, 'stalker')) return;
     }
 
     // Slime king: a stationary NPC — press E beside it to run its dialog.
     const king = this.map?.current?.objectsByType(SlimeKing).find((k) => k.overlaps(player.box()));
     if (king) {
-      this.harvest(king);
       if (this.startDialog(king.dialogRef, 'slime_king')) return;
     }
 
@@ -668,7 +545,6 @@ class MapGame extends Engine {
       ?.objectsByType(Sign)
       .find((s) => s.overlaps(player.interactionBox()));
     if (sign) {
-      this.harvest(sign);
       if (this.startDialog(sign.dialogRef, 'sign')) return;
     }
 
@@ -679,7 +555,6 @@ class MapGame extends Engine {
       ?.objectsByType(Bookshelf)
       .find((b) => b.overlaps(player.interactionBox()));
     if (shelf) {
-      this.harvest(shelf);
       if (shelf.movable && !shelf.isOpen) {
         if (this.startDialog(shelf.dialogRef, 'bookshelf')) {
           this.shelfAwaitingSlide = shelf;
@@ -698,8 +573,12 @@ class MapGame extends Engine {
       .find((c) => !c.isOpen && c.overlaps(player.interactionBox()));
     if (chest?.open()) {
       this.audio?.playSound('chest_open', { volume: 0.7 });
-      this.telemetry.chestOpen(chest.id, chest.item ?? null);
-      if (!this.harvest(chest)) {
+      const item = chest.item;
+      this.telemetry.chestOpen(chest.id, item ?? null);
+      if (item) {
+        this.inventory.add(item);
+        showMessage(`Found ${item}`, 1.6);
+      } else {
         showMessage('The chest is empty', 1.2);
       }
       this.startDialog(chest.dialogRef, 'chest');
@@ -709,7 +588,6 @@ class MapGame extends Engine {
     // Campfires: toggle the nearest within reach.
     const fire = this.campfires().find((f) => this.isCampfireInReach(f));
     if (fire) {
-      this.harvest(fire);
       fire.toggle();
       this.telemetry.campfireToggle(fire.id, fire.lit);
     }
@@ -788,20 +666,6 @@ class MapGame extends Engine {
       }
       return;
     }
-    // Inventory overlay: while open it captures every key (WASD/arrows move,
-    // Esc closes). When closed, Esc opens it — unless a dialog or keypad own
-    // the screen, in which case Esc belongs to them.
-    const inventory = this.inventoryView;
-    if (inventory.isOpen) {
-      inventory.handleKey(e);
-      e.preventDefault();
-      return;
-    }
-    if (e.key === 'Escape' && !this.lockUI && !this.dialog?.active) {
-      inventory.show();
-      e.preventDefault();
-      return;
-    }
     // Code entry captures all keys: arrows spin/move, E/Esc leaves.
     if (this.lockUI) {
       const lockedPortal = this.lockUI.portal;
@@ -839,10 +703,6 @@ class MapGame extends Engine {
       this.splashElapsed += dt;
       return;
     }
-
-    // The inventory overlay freezes the world while open. It has no clock of
-    // its own, so there is nothing to advance — just stop the frame here.
-    if (this.inventoryView.isOpen) return;
 
     // Advance the dialog typewriter + slide animation every frame; while the
     // modal is open it freezes the world (no map/player updates).
@@ -970,7 +830,6 @@ class MapGame extends Engine {
       if (!(object instanceof Olive) || !object.collect()) continue;
       showMessage('You picked an olive', 1.2);
       this.telemetry.olivePickup(object.id);
-      this.harvest(object);
       if (this.startDialog(object.dialogRef, 'olive')) break;
     }
   }
@@ -1002,9 +861,10 @@ class MapGame extends Engine {
     this.fog?.render();
     ctx.restore();
 
-    this.drawText(
+    drawText(
       ctx,
-      `screen ${this.cx},${this.cy}   WASD move · E use / open portal · Esc inventory`,
+      this.font,
+      `screen ${this.cx},${this.cy}   WASD move · E use / open portal`,
       8,
       20,
       '#ffffff',
@@ -1016,29 +876,6 @@ class MapGame extends Engine {
 
     // Code entry keypad, above the dialog.
     if (this.lockUI) this.renderLock(ctx);
-
-    // The inventory overlay is the topmost layer — it covers the keypad too.
-    this.inventoryView.render(ctx);
-  }
-
-  /**
-   * Draws a line of text with the shared pixel font, falling back to the
-   * canvas font API when the sheet failed to load.
-   */
-  // oxlint-disable-next-line max-params
-  private drawText(
-    ctx: RenderContext,
-    text: string,
-    x: number,
-    y: number,
-    color: string,
-    scale = 2,
-  ): void {
-    if (this.font) {
-      this.font.render(ctx, text, x, y, color, scale);
-      return;
-    }
-    ctx.drawText(text, x, y, color);
   }
 
   /**
@@ -1072,7 +909,7 @@ class MapGame extends Engine {
     if (raw) {
       raw.save();
       raw.globalAlpha = this.ready ? pulse : 0.7;
-      this.drawText(ctx, label, x, y, '#f5efe0', scale);
+      drawText(ctx, this.font, label, x, y, '#f5efe0', scale);
       raw.restore();
     }
   }
@@ -1093,7 +930,7 @@ class MapGame extends Engine {
     const totalW = 4 * box + 3 * gap;
     const startX = Math.round((w - totalW) / 2);
     const y = Math.round((h - box) / 2);
-    this.drawText(ctx, 'ENTER CODE', startX, y - Math.round(box * 0.5), '#e8e8ff');
+    drawText(ctx, this.font, 'ENTER CODE', startX, y - Math.round(box * 0.5), '#e8e8ff');
     for (let i = 0; i < 4; i++) {
       const x = startX + i * (box + gap);
       const active = i === ui.cursor;
@@ -1107,12 +944,13 @@ class MapGame extends Engine {
         ctx.drawSprite(frame.image, frame.sx, frame.sy, frame.sw, frame.sh, dx, dy, s, s);
       }
       if (active) {
-        this.drawText(ctx, '\u25B2', x + Math.round(box / 2) - 6, y - 20, '#ffd66e');
-        this.drawText(ctx, '\u25BC', x + Math.round(box / 2) - 6, y + box + 4, '#ffd66e');
+        drawText(ctx, this.font, '\u25B2', x + Math.round(box / 2) - 6, y - 20, '#ffd66e');
+        drawText(ctx, this.font, '\u25BC', x + Math.round(box / 2) - 6, y + box + 4, '#ffd66e');
       }
     }
-    this.drawText(
+    drawText(
       ctx,
+      this.font,
       '\u25B2\u25BC change   \u25C4\u25BA move   E / Esc close',
       startX,
       y + box + Math.round(box * 0.55),
