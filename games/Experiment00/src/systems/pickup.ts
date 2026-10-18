@@ -1,6 +1,7 @@
 import type { SubSystem } from '../../../../src/index';
 import { CollectibleBehaviour } from '../behaviors/collectible';
 import type { GameContext } from '../context';
+import { harvest } from '../harvest';
 
 /**
  * Walk-over pickups: collects any {@link CollectibleBehaviour} whose `pickup`
@@ -15,19 +16,23 @@ export class PickupSystem implements SubSystem {
   readonly id = 'pickup';
   readonly order = 35; // after the world moved the player (20), before E (40)
 
-  constructor(private readonly ctx: GameContext) {}
+  constructor(private readonly context: GameContext) {}
 
   update(_dt: number): void {
-    if (!this.ctx.flow?.worldActive) return;
-    const player = this.ctx.player;
-    const screen = this.ctx.world?.current();
+    if (!this.context.flow?.worldActive) return;
+
+    const player = this.context.player;
+    const screen = this.context.world?.current();
+
     if (!player || !screen) return;
+
     for (const object of screen.collision.owners(player.box(), 'pickup', player)) {
       const collectible = object.getBehaviour<CollectibleBehaviour>('collectible');
       if (!collectible || !collectible.collect()) continue;
-      this.ctx.hud?.show(collectible.toast, collectible.toastSeconds);
-      this.ctx.telemetry.olivePickup(object.id);
-      if (this.ctx.dialog?.start(collectible.dialogRef, collectible.dialogTag)) break;
+      this.context.hud?.show(collectible.toast, collectible.toastSeconds);
+      this.context.telemetry.olivePickup(object.id);
+      harvest(this.context, object);
+      if (this.context.dialog?.start(collectible.dialogRef, collectible.dialogTag)) break;
     }
   }
 }

@@ -1,6 +1,7 @@
 import { InteractableBehaviour, type InteractionActor } from '../../../../src/index';
 import { BLOCK_SIZE, PORTAL_OPEN_SECONDS, SCREEN_H, SCREEN_W } from '../constants';
 import type { GameContext } from '../context';
+import { harvest } from '../harvest';
 import type { LightSource } from './light_source';
 import type { Bookshelf } from '../objects/bookshelf';
 import type { Campfire } from '../objects/campfire';
@@ -33,10 +34,13 @@ export class PortalBehavior extends InteractableBehaviour {
   interact(services: object): boolean {
     const ctx = services as GameContext;
     const portal = this.portal;
+    harvest(ctx, portal);
     if (portal.isLocked) {
       ctx.telemetry.portalLocked(portal.id);
       // Reminder first; the keypad raises when the reminder closes.
-      if (ctx.dialog?.start(portal.reminderRef, 'portal_reminder', () => ctx.lock?.openFor(portal))) {
+      if (
+        ctx.dialog?.start(portal.reminderRef, 'portal_reminder', () => ctx.lock?.openFor(portal))
+      ) {
         return true;
       }
       ctx.hud?.show('The door is locked', 1.4);
@@ -91,6 +95,7 @@ export class SignBehavior extends InteractableBehaviour {
 
   interact(services: object): boolean {
     const ctx = services as GameContext;
+    harvest(ctx, this.sign);
     return ctx.dialog?.start(this.sign.dialogRef, 'sign') ?? false;
   }
 }
@@ -113,12 +118,8 @@ export class ChestBehavior extends InteractableBehaviour {
     const chest = this.chest;
     if (!chest.open()) return false;
     ctx.audio?.playSound('chest_open', { volume: 0.7 });
-    const item = chest.item;
-    ctx.telemetry.chestOpen(chest.id, item ?? null);
-    if (item) {
-      ctx.inventory.add(item);
-      ctx.hud?.show(`Found ${item}`, 1.6);
-    } else {
+    ctx.telemetry.chestOpen(chest.id, chest.item ?? null);
+    if (!harvest(ctx, chest)) {
       ctx.hud?.show('The chest is empty', 1.2);
     }
     ctx.dialog?.start(chest.dialogRef, 'chest');
@@ -142,6 +143,7 @@ export class BookshelfBehavior extends InteractableBehaviour {
   interact(services: object): boolean {
     const ctx = services as GameContext;
     const shelf = this.shelf;
+    harvest(ctx, shelf);
     if (shelf.movable && !shelf.isOpen) {
       // Slide open after the message is read — or now, when it has none.
       if (ctx.dialog?.start(shelf.dialogRef, 'bookshelf', () => shelf.slideOpen())) {
@@ -177,6 +179,7 @@ export class CampfireBehavior extends InteractableBehaviour {
 
   interact(services: object): boolean {
     const ctx = services as GameContext;
+    harvest(ctx, this.campfire);
     this.light?.toggle();
     ctx.telemetry.campfireToggle(this.campfire.id, this.light?.lit ?? false);
     return true;
@@ -198,6 +201,7 @@ export class StalkerBehavior extends InteractableBehaviour {
 
   interact(services: object): boolean {
     const ctx = services as GameContext;
+    harvest(ctx, this.foe);
     return ctx.dialog?.start(this.foe.dialogRef, 'stalker') ?? false;
   }
 }
@@ -217,6 +221,7 @@ export class SlimeKingBehavior extends InteractableBehaviour {
 
   interact(services: object): boolean {
     const ctx = services as GameContext;
+    harvest(ctx, this.king);
     return ctx.dialog?.start(this.king.dialogRef, 'slime_king') ?? false;
   }
 }

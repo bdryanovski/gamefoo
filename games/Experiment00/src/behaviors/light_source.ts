@@ -11,6 +11,7 @@ import {
   shapeBounds,
   translateShape,
 } from '../../../../src/index';
+import { addOwnerLight } from './fog_light';
 import { game } from '../services';
 
 /** A world-space axis-aligned box. */
@@ -82,21 +83,10 @@ export class LightSource extends MapObjectBehaviour {
 
   /** Registers this fire's dither-fog light (when the fog is up). */
   private attachFogLight(): void {
-    const options = this.fogOptions;
-    const fog = game(this.owner.services)?.fog;
-    if (!options || !fog) {
+    if (!this.fogOptions) {
       return;
     }
-    const { width, height } = this.owner.getSize();
-    this.fogLight = fog.addLight({
-      ...options,
-      x: this.owner.x + width / 2,
-      y: this.owner.y + height / 2,
-      followTarget: this.owner,
-      offsetX: width / 2,
-      offsetY: height / 2,
-      enabled: this.lit,
-    });
+    this.fogLight = addOwnerLight(this.owner, { ...this.fogOptions, enabled: this.lit });
   }
 
   /** Enable the glow/ember effects (and fog light) only while lit. */

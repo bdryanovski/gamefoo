@@ -1,5 +1,5 @@
 import type { DeltaTime } from '../../../../src/generic_types';
-import type { AssetManager, DitherLight, Input, Vector2 } from '../../../../src/index';
+import type { AssetManager, Input, Vector2 } from '../../../../src/index';
 import {
   type CollisionMap,
   FootstepTrailShader,
@@ -8,7 +8,7 @@ import {
   type MapObjectContext,
   type Rect,
 } from '../../../../src/index';
-import { game } from '../services';
+import { FogLight } from '../behaviors/fog_light';
 
 const SIZE = 16;
 const SPEED = 64; // px/s
@@ -45,8 +45,6 @@ export class Player extends MapObject {
   private readonly input: Input;
   private facing: Facing = 'down';
   private moving = false;
-  /** This player's own dither-fog halo, released again on despawn. */
-  private fogLight: DitherLight | null = null;
 
   constructor(ctx: MapObjectContext, input: Input) {
     super(ctx);
@@ -120,32 +118,17 @@ export class Player extends MapObject {
       }),
     );
     this.play('Idle');
-    this.attachFogLight();
-  }
-
-  override onDespawn(): void {
-    if (this.fogLight) {
-      game(this.services)?.fog?.removeLight(this.fogLight);
-      this.fogLight = null;
-    }
-    super.onDespawn();
-  }
-
-  /**
-   * Registers this player's dither-fog halo (when the fog is up). Without it
-   * the ambient fog hides the world around the character.
-   */
-  private attachFogLight(): void {
-    this.fogLight =
-      game(this.services)?.fog?.addLight({
-        followTarget: this,
-        offsetX: SIZE / 2,
-        offsetY: SIZE / 2,
+    // A halo in the dither fog — without it the ambient fog hides the world
+    // around the character. Centred on the 16px footprint (the sprite grid is
+    // 17px). Released again on despawn.
+    this.attachBehaviour(
+      new FogLight(this, {
         innerRadius: 26,
         ditherRadius: 148,
-        strength: 1,
-        pattern: 'bayer8',
-      }) ?? null;
+        offsetX: SIZE / 2,
+        offsetY: SIZE / 2,
+      }),
+    );
   }
 
   /** The player's world-space collision/footprint box. */

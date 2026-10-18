@@ -1,7 +1,7 @@
-import type { DitherLight } from '../../../../src/index';
 import { MapObject, type Rect, type ScopedState, type WorldCollider } from '../../../../src/index';
+import { FogLight } from '../behaviors/fog_light';
 import { ChestBehavior } from '../behaviors/interactable';
-import { game, saveScope } from '../services';
+import { saveScope } from '../services';
 
 /**
  * A chest the player opens with **E**. Authored as a two-state machine
@@ -43,7 +43,7 @@ export class Chest extends MapObject {
   private store: ScopedState | null = null;
 
   /** The treasure glow this chest casts into the dither fog once open. */
-  private fogLight: DitherLight | null = null;
+  private fogGlow: FogLight | null = null;
 
   /** The open state's id (authored state name `open`). */
   private get openStateId(): string {
@@ -77,40 +77,15 @@ export class Chest extends MapObject {
     if (this.id !== '' && this.store?.get<boolean>(this.id) === true) {
       this.play('open');
     }
-    this.attachFogLight();
-    this.attachBehaviour(new ChestBehavior(this));
-  }
-
-  override onDespawn(): void {
-    if (this.fogLight) {
-      game(this.services)?.fog?.removeLight(this.fogLight);
-      this.fogLight = null;
-    }
-    super.onDespawn();
-  }
-
-  /**
-   * Registers the chest's treasure glow — disabled until the chest opens
-   * (a reopened-save chest spawns with it already lit).
-   */
-  private attachFogLight(): void {
-    const fog = game(this.services)?.fog;
-    if (!fog) {
-      return;
-    }
-    const b = this.bounds();
-    this.fogLight = fog.addLight({
-      x: this.x + b.width / 2,
-      y: this.y + b.height / 2,
-      followTarget: this,
-      offsetX: b.width / 2,
-      offsetY: b.height / 2,
-      enabled: !this.isOpen,
+    // The treasure glow — disabled until the chest opens (a reopened-save
+    // chest spawns with it already lit).
+    this.fogGlow = new FogLight(this, {
       innerRadius: 6,
       ditherRadius: 48,
-      strength: 1,
-      pattern: 'bayer8',
+      enabled: !this.isOpen,
     });
+    this.attachBehaviour(this.fogGlow);
+    this.attachBehaviour(new ChestBehavior(this));
   }
 
   /**
@@ -123,9 +98,7 @@ export class Chest extends MapObject {
       return false;
     }
     this.play('open');
-    if (this.fogLight) {
-      this.fogLight.enabled = true;
-    }
+    this.fogGlow?.setEnabled(true);
     if (this.id !== '') {
       this.store?.set(this.id, true);
     }
@@ -158,5 +131,4 @@ export class Chest extends MapObject {
       box.y + box.height > a.y
     );
   }
-
 }

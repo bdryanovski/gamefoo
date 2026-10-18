@@ -15,7 +15,13 @@ import {
 import { boot } from './boot';
 import type { GameContext } from './context';
 import { PLAYER_LEVEL, SCALE, SCREEN_H, SCREEN_W } from './constants';
-import { Inventory } from './inventory';
+import {
+  DEFAULT_ITEMS,
+  Inventory,
+  InventoryView,
+  ItemCatalog,
+  Journal,
+} from './inventory';
 import { Telemetry } from './telemetry';
 import { GameFlow } from './systems/flow';
 import { WorldSystem } from './systems/world';
@@ -25,6 +31,7 @@ import { TransitionSystem } from './systems/transition';
 import { HudSystem } from './systems/hud';
 import { DialogSystem } from './systems/dialog';
 import { LockKeypadSystem } from './systems/lock_keypad';
+import { InventorySystem } from './systems/inventory';
 import { SplashSystem } from './systems/splash';
 import { GAME_KEYS } from './config/keymap';
 
@@ -36,10 +43,18 @@ const engine = new Engine(renderer, { backgroundColor: '#12121c' });
 const input = new Input();
 const save = new StateStore({ backend: new MemoryBackend('experiment00:save'), autoSave: true });
 const audio = new AudioSystem(); // loaded by boot; a subsystem from frame one
+const inventory = new Inventory(save.scope('inventory'));
+const journal = new Journal(save.scope('journal'));
+const items = new ItemCatalog(DEFAULT_ITEMS, save.scope('items'));
+// The Esc book overlay: opened/closed by InventorySystem, drawn above the rest.
+const inventoryView = new InventoryView({ inventory, journal, items });
 const ctx: GameContext = {
   input,
   save,
-  inventory: new Inventory(save.scope('inventory')),
+  inventory,
+  journal,
+  items,
+  inventoryView,
   telemetry: new Telemetry(),
   audio,
 };
@@ -64,10 +79,11 @@ const audioDirector = new AudioDirectorSystem(ctx);
 const transition = new TransitionSystem(ctx);
 const hud = new HudSystem(
   ctx,
-  () => `screen ${world.screenKey()}   WASD move · E use / open portal`,
+  () => `screen ${world.screenKey()}   WASD move · E use / open portal · Esc inventory`,
 );
 const dialog = new DialogSystem(ctx);
 const lock = new LockKeypadSystem(ctx);
+const inventorySystem = new InventorySystem(ctx);
 const splash = new SplashSystem(ctx);
 
 ctx.flow = flow;
@@ -90,6 +106,7 @@ engine
   .use(hud) // 80 — toasts + screen label
   .use(dialog) // 85 — dialog modal
   .use(lock) // 87 — lock keypad modal
+  .use(inventorySystem) // 88 — Esc inventory/journal overlay
   .use(splash) // 89 — title card; init() pushes 'splash': frozen from frame 1
   .use(
     new MonitorSystem({

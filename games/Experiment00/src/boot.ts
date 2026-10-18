@@ -26,6 +26,7 @@ import { Chest } from './objects/chest';
 import { FlyingSkull } from './objects/flying_skull';
 import { Ghost } from './objects/ghost';
 import { Goblin } from './objects/goblin';
+import { Her } from './objects/her';
 import { Lanter } from './objects/lanter';
 import { Olive } from './objects/olive';
 import { Portal } from './objects/portal';
@@ -53,6 +54,7 @@ const OBJECT_CLASSES = [
   FlyingSkull,
   Skeleton,
   Goblin,
+  Her,
   SlimeKing,
   Torch,
   Lanter,
@@ -68,28 +70,29 @@ const OBJECT_CLASSES = [
  * until `markReady()` — failures are non-fatal where the game still runs
  * (title card, font, dialogs export).
  */
-export async function boot(ctx: GameContext, engine: Engine): Promise<void> {
+export async function boot(context: GameContext, engine: Engine): Promise<void> {
   const loadStart = performance.now();
-  ctx.telemetry.gameStart();
+  context.telemetry.gameStart();
 
   // The world system is resolved from the engine (it is registered by the
   // composition root); boot installs the loaded map + spawns the player.
   const world = engine.get<WorldSystem>('world');
 
   // 1. Title card, first so it is on screen while the world streams in.
-  ctx.splash?.useImage(await Asset.load('/assets/images/splash.jpg').catch(() => undefined));
+  context.splash?.useImage(await Asset.load('/assets/images/splash.jpg').catch(() => undefined));
 
   // 2. The single bitmap font used for ALL text (8×8 CP437 atlas) — installed
   //    as the default for every text path before the map streams in, so
   //    editor-authored text placements are drawn with it too.
-  ctx.font = await FontSheet.load('/assets/fonts/dungeonmode/bitmap/dungeon-437.png').catch(
+  context.font = await FontSheet.load('/assets/fonts/dungeonmode/bitmap/dungeon-437.png').catch(
     () => undefined,
   );
-  if (ctx.font) {
-    TextObject.defaultFont = ctx.font;
-    ctx.hud?.useFont(ctx.font, 2);
+  if (context.font) {
+    TextObject.defaultFont = context.font;
+    context.hud?.useFont(context.font, 2);
+    context.inventoryView.setFont(context.font, 2);
   }
-  ctx.dialog?.useBox(ctx.font ? new DialogBox({ font: ctx.font }) : new DialogBox());
+  context.dialog?.useBox(context.font ? new DialogBox({ font: context.font }) : new DialogBox());
 
   // 3. Objects + screens registries (declarative, so wiring is scannable).
   const registry = new MapObjectRegistry();
@@ -109,7 +112,7 @@ export async function boot(ctx: GameContext, engine: Engine): Promise<void> {
     resolve: (img) => `/project${img.url}`,
     registry,
     screens,
-    services: ctx,
+    services: context,
   });
   world?.useMap(map); // also enters the first screen (0,0)
 
@@ -118,7 +121,7 @@ export async function boot(ctx: GameContext, engine: Engine): Promise<void> {
   const spriteIdByName = new Map<string, string>(
     ((project.sprites ?? []) as Array<{ name: string; id: string }>).map((s) => [s.name, s.id]),
   );
-  ctx.lock?.useNumberFrames(
+  context.lock?.useNumberFrames(
     Array.from({ length: 10 }, (_, digit) => {
       const id = spriteIdByName.get(`n${digit}`);
       return id ? map.assets.frame(id) : undefined;
@@ -131,7 +134,8 @@ export async function boot(ctx: GameContext, engine: Engine): Promise<void> {
   )
     .then((r) => (r.ok ? r.json() : { trees: {} }))
     .catch(() => ({ trees: {} }));
-  ctx.dialog?.useRunner(new DialogRunner(dialogs));
+  context.dialogs = dialogs; // kept so item/journal entries resolve their text
+  context.dialog?.useRunner(new DialogRunner(dialogs));
 
   // 7. Screen-space effects: vignette, then drifting spores on top, then the
   //    iris (rendered last by ShaderSystem at order 900 — it covers every
@@ -140,20 +144,20 @@ export async function boot(ctx: GameContext, engine: Engine): Promise<void> {
   const shaders = new ShaderSystem();
   shaders.add(new VignetteShader({ intensity: 0.4, inner: 0.55 }));
   shaders.add(new AmbientSporeShader({ density: 1.2, alpha: 0.22 }));
-  ctx.transition?.useShader(shaders.add(new ScreenTransitionShader({ block: 18 })));
+  context.transition?.useShader(shaders.add(new ScreenTransitionShader({ block: 18 })));
   engine.use(shaders); // order 900
 
   // 8. Audio catalog — the AudioSystem instance itself is a subsystem from
   //    frame one (registered in main); boot only loads it. The listener
   //    follows the player so campfire emitters attenuate with distance.
   const audioProject = await fetch(AUDIO.projectUrl).then((r) => r.json());
-  await ctx.audio?.load(audioProject, { resolve: (d) => resolveAudio(d.file) });
-  ctx.audio?.setListener(() => ctx.player?.center() ?? { x: 0, y: 0 });
+  await context.audio?.load(audioProject, { resolve: (d) => resolveAudio(d.file) });
+  context.audio?.setListener(() => context.player?.center() ?? { x: 0, y: 0 });
 
   // 9. The persistent player — the one game-owned object.
   world?.spawnPlayer();
 
   // 10. Everything loaded — the splash flips to "Press E to start".
-  ctx.splash?.markReady();
-  ctx.telemetry.gameLoaded(performance.now() - loadStart);
+  context.splash?.markReady();
+  context.telemetry.gameLoaded(performance.now() - loadStart);
 }

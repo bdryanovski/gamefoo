@@ -154,31 +154,35 @@ export class InventoryView {
    * movement keys, and tab switching are all consumed.
    */
   handleKey(event: KeyboardEvent): boolean {
+    return this.handleKeyName(event.key);
+  }
+
+  /**
+   * Handles one key by its {@link KeyboardEvent.key} name (case-insensitive),
+   * for callers that poll a key-state API rather than raw events.
+   */
+  handleKeyName(key: string): boolean {
     if (!this.open) {
       return false;
     }
-    switch (event.key) {
-      case 'Escape':
+    switch (key.toLowerCase()) {
+      case 'escape':
         this.hide();
         return true;
-      case 'ArrowUp':
+      case 'arrowup':
       case 'w':
-      case 'W':
         this.moveSelection(-1);
         return true;
-      case 'ArrowDown':
+      case 'arrowdown':
       case 's':
-      case 'S':
         this.moveSelection(1);
         return true;
-      case 'ArrowLeft':
+      case 'arrowleft':
       case 'a':
-      case 'A':
         this.moveTab(-1);
         return true;
-      case 'ArrowRight':
+      case 'arrowright':
       case 'd':
-      case 'D':
         this.moveTab(1);
         return true;
       default:

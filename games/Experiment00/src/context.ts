@@ -1,5 +1,6 @@
 import type {
   AudioSystem,
+  DialogDocument,
   DitherFog,
   FontSheet,
   Input,
@@ -7,7 +8,7 @@ import type {
   Screen,
   StateStore,
 } from '../../../src/index';
-import type { Inventory } from './inventory';
+import type { Inventory, InventoryView, ItemCatalog, Journal } from './inventory';
 import type { Player } from './objects/player';
 import type { Telemetry } from './telemetry';
 import type { GameFlow } from './systems/flow';
@@ -46,12 +47,20 @@ export interface GameContext {
   readonly input: Input;
   readonly save: StateStore;
   readonly inventory: Inventory;
+  /** The found-journals tracker (the inventory overlay's Journal tab). */
+  readonly journal: Journal;
+  /** Item id → name + lore, discovered as the player finds things. */
+  readonly items: ItemCatalog;
+  /** The book-like inventory/journal overlay, opened with Esc. */
+  readonly inventoryView: InventoryView;
   readonly telemetry: Telemetry;
 
   // Loaded during boot — undefined until then (guard with `?.`):
   audio?: AudioSystem;
   font?: FontSheet;
   fog?: DitherFog;
+  /** The raw dialogs document, kept so items/journal entries resolve their text. */
+  dialogs?: DialogDocument;
   player?: Player; // published by WorldSystem.spawnPlayer()
 
   // Systems — filled by main.ts at composition time:

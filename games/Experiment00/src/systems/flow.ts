@@ -1,7 +1,7 @@
 import type { SubSystem } from '../../../../src/index';
 
 /** Who currently holds the screen. */
-export type ModalOwner = 'splash' | 'dialog' | 'lock' | 'transition';
+export type ModalOwner = 'splash' | 'dialog' | 'inventory' | 'lock' | 'transition';
 
 /**
  * The modal stack: replaces the hardcoded early-return chain at the top of the

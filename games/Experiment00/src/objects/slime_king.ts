@@ -1,7 +1,6 @@
-import type { DitherLight } from '../../../../src/index';
 import { GlowShader, MapObject, type Rect } from '../../../../src/index';
+import { FogLight } from '../behaviors/fog_light';
 import { SlimeKingBehavior } from '../behaviors/interactable';
-import { game } from '../services';
 
 const CRITTER_SIZE = 64;
 
@@ -24,29 +23,19 @@ const CRITTER_SIZE = 64;
 export class SlimeKing extends MapObject {
   static override readonly type = 'slime_king';
 
-  /** This skull's ghost-light in the dither fog. */
-  private fogLight: DitherLight | null = null;
-
   override onSpawn(): void {
     super.onSpawn();
     this.attachBehaviour(new SlimeKingBehavior(this));
-    const fog = game(this.services)?.fog;
-    if (!fog) {
-      return;
-    }
-    this.fogLight = fog.addLight({
-      x: this.x + CRITTER_SIZE,
-      y: this.y + CRITTER_SIZE,
-      followTarget: this,
-      offsetX: CRITTER_SIZE / 3.2,
-      offsetY: CRITTER_SIZE / 1.5,
-      innerRadius: 15,
-      ditherRadius: 80,
-      strength: 1,
-      pattern: 'bayer8',
-      flickerAmount: 0.12,
-      flickerSpeed: 0.2,
-    });
+    this.attachBehaviour(
+      new FogLight(this, {
+        innerRadius: 15,
+        ditherRadius: 80,
+        flickerAmount: 0.12,
+        flickerSpeed: 0.2,
+        offsetX: CRITTER_SIZE / 3.2,
+        offsetY: CRITTER_SIZE / 1.5,
+      }),
+    );
 
     this.attachShader(
       new GlowShader({
