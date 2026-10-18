@@ -51,8 +51,8 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "oxfmt",
-      "oxlint --fix"
+      "vp fmt",
+      "vp lint --fix"
     ]
   },
   "engines": {

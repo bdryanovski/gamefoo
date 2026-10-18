@@ -49,6 +49,16 @@ describe('Engine', () => {
     expect(engine.use(sub)).toBe(engine);
   });
 
+  test('get() - find register subsystem by id', () => {
+    const prob: SubSystem = { id: 'demo', order: 10 };
+    engine.use(prob);
+    expect(engine.get('demo')).toBe(prob);
+  });
+
+  test('get() - get undefined for unknown subsystem', () => {
+    expect(engine.get('non-existing')).toBeUndefined();
+  });
+
   test('resize() — callable, returns void', () => {
     expect(typeof engine.resize).toBe('function');
     expect(engine.resize(1280, 720)).toBeUndefined();

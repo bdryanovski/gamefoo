@@ -151,6 +151,11 @@ export { default as FrameNode } from './core/map/frame_node';
 export { default as MapObject } from './core/map/map_object';
 export { default as TextObject } from './core/map/text_object';
 export type { MapObjectConstructor } from './core/map/map_object';
+export { MapObjectBehaviour } from './core/map/map_behaviour';
+export { MapObjectBehaviourRegistry } from './core/map/behaviour_registry';
+export type { BehaviourFactory } from './core/map/behaviour_registry';
+export { InteractableBehaviour } from './core/map/interactable_behaviour';
+export type { InteractionActor } from './core/map/interactable_behaviour';
 export { default as MapObjectRegistry } from './core/map/map_object_registry';
 export { drawFrame } from './core/map/draw';
 export { default as CollisionMap } from './core/map/collision_map';
@@ -234,6 +239,10 @@ export type {
 } from './generic_types';
 export { CameraSystem } from './subsystems/camera_system';
 // ── Subsystems ──────────────────────────────────────────────────────
+export { InteractionSystem } from './subsystems/interaction_system';
+export type { InteractionSystemConfig } from './subsystems/interaction_system';
+export { MapSystem } from './subsystems/map_system';
+export type { MapSystemConfig } from './subsystems/map_system';
 export { CollisionSystem } from './subsystems/collision_system';
 export { IsometricCameraSystem } from './subsystems/iso_camera_system';
 export { MonitorSystem } from './subsystems/monitor_system';

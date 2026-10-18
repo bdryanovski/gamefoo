@@ -2,6 +2,7 @@ import type { DeltaTime } from '@/generic_types';
 import type { RenderContext } from '../renderer/type';
 import AssetManager from './asset_manager';
 import type MapObjectRegistry from './map_object_registry';
+import type { MapObjectBehaviourRegistry } from './behaviour_registry';
 import Screen, { type ScreenOverlay } from './screen';
 import type ScreenRegistry from './screen_registry';
 import {
@@ -28,6 +29,14 @@ export interface MapLoadOptions {
    * Custom-class registry used to instantiate specific screens.
    */
   screens?: ScreenRegistry;
+  /**
+   * Registry resolving each object's authored `behaviours` on activation.
+   */
+  behaviours?: MapObjectBehaviourRegistry;
+  /**
+   * Shared services bag handed to behaviour factories (game singletons).
+   */
+  services?: object;
 }
 
 /**
@@ -113,6 +122,8 @@ export default class MapManager {
         assets: this.assets,
         map: project.map,
         registry: options.registry,
+        behaviours: options.behaviours,
+        services: options.services,
       });
       this.screens.set(screen.name, screen);
     }

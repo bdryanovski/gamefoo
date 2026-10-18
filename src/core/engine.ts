@@ -268,6 +268,22 @@ export default class Engine {
   }
 
   /**
+   * Return the reigstered subsyste, by given id: string or undefined
+   *
+   * useful inside {@link Subsystem.init} or anywhere a system must find a peer
+   * Example: `engine.get('audio')` without threading references. Subsystems
+   * must not share an ID we find only the first match.
+   *
+   * @param subsystemId - the `Subsystem.id` to find
+   * @return The subsystem, or undefined when no such id is registered
+   *
+   * @since 0.5.0
+   */
+  get<T extends SubSystem>(subsystemId: string): T | undefined {
+    return this.subsystems.find((system) => system.id === subsystemId) as T | undefined;
+  }
+
+  /**
    * Invokes a named lifecycle hook on every enabled subsystem that
    * implements it.
    *

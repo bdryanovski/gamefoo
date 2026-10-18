@@ -228,21 +228,13 @@ export default class Input implements SubSystem {
   }
 
   /**
-   * SubSystem hook: called at the start of each frame.
-   *
-   * When registered with the Engine via `engine.use(input)`, this method
-   * is called automatically, ensuring "just pressed" detection works.
-   *
-   * @param _deltaTime - Seconds since last frame (unused).
-   *
-   * @since 0.5.0
-   */
-  preUpdate(_deltaTime: number): void {
-    this.update();
-  }
-
-  /**
    * Updates the input state for the current frame.
+   *
+   * Also the {@link SubSystem} hook: when registered with the Engine via
+   * `engine.use(input)` this runs automatically (order `0`), so "just pressed"
+   * detection and {@link consume} work without a manual call. Do **not** add a
+   * `preUpdate` alias — the engine would then invoke this twice in one frame,
+   * clearing the edges before any later system can read them.
    *
    * Call this once at the beginning of each frame to enable "just pressed"
    * detection via {@link Input.isKeyPressed}. Without calling this method,
@@ -338,6 +330,23 @@ export default class Input implements SubSystem {
    */
   getPressedKeys(): Set<string> {
     return new Set(this.keys);
+  }
+
+  /**
+   * Consumes a just-pressed edge: the key stops reporting as "just pressed"
+   * for the rest of the current frame, while remaining "down" until keyup.
+   *
+   * Call this right after a system handled a key, so systems that run later
+   * in the same frame cannot double-handle the same press. This restores the
+   * one-press-one-action semantics of raw "keydown" listeners when input is polled
+   * by several systems.
+   *
+   * @param key - The key to consume (case-insensitive e.g. "ArrowUp")
+   *
+   * @since 0.5.0
+   */
+  consume(key: string): void {
+    this.keysJustPressed.delete(key.toLowerCase());
   }
 
   /**

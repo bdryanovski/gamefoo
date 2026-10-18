@@ -1,5 +1,6 @@
-import type { DeltaTime, Vector2 } from '../../../../../src/generic_types';
+import type { Vector2 } from '../../../../../src/generic_types';
 import { type CollisionMap, MapObject, type Rect } from '../../../../../src/index';
+import { collision as readCollision, playerBox } from '../../senses';
 
 /** Footprint side, in px — every critter is a 16×16 mover. */
 export const CRITTER_SIZE = 16;
@@ -11,39 +12,50 @@ type Facing = 'up' | 'down' | 'left' | 'right';
 
 /**
  * Shared brain-stem for the map's roaming characters. It owns the parts every
- * critter needs regardless of temperament: per-frame perception of the player
- * ({@link CritterAI.sense}), collision-aware movement that slides on solids and
- * refuses to walk off walkable ground ({@link CritterAI.move}), zone tests
- * against the object's authored `vision`/`activation` colliders, and the
- * heading→facing→animation mapping.
+ * critter needs regardless of temperament — collider-aware movement that
+ * slides on solids and refuses to walk off walkable ground
+ * ({@link CritterAI.move}), zone tests against the object's authored
+ * `vision`/`activation` colliders, the heading→facing→animation mapping, and
+ * the player's box.
  *
- * Subclasses supply only a temperament in {@link CritterAI.think}: {@link
- * ExploreAI} flees, {@link ChaseAI} closes in. They drive movement through the
- * shared {@link CritterAI.move} and read perception through {@link
- * CritterAI.sees} and {@link CritterAI.zoneBounds}.
+ * Perception is *pulled*: {@link CritterAI.target} and {@link CritterAI.collision}
+ * read the shared services bag (`senses.ts`) instead of being fed a frame
+ * ahead by the game. The explicit {@link CritterAI.sense} setter remains for
+ * unit tests (and as a per-frame override), but production never calls it.
  *
- * The critter can't see the game-owned player on its own, so the game feeds it
- * the player's box + the screen collision each frame via {@link
- * CritterAI.sense} before the screen advances the live objects.
+ * Temperaments live in attached {@link MapObjectBehaviour}s (see
+ * `behaviors/explore.ts` and `behaviors/stalk.ts`) that drive the shared
+ * movement through this public surface; subclasses only pick their behavior.
  */
 export abstract class CritterAI extends MapObject {
   static override readonly type: string;
 
-  /** This frame's perception, set by the game before the screen updates. */
-  protected target: Rect | null = null;
-  protected collision: CollisionMap | null = null;
+  /** Per-frame perception override (tests only); `null` → read the senses service. */
+  private sensed: { target: Rect | null; collision: CollisionMap } | null = null;
 
-  protected facing: Facing = 'down';
-  protected moving = false;
-  protected heading: Vector2 = { x: 0, y: 0 };
+  /** Current facing (drives the FSM state when moving). */
+  facing: Facing = 'down';
+  /** Whether this critter moved on the last think. */
+  moving = false;
+  /** Current heading unit vector (`{0,0}` = idle). */
+  heading: Vector2 = { x: 0, y: 0 };
 
   /**
-   * Provide this frame's perception: the player's world box (or `null` when
-   * off-screen) and the screen's collision world for movement.
+   * Provide perception explicitly, bypassing the senses service. Production
+   * code relies on the service; tests use this to feed a box + collision.
    */
   sense(target: Rect | null, collision: CollisionMap): void {
-    this.target = target;
-    this.collision = collision;
+    this.sensed = { target, collision };
+  }
+
+  /** The player's world box: the override if set, else the shared services. */
+  get target(): Rect | null {
+    return this.sensed ? this.sensed.target : playerBox(this.services);
+  }
+
+  /** The screen collision: the override if set, else the shared services. */
+  get collision(): CollisionMap | null {
+    return this.sensed ? this.sensed.collision : readCollision(this.services);
   }
 
   /** World-space collision/footprint box. */
@@ -51,25 +63,19 @@ export abstract class CritterAI extends MapObject {
     return { x: this.x, y: this.y, width: CRITTER_SIZE, height: CRITTER_SIZE };
   }
 
-  /** Centre-bottom point, used for the walkable-ground check. */
-  protected footPoint(): Vector2 {
-    return { x: this.x + CRITTER_SIZE / 2, y: this.y + CRITTER_SIZE - 2 };
-  }
-
-  /** Centre point of the footprint. */
-  protected center(): Vector2 {
+  /** World-space centre of the footprint. */
+  center(): Vector2 {
     return { x: this.x + CRITTER_SIZE / 2, y: this.y + CRITTER_SIZE / 2 };
   }
 
   /**
-   * World-space AABB of the current state's collider on `layer` (e.g.
-   * `"vision"`, `"activation"`), or a square around the centre when the
-   * object authors none.
+   * World-space AABB of the `layer` collider in the current state, or a
+   * square around the centre when none is authored.
    */
-  protected zoneBounds(layer: string): Rect {
-    const hit = this.worldColliders().find((c) => c.layer === layer);
-    if (hit) {
-      return hit.bounds;
+  zoneBounds(layer: string): Rect {
+    const zone = this.worldColliders().find((c) => c.layer === layer);
+    if (zone) {
+      return zone.bounds;
     }
     const c = this.center();
     return {
@@ -80,8 +86,8 @@ export abstract class CritterAI extends MapObject {
     };
   }
 
-  /** True when the sensed player overlaps `box`. */
-  protected overlapsTarget(box: Rect): boolean {
+  /** True when `box` overlaps the player's sensed box. */
+  overlapsTarget(box: Rect): boolean {
     const t = this.target;
     if (!t) {
       return false;
@@ -94,39 +100,37 @@ export abstract class CritterAI extends MapObject {
     );
   }
 
-  /** True when the sensed player overlaps this critter's `vision` zone. */
+  /** True when the player overlaps this critter's authored `vision` zone. */
   get sees(): boolean {
     return this.overlapsTarget(this.zoneBounds('vision'));
   }
 
-  override update(deltaTime: DeltaTime): void {
-    this.think(deltaTime);
-    super.update(deltaTime);
+  /** World-space foot point used for the walkable-ground test. */
+  footPoint(): Vector2 {
+    return { x: this.x + CRITTER_SIZE / 2, y: this.y + CRITTER_SIZE - 2 };
   }
-
-  /** One AI step: pick a heading, move, animate. Implemented per temperament. */
-  protected abstract think(dt: DeltaTime): void;
 
   /**
    * Slide `(dx, dy)` against solids and screen bounds, refusing steps that
    * land off walkable ground (a wall or pit). Returns `true` when the step was
    * blocked and undone, so callers can react (turn around, give up).
    */
-  protected move(dx: number, dy: number): boolean {
-    if (!this.collision) {
+  move(dx: number, dy: number): boolean {
+    const collision = this.collision;
+    if (!collision) {
       this.x += dx;
       this.y += dy;
       return false;
     }
     const prevX = this.x;
     const prevY = this.y;
-    const next = this.collision.resolve(this.box(), dx, dy, this);
-    const maxX = this.collision.cols * this.collision.cellSize - CRITTER_SIZE;
-    const maxY = this.collision.rows * this.collision.cellSize - CRITTER_SIZE;
+    const next = collision.resolve(this.box(), dx, dy, this);
+    const maxX = collision.cols * collision.cellSize - CRITTER_SIZE;
+    const maxY = collision.rows * collision.cellSize - CRITTER_SIZE;
     this.x = Math.max(0, Math.min(maxX, next.x));
     this.y = Math.max(0, Math.min(maxY, next.y));
     const foot = this.footPoint();
-    if (!this.collision.isWalkable(foot.x, foot.y)) {
+    if (!collision.isWalkable(foot.x, foot.y)) {
       this.x = prevX;
       this.y = prevY;
       return true;
@@ -134,8 +138,8 @@ export abstract class CritterAI extends MapObject {
     return false;
   }
 
-  /** Derive facing from the current heading and switch the animation state. */
-  protected applyFacing(): void {
+  /** Sync facing from the heading and switch the animation state. */
+  applyFacing(): void {
     if (this.moving) {
       if (Math.abs(this.heading.x) > Math.abs(this.heading.y)) {
         this.facing = this.heading.x < 0 ? 'left' : 'right';
@@ -151,8 +155,12 @@ export abstract class CritterAI extends MapObject {
     if (!this.moving) {
       return 'Idle';
     }
-    if (this.facing === 'up') {return 'Up';}
-    if (this.facing === 'down') {return 'Down';}
+    if (this.facing === 'up') {
+      return 'Up';
+    }
+    if (this.facing === 'down') {
+      return 'Down';
+    }
     return this.facing === 'left' ? 'Left' : 'Right';
   }
 }

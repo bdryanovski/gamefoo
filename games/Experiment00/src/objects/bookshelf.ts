@@ -1,5 +1,7 @@
 import type { DeltaTime } from '../../../../src/generic_types';
 import { MapObject, type Rect, type ScopedState } from '../../../../src/index';
+import { BookshelfBehavior } from '../behaviors/interactable';
+import { saveScope } from '../services';
 
 /** One tile — how far a movable shelf slides. */
 const SLIDE_DISTANCE = 16;
@@ -27,19 +29,14 @@ const SLIDE_SPEED = 32;
  * re-activates, so the passage stays open across screens and reloads.
  *
  * The class reports its reach + dialog reference and owns the slide;
- * {@link MapGame} drives the dialog runtime and triggers the slide after the
+ * {@link DialogSystem} drives the dialog runtime and triggers the slide after the
  * message is read.
  */
 export class Bookshelf extends MapObject {
   static override readonly type = 'shelf';
 
-  /** Shared "which shelves are open" state, scoped to `"shelves"`. */
-  private static store: ScopedState | null = null;
-
-  /** Binds the opened-shelves state every instance reads and writes. */
-  static useState(store: ScopedState | null): void {
-    Bookshelf.store = store;
-  }
+  /** This instance's "which shelves are open" scope, bound on spawn. */
+  private store: ScopedState | null = null;
 
   /** X the shelf is sliding toward; snapped to exactly on arrival. */
   private slideTargetX = 0;
@@ -69,11 +66,13 @@ export class Bookshelf extends MapObject {
   }
 
   override onSpawn(): void {
+    this.store = saveScope(this.services, 'shelves');
     // Restore an already-opened shelf at its slid position, instantly.
-    if (this.movable && this.id !== '' && Bookshelf.store?.get<boolean>(this.id) === true) {
+    if (this.movable && this.id !== '' && this.store?.get<boolean>(this.id) === true) {
       this.x += SLIDE_DISTANCE;
       this.moved = true;
     }
+    this.attachBehaviour(new BookshelfBehavior(this));
   }
 
   /**
@@ -88,7 +87,7 @@ export class Bookshelf extends MapObject {
     this.slideTargetX = this.x + SLIDE_DISTANCE;
     this.sliding = true;
     if (this.id !== '') {
-      Bookshelf.store?.set(this.id, true);
+      this.store?.set(this.id, true);
     }
     return true;
   }
@@ -127,4 +126,5 @@ export class Bookshelf extends MapObject {
       box.y + box.height > a.y
     );
   }
+
 }

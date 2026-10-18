@@ -1,4 +1,5 @@
 import { MapObject, type Rect } from '../../../../src/index';
+import { SignBehavior } from '../behaviors/interactable';
 
 /**
  * Custom class bound to the "sign" object — an interactable that starts a
@@ -14,7 +15,7 @@ import { MapObject, type Rect } from '../../../../src/index';
  * object editor; the footprint is used when none exists). Pressing **E** next
  * to a sign whose {@link Sign.dialogRef} resolves opens the dialog modal.
  *
- * The class only reports its reach + dialog reference; {@link MapGame} drives
+ * The class only reports its reach + dialog reference; {@link DialogSystem} drives
  * the dialog runtime.
  */
 export class Sign extends MapObject {
@@ -47,5 +48,9 @@ export class Sign extends MapObject {
       box.y < a.y + a.height &&
       box.y + box.height > a.y
     );
+  }
+
+  override onSpawn(): void {
+    this.attachBehaviour(new SignBehavior(this));
   }
 }

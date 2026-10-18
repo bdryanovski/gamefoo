@@ -1,9 +1,9 @@
 import {
   MapObject,
   type RenderContext,
-  type ScopedState,
   type WorldCollider,
 } from '../../../../src/index';
+import { CollectibleBehaviour } from '../behaviors/collectible';
 
 /**
  * A collectible olive placed on the map. Each placement carries an authored
@@ -12,46 +12,20 @@ import {
  *
  * ### Persistence
  *
- * Picked olives are remembered in a shared {@link ScopedState} (the game's
- * save store, scoped to `"olives"`): {@link Olive.collect} writes
- * `olives.<id> = true`. Because the store is backed by `localStorage`, a
- * collected olive stays gone across screen re-entry **and** page reloads —
- * {@link Olive.onSpawn} reads that flag when the screen re-activates, so the
- * olive never renders or blocks again once taken.
+ * A {@link CollectibleBehaviour} is attached on spawn and owns the picked
+ * latch + persistence (the game's save store, scoped to `"olives"`). The
+ * store is the source of truth and is read back on every spawn, so a
+ * collected olive stays gone across screen re-entry and reloads without any
+ * per-class static injection point.
  *
- * The state is bound once via the static {@link Olive.useState}; the map
- * instantiates olives generically through the registry, so there is no
- * per-instance injection point.
+ * ### Behaviour
  *
- * ### Pickup
- *
- * Olives author a `pickup` collider (not `solid`), so the player walks over
- * them freely. {@link MapGame} detects a pickup with
- * `collision.owners(player.box(), 'pickup')` and calls {@link Olive.collect};
- * a collected olive drops its colliders ({@link Olive.worldColliders} returns
- * none) so it leaves the collision world the same frame.
- *
- * Bind it with `registry.register(Olive)` (keyed by its static `type`,
- * matching the object's name `"olive"`).
- *
- * @see {@link ScopedState}
+ * {@link PickupSystem} dispatches on the behavior (no hardcoded `Olive`
+ * import): a picked olive contributes no colliders and does not render, so it
+ * retires from the world the moment it is taken.
  */
 export class Olive extends MapObject {
   static override readonly type = 'olive';
-
-  /** Shared "which olives are collected" state, scoped to `"olives"`. */
-  private static state: ScopedState | null = null;
-
-  /**
-   * Binds the collected-olives state every instance reads and writes. Call
-   * once at load, before any screen with olives activates:
-   * `Olive.useState(store.scope('olives'))`. Pass `null` to unbind.
-   */
-  static useState(state: ScopedState | null): void {
-    Olive.state = state;
-  }
-
-  private collected = false;
 
   /**
    * Stable identity from the authored `id` property (trimmed). Empty when
@@ -70,41 +44,36 @@ export class Olive extends MapObject {
     return raw?.trim() ? raw.trim() : null;
   }
 
+  /** The collectible behavior driving this olive (attached on spawn). */
+  private get collectible(): CollectibleBehaviour | undefined {
+    return this.getBehaviour<CollectibleBehaviour>('collectible');
+  }
+
   /** Whether this olive has already been picked up. */
   get isCollected(): boolean {
-    return this.collected;
+    return this.collectible?.isCollected ?? false;
   }
 
   override onSpawn(): void {
-    const id = this.oliveId;
-    this.collected = id !== '' && Olive.state?.get<boolean>(id) === true;
+    this.attachBehaviour(new CollectibleBehaviour(this, 'olives', 'You picked an olive', 'olive'));
   }
 
   /**
-   * Picks the olive up: records it in the shared state (so it stays gone
-   * across screens and reloads) and retires it from the world. Returns
-   * `true` only on the first pickup — the caller uses that to fire a
-   * one-time effect (a toast, a dialog).
+   * Picks the olive up: records it in the save store and retires it from the
+   * world. Returns `true` only on the first pickup — the caller uses that to
+   * fire a one-time effect (a toast, a dialog).
    */
   collect(): boolean {
-    if (this.collected) {
-      return false;
-    }
-    this.collected = true;
-    const id = this.oliveId;
-    if (id !== '') {
-      Olive.state?.set(id, true);
-    }
-    return true;
+    return this.collectible?.collect() ?? false;
   }
 
   /** A collected olive contributes no colliders — it is gone. */
   override worldColliders(): WorldCollider[] {
-    return this.collected ? [] : super.worldColliders();
+    return this.isCollected ? [] : super.worldColliders();
   }
 
   override render(ctx: RenderContext): void {
-    if (this.collected) {
+    if (this.isCollected) {
       return;
     }
     super.render(ctx);

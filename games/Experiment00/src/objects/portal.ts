@@ -1,4 +1,6 @@
 import { MapObject, type Rect, type RenderContext, type ScopedState } from '../../../../src/index';
+import { PortalBehavior } from '../behaviors/interactable';
+import { saveScope } from '../services';
 
 /**
  * Parse a `"x,y"` property into a coordinate, or `null` when absent or
@@ -33,26 +35,16 @@ function parseCoord(raw: string | undefined): { x: number; y: number } | null {
  * navigates to `targetScreen`.
  *
  * The class owns its state (open/closed) and reports target/overlap;
- * {@link MapGame} performs the actual screen navigation.
+ * {@link WorldSystem} performs the actual screen navigation.
  */
 export class Portal extends MapObject {
   static override readonly type = 'portal';
 
-  /** Shared "which doors are open" state, scoped to `"doors"`. */
-  private static store: ScopedState | null = null;
+  /** This instance's "which doors are open" scope, bound on spawn. */
+  private store: ScopedState | null = null;
 
-  /** Binds the opened-doors state every instance reads and writes. */
-  static useState(store: ScopedState | null): void {
-    Portal.store = store;
-  }
-
-  /** Shared "which locked doors have been solved" state, scoped to `"locks"`. */
-  private static locks: ScopedState | null = null;
-
-  /** Binds the solved-locks state every instance reads and writes. */
-  static useLocks(store: ScopedState | null): void {
-    Portal.locks = store;
-  }
+  /** This instance's "which locked doors are solved" scope, bound on spawn. */
+  private locks: ScopedState | null = null;
 
   /** True while the open sound is playing, before the door actually opens. */
   private opening = false;
@@ -112,12 +104,15 @@ export class Portal extends MapObject {
   }
 
   override onSpawn(): void {
+    this.store = saveScope(this.services, 'doors');
+    this.locks = saveScope(this.services, 'locks');
     // All doors start closed; a door remembered open is restored silently.
-    const opened = this.id !== '' && Portal.store?.get<boolean>(this.id) === true;
+    const opened = this.id !== '' && this.store?.get<boolean>(this.id) === true;
     const target = this.stateNamed(opened ? 'open' : 'close');
     if (target) {
       this.play(target);
     }
+    this.attachBehaviour(new PortalBehavior(this));
   }
 
   /**
@@ -155,7 +150,7 @@ export class Portal extends MapObject {
 
   /** Whether this door's lock has already been solved (persisted). */
   get isUnlocked(): boolean {
-    return this.id !== '' && Portal.locks?.get<boolean>(this.id) === true;
+    return this.id !== '' && this.locks?.get<boolean>(this.id) === true;
   }
 
   /** True when the door has a code and it has not been solved yet. */
@@ -184,7 +179,7 @@ export class Portal extends MapObject {
    */
   unlock(): void {
     if (this.id !== '') {
-      Portal.locks?.set(this.id, true);
+      this.locks?.set(this.id, true);
     }
   }
 
@@ -226,7 +221,7 @@ export class Portal extends MapObject {
     }
     this.play(openState);
     if (this.id !== '') {
-      Portal.store?.set(this.id, true);
+      this.store?.set(this.id, true);
     }
     return true;
   }

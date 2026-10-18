@@ -1,7 +1,7 @@
 import { CRITTER_SIZE } from './ai/critter_ai';
 import { ExploreAI } from './ai/explore_ai';
 import type { DitherLight } from '../../../../src/index';
-import { getFog } from '../fog';
+import { game } from '../services';
 
 /**
  * The "flying_skull" critter, bound to the `flying_skull` object and driven by its exported
@@ -30,7 +30,7 @@ export class FlyingSkull extends ExploreAI {
 
   override onSpawn(): void {
     super.onSpawn();
-    const fog = getFog();
+    const fog = game(this.services)?.fog;
     if (!fog) {
       return;
     }
@@ -51,7 +51,7 @@ export class FlyingSkull extends ExploreAI {
 
   override onDespawn(): void {
     if (this.fogLight) {
-      getFog()?.removeLight(this.fogLight);
+      game(this.services)?.fog?.removeLight(this.fogLight);
       this.fogLight = null;
     }
     super.onDespawn();

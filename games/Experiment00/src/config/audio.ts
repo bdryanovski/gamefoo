@@ -34,3 +34,7 @@ export const AUDIO = {
   campfireSound: 'campfire_loop',
   campfireVolume: 0.2,
 } as const;
+
+/** Prefixes the audio base path and percent-encodes each path segment. */
+export const resolveAudio = (file: string): string =>
+  `/assets/audio/${file.split('/').map(encodeURIComponent).join('/')}`;

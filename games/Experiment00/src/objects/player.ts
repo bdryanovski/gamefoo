@@ -8,7 +8,7 @@ import {
   type MapObjectContext,
   type Rect,
 } from '../../../../src/index';
-import { getFog } from '../fog';
+import { game } from '../services';
 
 const SIZE = 16;
 const SPEED = 64; // px/s
@@ -65,15 +65,21 @@ export class Player extends MapObject {
    * @param assets - Catalog holding the prefab and resolving its frames.
    * @param input - Keyboard source driving movement.
    * @param spawn - Screen box to centre in, plus the z-level to draw at.
+   * @param services - The shared services bag (the game context).
    * @returns The player, or `null` when the prefab is missing from `assets`.
    *
    * @example
    * ```ts
-   * const player = Player.spawn(map.assets, input, { width: 320, height: 256, level: 3 });
+   * const player = Player.spawn(map.assets, input, { width: 320, height: 256, level: 3 }, ctx);
    * player?.onSpawn();
    * ```
    */
-  static spawn(assets: AssetManager, input: Input, spawn: PlayerSpawn): Player | null {
+  static spawn(
+    assets: AssetManager,
+    input: Input,
+    spawn: PlayerSpawn,
+    services: object,
+  ): Player | null {
     const def = assets.objectByName(Player.type);
     if (!def) {
       return null;
@@ -84,6 +90,7 @@ export class Player extends MapObject {
         machine: def.machine,
         def,
         properties: def.properties,
+        services,
         x: (spawn.width - SIZE) / 2,
         y: (spawn.height - SIZE) / 2,
         level: spawn.level,
@@ -118,7 +125,7 @@ export class Player extends MapObject {
 
   override onDespawn(): void {
     if (this.fogLight) {
-      getFog()?.removeLight(this.fogLight);
+      game(this.services)?.fog?.removeLight(this.fogLight);
       this.fogLight = null;
     }
     super.onDespawn();
@@ -130,7 +137,7 @@ export class Player extends MapObject {
    */
   private attachFogLight(): void {
     this.fogLight =
-      getFog()?.addLight({
+      game(this.services)?.fog?.addLight({
         followTarget: this,
         offsetX: SIZE / 2,
         offsetY: SIZE / 2,

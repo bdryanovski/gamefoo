@@ -17,6 +17,8 @@ import type {
   Transform,
 } from './types';
 import type { DeltaTime } from '@/generic_types';
+import type { MapObjectBehaviour } from './map_behaviour';
+import type { MapObjectBehaviourRegistry } from './behaviour_registry';
 
 /**
  * Base class for every placed object driven by a {@link StateMachineDefinition}
@@ -106,6 +108,25 @@ export default class MapObject extends ShaderHost {
    */
   private parts: DrawNode[] = [];
 
+  /**
+   * Authored behaviour type keys (from the prefab / placement), resolved
+   * against a {@link MapObjectBehaviourRegistry} on screen activation.
+   */
+  private readonly authoredBehaviours: readonly string[];
+  /**
+   * The shared services bag handed to behaviours (game singletons), or
+   * `undefined` when the map was loaded without one.
+   */
+  private readonly gameServices?: object;
+  /**
+   * Attached behaviors, keyed by lowercased {@link MapObjectBehaviour.type}.
+   */
+  private readonly behaviorMap = new Map<string, MapObjectBehaviour>();
+  /**
+   * Priority-sorted cache of behaviors, invalidated on attach/detach.
+   */
+  private sortedBehaviours: MapObjectBehaviour[] | null = null;
+
   constructor(ctx: MapObjectContext) {
     super({ x: ctx.x, y: ctx.y });
     this.level = ctx.level;
@@ -115,6 +136,8 @@ export default class MapObject extends ShaderHost {
     this.properties = ctx.properties;
     this.assets = ctx.assets;
     this.transform = ctx.transform;
+    this.authoredBehaviours = ctx.behaviours ?? [];
+    this.gameServices = ctx.services;
 
     const initial =
       ctx.startStateId ?? ctx.machine.initialStateId ?? ctx.machine.states[0]?.id ?? '';
@@ -138,6 +161,39 @@ export default class MapObject extends ShaderHost {
   }
 
   /**
+   * The object prefab (name, sprites, animations, meta, authored colliders).
+   * Exposed for engine-side {@link MapObjectBehaviour | behaviors}.
+   */
+  get definition(): GameObjectDefinition {
+    return this.def;
+  }
+
+  /**
+   * The finite state machine definition (states + transitions), for behaviors
+   * that reason about authored states.
+   */
+  get machineDefinition(): StateMachineDefinition {
+    return this.machine;
+  }
+
+  /**
+   * The authored key/value properties for this object. Exposed for behaviors
+   * that read their tuning from the map project.
+   */
+  get authored(): Record<string, string> {
+    return this.properties;
+  }
+
+  /**
+   * The shared services bag attached by the loader (game singletons:
+   * state store, fog, dialog, …). `undefined` when none was provided; game
+   * behaviors/objects narrow it to their own `GameServices` shape.
+   */
+  get services(): object | undefined {
+    return this.gameServices;
+  }
+
+  /**
    * Fires `condition`. If a transition leaves the current state on that
    * condition, moves to its target (and swaps the display).
    *
@@ -152,6 +208,126 @@ export default class MapObject extends ShaderHost {
       return false;
     }
     return this.fsm.transition(edge.toStateId);
+  }
+
+  // --- Behaviors ----------------------------------------------------------
+
+  /**
+   * The attached behaviour with `type` (case-insensitive), or `undefined`.
+   */
+  getBehaviour<T extends MapObjectBehaviour>(type: string): T | undefined {
+    return this.behaviorMap.get(type.toLowerCase()) as T | undefined;
+  }
+
+  /**
+   * Whether a behaviour with `type` (case-insensitive) is attached.
+   */
+  hasBehaviour(type: string): boolean {
+    return this.behaviorMap.has(type.toLowerCase());
+  }
+
+  /**
+   * Every attached behaviour that is an instance of `type`.
+   */
+  getBehavioursByType<T extends MapObjectBehaviour>(
+    type: abstract new (...args: never[]) => T,
+  ): T[] {
+    return this.behaviors.filter((b): b is T => b instanceof type);
+  }
+
+  /**
+   * Attaches a behaviour; fires its {@link MapObjectBehaviour.onAttach} hook.
+   *
+   * @returns The same behaviour instance (for chaining).
+   */
+  attachBehaviour<T extends MapObjectBehaviour>(behaviour: T): T {
+    this.behaviorMap.set(behaviour.key, behaviour);
+    this.sortedBehaviours = null;
+    behaviour.onAttach?.();
+    return behaviour;
+  }
+
+  /**
+   * Detaches the behaviour with `type`, firing {@link MapObjectBehaviour.onDetach}.
+   */
+  detachBehaviour(type: string): void {
+    const behaviour = this.behaviorMap.get(type.toLowerCase());
+    if (!behaviour) {
+      return;
+    }
+    behaviour.onDetach?.();
+    this.behaviorMap.delete(type.toLowerCase());
+    this.sortedBehaviours = null;
+  }
+
+  /**
+   * Detaches every behaviour (firing each `onDetach`).
+   */
+  detachBehaviours(): void {
+    for (const type of Array.from(this.behaviorMap.keys())) {
+      this.detachBehaviour(type);
+    }
+  }
+
+  /**
+   * Resolves and attaches this object's authored `behaviours` from `registry`.
+   * Unknown names warn and are skipped. Called by the screen on activation,
+   * after {@link MapObject.onSpawn}.
+   */
+  attachAuthoredBehaviours(registry?: MapObjectBehaviourRegistry, services?: object): void {
+    if (!registry) {
+      return;
+    }
+    for (const type of this.authoredBehaviours) {
+      const factory = registry.resolve(type);
+      if (!factory) {
+        console.warn(`[MapObject] Unknown behaviour "${type}" on "${this.def.name}"`);
+        continue;
+      }
+      this.attachBehaviour(factory(this, services));
+    }
+  }
+
+  /**
+   * Every attached behaviour, in priority order (lowest first). Mainly for
+   * engine systems that dispatch on a behavior subclass (e.g. interaction).
+   */
+  getBehaviours(): readonly MapObjectBehaviour[] {
+    return this.behaviors;
+  }
+
+  /**
+   * Priority-sorted behaviours, recomputed only when the set changes.
+   */
+  private get behaviors(): MapObjectBehaviour[] {
+    this.sortedBehaviours ??= Array.from(this.behaviorMap.values()).sort(
+      (a, b) => a.priority - b.priority,
+    );
+    return this.sortedBehaviours;
+  }
+
+  /**
+   * Calls `update(deltaTime)` on every enabled behaviour, in priority order.
+   * Driven by the screen (game subclasses override {@link MapObject.update}).
+   */
+  updateBehaviours(deltaTime: DeltaTime): void {
+    for (const behaviour of this.behaviors) {
+      if (behaviour.enabled) {
+        behaviour.update(deltaTime);
+      }
+    }
+  }
+
+  /**
+   * Calls `render(ctx)` on every enabled behaviour that defines one, in
+   * priority order, after the object's own render.
+   */
+  renderBehaviours(ctx: RenderContext): void {
+    for (const behaviour of this.behaviors) {
+      if (behaviour.enabled && behaviour.render) {
+        behaviour.render(ctx);
+      }
+    }
   }
 
   /**
@@ -223,14 +399,14 @@ export default class MapObject extends ShaderHost {
   /**
    * Transitions to a state by **id**.
    */
-  protected transition(stateId: string): boolean {
+  transition(stateId: string): boolean {
     return this.fsm.transition(stateId);
   }
 
   /**
    * Transitions to a state by its authored **name**.
    */
-  protected play(stateName: string): boolean {
+  play(stateName: string): boolean {
     const target = this.machine.states.find((s) => s.name === stateName);
     return target ? this.fsm.transition(target.id) : false;
   }

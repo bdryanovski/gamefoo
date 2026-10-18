@@ -41,7 +41,6 @@ function oliveDef(): GameObjectDefinition {
 }
 
 function makeOlive(store: StateStore, opts: { id?: string; message?: string } = {}): Olive {
-  Olive.useState(store.scope('olives'));
   const def = oliveDef();
   const properties: Record<string, string> = {};
   if (opts.id !== undefined) {properties.id = opts.id;}
@@ -51,6 +50,7 @@ function makeOlive(store: StateStore, opts: { id?: string; message?: string } = 
     machine: def.machine,
     def,
     properties,
+    services: { save: store },
     x: 0,
     y: 0,
     level: 2,

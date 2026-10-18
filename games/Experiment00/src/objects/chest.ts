@@ -1,6 +1,7 @@
 import type { DitherLight } from '../../../../src/index';
 import { MapObject, type Rect, type ScopedState, type WorldCollider } from '../../../../src/index';
-import { getFog } from '../fog';
+import { ChestBehavior } from '../behaviors/interactable';
+import { game, saveScope } from '../services';
 
 /**
  * A chest the player opens with **E**. Authored as a two-state machine
@@ -28,26 +29,21 @@ import { getFog } from '../fog';
  * - **`message` property** — a dialog to run on open (a tree name/id or a
  *   `msg_…` id). The project uses `"0"` as the "unset" sentinel.
  * - **`item` property** — the item id the chest holds (added to the player's
- *   inventory by {@link MapGame}). `"0"`/empty means the chest is empty.
+ *   inventory by {@link ChestBehavior}). `"0"`/empty means the chest is empty.
  *
  * Bind it with `registry.register(Chest)` (keyed by its static `type`,
- * matching the object name `"chest"`) and `Chest.useState(store.scope('chests'))`.
+ * matching the object name `"chest"`); its behaviors attach on spawn.
  *
  * @see {@link ScopedState}
  */
 export class Chest extends MapObject {
   static override readonly type = 'chest';
 
-  /** Shared "which chests are open" state, scoped to `"chests"`. */
-  private static store: ScopedState | null = null;
+  /** This instance's "which chests are open" scope, bound on spawn. */
+  private store: ScopedState | null = null;
 
   /** The treasure glow this chest casts into the dither fog once open. */
   private fogLight: DitherLight | null = null;
-
-  /** Binds the opened-chests state every instance reads and writes. */
-  static useState(store: ScopedState | null): void {
-    Chest.store = store;
-  }
 
   /** The open state's id (authored state name `open`). */
   private get openStateId(): string {
@@ -76,16 +72,18 @@ export class Chest extends MapObject {
   }
 
   override onSpawn(): void {
+    this.store = saveScope(this.services, 'chests');
     // Restore a previously-opened chest so it spawns open and stays open.
-    if (this.id !== '' && Chest.store?.get<boolean>(this.id) === true) {
+    if (this.id !== '' && this.store?.get<boolean>(this.id) === true) {
       this.play('open');
     }
     this.attachFogLight();
+    this.attachBehaviour(new ChestBehavior(this));
   }
 
   override onDespawn(): void {
     if (this.fogLight) {
-      getFog()?.removeLight(this.fogLight);
+      game(this.services)?.fog?.removeLight(this.fogLight);
       this.fogLight = null;
     }
     super.onDespawn();
@@ -96,7 +94,7 @@ export class Chest extends MapObject {
    * (a reopened-save chest spawns with it already lit).
    */
   private attachFogLight(): void {
-    const fog = getFog();
+    const fog = game(this.services)?.fog;
     if (!fog) {
       return;
     }
@@ -129,7 +127,7 @@ export class Chest extends MapObject {
       this.fogLight.enabled = true;
     }
     if (this.id !== '') {
-      Chest.store?.set(this.id, true);
+      this.store?.set(this.id, true);
     }
     return true;
   }
@@ -160,4 +158,5 @@ export class Chest extends MapObject {
       box.y + box.height > a.y
     );
   }
+
 }

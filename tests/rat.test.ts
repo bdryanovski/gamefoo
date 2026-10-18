@@ -65,7 +65,9 @@ function makeRat(x: number, y: number): Rat {
     level: 0,
     startStateId: 'st_idle',
   };
-  return new Rat(ctx);
+  const rat = new Rat(ctx);
+  rat.onSpawn(); // attaches the ExploreBehavior temperament
+  return rat;
 }
 
 describe('Rat', () => {
@@ -91,7 +93,7 @@ describe('Rat', () => {
     const rat = makeRat(100, 100);
     // Player just to the left → rat should bolt right.
     rat.sense({ x: 84, y: 100, width: 16, height: 16 }, openFloor());
-    rat.update(0.5);
+    rat.updateBehaviours(0.5);
     expect(rat.box().x).toBeGreaterThan(100);
     expect(rat.state).toBe('st_right');
   });
@@ -99,7 +101,7 @@ describe('Rat', () => {
   test('flees upward when the player is below', () => {
     const rat = makeRat(100, 100);
     rat.sense({ x: 100, y: 112, width: 16, height: 16 }, openFloor());
-    rat.update(0.5);
+    rat.updateBehaviours(0.5);
     expect(rat.box().y).toBeLessThan(100);
     expect(rat.state).toBe('st_up');
   });

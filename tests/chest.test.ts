@@ -54,7 +54,6 @@ function makeChest(
   store: StateStore,
   opts: { id?: string; message?: string; item?: string } = {},
 ): Chest {
-  Chest.useState(store.scope('chests'));
   const def = chestDef();
   const properties: Record<string, string> = {};
   if (opts.message !== undefined) {properties.message = opts.message;}
@@ -64,6 +63,7 @@ function makeChest(
     machine: def.machine,
     def,
     properties,
+    services: { save: store },
     x: 0,
     y: 0,
     level: 2,

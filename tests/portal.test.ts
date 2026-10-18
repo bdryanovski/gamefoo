@@ -129,13 +129,13 @@ describe('Portal', () => {
 });
 
 function makeDoor(store: StateStore, opts: { id?: string } = {}): Portal {
-  Portal.useState(store.scope('doors'));
   const def = portalDef(true);
   const ctx: MapObjectContext = {
     assets,
     machine: def.machine,
     def,
     properties: {},
+    services: { save: store },
     x: 0,
     y: 0,
     level: 0,

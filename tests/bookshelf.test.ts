@@ -34,7 +34,6 @@ function shelfDef(): GameObjectDefinition {
 function makeShelf(
   opts: { message?: string; id?: string; x?: number; y?: number; store?: StateStore } = {},
 ): Bookshelf {
-  Bookshelf.useState(opts.store ? opts.store.scope('shelves') : null);
   const def = shelfDef();
   const properties: Record<string, string> = {};
   if (opts.message !== undefined) {properties.message = opts.message;}
@@ -44,6 +43,7 @@ function makeShelf(
     machine: def.machine,
     def,
     properties,
+    services: opts.store ? { save: opts.store } : undefined,
     x: opts.x ?? 0,
     y: opts.y ?? 0,
     level: 0,

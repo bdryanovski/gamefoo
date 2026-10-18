@@ -1,6 +1,7 @@
 import type { DitherLight } from '../../../../src/index';
 import { GlowShader, MapObject, type Rect } from '../../../../src/index';
-import { getFog } from '../fog';
+import { SlimeKingBehavior } from '../behaviors/interactable';
+import { game } from '../services';
 
 const CRITTER_SIZE = 64;
 
@@ -18,7 +19,7 @@ const CRITTER_SIZE = 64;
  *
  * Its reach is the current state's `activation` collider (the footprint is used
  * when none exists). The class only reports its reach + dialog reference;
- * {@link MapGame} drives the dialog runtime.
+ * {@link DialogSystem} drives the dialog runtime.
  */
 export class SlimeKing extends MapObject {
   static override readonly type = 'slime_king';
@@ -28,7 +29,8 @@ export class SlimeKing extends MapObject {
 
   override onSpawn(): void {
     super.onSpawn();
-    const fog = getFog();
+    this.attachBehaviour(new SlimeKingBehavior(this));
+    const fog = game(this.services)?.fog;
     if (!fog) {
       return;
     }
@@ -85,4 +87,5 @@ export class SlimeKing extends MapObject {
       box.y + box.height > a.y
     );
   }
+
 }

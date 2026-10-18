@@ -1,6 +1,6 @@
 import { Screen } from '../../../../src/index';
-import { showMessage } from '../hud';
 import { Campfire } from '../objects/campfire';
+import { game } from '../services';
 
 /**
  * The game's default screen. Registered with `screens.setDefault(RoomScreen)`
@@ -19,6 +19,6 @@ export class RoomScreen extends Screen {
 
   protected override onEnter(): void {
     const [x, y] = this.coordinate;
-    showMessage(`Room ${x},${y}`, 1.2);
+    game(this.services)?.hud?.show(`Room ${x},${y}`, 1.2);
   }
 }

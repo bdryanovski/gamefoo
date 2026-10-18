@@ -1,11 +1,12 @@
 /**
- * Contract: Firelight (Campfire/Torch) derives its lit/unlit states from the
- * object's machine (initial state = lit) and its collider from the object
+ * Contract: the {@link LightSource} behavior derives its lit/unlit states from
+ * the owner's machine (initial state = lit) and its collider from the owner's
  * definition — no config file. Toggling flips the state and the solid box.
  */
 import { describe, expect, test } from 'vite-plus/test';
 import { Campfire } from '../games/Experiment00/src/objects/campfire';
 import { Torch } from '../games/Experiment00/src/objects/torch';
+import { LightSource } from '../games/Experiment00/src/behaviors/light_source';
 import type AssetManager from '../src/core/map/asset_manager';
 import type { GameObjectDefinition, MapObjectContext } from '../src/core/map/types';
 
@@ -43,9 +44,9 @@ function fireDef(name: string): GameObjectDefinition {
   };
 }
 
-function makeCampfire(x = 100, y = 100): Campfire {
-  const def = fireDef('campfire');
-  const ctx: MapObjectContext = {
+function context(name: string, x: number, y: number): MapObjectContext {
+  const def = fireDef(name);
+  return {
     assets,
     machine: def.machine,
     def,
@@ -55,37 +56,49 @@ function makeCampfire(x = 100, y = 100): Campfire {
     level: 0,
     startStateId: 'st_lit',
   };
-  return new Campfire(ctx);
 }
 
-describe('Firelight (Campfire)', () => {
+function makeCampfire(x = 100, y = 100): { fire: Campfire; light: LightSource } {
+  const fire = new Campfire({ ...fireCtx(x, y) });
+  fire.onSpawn();
+  const light = fire.getBehaviour<LightSource>('light-source');
+  if (!light) throw new Error('LightSource behavior not attached');
+  return { fire, light };
+}
+
+function fireCtx(x: number, y: number): MapObjectContext {
+  const def = fireDef('campfire');
+  return { assets, machine: def.machine, def, properties: {}, x, y, level: 0, startStateId: 'st_lit' };
+}
+
+describe('LightSource (Campfire)', () => {
   test('spawns lit (the machine initial state)', () => {
-    expect(makeCampfire().lit).toBe(true);
+    expect(makeCampfire().light.lit).toBe(true);
   });
 
   test('toggle flips lit ⇄ unlit and back', () => {
-    const fire = makeCampfire();
-    expect(fire.toggle()).toBe(true);
-    expect(fire.lit).toBe(false);
+    const { fire, light } = makeCampfire();
+    expect(light.toggle()).toBe(true);
+    expect(light.lit).toBe(false);
     expect(fire.state).toBe('st_off');
-    expect(fire.toggle()).toBe(true);
-    expect(fire.lit).toBe(true);
+    expect(light.toggle()).toBe(true);
+    expect(light.lit).toBe(true);
     expect(fire.state).toBe('st_lit');
   });
 
   test('extinguish and ignite are idempotent', () => {
-    const fire = makeCampfire();
-    expect(fire.extinguish()).toBe(true);
-    expect(fire.extinguish()).toBe(false); // already out
-    expect(fire.ignite()).toBe(true);
-    expect(fire.ignite()).toBe(false); // already lit
+    const { light } = makeCampfire();
+    expect(light.extinguish()).toBe(true);
+    expect(light.extinguish()).toBe(false); // already out
+    expect(light.ignite()).toBe(true);
+    expect(light.ignite()).toBe(false); // already lit
   });
 
   test('collisionBox comes from the current state solid collider', () => {
-    const fire = makeCampfire(100, 100);
-    expect(fire.collisionBox).toEqual({ x: 102, y: 102, w: 12, h: 12 });
-    fire.extinguish(); // cold pit authors no solid
-    expect(fire.collisionBox).toEqual({ x: 100, y: 100, w: 0, h: 0 });
+    const { light } = makeCampfire(100, 100);
+    expect(light.collisionBox).toEqual({ x: 102, y: 102, w: 12, h: 12 });
+    light.extinguish(); // cold pit authors no solid
+    expect(light.collisionBox).toEqual({ x: 100, y: 100, w: 0, h: 0 });
   });
 });
 
@@ -102,8 +115,10 @@ describe('Torch', () => {
       level: 0,
       startStateId: 'st_lit',
     });
-    expect(torch.lit).toBe(true);
-    expect(torch.toggle()).toBe(true);
-    expect(torch.lit).toBe(false);
+    torch.onSpawn();
+    const light = torch.getBehaviour<LightSource>('light-source')!;
+    expect(light.lit).toBe(true);
+    expect(light.toggle()).toBe(true);
+    expect(light.lit).toBe(false);
   });
 });

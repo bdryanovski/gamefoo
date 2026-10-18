@@ -7,6 +7,7 @@ import CollisionMap, { shapeBounds, translateShape } from './collision_map';
 import MapObject, { type MapObjectConstructor } from './map_object';
 import TextObject from './text_object';
 import type MapObjectRegistry from './map_object_registry';
+import type { MapObjectBehaviourRegistry } from './behaviour_registry';
 import {
   type Clip,
   type CollisionDefinition,
@@ -92,6 +93,14 @@ export interface ScreenContext {
   assets: AssetManager;
   map: MapData;
   registry?: MapObjectRegistry;
+  /**
+   * Registry used to resolve each object's authored `behaviours` on activation.
+   */
+  behaviours?: MapObjectBehaviourRegistry;
+  /**
+   * Shared services bag handed to behaviour factories (game singletons).
+   */
+  services?: object;
 }
 
 /**
@@ -165,6 +174,14 @@ export default class Screen {
    */
   private readonly layerDefs?: LayerDefinition[];
   private active = false;
+  /**
+   * Registry resolving each object's authored behaviours on activation.
+   */
+  private readonly behaviourRegistry?: MapObjectBehaviourRegistry;
+  /**
+   * Shared services bag handed to behaviour factories.
+   */
+  private readonly behaviourServices?: object;
 
   constructor(context: ScreenContext) {
     const { data, assets, map } = context;
@@ -173,6 +190,8 @@ export default class Screen {
     this.width = map.screenCols * map.blockSize;
     this.height = map.screenRows * map.blockSize;
     this.collision = new CollisionMap(map.screenCols, map.screenRows, map.blockSize);
+    this.behaviourRegistry = context.behaviours;
+    this.behaviourServices = context.services;
 
     this.layerDefs = map.layers;
     // Levels default to visible unless their authored layer entry hides them.
@@ -333,6 +352,8 @@ export default class Screen {
       transform,
       startStateId,
       id: placement.id,
+      behaviours: placement.behaviours ?? owner.behaviours ?? [],
+      services: this.behaviourServices,
     };
 
     const key = owner.properties.class ?? owner.name;
@@ -375,6 +396,7 @@ export default class Screen {
         } else {
           const instance = new descriptor.ctor(descriptor.context);
           instance.onSpawn();
+          instance.attachAuthoredBehaviours(this.behaviourRegistry, this.behaviourServices);
           layer.instances.push(instance);
           this.collision.addOccupant(instance);
         }
@@ -398,6 +420,7 @@ export default class Screen {
       }
       for (const instance of layer.instances) {
         if (instance instanceof MapObject) {
+          instance.detachBehaviours();
           instance.onDespawn();
           this.collision.removeOccupant(instance);
         }
@@ -419,6 +442,9 @@ export default class Screen {
       }
       for (const instance of layer.instances) {
         instance.update(deltaTime);
+        if (instance instanceof MapObject) {
+          instance.updateBehaviours(deltaTime);
+        }
       }
     }
     this.onUpdate(deltaTime);
@@ -447,6 +473,9 @@ export default class Screen {
       }
       for (const instance of layer.instances) {
         instance.render(ctx);
+        if (instance instanceof MapObject) {
+          instance.renderBehaviours(ctx);
+        }
       }
     }
     if (overlay && !overlayDrawn) {
@@ -507,8 +536,17 @@ export default class Screen {
   /**
    * Live objects that are instances of `type`.
    */
-  objectsByType<T extends MapObject>(type: new (...args: never[]) => T): T[] {
+  objectsByType<T extends MapObject>(type: abstract new (...args: never[]) => T): T[] {
     return this.objects.filter((o): o is T => o instanceof type);
+  }
+
+  /**
+   * The shared services bag the loader was given (game singletons). Bespoke
+   * screen subclasses use it to reach game services (e.g. the HUD) without a
+   * module-level singleton.
+   */
+  get services(): object | undefined {
+    return this.behaviourServices;
   }
 
   /**

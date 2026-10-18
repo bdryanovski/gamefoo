@@ -194,6 +194,11 @@ export interface GameObjectDefinition {
   properties: Record<string, string>;
   machine: StateMachineDefinition;
   /**
+   * Authored behaviour type keys attached to every instance on spawn,
+   * resolved against a {@link MapObjectBehaviourRegistry}.
+   */
+  behaviours?: string[];
+  /**
    * Composition footprint in grid cells (drives cell pixel offsets).
    */
   grid?: ObjectGrid;
@@ -280,7 +285,16 @@ export type Placement = Transform & {
          * (this instance wins). Lets one prefab drive many configured
          * instances — e.g. a `portal` whose target screen differs per copy.
          */
+        /**
+         * Per-placement overrides merged over the object def's `properties`
+         * (this instance wins). Lets one prefab drive many configured
+         * instances — e.g. a `portal` whose target screen differs per copy.
+         */
         properties?: Record<string, string>;
+        /**
+         * Per-placement behaviour override; falls back to the prefab's list.
+         */
+        behaviours?: string[];
       }
     | ({ kind: 'text' } & TextConfig)
   );
@@ -399,6 +413,16 @@ export interface MapObjectContext {
    * Free-form key/value config authored on the object.
    */
   properties: Record<string, string>;
+  /**
+   * Authored behaviour type keys to attach on spawn (from the prefab and/or
+   * the placement). Absent → no behaviors.
+   */
+  behaviours?: string[];
+  /**
+   * Shared services bag handed to behaviour factories (and reachable from the
+   * object itself via {@link MapObject.services}). Absent → no services.
+   */
+  services?: object;
   /**
    * Pixel offset within the screen.
    */
