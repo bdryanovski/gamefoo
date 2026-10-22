@@ -1,3 +1,4 @@
+import type { DeltaTime } from '@/generic_types';
 import type Engine from '../core/engine';
 
 import type { RenderContext } from '../core/renderer/type';
@@ -36,9 +37,9 @@ export interface SubSystem {
    */
   init?(engine: Engine): void;
 
-  preUpdate?(deltaTime: number): void;
-  update?(deltaTime: number): void;
-  postUpdate?(deltaTime: number): void;
+  preUpdate?(deltaTime: DeltaTime): void;
+  update?(deltaTime: DeltaTime): void;
+  postUpdate?(deltaTime: DeltaTime): void;
 
   preRender?(ctx: RenderContext): void;
   render?(ctx: RenderContext): void;

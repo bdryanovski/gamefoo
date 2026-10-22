@@ -7,6 +7,8 @@ import type { SubSystem } from './types';
  *
  * @since 0.2.0
  *
+ * @deprecated No longer in use only into some web demos
+ *
  * @category SubSystems
  */
 export class CollisionSystem implements SubSystem {

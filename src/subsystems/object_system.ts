@@ -1,3 +1,4 @@
+import type { DeltaTime } from '@/generic_types';
 import GameObjectRegister from '../core/game_object_register';
 import type { RenderContext } from '../core/renderer/type';
 import type { GameObject } from '../entities/types';
@@ -49,7 +50,7 @@ export class ObjectSystem implements SubSystem {
     }
   }
 
-  update(deltaTime: number): void {
+  update(deltaTime: DeltaTime): void {
     this.objects.updateAll(deltaTime);
   }
 

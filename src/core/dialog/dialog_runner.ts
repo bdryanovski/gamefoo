@@ -1,3 +1,4 @@
+import type { DeltaTime } from '@/generic_types';
 import type {
   DialogChoice,
   DialogDocument,
@@ -8,6 +9,8 @@ import type {
 
 /**
  * Configuration for a {@link DialogRunner}.
+ *
+ * @since 0.5.0
  */
 export interface DialogRunnerConfig {
   /** Characters revealed per second by the typewriter. @defaultValue `45` */
@@ -195,7 +198,7 @@ export class DialogRunner {
   }
 
   /** Advance the typewriter by `dt` seconds. No-op when inactive. */
-  update(dt: number): void {
+  update(dt: DeltaTime): void {
     if (!this.running) {
       return;
     }

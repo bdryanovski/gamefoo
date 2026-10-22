@@ -1,5 +1,5 @@
 import type { RenderContext } from '@/core/renderer/type';
-import type { Dimension, Vector2 } from '@/generic_types';
+import type { DeltaTime, Dimension, Vector2 } from '@/generic_types';
 
 /**
  * Abstract base class for all renderable objects in the GameFoo engine.
@@ -189,7 +189,7 @@ export default abstract class Node {
    * }
    * ```
    */
-  abstract update(deltaTime: number): void;
+  abstract update(deltaTime: DeltaTime): void;
 
   /**
    * Draws the node to the screen.

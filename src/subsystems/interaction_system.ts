@@ -3,6 +3,7 @@ import type MapObject from '../core/map/map_object';
 import { InteractableBehaviour, type InteractionActor } from '../core/map/interactable_behaviour';
 import { OutlineShader } from '../core/shaders/outline_shader';
 import type { SubSystem } from './types';
+import type { DeltaTime } from '@/generic_types';
 
 /**
  * Configuration for {@link InteractionSystem}.
@@ -68,7 +69,7 @@ export class InteractionSystem implements SubSystem {
     this.keys = config.keys ?? ['e', ' '];
   }
 
-  update(_deltaTime: number): void {
+  update(_deltaTime: DeltaTime): void {
     if (this.config.isActive && !this.config.isActive()) {
       return;
     }

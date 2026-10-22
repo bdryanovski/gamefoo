@@ -1,3 +1,4 @@
+import type { DeltaTime } from '@/generic_types';
 import type { SubSystem } from '../subsystems/types';
 import type { LoopDriver } from './renderer/loops/loop';
 import { RAFLoopDriver } from './renderer/loops/loop';
@@ -329,7 +330,7 @@ export default class Engine {
    *
    * @internal
    */
-  private tick(deltaTime: number): void {
+  private tick(deltaTime: DeltaTime): void {
     if (!this.running) {
       return;
     }

@@ -2,7 +2,7 @@ import type { EnhancedCameraConfig } from '../core/enhanced_camera';
 import { EnhancedCamera } from '../core/enhanced_camera';
 import type { IsometricProjection } from '../core/grid/isometric';
 import type { RenderContext } from '../core/renderer/type';
-import type { Vector2 } from '../generic_types';
+import type { DeltaTime, Vector2 } from '../generic_types';
 import type { SubSystem } from './types';
 
 /**
@@ -108,7 +108,7 @@ export class CameraSystem implements SubSystem {
    *
    * @param deltaTime - Seconds since the last frame.
    */
-  update(deltaTime: number): void {
+  update(deltaTime: DeltaTime): void {
     const t = this.target();
     if (t) {
       this.camera.smoothFollow(t, deltaTime);

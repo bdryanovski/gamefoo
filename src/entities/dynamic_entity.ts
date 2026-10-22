@@ -1,4 +1,4 @@
-import type { Vector2 } from '../generic_types';
+import type { DeltaTime, Vector2 } from '../generic_types';
 import Entity from './entity';
 
 /**
@@ -115,7 +115,7 @@ export default abstract class DynamicEntity extends Entity {
    *
    * @since 0.4.0
    */
-  update(deltaTime: number): void {
+  update(deltaTime: DeltaTime): void {
     this.updateBehaviours(deltaTime);
     this.x += this.velocity.x * this.speed * deltaTime;
     this.y += this.velocity.y * this.speed * deltaTime;

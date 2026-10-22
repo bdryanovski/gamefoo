@@ -5,6 +5,8 @@ import type { DialogRunner } from './dialog_runner';
 /**
  * Colours for a {@link DialogBox}. All optional — omitted entries fall back to
  * the retro default palette.
+ *
+ * @since 0.5.0
  */
 export interface DialogBoxTheme {
   /** Panel fill. */
@@ -25,6 +27,8 @@ export interface DialogBoxTheme {
 
 /**
  * Sizing/behaviour for a {@link DialogBox}.
+ *
+ * @since 0.5.0
  */
 export interface DialogBoxConfig {
   theme?: DialogBoxTheme;
@@ -73,6 +77,8 @@ const easeOut = (t: number): number => 1 - (1 - t) * (1 - t);
  * Body height is measured from the FULL text (not the typewriter-revealed
  * prefix) so the panel keeps a stable height while the text types in and never
  * clips the body or the options.
+ *
+ * @since 0.5.0
  */
 interface DialogLayout {
   /** Raw canvas, or `null` when rendering without one. */
@@ -206,13 +212,7 @@ export class DialogBox {
   }
 
   /** Draws one line of text with the active font (bitmap or canvas). */
-  private drawLine(
-    ctx: RenderContext,
-    s: string,
-    x: number,
-    y: number,
-    color: string,
-  ): void {
+  private drawLine(ctx: RenderContext, s: string, x: number, y: number, color: string): void {
     if (this.font) {
       this.font.render(ctx, s, x, y, color, this.fontScale);
       return;
