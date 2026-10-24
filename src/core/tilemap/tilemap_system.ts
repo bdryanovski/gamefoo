@@ -25,7 +25,9 @@
  * @see {@link SubSystem}  — the subsystem interface
  */
 
-/** Minimal interface required by TilemapSystem to get the camera viewport. */
+/**
+ * Minimal interface required by TilemapSystem to get the camera viewport.
+ */
 interface CameraLike {
   camera: {
     getViewRect(): { x: number; y: number; width: number; height: number };
@@ -38,7 +40,9 @@ import type { RenderContext } from '../renderer/type';
 import type { TileMap } from './tilemap';
 
 export class TilemapSystem implements SubSystem {
-  /** Subsystem identifier. */
+  /**
+   * Subsystem identifier.
+   */
   id = 'tilemap';
 
   /**
@@ -47,13 +51,19 @@ export class TilemapSystem implements SubSystem {
    */
   order = 15;
 
-  /** The tilemap to render. */
+  /**
+   * The tilemap to render.
+   */
   private tilemap: TileMap;
 
-  /** Cached reference to the camera subsystem, resolved in `init`. */
+  /**
+   * Cached reference to the camera subsystem, resolved in `init`.
+   */
   private cameraSystem: CameraLike | null = null;
 
-  /** Canvas dimensions fallback when no camera is available. */
+  /**
+   * Canvas dimensions fallback when no camera is available.
+   */
   private canvasWidth = 0;
   private canvasHeight = 0;
 

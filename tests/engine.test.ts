@@ -4,7 +4,7 @@
  * Verifies that every public member exists with the correct type/shape.
  * Add a test when a new public method/property is introduced.
  */
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, test } from 'vite-plus/test';
 import Engine from '../src/core/engine';
 import type { LoopDriver } from '../src/core/renderer/loops/loop';
 import type { RenderContext } from '../src/core/renderer/type';
@@ -18,6 +18,8 @@ function makeCtx(width = 800, height = 600): RenderContext {
   return {
     width,
     height,
+    gameScale: 1,
+    readGameScale: () => 1,
     clear: () => {},
     flush: () => {},
     save: () => {},
@@ -45,6 +47,16 @@ describe('Engine', () => {
   test('use() — returns the engine (chainable)', () => {
     const sub: SubSystem = { id: 'test', order: 10 };
     expect(engine.use(sub)).toBe(engine);
+  });
+
+  test('get() - find register subsystem by id', () => {
+    const prob: SubSystem = { id: 'demo', order: 10 };
+    engine.use(prob);
+    expect(engine.get('demo')).toBe(prob);
+  });
+
+  test('get() - get undefined for unknown subsystem', () => {
+    expect(engine.get('non-existing')).toBeUndefined();
   });
 
   test('resize() — callable, returns void', () => {

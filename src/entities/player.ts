@@ -20,6 +20,8 @@ import DynamicEntity from './dynamic_entity';
  * @category Entities
  * @since 0.1.0
  *
+ * @deprecated
+ *
  * @example Subclassing (required — Player is abstract)
  * ```ts
  * import { Player, Control, HealthKit, Input, SpriteRender } from "gamefoo";

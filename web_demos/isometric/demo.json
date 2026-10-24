@@ -1,0 +1,5 @@
+{
+  "title": "Isometric World",
+  "description": "Procedurally generated isometric map with Perlin noise terrain, A* pathfinding NPCs, collision detection, zoom camera, and debug overlays.",
+  "tags": ["isometric", "tilemap", "pathfinding", "perlin noise", "camera", "debug"]
+}

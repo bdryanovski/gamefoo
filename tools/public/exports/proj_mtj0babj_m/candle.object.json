@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-object-editor",
+    "name": "candle",
+    "category": ""
+  },
+  "grid": {
+    "cols": 1,
+    "rows": 2,
+    "cell": 16
+  },
+  "size": {
+    "width": 16,
+    "height": 32
+  },
+  "properties": {},
+  "images": {
+    "BC2DFFC6-DC2B-4984-9BAC-8CCD6E65418D.png": {
+      "src": "/uploads/1791873981545_BC2DFFC6-DC2B-4984-9BAC-8CCD6E65418D.png",
+      "width": 375,
+      "height": 164
+    }
+  },
+  "frames": {
+    "sprite_3_4": {
+      "image": "BC2DFFC6-DC2B-4984-9BAC-8CCD6E65418D.png",
+      "x": 48,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_2_4": {
+      "image": "BC2DFFC6-DC2B-4984-9BAC-8CCD6E65418D.png",
+      "x": 32,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_1_4": {
+      "image": "BC2DFFC6-DC2B-4984-9BAC-8CCD6E65418D.png",
+      "x": 16,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    },
+    "sprite_0_4": {
+      "image": "BC2DFFC6-DC2B-4984-9BAC-8CCD6E65418D.png",
+      "x": 0,
+      "y": 64,
+      "width": 16,
+      "height": 32
+    }
+  },
+  "animations": {
+    "candle": {
+      "frames": [
+        "sprite_3_4",
+        "sprite_2_4",
+        "sprite_1_4",
+        "sprite_0_4"
+      ],
+      "duration": 0.15,
+      "loop": true
+    }
+  },
+  "collisionLayers": {
+    "solid": {
+      "name": "Solid",
+      "color": "#e05a5a"
+    }
+  },
+  "states": {
+    "init": {
+      "layers": [
+        {
+          "name": "base",
+          "cells": [
+            {
+              "col": 0,
+              "row": 0,
+              "source": {
+                "kind": "animation",
+                "animation": "candle"
+              }
+            }
+          ]
+        }
+      ],
+      "collisions": [
+        {
+          "id": "col_mv6br0my_l",
+          "layer": "solid",
+          "enabled": true,
+          "shape": {
+            "kind": "rect",
+            "x": 5.0754807692307695,
+            "y": 21.377884615384616,
+            "width": 7.773076923076922,
+            "height": 10.098076923076924
+          }
+        }
+      ]
+    }
+  },
+  "initial": "init"
+}

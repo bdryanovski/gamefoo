@@ -1,5 +1,5 @@
-import { Entity } from "../../../src";
-import { DungenEnemy } from "../enemy";
+import type { Entity } from '../../../src';
+import { DungenEnemy } from '../enemy';
 
 export class Archer extends DungenEnemy {
   constructor(
@@ -12,7 +12,7 @@ export class Archer extends DungenEnemy {
   ) {
     super(id, x, y, wallMap, target, losCheck);
 
-    this.enemyType = "archer";
+    this.enemyType = 'archer';
 
     this.hp = 1;
     this.maxHp = 1;

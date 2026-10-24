@@ -45,31 +45,48 @@
  * @see {@link Pathfinder} — navigates the grid
  */
 import type { Vector2 } from '../../generic_types';
+import type { Rect } from '../map/types';
 import type { IsoConfig, IsoLayout, VisibleRange } from './isometric_types';
 
 export class IsometricProjection {
-  /** Full width of an isometric tile in pixels. */
+  /**
+   * Full width of an isometric tile in pixels.
+   */
   readonly tileWidth: number;
 
-  /** Full height of an isometric tile in pixels. */
+  /**
+   * Full height of an isometric tile in pixels.
+   */
   readonly tileHeight: number;
 
-  /** Screen-space offset applied to all projected coordinates. */
+  /**
+   * Screen-space offset applied to all projected coordinates.
+   */
   readonly origin: Vector2;
 
-  /** Layout mode: `"diamond"` or `"staggered"`. */
+  /**
+   * Layout mode: `"diamond"` or `"staggered"`.
+   */
   readonly layout: IsoLayout;
 
-  /** Half-tile width, cached for performance. */
+  /**
+   * Half-tile width, cached for performance.
+   */
   private readonly hw: number;
 
-  /** Half-tile height, cached for performance. */
+  /**
+   * Half-tile height, cached for performance.
+   */
   private readonly hh: number;
 
-  /** Reusable output object for gridToScreen to reduce allocations. */
+  /**
+   * Reusable output object for gridToScreen to reduce allocations.
+   */
   private readonly _screenOut: Vector2 = { x: 0, y: 0 };
 
-  /** Reusable output object for screenToGrid to reduce allocations. */
+  /**
+   * Reusable output object for screenToGrid to reduce allocations.
+   */
   private readonly _gridOut: { col: number; row: number } = { col: 0, row: 0 };
 
   /**
@@ -200,10 +217,7 @@ export class IsometricProjection {
    *
    * @since 0.4.0
    */
-  screenToGridFast(
-    screenX: number,
-    screenY: number,
-  ): { col: number; row: number } {
+  screenToGridFast(screenX: number, screenY: number): { col: number; row: number } {
     if (this.layout === 'staggered') {
       const sx = screenX - this.origin.x;
       const sy = screenY - this.origin.y;
@@ -271,10 +285,7 @@ export class IsometricProjection {
    * ctx.stroke();
    * ```
    */
-  getTileDiamond(
-    col: number,
-    row: number,
-  ): [Vector2, Vector2, Vector2, Vector2] {
+  getTileDiamond(col: number, row: number): [Vector2, Vector2, Vector2, Vector2] {
     const center = this.gridToScreenDiamond(col, row);
     const cx = center.x + this.hw;
     const cy = center.y + this.hh;
@@ -296,10 +307,8 @@ export class IsometricProjection {
    * The returned range is conservatively padded by one tile in every
    * direction to avoid popping at the edges.
    *
-   * @param viewX - Left edge of the viewport in screen-space.
-   * @param viewY - Top edge of the viewport in screen-space.
-   * @param viewW - Width of the viewport in pixels.
-   * @param viewH - Height of the viewport in pixels.
+   * @param view - Viewport rectangle in screen-space: `x`/`y` are the
+   *   left/top edges, `width`/`height` the pixel extents.
    * @param gridCols - Total columns in the grid (used for clamping).
    * @param gridRows - Total rows in the grid (used for clamping).
    * @returns A {@link VisibleRange} with min/max column and row.
@@ -309,43 +318,27 @@ export class IsometricProjection {
    * @example Render only visible tiles
    * ```ts
    * const view = camera.getViewRect();
-   * const range = iso.getVisibleRange(
-   *   view.x, view.y, view.width, view.height,
-   *   grid.cols, grid.rows,
-   * );
+   * const range = iso.getVisibleRange(view, grid.cols, grid.rows);
    *
-   * for (let r = range.minRow; r <= range.maxRow; r++) {
-   *   for (let c = range.minCol; c <= range.maxCol; c++) {
-   *     renderTile(c, r);
+   * for (let row = range.minRow; row <= range.maxRow; row += 1) {
+   *   for (let col = range.minCol; col <= range.maxCol; col += 1) {
+   *     renderTile(col, row);
    *   }
    * }
    * ```
    */
-  getVisibleRange(
-    viewX: number,
-    viewY: number,
-    viewW: number,
-    viewH: number,
-    gridCols: number,
-    gridRows: number,
-  ): VisibleRange {
+  getVisibleRange(view: Rect, gridCols: number, gridRows: number): VisibleRange {
     const pad = 2;
 
-    const topLeft = this.screenToGrid(viewX, viewY);
-    const topRight = this.screenToGrid(viewX + viewW, viewY);
-    const bottomLeft = this.screenToGrid(viewX, viewY + viewH);
-    const bottomRight = this.screenToGrid(viewX + viewW, viewY + viewH);
+    const topLeft = this.screenToGrid(view.x, view.y);
+    const topRight = this.screenToGrid(view.x + view.width, view.y);
+    const bottomLeft = this.screenToGrid(view.x, view.y + view.height);
+    const bottomRight = this.screenToGrid(view.x + view.width, view.y + view.height);
 
     const minCol = Math.max(0, Math.min(topLeft.col, bottomLeft.col) - pad);
-    const maxCol = Math.min(
-      gridCols - 1,
-      Math.max(topRight.col, bottomRight.col) + pad,
-    );
+    const maxCol = Math.min(gridCols - 1, Math.max(topRight.col, bottomRight.col) + pad);
     const minRow = Math.max(0, Math.min(topLeft.row, topRight.row) - pad);
-    const maxRow = Math.min(
-      gridRows - 1,
-      Math.max(bottomLeft.row, bottomRight.row) + pad,
-    );
+    const maxRow = Math.min(gridRows - 1, Math.max(bottomLeft.row, bottomRight.row) + pad);
 
     return { minCol, maxCol, minRow, maxRow };
   }
@@ -379,10 +372,7 @@ export class IsometricProjection {
    *
    * @internal
    */
-  private screenToGridDiamond(
-    screenX: number,
-    screenY: number,
-  ): { col: number; row: number } {
+  private screenToGridDiamond(screenX: number, screenY: number): { col: number; row: number } {
     const sx = screenX - this.origin.x;
     const sy = screenY - this.origin.y;
     return {
@@ -413,10 +403,7 @@ export class IsometricProjection {
    *
    * @internal
    */
-  private screenToGridStaggered(
-    screenX: number,
-    screenY: number,
-  ): { col: number; row: number } {
+  private screenToGridStaggered(screenX: number, screenY: number): { col: number; row: number } {
     const sx = screenX - this.origin.x;
     const sy = screenY - this.origin.y;
 

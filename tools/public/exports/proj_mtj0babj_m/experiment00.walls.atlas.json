@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "version": "1.0",
+    "tool": "gamefoo-tilemap-editor",
+    "projectName": "Experiment00",
+    "image": "walls.png",
+    "imageWidth": 224,
+    "imageHeight": 256
+  },
+  "frames": {
+    "sprite_0_0": {
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_0": {
+      "x": 16,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_0": {
+      "x": 32,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_0": {
+      "x": 48,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_1": {
+      "x": 48,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_1": {
+      "x": 32,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_1": {
+      "x": 16,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_1": {
+      "x": 0,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_2": {
+      "x": 0,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_2": {
+      "x": 16,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_2": {
+      "x": 32,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_2": {
+      "x": 48,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_3_3": {
+      "x": 48,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_2_3": {
+      "x": 32,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_1_3": {
+      "x": 16,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_0_3": {
+      "x": 0,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_0": {
+      "x": 160,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_11_0": {
+      "x": 176,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_12_0": {
+      "x": 192,
+      "y": 0,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_13_1": {
+      "x": 208,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_12_3": {
+      "x": 192,
+      "y": 48,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_10_2": {
+      "x": 160,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_11_2": {
+      "x": 176,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_12_2": {
+      "x": 192,
+      "y": 32,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_12_1": {
+      "x": 192,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    },
+    "sprite_11_1": {
+      "x": 176,
+      "y": 16,
+      "width": 16,
+      "height": 16
+    }
+  },
+  "animations": {}
+}

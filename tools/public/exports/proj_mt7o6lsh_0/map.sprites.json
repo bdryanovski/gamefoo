@@ -1,0 +1,320 @@
+{
+  "floor": {
+    "x": 32,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "wall_north": {
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "wall_west": {
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "wall_east": {
+    "x": 48,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "wall_south": {
+    "x": 16,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "wall_south_east": {
+    "x": 48,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "wall_north_west": {
+    "x": 16,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "wall_south_west": {
+    "x": 0,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "wall_north_east": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "middle_one": {
+    "x": 32,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "middle_two": {
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "empty": {
+    "x": 0,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "wall_bottom": {
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "top_right": {
+    "x": 32,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "top_left": {
+    "x": 48,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "bottom_left": {
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "portal_north": {
+    "x": 176,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "portal_east": {
+    "x": 208,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "portal_south": {
+    "x": 192,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "portal_west": {
+    "x": 160,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "jar": {
+    "x": 0,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "jar_broken": {
+    "x": 16,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "rocks": {
+    "x": 32,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "rocks_crystal": {
+    "x": 48,
+    "y": 64,
+    "width": 16,
+    "height": 16
+  },
+  "sign": {
+    "x": 48,
+    "y": 32,
+    "width": 16,
+    "height": 16
+  },
+  "skeleton": {
+    "x": 0,
+    "y": 48,
+    "width": 16,
+    "height": 16
+  },
+  "shelf": {
+    "x": 240,
+    "y": 2,
+    "width": 16,
+    "height": 30
+  },
+  "torch": {
+    "x": 0,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "torch_1": {
+    "x": 16,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "torch_2": {
+    "x": 32,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "torch_3": {
+    "x": 48,
+    "y": 0,
+    "width": 16,
+    "height": 16
+  },
+  "fire": {
+    "x": 0,
+    "y": 64,
+    "width": 16,
+    "height": 32
+  },
+  "fire_1": {
+    "x": 16,
+    "y": 64,
+    "width": 16,
+    "height": 32
+  },
+  "fire_2": {
+    "x": 32,
+    "y": 64,
+    "width": 16,
+    "height": 32
+  },
+  "fire_3": {
+    "x": 48,
+    "y": 64,
+    "width": 16,
+    "height": 32
+  },
+  "ork": {
+    "x": 112,
+    "y": 16,
+    "width": 16,
+    "height": 32
+  },
+  "ork_1": {
+    "x": 128,
+    "y": 16,
+    "width": 16,
+    "height": 32
+  },
+  "lanter": {
+    "x": 144,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "sprite_10_1": {
+    "x": 160,
+    "y": 16,
+    "width": 16,
+    "height": 16
+  },
+  "ground": {
+    "x": 192,
+    "y": 192,
+    "width": 16,
+    "height": 16
+  },
+  "ground_0": {
+    "x": 144,
+    "y": 208,
+    "width": 16,
+    "height": 16
+  },
+  "ground_1": {
+    "x": 128,
+    "y": 192,
+    "width": 16,
+    "height": 16
+  },
+  "ground_2": {
+    "x": 144,
+    "y": 192,
+    "width": 16,
+    "height": 16
+  },
+  "ground_3": {
+    "x": 176,
+    "y": 192,
+    "width": 16,
+    "height": 16
+  },
+  "ground_4": {
+    "x": 160,
+    "y": 192,
+    "width": 16,
+    "height": 16
+  },
+  "ground_5": {
+    "x": 176,
+    "y": 240,
+    "width": 16,
+    "height": 16
+  },
+  "ground_6": {
+    "x": 128,
+    "y": 240,
+    "width": 16,
+    "height": 16
+  },
+  "groung_7": {
+    "x": 144,
+    "y": 240,
+    "width": 16,
+    "height": 16
+  },
+  "ground_8": {
+    "x": 160,
+    "y": 240,
+    "width": 16,
+    "height": 16
+  },
+  "ground_9": {
+    "x": 176,
+    "y": 224,
+    "width": 16,
+    "height": 16
+  },
+  "ground_10": {
+    "x": 128,
+    "y": 224,
+    "width": 16,
+    "height": 16
+  },
+  "ground_11": {
+    "x": 128,
+    "y": 208,
+    "width": 16,
+    "height": 16
+  },
+  "ground_12": {
+    "x": 176,
+    "y": 208,
+    "width": 16,
+    "height": 16
+  }
+}

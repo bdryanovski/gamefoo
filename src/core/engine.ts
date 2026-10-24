@@ -1,3 +1,4 @@
+import type { DeltaTime } from '@/generic_types';
 import type { SubSystem } from '../subsystems/types';
 import type { LoopDriver } from './renderer/loops/loop';
 import { RAFLoopDriver } from './renderer/loops/loop';
@@ -23,8 +24,7 @@ interface EngineConfig {
    * The colour used to clear the screen at the start of each frame.
    *
    * Accepts any CSS colour string — hex (`#rrggbb`), `rgb()`, `hsl()`,
-   * or named colours. On terminal renderers the colour is converted to the
-   * nearest ANSI truecolour background.
+   * or named colours.
    *
    * @defaultValue `"#000000"`
    */
@@ -35,8 +35,6 @@ interface EngineConfig {
    *
    * - **Browser**: leave unset to use {@link RAFLoopDriver}
    *   (`requestAnimationFrame`).
-   * - **Terminal / Bun**: pass `new IntervalLoopDriver(30)` for a
-   *   `setInterval`-based 30 FPS loop.
    *
    * @defaultValue `new RAFLoopDriver()`
    *
@@ -51,7 +49,6 @@ interface EngineConfig {
  *
  * `Engine` is renderer-agnostic. Pass any {@link RenderContext} —
  * {@link WebRenderer} for browser canvas output, or
- * {@link TerminalRenderContext} for ANSI terminal output.
  *
  * ---
  *
@@ -67,8 +64,6 @@ interface EngineConfig {
  * Engine.render(ctx)                (override hook)
  *   ↓
  * preRender → render → postRender   (all registered subsystems)
- *   ↓
- * ctx.flush()                       (terminal dirty-cell flush; no-op on canvas)
  * ```
  *
  * ---
@@ -86,19 +81,6 @@ interface EngineConfig {
  *
  * engine.setup(() => console.log("Game started!"));
  * ```
- *
- * ### Terminal usage (Bun)
- *
- * ```ts
- * import { Engine, IntervalLoopDriver, TerminalRenderContext } from "gamefoo";
- *
- * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
- * const engine   = new Engine(renderer, {
- *   loopDriver: new IntervalLoopDriver(30),
- * });
- * engine.setup();
- * ```
- *
  * ### Subclassing
  *
  * ```ts
@@ -117,10 +99,9 @@ interface EngineConfig {
  * @since 0.1.0
  *
  * @see {@link WebRenderer}          — canvas adapter
- * @see {@link TerminalRenderContext} — ANSI terminal adapter
  * @see {@link SubSystem}            — subsystem interface
  * @see {@link RAFLoopDriver}        — default browser loop
- * @see {@link IntervalLoopDriver}   — terminal / server loop
+ * @see {@link IntervalLoopDriver}   — server loop
  */
 export default class Engine {
   /**
@@ -152,6 +133,13 @@ export default class Engine {
    * Read from the renderer's `height` property at construction time.
    */
   private height: number;
+
+  /**
+   * Curent game enegine game scale
+   *
+   * @since 0.5.0
+   */
+  readonly gameScale: number;
 
   /**
    * Guards against calling {@link Engine.setup} more than once.
@@ -205,14 +193,6 @@ export default class Engine {
    * const renderer = new WebRenderer("game-canvas", 800, 600);
    * const engine   = new Engine(renderer, { backgroundColor: "#1a1a2e" });
    * ```
-   *
-   * @example Terminal
-   * ```ts
-   * const renderer = new TerminalRenderContext({ cols: 80, rows: 24 });
-   * const engine   = new Engine(renderer, {
-   *   loopDriver: new IntervalLoopDriver(30),
-   * });
-   * ```
    */
   constructor(renderer: RenderContext, config: EngineConfig = {}) {
     this.ctx = renderer;
@@ -220,6 +200,7 @@ export default class Engine {
     this.width = renderer.width;
     this.height = renderer.height;
     this.loopDriver = config.loopDriver ?? new RAFLoopDriver();
+    this.gameScale = renderer.readGameScale();
   }
 
   /**
@@ -244,6 +225,23 @@ export default class Engine {
   }
 
   /**
+   * The render context used by this engine.
+   *
+   * Provides access to the underlying renderer for subsystems that need
+   * to query canvas properties or perform custom rendering.
+   *
+   * @since 0.5.0
+   *
+   * @example
+   * ```ts
+   * const canvas = engine.renderer.getCanvas?.()?.canvas;
+   * ```
+   */
+  get renderer(): RenderContext {
+    return this.ctx;
+  }
+
+  /**
    * Attaches a subsystem to the engine and calls its `init` hook.
    *
    * Subsystems are sorted by their `order` property (lower = earlier).
@@ -265,9 +263,25 @@ export default class Engine {
    */
   use(subsystem: SubSystem): this {
     this.subsystems.push(subsystem);
-    this.subsystems.sort((a, b) => (a.order || 100) - (b.order || 100));
+    this.subsystems.sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
     subsystem.init?.(this);
     return this;
+  }
+
+  /**
+   * Return the reigstered subsyste, by given id: string or undefined
+   *
+   * useful inside {@link Subsystem.init} or anywhere a system must find a peer
+   * Example: `engine.get('audio')` without threading references. Subsystems
+   * must not share an ID we find only the first match.
+   *
+   * @param subsystemId - the `Subsystem.id` to find
+   * @return The subsystem, or undefined when no such id is registered
+   *
+   * @since 0.5.0
+   */
+  get<T extends SubSystem>(subsystemId: string): T | undefined {
+    return this.subsystems.find((system) => system.id === subsystemId) as T | undefined;
   }
 
   /**
@@ -279,9 +293,11 @@ export default class Engine {
    *
    * @internal
    */
-  private run<K extends keyof SubSystem>(hook: K, ...args: any[]): void {
+  private run<K extends keyof SubSystem>(hook: K, ...args: unknown[]): void {
     for (const subsystem of this.subsystems) {
-      if (subsystem.enabled === false) continue;
+      if (subsystem.enabled === false) {
+        continue;
+      }
       const fun = subsystem[hook];
       if (typeof fun === 'function') {
         // @ts-expect-error
@@ -293,22 +309,10 @@ export default class Engine {
   /**
    * Updates the engine's logical dimensions.
    *
-   * Call this after a terminal resize event (or canvas resize) to keep
-   * subsystems that depend on `engine.dementions` consistent.
-   *
    * @param width  - New logical width in renderer units.
    * @param height - New logical height in renderer units.
    *
    * @since 0.4.0
-   *
-   * @example
-   * ```ts
-   * process.stdout.on("resize", () => {
-   *   const { cols, rows } = getTerminalSize();
-   *   renderer.resize(cols, rows);
-   *   engine.resize(renderer.width, renderer.height);
-   * });
-   * ```
    */
   resize(width: number, height: number): void {
     this.width = width;
@@ -326,8 +330,10 @@ export default class Engine {
    *
    * @internal
    */
-  private tick(deltaTime: number): void {
-    if (!this.running) return;
+  private tick(deltaTime: DeltaTime): void {
+    if (!this.running) {
+      return;
+    }
 
     this.run('preUpdate', deltaTime);
     this.run('update', deltaTime);
@@ -342,9 +348,6 @@ export default class Engine {
     this.run('preRender', this.ctx);
     this.run('render', this.ctx);
     this.run('postRender', this.ctx);
-
-    // Flush buffered output (terminal dirty-cell diff; no-op on canvas).
-    this.ctx.flush?.();
   }
 
   /**
@@ -376,7 +379,7 @@ export default class Engine {
    * });
    * ```
    */
-  public async setup(setupFn?: () => void) {
+  async setup(setupFn?: () => void | Promise<void>): Promise<void> {
     if (this._initialized) {
       console.warn('Engine is already initialized.');
       return;
@@ -386,7 +389,7 @@ export default class Engine {
     this.clearScrean();
 
     if (typeof setupFn === 'function') {
-      setupFn();
+      await setupFn.bind(this)();
     }
 
     this._initialized = true;
@@ -415,7 +418,7 @@ export default class Engine {
    * }
    * ```
    */
-  public update(_deltaTime: number) {}
+  update(_deltaTime: number): void {}
 
   /**
    * Override hook called once per frame **after** `clearScrean()` and
@@ -437,7 +440,7 @@ export default class Engine {
    * }
    * ```
    */
-  public render(_ctx: RenderContext) {}
+  render(_ctx: RenderContext): void {}
 
   /**
    * Pauses the frame loop.
@@ -454,7 +457,7 @@ export default class Engine {
    * });
    * ```
    */
-  public pause() {
+  pause(): void {
     this.running = false;
     this.loopDriver.stop();
   }
@@ -473,7 +476,7 @@ export default class Engine {
    * engine.clearScrean();
    * ```
    */
-  public clearScrean() {
+  clearScrean(): void {
     this.ctx.clear(this.cnf.backgroundColor ?? '#000000');
   }
 
@@ -491,10 +494,10 @@ export default class Engine {
    * engine.destroy();
    * ```
    */
-  public destroy() {
+  destroy(): void {
     this.pause();
-    for (let i = this.subsystems.length - 1; i >= 0; i--) {
-      this.subsystems[i]?.destroy?.();
+    for (let index = this.subsystems.length - 1; index >= 0; index -= 1) {
+      this.subsystems[index]?.destroy?.();
     }
   }
 }

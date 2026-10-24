@@ -1,0 +1,5 @@
+{
+  "title": "Endless World",
+  "description": "Camera & viewport stress-test in a 4000x4000 world with Perlin terrain, trees, rocks, ponds, and critters.",
+  "tags": ["camera", "perlin noise", "large world", "minimap"]
+}

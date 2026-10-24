@@ -1,6 +1,13 @@
-import { Entity, type Input } from "../../src";
-import type { RenderContext } from "../../src/core/renderer/type";
-import { DASH_COOLDOWN, DASH_DURATION, DASH_SPEED, MAP_COLS, MAP_ROWS, TILE_SIZE } from "./constants";
+import { Entity, type Input } from '../../src';
+import type { RenderContext } from '../../src/core/renderer/type';
+import {
+  DASH_COOLDOWN,
+  DASH_DURATION,
+  DASH_SPEED,
+  MAP_COLS,
+  MAP_ROWS,
+  TILE_SIZE,
+} from './constants';
 
 export class DungenPlayer extends Entity {
   private input: Input;
@@ -22,7 +29,7 @@ export class DungenPlayer extends Entity {
   private dashing = false;
 
   constructor(x: number, y: number, input: Input, wallMap: boolean[][]) {
-    super("player", x, y, TILE_SIZE, TILE_SIZE);
+    super('player', x, y, TILE_SIZE, TILE_SIZE);
     this.input = input;
     this.wallMap = wallMap;
   }
@@ -34,10 +41,10 @@ export class DungenPlayer extends Entity {
 
     if (this.attackTimer > 0) {
       this.attackTimer -= deltaTime;
-      if (this.attackTimer <= 0) this.attacking = false;
+      if (this.attackTimer <= 0) {this.attacking = false;}
     }
 
-    if (this.input.isKeyDown(" ") && !this.attacking) {
+    if (this.input.isKeyDown(' ') && !this.attacking) {
       this.attacking = true;
       this.attackTimer = 0.2;
     }
@@ -45,10 +52,10 @@ export class DungenPlayer extends Entity {
     let dx = 0;
     let dy = 0;
 
-    if (this.input.isKeyDown("w") || this.input.isKeyDown("ArrowUp")) dy = -1;
-    if (this.input.isKeyDown("s") || this.input.isKeyDown("ArrowDown")) dy = 1;
-    if (this.input.isKeyDown("a") || this.input.isKeyDown("ArrowLeft")) dx = -1;
-    if (this.input.isKeyDown("d") || this.input.isKeyDown("ArrowRight")) dx = 1;
+    if (this.input.isKeyDown('w') || this.input.isKeyDown('ArrowUp')) {dy = -1;}
+    if (this.input.isKeyDown('s') || this.input.isKeyDown('ArrowDown')) {dy = 1;}
+    if (this.input.isKeyDown('a') || this.input.isKeyDown('ArrowLeft')) {dx = -1;}
+    if (this.input.isKeyDown('d') || this.input.isKeyDown('ArrowRight')) {dx = 1;}
 
     if (dx !== 0 && dy !== 0) {
       const diag = 1 / Math.sqrt(2);
@@ -64,7 +71,12 @@ export class DungenPlayer extends Entity {
       this.dashCooldown -= deltaTime;
     }
 
-    if (this.input.isKeyDown("x") && this.dashCooldown <= 0 && (dx !== 0 || dy !== 0) && !this.dashing) {
+    if (
+      this.input.isKeyDown('x') &&
+      this.dashCooldown <= 0 &&
+      (dx !== 0 || dy !== 0) &&
+      !this.dashing
+    ) {
       this.dashing = true;
       this.dashTimer = DASH_DURATION;
       this.dashCooldown = DASH_COOLDOWN;
@@ -72,7 +84,7 @@ export class DungenPlayer extends Entity {
 
     if (this.dashing) {
       this.dashTimer -= deltaTime;
-      if (this.dashTimer <= 0) this.dashing = false;
+      if (this.dashTimer <= 0) {this.dashing = false;}
     }
 
     const currentSpeed = this.dashing ? DASH_SPEED : this.speed;
@@ -92,10 +104,10 @@ export class DungenPlayer extends Entity {
     if (this.invincibleTimer > 0 && Math.floor(this.invincibleTimer * 10) % 2 === 0) {
       return;
     }
-    const c = ctx.getCanvas!()!
+    const c = ctx.getCanvas!()!;
 
     if (this.dashing) {
-      c.fillStyle = "rgba(127, 219, 202, 0.3)";
+      c.fillStyle = 'rgba(127, 219, 202, 0.3)';
       c.fillRect(
         this.x - this.facing.x * TILE_SIZE * 0.5,
         this.y - this.facing.y * TILE_SIZE * 0.5,
@@ -104,12 +116,12 @@ export class DungenPlayer extends Entity {
       );
     }
 
-    c.fillStyle = this.dashing ? "#ffffff" : "#7fdbca";
+    c.fillStyle = this.dashing ? '#ffffff' : '#7fdbca';
     c.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
 
     if (this.attacking) {
       const box = this.getAttackBox();
-      c.fillStyle = "rgba(255, 255, 100, 0.6)";
+      c.fillStyle = 'rgba(255, 255, 100, 0.6)';
       c.fillRect(box.x, box.y, box.w, box.h);
     }
   }
@@ -122,8 +134,8 @@ export class DungenPlayer extends Entity {
 
     for (let row = top; row <= bottom; row++) {
       for (let col = left; col <= right; col++) {
-        if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) return true;
-        if (this.wallMap[row]?.[col]) return true;
+        if (row < 0 || row >= MAP_ROWS || col < 0 || col >= MAP_COLS) {return true;}
+        if (this.wallMap[row]?.[col]) {return true;}
       }
     }
     return false;
@@ -140,7 +152,7 @@ export class DungenPlayer extends Entity {
   }
 
   takeDamage() {
-    if (this.invincibleTimer > 0 || this.dashing) return;
+    if (this.invincibleTimer > 0 || this.dashing) {return;}
     this.hp -= 1;
     this.invincibleTimer = 1.0;
   }

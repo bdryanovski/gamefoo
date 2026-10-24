@@ -2,7 +2,7 @@ import type { EnhancedCameraConfig } from '../core/enhanced_camera';
 import { EnhancedCamera } from '../core/enhanced_camera';
 import type { IsometricProjection } from '../core/grid/isometric';
 import type { RenderContext } from '../core/renderer/type';
-import type { Vector2 } from '../generic_types';
+import type { DeltaTime, Vector2 } from '../generic_types';
 import type { SubSystem } from './types';
 
 /**
@@ -43,7 +43,9 @@ import type { SubSystem } from './types';
  * ```
  */
 export class CameraSystem implements SubSystem {
-  /** Subsystem identifier. */
+  /**
+   * Subsystem identifier.
+   */
   id = 'camera';
 
   /**
@@ -52,7 +54,9 @@ export class CameraSystem implements SubSystem {
    */
   order = 10;
 
-  /** The underlying enhanced camera. Exposed for external consumers. */
+  /**
+   * The underlying enhanced camera. Exposed for external consumers.
+   */
   camera: EnhancedCamera;
 
   /**
@@ -61,7 +65,9 @@ export class CameraSystem implements SubSystem {
    */
   projection: IsometricProjection | null;
 
-  /** Target position supplier. Returns `null` for free camera. */
+  /**
+   * Target position supplier. Returns `null` for free camera.
+   */
   private target: () => Vector2 | null;
 
   /**
@@ -102,7 +108,7 @@ export class CameraSystem implements SubSystem {
    *
    * @param deltaTime - Seconds since the last frame.
    */
-  update(deltaTime: number): void {
+  update(deltaTime: DeltaTime): void {
     const t = this.target();
     if (t) {
       this.camera.smoothFollow(t, deltaTime);
@@ -125,7 +131,9 @@ export class CameraSystem implements SubSystem {
     ctx.translate(-view.x, -view.y);
     if (this.camera.zoom !== 1) {
       const raw = ctx.getCanvas?.();
-      if (raw) raw.imageSmoothingEnabled = false;
+      if (raw) {
+        raw.imageSmoothingEnabled = false;
+      }
     }
   }
 

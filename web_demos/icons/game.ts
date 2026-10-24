@@ -1,4 +1,4 @@
-import type { RenderContext } from "../../src/core/renderer/type";
+import type { RenderContext } from '../../src/core/renderer/type';
 import {
   Engine,
   Entity,
@@ -7,14 +7,14 @@ import {
   ObjectSystem,
   type Vector2,
   WebRenderer,
-} from "../../src/index";
+} from '../../src/index';
 
 const CANVAS_W = 800;
 const CANVAS_H = 600;
 
-const renderer = new WebRenderer("game", CANVAS_W, CANVAS_H);
+const renderer = new WebRenderer('game', CANVAS_W, CANVAS_H);
 const engine = new Engine(renderer, {
-  backgroundColor: "#000000",
+  backgroundColor: '#000000',
   gameScale: 1,
 });
 
@@ -22,7 +22,7 @@ class KeyboardLayoutText extends Entity {
   private icon: IconBitmap;
 
   constructor(iconName: InternalBitmapIconName, position: Vector2) {
-    super("KeyboardLayoutText" + iconName, position.x, position.y, 0, 0);
+    super(`KeyboardLayoutText${  iconName}`, position.x, position.y, 0, 0);
     this.x = position.x;
     this.y = position.y;
 
@@ -35,15 +35,15 @@ class KeyboardLayoutText extends Entity {
   }
 
   override render(ctx: RenderContext): void {
-    const c = ctx.getCanvas!()!
-    c.fillStyle = "#ffffff";
-    const chars = this.icon.metadata?.keys || "";
+    const c = ctx.getCanvas!()!;
+    c.fillStyle = '#ffffff';
+    const chars = this.icon.metadata?.keys || '';
     const charsPerRow = 10;
     const charWidth = this.icon.width + 5;
     const charHeight = this.icon.height + 5;
 
     for (let i = 0; i < chars.length; i++) {
-      const icon = chars[i] ?? "";
+      const icon = chars[i] ?? '';
       const row = Math.floor(i / charsPerRow);
       const col = i % charsPerRow;
       const x = this.x + col * charWidth;
@@ -55,8 +55,8 @@ class KeyboardLayoutText extends Entity {
 
 engine.use(
   new ObjectSystem([
-    new KeyboardLayoutText("icons_8x8", { x: 10, y: 10 }),
-    new KeyboardLayoutText("icons_16x16", { x: 10, y: 200 }),
+    new KeyboardLayoutText('icons_8x8', { x: 10, y: 10 }),
+    new KeyboardLayoutText('icons_16x16', { x: 10, y: 200 }),
     // new KeyboardLayoutText("icons_32x32", { x: 10, y: 300 }),
   ]),
 );

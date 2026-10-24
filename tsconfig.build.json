@@ -8,16 +8,6 @@
     "emitDeclarationOnly": false,
     "outDir": "dist"
   },
-  "include": [
-    "src/index.ts",
-    "src/core/**/*.ts",
-    "src/entities/**/*.ts",
-    "src/types.ts"
-  ],
-  "exclude": [
-    "demo",
-    "node_modules",
-    "dist",
-    "tests"
-  ]
+  "include": ["src/index.ts", "src/core/**/*.ts", "src/entities/**/*.ts", "src/types.ts"],
+  "exclude": ["demo", "node_modules", "dist", "tests"]
 }

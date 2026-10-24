@@ -1,0 +1,5 @@
+{
+  "title": "Basic Demo",
+  "description": "Player movement, collision detection, health system, and a wandering blob enemy. The original engine test.",
+  "tags": ["player", "collision", "health", "behaviours"]
+}

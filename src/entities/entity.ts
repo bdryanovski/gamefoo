@@ -1,6 +1,6 @@
 import type { Behaviour } from '../core/behaviour';
 import type { RenderContext } from '../core/renderer/type';
-import type { Demension, Vector2 } from '../generic_types';
+import ShaderHost from '../core/shaders/shader_host';
 
 /**
  * Abstract base class for every game entity in the GameFoo engine.
@@ -12,6 +12,8 @@ import type { Demension, Vector2 } from '../generic_types';
  *   {@link Entity.size | size} with convenient `x`/`y` accessors.
  * - **Behaviour system** — attach, detach, query, and bulk-update
  *   {@link Behaviour} instances that compose an entity's logic.
+ * - **Screen effects** — the keyed shader API and the `under`/over render
+ *   sandwich inherited from {@link ShaderHost}.
  *
  * Subclasses must implement {@link Entity.update} and
  * {@link Entity.render}.
@@ -50,25 +52,16 @@ import type { Demension, Vector2 } from '../generic_types';
  * @see {@link DynamicEntity} — extends Entity with velocity / speed
  * @see {@link Player}        — concrete player entity
  * @see {@link Behaviour}     — composable logic units
+ * @see {@link ShaderHost}    — the position + shader base Entity builds on
  */
-export default abstract class Entity {
+export default abstract class Entity extends ShaderHost {
   /**
    * Unique identifier for this entity.
    *
    * Used as the key in {@link GameObjectRegister} and for
    * collision-callback identification.
    */
-  public id: string = '';
-
-  /**
-   * World-space position of the entity's origin (top-left corner).
-   */
-  protected readonly position: Vector2 = { x: 0, y: 0 };
-
-  /**
-   * Bounding dimensions of the entity in pixels.
-   */
-  protected readonly size: Demension = { width: 0, height: 0 };
+  id: string = '';
 
   /**
    * Internal map from behaviour key (lowercased type) to
@@ -81,32 +74,6 @@ export default abstract class Entity {
    * a behaviour is attached or detached.
    */
   private _sortedBehaviors: Behaviour[] | null = null;
-
-  /**
-   * Horizontal position of the entity (shorthand for
-   * `position.x`).
-   */
-  get x(): number {
-    return this.position.x;
-  }
-
-  /** Sets the horizontal position. */
-  set x(value: number) {
-    this.position.x = value;
-  }
-
-  /**
-   * Vertical position of the entity (shorthand for
-   * `position.y`).
-   */
-  get y(): number {
-    return this.position.y;
-  }
-
-  /** Sets the vertical position. */
-  set y(value: number) {
-    this.position.y = value;
-  }
 
   /**
    * Creates a new entity.
@@ -127,63 +94,9 @@ export default abstract class Entity {
    * }
    * ```
    */
-  constructor(
-    id: string,
-    x: number,
-    y: number,
-    width?: number,
-    height?: number,
-  ) {
+  constructor(id: string, x: number, y: number, width?: number, height?: number) {
+    super({ x, y }, { width: width ?? 0, height: height ?? 0 });
     this.id = id;
-    this.position = { x, y };
-
-    if (width && height) {
-      this.size = { width, height };
-    }
-  }
-
-  /**
-   * Advances the entity's state by one frame.
-   *
-   * @param deltaTime - Seconds elapsed since the previous frame.
-   */
-  abstract update(deltaTime: number): void;
-
-  /**
-   * Draws the entity .
-   *
-   * @param ctx - The 2-D rendering context.
-   */
-  abstract render(ctx: RenderContext): void;
-
-  /**
-   * Returns a **copy** of the entity's current position.
-   *
-   * @returns A new {@link Vector2} with the entity's `x` and `y`.
-   */
-  getPosition(): Vector2 {
-    return this.position;
-  }
-
-  /**
-   * Returns a **copy** of the entity's bounding dimensions.
-   *
-   * @returns An object with `width` and `height`.
-   */
-  getSize(): Demension {
-    return this.size;
-  }
-
-  /**
-   * Set size of the entity
-   *
-   * @since 0.2.0
-   *
-   * @return void
-   */
-  protected setSize(width: number, height: number): void {
-    this.size.width = width;
-    this.size.height = height;
   }
 
   /**
@@ -216,9 +129,7 @@ export default abstract class Entity {
    * const renderers = entity.getBehavioursByType(SpriteRender);
    * ```
    */
-  getBehavioursByType<T extends Behaviour>(
-    type: new (...args: any[]) => T,
-  ): T[] {
+  getBehavioursByType<T extends Behaviour>(type: new (...args: never[]) => T): T[] {
     return this.behaviors.filter((b) => b instanceof type) as T[];
   }
 
@@ -274,7 +185,9 @@ export default abstract class Entity {
    */
   detachBehaviour(key: string): void {
     const behavior = this.behaviorMap.get(key.toLowerCase());
-    if (!behavior) return;
+    if (!behavior) {
+      return;
+    }
 
     if (behavior.onDetach) {
       behavior.onDetach();
@@ -291,11 +204,9 @@ export default abstract class Entity {
    * @internal
    */
   private get behaviors(): Behaviour[] {
-    if (!this._sortedBehaviors) {
-      this._sortedBehaviors = Array.from(this.behaviorMap.values()).sort(
-        (a, b) => a.priority - b.priority,
-      );
-    }
+    this._sortedBehaviors ??= Array.from(this.behaviorMap.values()).sort(
+      (a, b) => a.priority - b.priority,
+    );
     return this._sortedBehaviors;
   }
 
