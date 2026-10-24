@@ -30,11 +30,11 @@ export { default as Camera } from './core/camera';
  * @since 0.5.0
  */
 export * from './core/consoles';
-// ── Controls ────────────────────────────────────────────────────────
+// ── Input ───────────────────────────────────────────────────────────
 /**
  * @since 0.5.0
  */
-export * from './core/controls';
+export * from './input';
 // ── Audio ───────────────────────────────────────────────────────────
 /**
  * @since 0.5.0
@@ -97,7 +97,6 @@ export type { IsoConfig, IsoLayout, VisibleRange } from './core/grid/isometric_t
 // ── Icons ───────────────────────────────────────────────────────────
 export type { InternalBitmapIconName } from './core/icons/icon_bitmap';
 export { default as IconBitmap } from './core/icons/icon_bitmap';
-export { default as Input } from './core/input';
 // ── Palettes ────────────────────────────────────────────────────────
 /**
  * @since 0.5.0
@@ -240,7 +239,7 @@ export type {
 export { CameraSystem } from './subsystems/camera_system';
 // ── Subsystems ──────────────────────────────────────────────────────
 export { InteractionSystem } from './subsystems/interaction_system';
-export type { InteractionSystemConfig } from './subsystems/interaction_system';
+export type { InteractionInput, InteractionSystemConfig } from './subsystems/interaction_system';
 export { MapSystem } from './subsystems/map_system';
 export type { MapSystemConfig } from './subsystems/map_system';
 export { CollisionSystem } from './subsystems/collision_system';

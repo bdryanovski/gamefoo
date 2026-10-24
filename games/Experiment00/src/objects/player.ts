@@ -1,5 +1,5 @@
 import type { DeltaTime } from '../../../../src/generic_types';
-import type { AssetManager, Input, Vector2 } from '../../../../src/index';
+import type { AssetManager, InputSystem, Vector2 } from '../../../../src/index';
 import {
   type CollisionMap,
   FootstepTrailShader,
@@ -27,7 +27,7 @@ export interface PlayerSpawn {
 
 /**
  * The playable character, bound to the "player" object and driven by its
- * exported state machine. The class turns keyboard input into movement,
+ * exported state machine. The class turns mapped movement actions into movement,
  * resolves collisions against solid {@link MapObject.colliders}, and drives
  * the FSM so the animation matches direction + moving/idle state.
  *
@@ -42,11 +42,11 @@ export interface PlayerSpawn {
 export class Player extends MapObject {
   static override readonly type = 'me';
 
-  private readonly input: Input;
+  private readonly input: InputSystem;
   private facing: Facing = 'down';
   private moving = false;
 
-  constructor(ctx: MapObjectContext, input: Input) {
+  constructor(ctx: MapObjectContext, input: InputSystem) {
     super(ctx);
     this.input = input;
   }
@@ -61,7 +61,7 @@ export class Player extends MapObject {
    * plays `Idle`, so no `startStateId` is needed here.
    *
    * @param assets - Catalog holding the prefab and resolving its frames.
-   * @param input - Keyboard source driving movement.
+   * @param input - Action source driving movement.
    * @param spawn - Screen box to centre in, plus the z-level to draw at.
    * @param services - The shared services bag (the game context).
    * @returns The player, or `null` when the prefab is missing from `assets`.
@@ -74,7 +74,7 @@ export class Player extends MapObject {
    */
   static spawn(
     assets: AssetManager,
-    input: Input,
+    input: InputSystem,
     spawn: PlayerSpawn,
     services: object,
   ): Player | null {
@@ -194,23 +194,9 @@ export class Player extends MapObject {
     return !collision.isWalkable(foot.x, foot.y);
   }
 
-  /** Reads the current movement intent from the keyboard, `-1..1` per axis. */
+  /** Reads the current movement intent from the active scheme, `-1..1` per axis. */
   private readInput(): { x: number; y: number } {
-    let x = 0;
-    let y = 0;
-    if (this.input.isKeyDown('a') || this.input.isKeyDown('arrowleft')) {
-      x -= 1;
-    }
-    if (this.input.isKeyDown('d') || this.input.isKeyDown('arrowright')) {
-      x += 1;
-    }
-    if (this.input.isKeyDown('w') || this.input.isKeyDown('arrowup')) {
-      y -= 1;
-    }
-    if (this.input.isKeyDown('s') || this.input.isKeyDown('arrowdown')) {
-      y += 1;
-    }
-    return { x, y };
+    return this.input.getRawDirection();
   }
 
   /** Centre-bottom "foot" point, used for the walkable-ground check. */

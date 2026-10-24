@@ -1,6 +1,7 @@
 import type { Frame, RenderContext, SubSystem } from '../../../../src';
 import type { DeltaTime } from '../../../../src/generic_types';
 import type { GameContext } from '../context';
+import { GAME_ACTION } from '../config/controls';
 import type { Portal } from '../objects/portal';
 import { drawText } from '../text';
 
@@ -28,8 +29,7 @@ export class LockKeypadSystem implements SubSystem {
   }
 
   openFor(portal: Portal): void {
-    this.context.input.consume('e');
-    this.context.input.consume(' ');
+    this.context.input.consume(GAME_ACTION.interact);
     this.ui = { portal, digits: [0, 0, 0, 0], cursor: 0 };
     this.context.flow?.push('lock');
     this.context.telemetry.keypadOpen(portal.id);
@@ -49,15 +49,18 @@ export class LockKeypadSystem implements SubSystem {
     }
 
     const input = this.context.input;
-    if (input.isKeyPressed('arrowup') || input.isKeyPressed('w')) {
+    if (input.isActionPressed(GAME_ACTION.up)) {
       this.spin(1);
-    } else if (input.isKeyPressed('arrowdown') || input.isKeyPressed('s')) {
+    } else if (input.isActionPressed(GAME_ACTION.down)) {
       this.spin(-1);
-    } else if (input.isKeyPressed('arrowleft') || input.isKeyPressed('a')) {
+    } else if (input.isActionPressed(GAME_ACTION.left)) {
       this.moveCursor(-1);
-    } else if (input.isKeyPressed('arrowright') || input.isKeyPressed('d')) {
+    } else if (input.isActionPressed(GAME_ACTION.right)) {
       this.moveCursor(1);
-    } else if (input.isKeyPressed('escape') || input.isKeyPressed('e')) {
+    } else if (
+      input.isActionPressed(GAME_ACTION.inventory) ||
+      input.isActionPressed(GAME_ACTION.interact)
+    ) {
       this.context.telemetry.keypadDismissed(this.ui.portal.id);
       this.close();
     }

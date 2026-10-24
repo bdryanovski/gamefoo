@@ -8,7 +8,7 @@
  * saw it — pressing E on the splash screen did nothing.
  */
 import { describe, expect, test } from 'vite-plus/test';
-import { Engine, Input } from '../src/index';
+import { Engine, Input, InputSystem, NES_CONTROLS } from '../src/index';
 import type { LoopDriver } from '../src/core/renderer/loops/loop';
 import type { RenderContext } from '../src/core/renderer/type';
 import type { SubSystem } from '../src/subsystems/types';
@@ -69,6 +69,43 @@ describe('Input as an Engine subsystem', () => {
 
       for (const handler of handlers.keydown ?? []) {
         handler({ key: 'e' });
+      }
+      tick?.(0.016);
+
+      expect(seen).toEqual([true]);
+    } finally {
+      (globalThis as { window?: unknown }).window = savedWindow;
+    }
+  });
+
+  test('InputSystem updates actions before later systems in the same frame', async () => {
+    const savedWindow = (globalThis as { window?: unknown }).window;
+    const { win, handlers } = stubbedWindow();
+    (globalThis as { window?: unknown }).window = win;
+
+    try {
+      let tick: ((dt: number) => void) | undefined;
+      const driver: LoopDriver = {
+        start: (cb) => {
+          tick = cb;
+        },
+        stop: () => {},
+      };
+      const engine = new Engine(makeCtx(), { loopDriver: driver });
+      const input = new InputSystem({ scheme: NES_CONTROLS });
+      const seen: boolean[] = [];
+      const probe: SubSystem = {
+        id: 'probe',
+        order: 50,
+        update: () => {
+          seen.push(input.isActionPressed('A'));
+        },
+      };
+      engine.use(input).use(probe);
+      await engine.setup();
+
+      for (const handler of handlers.keydown ?? []) {
+        handler({ key: 'x' });
       }
       tick?.(0.016);
 

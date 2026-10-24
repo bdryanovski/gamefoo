@@ -157,7 +157,7 @@ export async function boot(context: GameContext, engine: Engine): Promise<void> 
   // 9. The persistent player — the one game-owned object.
   world?.spawnPlayer();
 
-  // 10. Everything loaded — the splash flips to "Press E to start".
+  // 10. Everything loaded — the splash flips to the start prompt.
   context.splash?.markReady();
   context.telemetry.gameLoaded(performance.now() - loadStart);
 }

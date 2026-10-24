@@ -1,9 +1,24 @@
-import type Input from '../core/input';
 import type MapObject from '../core/map/map_object';
 import { InteractableBehaviour, type InteractionActor } from '../core/map/interactable_behaviour';
 import { OutlineShader } from '../core/shaders/outline_shader';
 import type { SubSystem } from './types';
 import type { DeltaTime } from '@/generic_types';
+
+/**
+ * Input source accepted by {@link InteractionSystem}.
+ *
+ * A raw `Input` provides key edges; an `InputSystem` provides action edges.
+ *
+ * @category SubSystems
+ */
+export interface InteractionInput {
+  /** Edge query for action-based input. */
+  isActionPressed?(action: string): boolean;
+  /** Edge query for raw keyboard input. */
+  isKeyPressed?(key: string): boolean;
+  /** Clears a press edge for raw keys or actions. */
+  consume(value: string): void;
+}
 
 /**
  * Configuration for {@link InteractionSystem}.
@@ -15,14 +30,20 @@ export interface InteractionSystemConfig {
   actor: () => InteractionActor | null;
   /** The live objects to scan each frame (e.g. the active screen's). */
   objects: () => Iterable<MapObject>;
-  /** Keyboard source (edge-triggered presses). */
-  input: Input;
+  /** Input source (edge-triggered presses). */
+  input: InteractionInput;
+  /**
+   * Action that triggers an interaction. Takes precedence over `keys`.
+   *
+   * @example `'PRIMARY'`
+   */
+  action?: string;
   /** Services handed to {@link InteractableBehaviour.interact}. */
   services?: object;
   /** Optional gate (e.g. freeze while a modal is up). */
   isActive?: () => boolean;
   /**
-   * Keys that trigger an interaction.
+   * Keys that trigger an interaction when `action` is not set.
    *
    * @defaultValue `['e', ' ']`
    */
@@ -32,10 +53,11 @@ export interface InteractionSystemConfig {
 }
 
 /**
- * The E key, generalized: every frame it outlines exactly the interactables in
- * reach (so the player sees what E would act on), and on a press edge it acts
- * on the best one — highest {@link InteractableBehaviour.interactPriority}
- * first, and the first whose `interact` accepts.
+ * The interaction action, generalized: every frame it outlines exactly the
+ * interactables in reach (so the player sees what the action would target),
+ * and on a press edge it acts on the best one — highest
+ * {@link InteractableBehaviour.interactPriority} first, and the first whose
+ * `interact` accepts.
  *
  * Highlight and action share one predicate per object, so they can never
  * disagree. Any object carrying an {@link InteractableBehaviour} participates;
@@ -50,6 +72,7 @@ export interface InteractionSystemConfig {
  *   actor: () => ctx.player ?? null,
  *   objects: () => ctx.world?.objects() ?? [],
  *   input: ctx.input,
+ *   action: 'PRIMARY',
  *   services: ctx,
  *   isActive: () => ctx.flow?.worldActive ?? false,
  * }));
@@ -62,10 +85,12 @@ export class InteractionSystem implements SubSystem {
   order = 40;
 
   private readonly config: InteractionSystemConfig;
+  private readonly action: string | undefined;
   private readonly keys: readonly string[];
 
   constructor(config: InteractionSystemConfig) {
     this.config = config;
+    this.action = config.action;
     this.keys = config.keys ?? ['e', ' '];
   }
 
@@ -112,14 +137,21 @@ export class InteractionSystem implements SubSystem {
     return inReach;
   }
 
-  /** Whether any trigger key was just pressed. */
+  /** Whether the configured action or any trigger key was just pressed. */
   private pressed(): boolean {
-    return (this.config.keys ?? ['e', ' ']).some((key) => this.config.input.isKeyPressed(key));
+    if (this.action) {
+      return this.config.input.isActionPressed?.(this.action) ?? false;
+    }
+    return this.keys.some((key) => this.config.input.isKeyPressed?.(key) ?? false);
   }
 
-  /** Eats the press edges so no later system re-handles them. */
+  /** Eats the press edge so no later system re-handles it. */
   private consume(): void {
-    for (const key of this.config.keys ?? ['e', ' ']) {
+    if (this.action) {
+      this.config.input.consume(this.action);
+      return;
+    }
+    for (const key of this.keys) {
       this.config.input.consume(key);
     }
   }

@@ -37,10 +37,11 @@
  */
 
 import type DynamicEntity from '../../entities/dynamic_entity';
+import type Input from '../../input/input';
+import { InputMapper } from '../../input/mapper';
+import { CONTROL_SCHEMES } from '../../input/schemes';
+import type { ControlScheme } from '../../input/schemes/types';
 import { Behaviour } from '../behaviour';
-import { CONTROL_SCHEMES, InputMapper } from '../controls';
-import type { ControlScheme } from '../controls/types';
-import type Input from '../input';
 
 /**
  * Keyboard and gamepad driven movement behaviour.
@@ -59,6 +60,11 @@ export class Control extends Behaviour<DynamicEntity> {
    * @since 0.5.0
    */
   private mapper: InputMapper;
+
+  /**
+   * Input source used to create a new mapper when the scheme changes.
+   */
+  private readonly input: Input;
 
   /**
    * Movement speed in pixels per second.
@@ -90,6 +96,7 @@ export class Control extends Behaviour<DynamicEntity> {
    */
   constructor(owner: DynamicEntity, input: Input, scheme: ControlScheme = CONTROL_SCHEMES.DEFAULT) {
     super(owner);
+    this.input = input;
     this.mapper = new InputMapper(input, scheme);
 
     if (owner?.getSpeed()) {
@@ -160,7 +167,10 @@ export class Control extends Behaviour<DynamicEntity> {
    * ```
    */
   setScheme(scheme: ControlScheme): void {
-    this.mapper = this.mapper.withScheme(scheme);
+    this.mapper = new InputMapper(this.input, scheme, {
+      gamepadIndex: this.mapper.getGamepadIndex(),
+      deadzone: this.mapper.getDeadzone(),
+    });
   }
 
   /**

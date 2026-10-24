@@ -74,8 +74,8 @@ interface PanelLayout {
 
 /**
  * The full-screen, book-like inventory overlay. It is a pure view + a small
- * amount of selection state: the game feeds it key events and draws it on top
- * of everything else. It reads its content live from {@link Inventory},
+ * amount of selection state: the game feeds it key events or actions and draws
+ * it on top of everything else. It reads its content live from {@link Inventory},
  * {@link ItemCatalog}, and {@link Journal}.
  *
  * ### Layout
@@ -86,14 +86,14 @@ interface PanelLayout {
  *
  * ### Input
  *
- * `W`/`S` (or up/down) move the selection, `A`/`D` (or left/right) switch
- * tabs, and **Esc always closes**.
+ * Up/down move the selection, left/right switch tabs, and the inventory action
+ * always closes. Keyboard keys and gamepad actions both resolve to these.
  *
  * @example
  * ```ts
  * const view = new InventoryView({ inventory, journal, items, font, fontScale: 2 });
  * // in the game loop:
- * if (view.isOpen) view.handleKey(event);
+ * if (view.isOpen) view.handleAction('up');
  * view.render(ctx);
  * ```
  */
@@ -162,27 +162,45 @@ export class InventoryView {
    * for callers that poll a key-state API rather than raw events.
    */
   handleKeyName(key: string): boolean {
+    switch (key.toLowerCase()) {
+      case 'escape':
+        return this.handleAction('close');
+      case 'arrowup':
+      case 'w':
+        return this.handleAction('up');
+      case 'arrowdown':
+      case 's':
+        return this.handleAction('down');
+      case 'arrowleft':
+      case 'a':
+        return this.handleAction('left');
+      case 'arrowright':
+      case 'd':
+        return this.handleAction('right');
+      default:
+        return false;
+    }
+  }
+
+  /** Handles a semantic navigation action while the overlay is open. */
+  handleAction(action: 'up' | 'down' | 'left' | 'right' | 'close'): boolean {
     if (!this.open) {
       return false;
     }
-    switch (key.toLowerCase()) {
-      case 'escape':
+    switch (action) {
+      case 'close':
         this.hide();
         return true;
-      case 'arrowup':
-      case 'w':
+      case 'up':
         this.moveSelection(-1);
         return true;
-      case 'arrowdown':
-      case 's':
+      case 'down':
         this.moveSelection(1);
         return true;
-      case 'arrowleft':
-      case 'a':
+      case 'left':
         this.moveTab(-1);
         return true;
-      case 'arrowright':
-      case 'd':
+      case 'right':
         this.moveTab(1);
         return true;
       default:

@@ -54,7 +54,7 @@ The goal is **incremental adoption** that:
 1. **Entity update loop** (`src/entities/*.ts`)
 2. **Rendering pipeline** (`src/core/renderer/*.ts`)
 3. **Collision detection** (`src/core/world.ts`)
-4. **Input handling** (`src/core/input*.ts`)
+4. **Input handling** (`src/input/*.ts`)
 
 **Actions:**
 

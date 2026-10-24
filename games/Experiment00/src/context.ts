@@ -3,7 +3,7 @@ import type {
   DialogDocument,
   DitherFog,
   FontSheet,
-  Input,
+  InputSystem,
   MapObject,
   Screen,
   StateStore,
@@ -44,7 +44,7 @@ export interface WorldRef {
  */
 export interface GameContext {
   // Services — available from construction:
-  readonly input: Input;
+  readonly input: InputSystem;
   readonly save: StateStore;
   readonly inventory: Inventory;
   /** The found-journals tracker (the inventory overlay's Journal tab). */

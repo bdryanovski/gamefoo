@@ -28,6 +28,8 @@ describe('exports — classes', () => {
     'HealthKit',
     'IconBitmap',
     'Input',
+    'InputMapper',
+    'InputSystem',
     'IntervalLoopDriver',
     'IsometricCameraSystem',
     'IsometricProjection',
@@ -80,7 +82,18 @@ describe('exports — classes', () => {
 });
 
 describe('exports — functions', () => {
-  const fns = ['log'] as const;
+  const fns = [
+    'binding',
+    'defineActions',
+    'defineScheme',
+    'extendScheme',
+    'getButtonLabel',
+    'getControlScheme',
+    'getDefaultControls',
+    'listControlSchemes',
+    'log',
+    'unassignedBinding',
+  ] as const;
 
   for (const name of fns) {
     test(name, () => {

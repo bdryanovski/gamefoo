@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'vite-plus/test';
-import { DialogRunner, Input, type DialogDocument } from '../src/index';
+import { DialogRunner, InputSystem, type DialogDocument } from '../src/index';
 import type { GameContext } from '../games/Experiment00/src/context';
 import { DialogSystem } from '../games/Experiment00/src/systems/dialog';
 import { GameFlow } from '../games/Experiment00/src/systems/flow';
+import { GAME_CONTROLS } from '../games/Experiment00/src/config/controls';
 
 const DOC: DialogDocument = {
   trees: {
@@ -30,10 +31,15 @@ function stubWindow(): { press: (key: string) => void } {
   };
 }
 
-function makeSystem(): { dialog: DialogSystem; flow: GameFlow; input: Input; win: { press: (k: string) => void } } {
+function makeSystem(): {
+  dialog: DialogSystem;
+  flow: GameFlow;
+  input: InputSystem;
+  win: { press: (k: string) => void };
+} {
   const win = stubWindow();
   const flow = new GameFlow();
-  const input = new Input();
+  const input = new InputSystem({ scheme: GAME_CONTROLS });
   const telemetry = { dialogOpen: () => {}, dialogAdvance: () => {} };
   const ctx = { input, flow, telemetry } as unknown as GameContext;
   const dialog = new DialogSystem(ctx);

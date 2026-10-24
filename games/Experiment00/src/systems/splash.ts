@@ -1,5 +1,6 @@
 import type { RenderContext, SubSystem } from '../../../../src';
 import type { GameContext } from '../context';
+import { GAME_ACTION } from '../config/controls';
 import { drawText } from '../text';
 
 export class SplashSystem implements SubSystem {
@@ -36,7 +37,7 @@ export class SplashSystem implements SubSystem {
     this.image = image;
   }
 
-  /** Boot signals "everything loaded" — the prompt becomes "Press E to start". */
+  /** Boot signals "everything loaded" — the prompt becomes the start prompt. */
   markReady(): void {
     this.ready = true;
   }
@@ -45,10 +46,7 @@ export class SplashSystem implements SubSystem {
     if (this.started) return;
     this.elapsed += dt;
     const input = this.context.input;
-    if (
-      this.ready &&
-      (input.isKeyPressed('e') || input.isKeyPressed(' ') || input.isKeyPressed('enter'))
-    ) {
+    if (this.ready && input.isActionPressed(GAME_ACTION.interact)) {
       this.started = true;
       this.context.flow?.pop('splash');
       this.onStarted?.();
@@ -73,7 +71,7 @@ export class SplashSystem implements SubSystem {
     // Dim the image a touch so the prompt stays legible over bright areas.
     ctx.fillRect(0, 0, w, h, 'rgba(6, 6, 12, 0.35)');
 
-    const label = this.ready ? 'Press E to start' : 'Loading...';
+    const label = this.ready ? 'Press E / A to start' : 'Loading...';
     const pulse = 0.55 + 0.45 * Math.sin(this.elapsed * 3);
     const scale = 3;
     const textW = this.context.font ? this.context.font.measure(label, scale) : label.length * 12;

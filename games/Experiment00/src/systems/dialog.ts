@@ -1,6 +1,7 @@
 import { DialogBox, DialogRunner } from '../../../../src/index';
 import type { RenderContext, SubSystem } from '../../../../src/index';
 import type { GameContext } from '../context';
+import { GAME_ACTION } from '../config/controls';
 
 /**
  * Owns the dialog modal: ticks the runner + box every frame, freezes the
@@ -40,12 +41,11 @@ export class DialogSystem implements SubSystem {
    * A `ref` that resolves to nothing logs a warning — the dialogs export is
    * likely stale or the ref is typo'd.
    *
-   * Consumes the E/Space edges so the press that opened the modal cannot
+   * Consumes the interact edge so the press that opened the modal cannot
    * also confirm it on the next frame.
    */
   start(ref: string | null, source: string, onClosed?: () => void): boolean {
-    this.ctx.input.consume('e');
-    this.ctx.input.consume(' ');
+    this.ctx.input.consume(GAME_ACTION.interact);
     if (ref && this.runner?.start(ref)) {
       this.ctx.telemetry.dialogOpen(source, ref);
       this.onClosed = onClosed;
@@ -83,19 +83,14 @@ export class DialogSystem implements SubSystem {
     if (!open) return;
 
     const input = this.ctx.input;
-    if (
-      input.isKeyPressed('arrowup') ||
-      input.isKeyPressed('arrowleft') ||
-      input.isKeyPressed('w')
-    ) {
+    if (input.isActionPressed(GAME_ACTION.up) || input.isActionPressed(GAME_ACTION.left)) {
       runner.moveSelection(-1);
     } else if (
-      input.isKeyPressed('arrowdown') ||
-      input.isKeyPressed('arrowright') ||
-      input.isKeyPressed('s')
+      input.isActionPressed(GAME_ACTION.down) ||
+      input.isActionPressed(GAME_ACTION.right)
     ) {
       runner.moveSelection(1);
-    } else if (input.isKeyPressed('e') || input.isKeyPressed(' ') || input.isKeyPressed('enter')) {
+    } else if (input.isActionPressed(GAME_ACTION.interact)) {
       runner.confirm();
       this.ctx.telemetry.dialogAdvance();
     }

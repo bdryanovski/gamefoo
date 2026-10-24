@@ -9,8 +9,8 @@
  * @since 0.5.0
  */
 
-import type { ControlScheme, ControlSchemeName } from '../controls';
-import { CONTROL_SCHEMES } from '../controls';
+import type { ControlScheme, ControlSchemeName } from '../../input/schemes';
+import { CONTROL_SCHEMES } from '../../input/schemes';
 import type { ConsoleName } from './index';
 
 /**
